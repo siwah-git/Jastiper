@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - TitipGo Admin</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="bg-gray-100 font-sans antialiased">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+      >
+        <div>
+          <nav class="space-y-2 p-4">
+            <img
+              src="asset/images/logosiwah.png"
+              alt="Logo"
+              class="w-48 h-20 object-contain mb-4"
+            />
+
+            <a
+              href="admin-dashboard.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+            >
+              <i class="fas fa-home mr-3"></i> Dashboard
+            </a>
+            <a
+              href="admin-katalog.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-box mr-3"></i> Manajemen Katalog
+            </a>
+            <a
+              href="admin-pengguna.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+            </a>
+            <a
+              href="admin-pesanan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+            </a>
+            <a
+              href="admin-aduan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-envelope mr-3"></i> Aduan
+            </a>
+            <a
+              href="admin-laporan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-chart-line mr-3"></i> Laporan
+            </a>
+            <a
+              href="admin-pendapatan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+            </a>
+            <a
+              href="admin-profil.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-user-circle mr-3"></i> Profil
+            </a>
+            <a
+              href="admin-tentang.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-user-circle mr-3"></i> Tentang Kami
+            </a>
+          </nav>
+        </div>
+        <footer class="text-sm text-gray-500 text-center p-4 border-t">
+          &copy; 2025 TitipGo. All rights reserved.
+        </footer>
+      </aside>
+
+      <!-- Konten utama -->
+      <main class="ml-64 w-full p-6 overflow-y-auto">
+        <!-- Header -->
+        <div
+          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
+        >
+          <p class="text-lg font-semibold">
+            Pendapatan Platform
+          </p>
+          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+        </div>
+
+        <div class="bg-white p-6 rounded-md shadow-md mb-8">
+    <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow">
+                <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
+                <p class="text-gray-600 text-sm">Total Pendapatan</p>
+                <p class="text-xl font-bold text-gray-800">Rp. 110.000.000,-</p>
+            </div>
+            <div class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow">
+                <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
+                <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
+                <p class="text-xl font-bold text-gray-800">1.000</p>
+            </div>
+
+            <div class="col-span-full md:col-span-2 lg:col-span-2 xl:col-span-2 flex justify-end items-center space-x-4 ml-auto">
+                <select id="monthYear" class="p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+                    <option value="">Bulan/Tahun</option>
+                    <option value="2024-01">Januari 2024</option>
+                    <option value="2024-02">Februari 2024</option>
+                    </select>
+                <button class="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
+                    <i class="fas fa-file-export mr-2"></i> Ekspor
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="bg-white p-6 rounded-md shadow-md">
+        <div class="overflow-x-auto rounded-md border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-blue-500"> <tr>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No. Pesanan</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Tanggal</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Customer</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Total Pesanan</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Ongkir</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Fee Platform</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Biaya Layanan</th>
+                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
+                        <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="py-3 px-4 text-sm text-gray-700">001</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">ORD111</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rosa</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-center">
+                            <a href="admin-pendapatan-detail.html" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 text-sm text-gray-700">002</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">ORD112</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Bella</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 text-sm text-gray-700">003</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">ORD113</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Angelina</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 text-sm text-gray-700">004</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">ORD114</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Brodi</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="py-3 px-4 text-sm text-gray-700">005</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">ORD115</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Kalea</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-center">
+                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+                        </td>
+                    </tr>
+                     
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center">
+            <div class="text-sm text-gray-700">
+                Menampilkan 1 sampai 9 dari 100 data
+            </div>
+            <div class="flex">
+                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">Previous</button>
+                <button class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300">1</button>
+                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
+                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
+                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
+        const currentPath = window.location.pathname;
+
+        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
+        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
+        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+
+        sidebarLinks.forEach(link => {
+            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+
+            // **LOGIKA PERBAIKAN DI SINI:**
+            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
+            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
+            let isLinkActive = false;
+
+            // Jika linkHref sama persis dengan currentPath
+            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
+                isLinkActive = true;
+            } 
+            // KHUSUS UNTUK KASUS DASHBOARD:
+            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
+            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
+            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
+                isLinkActive = true;
+            }
+            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
+            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
+            // Anda ingin `Manajemen Katalog` aktif.
+            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
+            //     isLinkActive = true;
+            // }
+
+
+            if (isLinkActive) {
+                // Hapus kelas default dan hover
+                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
+
+                // Tambahkan kelas untuk highlight aktif
+                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
+            } else {
+                // Hapus kelas highlight aktif
+                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
+
+                // Tambahkan kembali kelas default dan hover
+                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
+            }
+        });
+    });
+</script>
+  </body>
+</html>
+
+
