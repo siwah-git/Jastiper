@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - TitipGo Admin</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* A font closer to the image */
+      }
+      /* Mengoverride gaya default Font Awesome jika perlu, atau pastikan sudah cukup */
+      .sidebar-item .fas {
+        width: 1.25rem; /* Menjaga lebar ikon agar konsisten */
+        text-align: center;
+      }
+
+      /* Gaya untuk sidebar item aktif */
+      /* Pastikan ini mengoverride gaya default dari JS di bawah */
+      .sidebar-item.active {
+        background-color: #ec4899; /* pink-500 dari gambar */
+        color: white;
+        border-top-right-radius: 9999px; /* full rounded */
+        border-bottom-right-radius: 9999px; /* full rounded */
+        font-weight: 600; /* font-semibold */
+      }
+      .sidebar-item.active .fas {
+        color: white; /* Ikon juga putih saat aktif */
+      }
+
+      /* Chart specific styles */
+      .chart-container {
+        position: relative;
+        height: 300px; /* Adjusted height for the chart area */
+        padding-left: 65px; /* More space for Y-axis labels */
+        padding-right: 15px; /* Small right padding */
+        box-sizing: border-box; /* Include padding in height */
+      }
+      .y-axis-labels {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 60px; /* Width for labels */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end; /* Align numbers to the right */
+        padding-bottom: 25px; /* Adjust to align with X-axis */
+        padding-top: 5px; /* Adjust as needed */
+        font-size: 0.75rem; /* text-xs */
+        color: #6b7280; /* text-gray-500 */
+      }
+      .chart-bars-wrapper {
+        display: flex;
+        flex: 1;
+        align-items: flex-end; /* Ensure bars start from the bottom */
+        height: 100%; /* Take full height of parent */
+      }
+      .chart-bar {
+        width: 2.5rem; /* Wider bars, approx w-10 (40px) */
+        border-top-left-radius: 0.25rem; /* rounded-md */
+        border-top-right-radius: 0.25rem; /* rounded-md */
+        /* Gradient for bars */
+        background: linear-gradient(
+          to top,
+          #db2777,
+          #f472b6
+        ); /* pink-700 to pink-400 */
+        transition: height 0.3s ease-out; /* Smooth height transitions */
+        margin: 0 0.5rem; /* Spacing between bars */
+      }
+      .x-axis-labels {
+        padding-left: 65px; /* Align with chart bars */
+        padding-right: 15px; /* Align with chart bars */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex min-h-screen">
+      <aside
+        class="w-64 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+      >
+        <div>
+          <nav class="space-y-2 pt-6 pr-4">
+            <div class="px-6 pb-6 border-b border-gray-200">
+              <div class="flex items-center space-x-2">
+                <img
+                  src="https://i.ibb.co/C0W2XWf/titipgo-logo.png"
+                  alt="TitipGo Logo"
+                  class="h-10"
+                />
+                <span class="text-xl font-bold text-gray-800">TitipGo</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1 pl-12">AMAN DAN AMANAH</p>
+            </div>
+
+            <ul class="mt-6">
+              <li class="mb-1">
+                <a
+                  href="/dashboard"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-home mr-3"></i> Dashboard
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/katalog"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-box mr-3"></i> Manajemen Katalog
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/pengguna"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/pesanan"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/aduan"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-envelope mr-3"></i> Aduan
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/laporan"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-chart-line mr-3"></i> Laporan
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/pendapatan"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+                </a>
+              </li>
+              <li class="mb-1">
+                <a
+                  href="/profil"
+                  class="sidebar-item block py-2.5 pl-6 text-gray-700 hover:bg-pink-500 hover:text-white transition-colors duration-200 rounded-r-full"
+                >
+                  <i class="fas fa-user-circle mr-3"></i> Profil
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <footer
+          class="text-sm text-gray-500 text-center px-4 pt-4 border-t border-gray-200"
+        >
+          &copy; 2025 TitipGo. All rights reserved.
+        </footer>
+      </aside>
+
+      <main class="ml-64 w-full pb-8">
+        <header
+          class="bg-blue-600 text-white flex justify-between items-center py-4 px-8"
+        >
+          <h1 class="text-xl font-semibold">
+            Selamat datang di Dashboard Admin!
+          </h1>
+          <button
+            class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-2 rounded-lg text-sm transition-colors duration-200 shadow-md"
+          >
+            Logout
+          </button>
+        </header>
+
+        <div class="p-8">
+          <div class="grid grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+              <p class="text-gray-500 text-sm">Pesanan Aktif</p>
+              <p class="text-red-500 text-3xl font-bold mt-2">22</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+              <p class="text-gray-500 text-sm">Pesanan Selesai</p>
+              <p class="text-red-500 text-3xl font-bold mt-2">110</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+              <p class="text-gray-500 text-sm">Katalog Pending</p>
+              <p class="text-red-500 text-3xl font-bold mt-2">50</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+              <p class="text-gray-500 text-sm">Jastiper Aktif</p>
+              <p class="text-red-500 text-3xl font-bold mt-2">120</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Grafik Pendapatan Bulanan
+            </h3>
+            <div
+              class="flex items-center justify-end mb-4 text-sm text-gray-600"
+            >
+              <div
+                class="w-4 h-4 rounded-sm"
+                style="background: linear-gradient(to top, #db2777, #f472b6)"
+              ></div>
+              <span class="ml-2">Pendapatan Bulanan (Rp)</span>
+            </div>
+
+            <div class="chart-container">
+              <div class="y-axis-labels">
+                <span>1.400.000</span>
+                <span>1.200.000</span>
+                <span>1.000.000</span>
+                <span>800.000</span>
+                <span>600.000</span>
+                <span>400.000</span>
+                <span>200.000</span>
+                <span>0</span>
+              </div>
+              <div class="chart-bars-wrapper">
+                <div
+                  class="chart-bar"
+                  style="height: calc(1200000 / 1400000 * 100%)"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: calc(900000 / 1400000 * 100%)"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: calc(1300000 / 1400000 * 100%)"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: calc(1100000 / 1400000 * 100%)"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: calc(1400000 / 1400000 * 100%)"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: calc(1000000 / 1400000 * 100%)"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="flex justify-around text-gray-500 text-xs mt-2 x-axis-labels"
+            >
+              <span>January</span>
+              <span>February</span>
+              <span>March</span>
+              <span>April</span>
+              <span>Mei</span>
+              <span>Juni</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          let isLinkActive = false;
+
+          if (linkHref === currentPath) {
+            isLinkActive = true;
+          } else if (currentPath === "/" && linkHref === "/dashboard") {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            // Hapus kelas default dan hover yang tidak diinginkan
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+
+            // Tambahkan kelas untuk highlight aktif yang baru
+            link.classList.add(
+              "bg-pink-500",
+              "text-white",
+              "font-semibold",
+              "rounded-r-full"
+            );
+          } else {
+            // Hapus kelas highlight aktif jika tidak aktif
+            link.classList.remove(
+              "bg-pink-500",
+              "text-white",
+              "font-semibold",
+              "rounded-r-full"
+            );
+
+            // Tambahkan kembali kelas default dan hover
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-500" /* Sesuaikan hover:bg-pink-100 menjadi hover:bg-pink-500 jika itu yang Anda maksud */,
+              "hover:text-white" /* Sesuaikan hover:text-pink-600 menjadi hover:text-white */,
+              "rounded-r-full"
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
