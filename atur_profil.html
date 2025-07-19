@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Kita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://i.ibb.co/G0sTW8C/bg-titipgo.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-header img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav ul {
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #333;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav li:hover {
+            background-color: #f8e5f0;
+            color: #ec4899;
+        }
+
+        .sidebar-nav li.active {
+            background-color: #f8e5f0;
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        .sidebar-nav li.active span {
+            font-weight: 800;
+        }
+
+        .sidebar-nav li a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Tab Styles */
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.2s, border-bottom-color 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button.active {
+            color: #ec4899;
+            border-bottom-color: #ec4899;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Input Group Styles */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            flex-grow: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+        }
+
+        /* Disabled Input Styling */
+        .input-group input:disabled,
+        .input-group select:disabled,
+        .input-group textarea:disabled {
+            background-color: #ececec;
+            /* Lighter grey for disabled */
+            color: #777;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+        /* Image Upload/Preview Styles - Adjusted for visual similarity */
+        .image-upload-wrapper {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .image-preview-box {
+            width: 150px;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #e8e8e8;
+            color: #888;
+            font-size: 0.85rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .image-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .image-preview-box .text-placeholder {
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Personal Profile Image Specific - Adjusted to be square */
+        #profile-image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #ec4899;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #db2777;
+        }
+
+        .btn-primary:disabled {
+            background-color: #f8cce0;
+            /* Lighter pink for disabled primary */
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s, border-color 0.2s;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Button visibility for edit mode */
+        .form-actions-edit-mode {
+            display: none;
+        }
+
+        /* Hidden by default */
+        .form-actions-view-mode {
+            display: flex;
+        }
+
+        /* Shown by default */
+
+        .edit-mode .form-actions-edit-mode {
+            display: flex;
+        }
+
+        .edit-mode .form-actions-view-mode {
+            display: none;
+        }
+
+        /* Modal (Popup) Styling for Logout */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex h-full">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo">
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a></li>
+                    <li class="active"><span>🏬</span> <a href="toko_kita.html">Toko Kita</a></li>
+                    <li><span>💬</span> Chat</li>
+                    <li id="logout-button"><span>➡️</span> Logout</li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Toko Kita</h1>
+
+            <div class="tab-buttons">
+                <div class="tab-button active" data-tab="informasi-toko">Informasi Toko</div>
+                <div class="tab-button" data-tab="profil">Profil</div>
+            </div>
+
+            <div id="informasi-toko" class="tab-content active card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Informasi Toko</h2>
+                <form id="form-informasi-toko">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="input-group">
+                                <label for="store-profile-imageUrl">Foto Profil Toko:</label>
+                                <div class="image-upload-wrapper">
+                                    <div class="image-preview-container">
+                                        <div class="image-preview-box">
+                                            <img id="store-profile-image-preview" src="" alt="Foto Profil Toko">
+                                            <span class="text-placeholder">Tambahkan foto <br> (URL)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="url" id="store-profile-imageUrl" disabled
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
+                                    placeholder="URL Foto Profil Toko">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="store-background-imageUrl">Latar Belakang:</label>
+                                <div class="image-upload-wrapper">
+                                    <div class="image-preview-container">
+                                        <div class="image-preview-box">
+                                            <img id="store-background-image-preview" src="" alt="Latar Belakang Toko">
+                                            <span class="text-placeholder">Tambahkan foto <br> (URL)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="url" id="store-background-imageUrl" disabled
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
+                                    placeholder="URL Latar Belakang Toko">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <label for="store-namaToko">Nama Toko:</label>
+                                <input type="text" id="store-namaToko" required disabled
+                                    placeholder="Contoh: TitipGo Shop">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="input-group">
+                                    <label for="store-fee">Fee:</label>
+                                    <input type="text" id="store-fee" disabled
+                                        placeholder="Contoh: 10000 (angka tanpa Rp)">
+                                </div>
+                                <div class="input-group">
+                                    <label for="store-negara">Negara:</label>
+                                    <input type="text" id="store-negara" disabled placeholder="Contoh: Indonesia">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="store-deskripsiToko">Deskripsi Toko:</label>
+                                <textarea id="store-deskripsiToko" rows="4" disabled
+                                    placeholder="Jelaskan tentang toko Anda"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="store-alamatToko">Alamat Toko:</label>
+                                <textarea id="store-alamatToko" rows="3" disabled
+                                    placeholder="Alamat lengkap toko Anda"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4 form-actions-edit-mode">
+                        <button type="submit" class="btn-primary btn-save" disabled>Simpan</button>
+                        <button type="button" class="btn-secondary ml-4 btn-cancel-edit"
+                            data-form="store">Batal</button>
+                    </div>
+                    <div class="flex justify-end mt-4 form-actions-view-mode">
+                        <button type="button" class="btn-primary btn-edit-mode" data-form="store">Edit Informasi
+                            Toko</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="profil" class="tab-content card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Profil</h2>
+                <form id="form-profil">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex flex-col items-center">
+                            <label for="profile-imageUrl" class="block text-sm font-medium text-gray-700 mb-2">Foto
+                                Profil:</label>
+                            <img id="profile-image-preview" src="https://i.ibb.co/K2tHhW2/default-profile.png"
+                                alt="Foto Profil" class="mb-4">
+                            <input type="url" id="profile-imageUrl" disabled
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
+                                placeholder="URL Foto Profil">
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <label for="profile-nama">Nama:</label>
+                                <input type="text" id="profile-nama" required disabled placeholder="Nama Lengkap Anda">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-username">Username:</label>
+                                <input type="text" id="profile-username" disabled placeholder="Username Anda">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-email">E-mail:</label>
+                                <input type="email" id="profile-email" disabled
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
+                                    placeholder="Email Anda">
+                                <p class="text-xs text-gray-500 mt-1">Perubahan email memerlukan verifikasi password
+                                    lama.</p>
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-whatsapp">WhatsApp:</label>
+                                <input type="tel" id="profile-whatsapp" disabled placeholder="Contoh: 081234567890">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-instagram">Instagram:</label>
+                                <input type="text" id="profile-instagram" disabled
+                                    placeholder="Username Instagram Anda">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-jamOperasional">Jam Operasional:</label>
+                                <input type="text" id="profile-jamOperasional" disabled
+                                    placeholder="Contoh: 08.00 - 18.00">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-negaraJastip">Negara Jastip:</label>
+                                <input type="text" id="profile-negaraJastip" disabled
+                                    placeholder="Contoh: Korea, Jepang">
+                            </div>
+                            <div class="input-group password-group" style="display: none;">
+                                <label for="profile-oldPassword">Password Lama:</label>
+                                <input type="password" id="profile-oldPassword" disabled
+                                    placeholder="Masukkan password lama Anda">
+                                <p class="text-xs text-red-500 mt-1" id="old-password-error" style="display: none;">
+                                    Password lama salah atau kosong.</p>
+                            </div>
+                            <div class="input-group password-group" style="display: none;">
+                                <label for="profile-newPassword">Password Baru:</label>
+                                <input type="password" id="profile-newPassword" disabled
+                                    placeholder="Password baru (min 6 karakter)">
+                            </div>
+                            <div class="input-group password-group" style="display: none;">
+                                <label for="profile-confirmNewPassword">Konfirmasi Password Baru:</label>
+                                <input type="password" id="profile-confirmNewPassword" disabled
+                                    placeholder="Ulangi password baru Anda">
+                                <p class="text-xs text-red-500 mt-1" id="confirm-password-error" style="display: none;">
+                                    Password baru tidak cocok.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4 form-actions-edit-mode">
+                        <button type="submit" class="btn-primary btn-save" disabled>Simpan</button>
+                        <button type="button" class="btn-secondary ml-4 btn-cancel-edit"
+                            data-form="profile">Batal</button>
+                    </div>
+                    <div class="flex justify-end mt-4 form-actions-view-mode">
+                        <button type="button" class="btn-primary btn-edit-mode" data-form="profile">Edit Profil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+            <p class="text-gray-700">Apakah Anda yakin ingin keluar dari akun ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-logout" class="btn-cancel">Batal</button>
+                <button id="confirm-logout" class="btn-confirm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- YOUR FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
+            authDomain: "tittpgo-7f884.firebaseapp.com",
+            projectId: "tittpgo-28f84",
+            storageBucket: "tittpgo-7f884.appspot.com",
+            messagingSenderId: "816687553591",
+            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
+        let currentJastiperId = localStorage.getItem('jastiperId');
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentJastiperId = user.uid;
+                localStorage.setItem('jastiperId', currentJastiperId);
+                console.log("Jastiper ID (from Auth):", currentJastiperId);
+                loadStoreAndProfileData();
+            } else {
+                currentJastiperId = localStorage.getItem('jastiperId');
+                console.warn("Pengguna tidak terautentikasi oleh Firebase Auth. Fitur ubah email/password tidak akan berfungsi.");
+                if (!currentJastiperId) {
+                    console.warn("Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing.");
+                    const tempJastiperId = "contoh_jastiper_id_untuk_testing";
+                    localStorage.setItem('jastiperId', tempJastiperId);
+                    currentJastiperId = tempJastiperId;
+                }
+                loadStoreAndProfileData();
+            }
+        });
+
+
+        // --- TAB FUNCTIONALITY ---
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+
+        // --- DOM Elements for Store Info Tab ---
+        const formInformasiToko = document.getElementById('form-informasi-toko');
+        const storeProfileImageUrlInput = document.getElementById('store-profile-imageUrl');
+        const storeProfileImagePreview = document.getElementById('store-profile-image-preview');
+        const storeProfilePlaceholder = storeProfileImagePreview.nextElementSibling;
+        const storeBackgroundImageUrlInput = document.getElementById('store-background-imageUrl');
+        const storeBackgroundImagePreview = document.getElementById('store-background-image-preview');
+        const storeBackgroundPlaceholder = storeBackgroundImagePreview.nextElementSibling;
+        const storeNamaTokoInput = document.getElementById('store-namaToko');
+        const storeFeeInput = document.getElementById('store-fee');
+        const storeNegaraInput = document.getElementById('store-negara');
+        const storeDeskripsiTokoInput = document.getElementById('store-deskripsiToko');
+        const storeAlamatTokoInput = document.getElementById('store-alamatToko');
+        let originalStoreData = {};
+
+        // --- DOM Elements for Profile Tab ---
+        const formProfil = document.getElementById('form-profil');
+        const profileNamaInput = document.getElementById('profile-nama');
+        const profileUsernameInput = document.getElementById('profile-username');
+        const profileEmailInput = document.getElementById('profile-email');
+        const profileWhatsappInput = document.getElementById('profile-whatsapp');
+        const profileInstagramInput = document.getElementById('profile-instagram');
+        const profileJamOperasionalInput = document.getElementById('profile-jamOperasional');
+        const profileNegaraJastipInput = document.getElementById('profile-negaraJastip');
+
+        const profileOldPasswordInput = document.getElementById('profile-oldPassword');
+        const profileNewPasswordInput = document.getElementById('profile-newPassword');
+        const profileConfirmNewPasswordInput = document.getElementById('profile-confirmNewPassword');
+        const passwordGroupDivs = document.querySelectorAll('.password-group');
+        const oldPasswordError = document.getElementById('old-password-error');
+        const confirmPasswordError = document.getElementById('confirm-password-error');
+
+        const profileImageUrlInput = document.getElementById('profile-imageUrl');
+        const profileImagePreview = document.getElementById('profile-image-preview');
+        let originalProfileData = {};
+
+
+        // Function to set form fields enabled/disabled and button visibility
+        function setFormEditMode(formElement, isEditMode) {
+            console.log(`Setting form ${formElement.id} to edit mode: ${isEditMode}`);
+
+            // List of input IDs that should *never* be enabled by this function
+            const permanentlyDisabledIds = [
+                // 'store-fee' is removed from here to make it editable
+            ];
+
+            const inputs = formElement.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (permanentlyDisabledIds.includes(input.id)) {
+                    return;
+                }
+
+                input.disabled = !isEditMode;
+            });
+
+            if (formElement.id === 'form-profil') {
+                passwordGroupDivs.forEach(div => {
+                    div.style.display = isEditMode ? 'block' : 'none';
+                });
+                profileOldPasswordInput.disabled = !isEditMode;
+                profileNewPasswordInput.disabled = !isEditMode;
+                profileConfirmNewPasswordInput.disabled = !isEditMode;
+
+                if (!isEditMode) {
+                    profileOldPasswordInput.value = '';
+                    profileNewPasswordInput.value = '';
+                    profileConfirmNewPasswordInput.value = '';
+                    oldPasswordError.style.display = 'none';
+                    confirmPasswordError.style.display = 'none';
+                }
+            }
+
+
+            formElement.classList.toggle('edit-mode', isEditMode);
+
+            const saveButton = formElement.querySelector('.btn-save');
+            if (saveButton) {
+                saveButton.disabled = !isEditMode;
+            }
+        }
+
+        // Function to update image preview for store photos (with placeholder text)
+        function updateStoreImagePreview(inputElement, imgElement, placeholderElement) {
+            if (inputElement.value) {
+                imgElement.src = inputElement.value;
+                imgElement.classList.remove('hidden');
+                if (placeholderElement) placeholderElement.classList.add('hidden');
+            } else {
+                imgElement.src = '';
+                imgElement.classList.add('hidden');
+                if (placeholderElement) placeholderElement.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners for store image URL inputs
+        storeProfileImageUrlInput.addEventListener('input', () => updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder));
+        storeBackgroundImageUrlInput.addEventListener('input', () => updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder));
+
+        // Event listener for personal profile image URL input
+        profileImageUrlInput.addEventListener('input', () => {
+            if (profileImageUrlInput.value) {
+                profileImagePreview.src = profileImageUrlInput.value;
+            } else {
+                profileImagePreview.src = 'https://i.ibb.co/K2tHhW2/default-profile.png';
+            }
+        });
+
+        // Helper function to format fee for display
+        function formatFeeForDisplay(feeValue) {
+            const numericFee = parseInt(feeValue) || 0; // Ensure it's a number
+            return `Rp ${numericFee.toLocaleString('id-ID')}`;
+        }
+
+        // Helper function to clean fee input for saving (remove non-numeric chars)
+        function cleanFeeForSave(feeString) {
+            // Remove 'Rp', dots, commas, and other non-digit characters
+            const cleaned = feeString.replace(/[^0-9]/g, '');
+            return parseInt(cleaned) || 0; // Parse as integer, default to 0 if invalid
+        }
+
+
+        async function loadStoreAndProfileData() {
+            if (!currentJastiperId) {
+                console.warn("Jastiper ID not set, awaiting Firebase Auth state or using localStorage fallback.");
+                return;
+            }
+
+            try {
+                // Load Store Data
+                const tokoQuerySnapshot = await db.collection('toko').where("jastiperId", "==", currentJastiperId).limit(1).get();
+                if (!tokoQuerySnapshot.empty) {
+                    const tokoData = tokoQuerySnapshot.docs[0].data();
+                    storeNamaTokoInput.value = tokoData.namaToko || '';
+                    storeFeeInput.value = tokoData.fee !== undefined ? String(tokoData.fee) : '0'; // Keep as string for direct editing
+                    storeNegaraInput.value = tokoData.negara || tokoData.negaraAsal || '';
+                    storeDeskripsiTokoInput.value = tokoData.deskripsiToko || '';
+                    storeAlamatTokoInput.value = tokoData.alamatToko || '';
+                    storeProfileImageUrlInput.value = tokoData.profileImageUrl || '';
+                    storeBackgroundImageUrlInput.value = tokoData.backgroundImageUrl || '';
+
+                    originalStoreData = { ...tokoData };
+                    updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder);
+                    updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder);
+                } else {
+                    console.warn("Dokumen toko tidak ditemukan untuk jastiper ini. Menginisialisasi form toko kosong.");
+                    storeNamaTokoInput.value = '';
+                    storeFeeInput.value = '0';
+                    storeNegaraInput.value = '';
+                    storeDeskripsiTokoInput.value = '';
+                    storeAlamatTokoInput.value = '';
+                    storeProfileImageUrlInput.value = '';
+                    storeBackgroundImageUrlInput.value = '';
+                    originalStoreData = {};
+                    updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder);
+                    updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder);
+                }
+
+                // Load Jastiper Profile Data (personal)
+                const jastiperDocRef = db.collection('jastiper').doc(currentJastiperId);
+                const jastiperDoc = await jastiperDocRef.get();
+
+                if (jastiperDoc.exists) {
+                    const jastiperData = jastiperDoc.data();
+                    profileNamaInput.value = jastiperData.nama || '';
+                    profileUsernameInput.value = jastiperData.username || '';
+                    if (auth.currentUser && auth.currentUser.email) {
+                        profileEmailInput.value = auth.currentUser.email;
+                    } else {
+                        profileEmailInput.value = jastiperData.email || '';
+                    }
+                    profileWhatsappInput.value = jastiperData.whatsapp || jastiperData.nomorHp || '';
+                    profileInstagramInput.value = jastiperData.instagram || '';
+                    profileJamOperasionalInput.value = jastiperData.jamOperasional || '';
+                    profileNegaraJastipInput.value = jastiperData.negaraJastip || '';
+                    profileImageUrlInput.value = jastiperData.profileImageUrl || '';
+                    profileImagePreview.src = jastiperData.profileImageUrl || 'https://i.ibb.co/K2tHhW2/default-profile.png';
+
+                    originalProfileData = { ...jastiperData, email: profileEmailInput.value };
+                } else {
+                    console.warn("Dokumen jastiper tidak ditemukan untuk ID ini. Menginisialisasi form profil kosong.");
+                    profileNamaInput.value = '';
+                    profileUsernameInput.value = '';
+                    profileEmailInput.value = auth.currentUser ? auth.currentUser.email : '';
+                    profileWhatsappInput.value = '';
+                    profileInstagramInput.value = '';
+                    profileJamOperasionalInput.value = '';
+                    profileNegaraJastipInput.value = '';
+                    profileImageUrlInput.value = '';
+                    profileImagePreview.src = 'https://i.ibb.co/K2tHhW2/default-profile.png';
+                    originalProfileData = { email: profileEmailInput.value };
+                }
+
+                // Ensure forms start disabled (view mode) after loading data
+                setFormEditMode(formInformasiToko, false);
+                setFormEditMode(formProfil, false);
+
+            } catch (error) {
+                console.error("Error loading data:", error);
+                alert("Terjadi kesalahan saat memuat data: " + error.message);
+            }
+        }
+
+        // --- EDIT MODE ACTIVATION ---
+        document.querySelectorAll('.btn-edit-mode').forEach(button => {
+            button.addEventListener('click', () => {
+                const formType = button.dataset.form;
+                if (formType === 'store') {
+                    // When entering edit mode for store, change fee display from "Rp X" to "X"
+                    storeFeeInput.value = cleanFeeForSave(storeFeeInput.value).toString();
+                    setFormEditMode(formInformasiToko, true);
+                } else if (formType === 'profile') {
+                    setFormEditMode(formProfil, true);
+                }
+            });
+        });
+
+        // --- Save Store Information ---
+        formInformasiToko.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentJastiperId) {
+                alert("Jastiper ID tidak ditemukan. Mohon login ulang.");
+                return;
+            }
+
+            const updatedTokoData = {
+                namaToko: storeNamaTokoInput.value,
+                // Clean and parse fee before saving
+                fee: cleanFeeForSave(storeFeeInput.value),
+                negara: storeNegaraInput.value,
+                deskripsiToko: storeDeskripsiTokoInput.value,
+                alamatToko: storeAlamatTokoInput.value,
+                profileImageUrl: storeProfileImageUrlInput.value,
+                backgroundImageUrl: storeBackgroundImageUrlInput.value
+            };
+
+            try {
+                const tokoQuerySnapshot = await db.collection('toko').where("jastiperId", "==", currentJastiperId).limit(1).get();
+                if (!tokoQuerySnapshot.empty) {
+                    const tokoDocId = tokoQuerySnapshot.docs[0].id;
+                    await db.collection('toko').doc(tokoDocId).update(updatedTokoData);
+                    alert("Informasi toko berhasil diperbarui!");
+                } else {
+                    await db.collection('toko').add({
+                        ...updatedTokoData,
+                        jastiperId: currentJastiperId,
+                        tanggalBergabung: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    alert("Toko baru berhasil dibuat dan informasi diperbarui!");
+                }
+                setFormEditMode(formInformasiToko, false);
+                loadStoreAndProfileData();
+            } catch (error) {
+                console.error("Error updating store info:", error);
+                alert("Gagal memperbarui informasi toko: " + error.message);
+            }
+        });
+
+        // --- Save Personal Profile Information ---
+        formProfil.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Anda harus login melalui Firebase Authentication untuk mengubah profil atau password. Silakan logout dan login kembali.");
+                return;
+            }
+
+            const oldEmail = originalProfileData.email;
+            const newEmail = profileEmailInput.value;
+            const oldPassword = profileOldPasswordInput.value;
+            const newPassword = profileNewPasswordInput.value;
+            const confirmNewPassword = profileConfirmNewPasswordInput.value;
+
+            oldPasswordError.style.display = 'none';
+            confirmPasswordError.style.display = 'none';
+
+            let changesMade = false;
+
+            try {
+                const needsReauthForEmail = (newEmail !== oldEmail);
+                const needsReauthForPassword = (newPassword !== '');
+
+                if (needsReauthForEmail || needsReauthForPassword) {
+                    if (!oldPassword) {
+                        oldPasswordError.textContent = "Masukkan password lama Anda untuk melanjutkan.";
+                        oldPasswordError.style.display = 'block';
+                        return;
+                    }
+                    const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
+                    await user.reauthenticateWithCredential(credential);
+                    console.log("User re-authenticated successfully.");
+                }
+
+                if (needsReauthForEmail) {
+                    await user.updateEmail(newEmail);
+                    console.log("Email berhasil diperbarui di Auth.");
+                    changesMade = true;
+                }
+
+                if (needsReauthForPassword) {
+                    if (newPassword.length < 6) {
+                        confirmPasswordError.textContent = "Password baru minimal 6 karakter.";
+                        confirmPasswordError.style.display = 'block';
+                        return;
+                    }
+                    if (newPassword !== confirmNewPassword) {
+                        confirmPasswordError.textContent = "Konfirmasi password baru tidak cocok.";
+                        confirmPasswordError.style.display = 'block';
+                        return;
+                    }
+                    await user.updatePassword(newPassword);
+                    console.log("Password berhasil diperbarui di Auth.");
+                    changesMade = true;
+                }
+
+                const updatedJastiperData = {
+                    nama: profileNamaInput.value,
+                    username: profileUsernameInput.value,
+                    whatsapp: profileWhatsappInput.value,
+                    instagram: profileInstagramInput.value,
+                    jamOperasional: profileJamOperasionalInput.value,
+                    negaraJastip: profileNegaraJastipInput.value,
+                    profileImageUrl: profileImageUrlInput.value,
+                    email: newEmail
+                };
+
+                await db.collection('jastiper').doc(currentJastiperId).update(updatedJastiperData);
+                console.log("Data profil di Firestore berhasil diperbarui.");
+                changesMade = true;
+
+                if (changesMade) {
+                    alert("Profil pribadi berhasil diperbarui! Jika email atau password diubah, Anda mungkin perlu login ulang.");
+                    if (needsReauthForEmail || needsReauthForPassword) {
+                        auth.signOut().then(() => {
+                            localStorage.removeItem('jastiperId');
+                            alert("Demi keamanan, Anda telah keluar. Silakan login kembali dengan kredensial baru Anda.");
+                            window.location.href = 'halaman_login_anda.html';
+                        }).catch(signOutError => {
+                            console.error("Error signing out after profile update:", signOutError);
+                            alert("Profil berhasil diperbarui, tetapi gagal keluar. Mohon logout manual.");
+                            setFormEditMode(formProfil, false);
+                            loadStoreAndProfileData();
+                        });
+                    } else {
+                        setFormEditMode(formProfil, false);
+                        loadStoreAndProfileData();
+                    }
+                } else {
+                    alert("Tidak ada perubahan yang disimpan.");
+                    setFormEditMode(formProfil, false);
+                    loadStoreAndProfileData();
+                }
+
+            } catch (error) {
+                console.error("Error updating personal profile:", error);
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    oldPasswordError.textContent = "Password lama salah. Mohon masukkan yang benar.";
+                    oldPasswordError.style.display = 'block';
+                } else if (error.code === 'auth/requires-recent-login') {
+                    alert("Untuk alasan keamanan, silakan logout dan login kembali untuk memperbarui email atau password Anda.");
+                } else if (error.code === 'auth/email-already-in-use') {
+                    alert("Email ini sudah digunakan oleh akun lain. Mohon gunakan email yang berbeda.");
+                } else if (error.code === 'auth/invalid-email') {
+                    alert("Format email tidak valid.");
+                } else if (error.code === 'auth/weak-password') {
+                    confirmPasswordError.textContent = "Password terlalu lemah. Mohon gunakan minimal 6 karakter kombinasi huruf, angka, dan simbol.";
+                    confirmPasswordError.style.display = 'block';
+                } else {
+                    alert("Gagal memperbarui profil pribadi: " + error.message);
+                }
+            }
+        });
+
+        // --- "Batal" (Cancel Edit) Functionality ---
+        document.querySelectorAll('.btn-cancel-edit').forEach(button => {
+            button.addEventListener('click', () => {
+                const formType = button.dataset.form;
+                if (formType === 'store') {
+                    // Revert store form to original data
+                    storeNamaTokoInput.value = originalStoreData.namaToko || '';
+                    storeFeeInput.value = originalStoreData.fee !== undefined ? String(originalStoreData.fee) : '0'; // Revert to numeric string
+                    storeNegaraInput.value = originalStoreData.negara || originalStoreData.negaraAsal || '';
+                    storeDeskripsiTokoInput.value = originalStoreData.deskripsiToko || '';
+                    storeAlamatTokoInput.value = originalStoreData.alamatToko || '';
+                    storeProfileImageUrlInput.value = originalStoreData.profileImageUrl || '';
+                    storeBackgroundImageUrlInput.value = originalStoreData.backgroundImageUrl || '';
+                    updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder);
+                    updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder);
+                    setFormEditMode(formInformasiToko, false); // Switch back to view mode
+                } else if (formType === 'profile') {
+                    // Revert profile form to original data
+                    profileNamaInput.value = originalProfileData.nama || '';
+                    profileUsernameInput.value = originalProfileData.username || '';
+                    profileEmailInput.value = originalProfileData.email || '';
+                    profileWhatsappInput.value = originalProfileData.whatsapp || originalProfileData.nomorHp || '';
+                    profileInstagramInput.value = originalProfileData.instagram || '';
+                    profileJamOperasionalInput.value = originalProfileData.jamOperasional || '';
+                    profileNegaraJastipInput.value = originalProfileData.negaraJastip || '';
+                    profileImageUrlInput.value = originalProfileData.profileImageUrl || '';
+                    profileImagePreview.src = originalProfileData.profileImageUrl || 'https://i.ibb.co/K2tHhW2/default-profile.png';
+                    setFormEditMode(formProfil, false); // Switch back to view mode
+                }
+                alert("Perubahan dibatalkan.");
+            });
+        });
+
+
+        // Logout functionality
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logout-modal');
+        const cancelLogoutButton = document.getElementById('cancel-logout');
+        const confirmLogoutButton = document.getElementById('confirm-logout');
+
+        logoutButton.addEventListener('click', () => { logoutModal.classList.add('show'); });
+        cancelLogoutButton.addEventListener('click', () => { logoutModal.classList.remove('show'); });
+        confirmLogoutButton.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                localStorage.removeItem('jastiperId');
+                alert("Anda telah logout.");
+                window.location.href = 'halaman_login_anda.html';
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+                alert("Gagal logout: " + error.message);
+            });
+        });
+    </script>
+</body>
+
+</html>

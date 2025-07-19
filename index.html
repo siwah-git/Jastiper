@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beranda - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <style>
+        /* Anda bisa menambahkan CSS kustom di sini jika diperlukan,
+           walaupun sebagian besar sudah dicover oleh Tailwind */
+        .hero-section {
+            transition: background-image 1s ease-in-out;
+        }
+
+        /* CSS untuk bilah pencarian yang lebih ramping dan pendek */
+        .search-input-slim {
+            height: 2.25rem;
+            /* Tinggi lebih rendah, sekitar 36px */
+            width: 12rem;
+            /* Lebar lebih pendek, sekitar 192px */
+            padding-top: 0.5rem;
+            /* Sesuaikan padding agar teks tetap di tengah */
+            padding-bottom: 0.5rem;
+            /* Sesuaikan padding agar teks tetap di tengah */
+        }
+
+        /* Untuk menghilangkan garis fokus default pada tombol (opsional) */
+        button:focus,
+        input:focus {
+            outline: none;
+        }
+
+        /* Untuk navbar tengah */
+        .navbar-middle {
+            flex-grow: 1;
+            /* Memastikan elemen mengambil ruang yang tersedia */
+            display: flex;
+            justify-content: center;
+            /* Memusatkan konten di dalamnya */
+        }
+
+        /* Untuk outer shadow pada tombol Jastiper/Pembeli */
+        /* Mengubah warna shadow menjadi putih */
+        .btn-shadow-white {
+            box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(255, 255, 255, 0.3);
+            /* custom shadow warna putih */
+        }
+
+        /* Menambahkan border hitam untuk tombol Jastiper/Pembeli */
+        .btn-black-border {
+            border: 1px solid black;
+            /* Border 1px solid hitam */
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-white text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo" class="w-32">
+            <div class="relative">
+                <input type="text" placeholder="Cari Barang..."
+                    class="search-input-slim pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="navbar-middle text-gray-700 font-medium">
+            <a href="#" class="hover:text-pink-600 px-6">Beranda</a>
+            <a href="#" class="hover:text-pink-600 px-6">Kategori</a>
+            <a href="#" class="hover:text-pink-600 px-6">Negara</a>
+            <a href="#" class="hover:text-pink-600 px-6">Hubungi kami</a>
+        </nav>
+        <div class="space-x-4">
+            <button onclick="window.location.href='login_user.html'"
+                class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Masuk</button>
+            <button onclick="window.location.href='daftar_user.html'"
+                class="bg-gray-200 text-gray-800 px-4 py-1 rounded hover:bg-gray-300">Daftar</button>
+        </div>
+    </header>
+
+    <section id="hero-section" class="relative h-[80vh] bg-cover bg-center hero-section"
+        style="background-image: url('/asset/images/beranda.jpeg');">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center px-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Travel Anywhere, Shop Everywhere</h1>
+            <p class="text-lg md:text-xl text-white max-w-2xl">Solusi mudah untuk kamu yang mau belanja dari luar negeri
+                dengan mudah dan aman</p>
+        </div>
+    </section>
+
+    <section class="bg-pink-600 text-white py-8 text-center">
+        <h2 class="text-xl font-semibold mb-4">Kamu Mau Jadi Apa?</h2>
+        <div class="flex justify-center gap-10">
+            <button onclick="window.location.href='login_user.html'"
+                class="bg-pink-600 text-white font-bold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-pink-700 btn-shadow-white btn-black-border">
+                <img src="asset/images/pesawat_remove_bg.png" alt="Jastiper" class="w-6 h-6"> <span
+                    class="text-white">Jastiper</span>
+            </button>
+            <button onclick="window.location.href='login_user.html'"
+                class="bg-blue-600 text-white font-bold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-blue-700 btn-shadow-white btn-black-border">
+                <img src="asset/images/keranjang_remove_bg.png" alt="Pembeli" class="w-6 h-6"> <span
+                    class="text-white">Pembeli</span>
+            </button>
+        </div>
+    </section>
+
+    <section class="bg-black text-white text-center px-10 py-6">
+        <h2 class="text-xl font-bold mb-4">Apa itu TitipGo?</h2>
+        <div class="mt-4 mb-6">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="mx-auto w-32">
+        </div>
+        <p class="text-sm max-w-3xl mx-auto leading-relaxed">
+            Aplikasi TitipGo membantu kamu menemukan produk luar negeri yang kamu mau, tanpa ribet dan bisa langsung
+            diantar oleh Jastiper terpercaya. Gabung dan nikmati pengalaman belanja dari berbagai negara hanya dalam
+            satu aplikasi.
+        </p>
+    </section>
+
+    <section class="relative py-12 text-center bg-cover bg-center" style="background-image: url('/img/bg-produk.jpg');">
+        <div class="absolute inset-0 bg-blue-900 bg-opacity-80 z-0"></div>
+        <div class="relative z-10">
+            <h2 class="text-xl font-bold text-white mb-8">Produk Best-Seller</h2>
+            <div id="produk-best-seller" class="grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
+                <p class="col-span-full text-white">Memuat produk...</p>
+            </div>
+            <button class="mt-6 bg-white text-blue-800 font-bold px-6 py-2 rounded hover:bg-gray-100">
+                Lihat Semua
+            </button>
+        </div>
+    </section>
+
+    <section class="bg-gray-900 py-10 text-center">
+        <h2 class="text-xl font-bold text-white mb-8">Negara Terpopuler</h2>
+        <div id="negara-terpopuler" class="grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
+            <p class="col-span-full text-white">Memuat negara...</p>
+        </div>
+        <button class="mt-6 bg-white text-gray-900 font-bold px-6 py-2 rounded hover:bg-gray-200">
+            Lihat Semua
+        </button>
+    </section>
+
+    <footer class="bg-gray-200 text-black py-6 text-sm">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <p class="font-semibold">INFORMASI</p>
+                <p>Tentang Kami</p>
+                <p>Pertanyaan Umum</p>
+                <p>Hubungi Kami</p>
+            </div>
+            <div>
+                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 mb-2">
+                <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                <p class="font-semibold">IKUTI SOSIAL MEDIA KAMI</p>
+                <p>📘 Facebook</p>
+                <p>▶️ Youtube</p>
+                <p>📷 Instagram</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- KONFIGURASI FIREBASE ANDA ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC...G2Mtu3ZGQ3fh...", // <-- GANTI DENGAN API KEY ANDA
+            authDomain: "tittpgo-7f884.firebaseapp.com",
+            projectId: "tittpgo-7f884",
+            storageBucket: "tittpgo-7f884.appspot.com",
+            messagingSenderId: "616687553591",
+            appId: "1:616687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Inisialisasi Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(); // Dapatkan instance Firestore
+
+        // --- PENGATURAN SLIDER HERO SECTION ---
+        const heroImages = [
+            '/asset/images/beranda.jpeg',
+            '/asset/images/Bg_beranda2.jpeg'
+        ];
+
+        let currentHeroImageIndex = 0;
+        const heroSection = document.getElementById('hero-section');
+
+        function changeHeroImage() {
+            currentHeroImageIndex = (currentHeroImageIndex + 1) % heroImages.length;
+            const nextImageUrl = heroImages[currentHeroImageIndex];
+            heroSection.style.backgroundImage = `url('${nextImageUrl}')`;
+        }
+
+        setInterval(changeHeroImage, 5000);
+
+
+        // --- FUNGSI UNTUK MEMUAT DATA PRODUK BEST-SELLER ---
+        async function loadBestSellerProducts() {
+            const produkContainer = document.getElementById('produk-best-seller');
+            produkContainer.innerHTML = '<p class="col-span-full text-white">Memuat produk best-seller...</p>';
+
+            try {
+                const produkSnapshot = await db.collection('produk')
+                    .where('isBestSeller', '==', true)
+                    .limit(4)
+                    .get();
+
+                produkContainer.innerHTML = '';
+
+                if (produkSnapshot.empty) {
+                    produkContainer.innerHTML = '<p class="col-span-full text-white">Tidak ada produk best-seller ditemukan.</p>';
+                    return;
+                }
+
+                produkSnapshot.forEach((doc) => {
+                    const produk = doc.data();
+                    const produkElement = `
+                        <div class="bg-white text-black rounded-lg overflow-hidden shadow-md p-3">
+                            <img src="${produk.gambarURL}" alt="${produk.nama}" class="w-full h-32 object-cover rounded">
+                            <p class="mt-2 font-semibold">${produk.nama}</p>
+                            <span class="text-sm text-gray-500">${produk.negara}</span>
+                        </div>
+                    `;
+                    produkContainer.innerHTML += produkElement;
+                });
+            } catch (error) {
+                console.error("Error loading best-seller products: ", error);
+                produkContainer.innerHTML = '<p class="col-span-full text-red-400">Gagal memuat produk. Silakan periksa konsol untuk detail kesalahan.</p>';
+            }
+        }
+
+        // --- FUNGSI UNTUK MEMUAT DATA NEGARA TERPOPULER ---
+        async function loadPopularCountries() {
+            const negaraContainer = document.getElementById('negara-terpopuler');
+            negaraContainer.innerHTML = '<p class="col-span-full text-white">Memuat negara populer...</p>';
+
+            try {
+                const negaraSnapshot = await db.collection('negara')
+                    .where('isPopuler', '==', true)
+                    .limit(4)
+                    .get();
+
+                negaraContainer.innerHTML = '';
+
+                if (negaraSnapshot.empty) {
+                    negaraContainer.innerHTML = '<p class="col-span-full text-white">Tidak ada negara populer ditemukan.</p>';
+                    return;
+                }
+
+                negaraSnapshot.forEach((doc) => {
+                    const negara = doc.data();
+                    const negaraElement = `
+                        <img src="${negara.gambarURL}" alt="${negara.nama}" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    `;
+                    negaraContainer.innerHTML += negaraElement;
+                });
+            } catch (error) {
+                console.error("Error loading popular countries: ", error);
+                negaraContainer.innerHTML = '<p class="col-span-full text-red-400">Gagal memuat negara. Silakan periksa konsol untuk detail kesalahan.</p>';
+            }
+        }
+
+        // Panggil fungsi-fungsi pemuatan data saat DOM selesai dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBestSellerProducts();
+            loadPopularCountries();
+        });
+    </script>
+</body>
+
+</html>

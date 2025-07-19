@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toko Kita - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://i.ibb.co/G0sTW8C/bg-titipgo.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+            /* Prevent scroll on body, main content handles it */
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            /* Fixed width */
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            /* Allow sidebar to scroll if content is long */
+        }
+
+        .sidebar-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-header img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav ul {
+            padding: 1rem 0;
+            flex-grow: 1;
+            /* Allow navigation to take available space */
+        }
+
+        .sidebar-nav li {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #333;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav li:hover {
+            background-color: #f8e5f0;
+            color: #ec4899;
+        }
+
+        .sidebar-nav li.active {
+            background-color: #f8e5f0;
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        .sidebar-nav li.active span {
+            font-weight: 800;
+            /* Make emoji/icon bolder if it's an actual icon */
+        }
+
+        .sidebar-nav li a {
+            text-decoration: none;
+            /* Remove underline for links in sidebar */
+            color: inherit;
+            /* Inherit color from parent li */
+        }
+
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            display: flex;
+            /* Use flexbox for main content layout */
+            flex-direction: column;
+            /* Stack children vertically */
+            overflow: hidden;
+            /* Prevent main-content from showing scrollbar, its children will */
+        }
+
+        /* Card Styling (re-used for main sections) */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            /* Slightly transparent white */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            /* Space below card */
+        }
+
+        /* Form Input Styling */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            /* Stack label and input vertically */
+            margin-bottom: 0.75rem;
+            /* Reduced margin */
+            justify-content: space-between;
+            /* Untuk mendorong label ke atas dan input ke bawah */
+            min-height: 70px;
+            /* Sesuaikan tinggi ini agar sesuai dengan yang terpanjang (misal, fee dengan hint) */
+        }
+
+        /* Sesuaikan juga bagian .card grid */
+        .card .grid {
+            align-items: flex-start;
+            /* Untuk menyelaraskan item di bagian atas sel grid */
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            /* Slightly smaller font */
+            color: #555;
+            margin-bottom: 0.2rem;
+            /* Reduced space */
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            flex-grow: 1;
+            padding: 0.4rem 0.6rem;
+            /* Reduced padding */
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            font-size: 0.85rem;
+            /* Reduced font size */
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+        }
+
+        /* Button Styling */
+        .btn-primary {
+            background-color: #ec4899;
+            color: white;
+            padding: 0.6rem 1rem;
+            /* Reduced padding */
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+            cursor: pointer;
+            font-size: 0.9rem;
+            /* Reduced font size */
+        }
+
+        .btn-primary:hover {
+            background-color: #db2777;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 0.6rem 1rem;
+            /* Reduced padding */
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s, border-color 0.2s;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 0.9rem;
+            /* Reduced font size */
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-danger {
+            /* New style for delete button */
+            background-color: #ef4444;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+
+        /* Product Count and Action Buttons Styling */
+        .product-count-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8e5f0;
+            /* Light pink background */
+            border-radius: 0.5rem;
+            padding: 0.6rem 1rem;
+            /* Reduced padding */
+            margin-bottom: 1.5rem;
+            /* Space below bar */
+            font-weight: 600;
+            color: #ec4899;
+            /* Pink text */
+            font-size: 0.9rem;
+            /* Reduced font size */
+        }
+
+        .product-count-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            /* Reduced gap */
+            flex-grow: 1;
+        }
+
+        .product-count-info span {
+            font-weight: 800;
+        }
+
+        .progress-bar-container {
+            width: 120px;
+            /* Reduced width for the bar */
+            height: 8px;
+            /* Reduced height */
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            /* Reduced radius */
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #ec4899;
+            width: 0%;
+            /* Will be set by JS */
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Table Container - now scrolls independently */
+        .table-container {
+            flex-grow: 1;
+            /* Allows table container to take remaining height */
+            overflow-y: auto;
+            /* Enable vertical scrolling for the table */
+            margin-top: 0;
+            /* No top margin needed, handled by card margin-bottom */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: #fff;
+            /* Ensure background is white for scrolling content */
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+            /* Ensure table doesn't get too narrow */
+        }
+
+        .product-table th,
+        .product-table td {
+            padding: 0.6rem 0.75rem;
+            /* Reduced padding */
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-table th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.85rem;
+            /* Reduced font size */
+            text-transform: uppercase;
+            position: sticky;
+            /* Make table header sticky */
+            top: 0;
+            /* Stick to the top of its scrollable container */
+            z-index: 10;
+            /* Ensure it's above scrolling content */
+        }
+
+        .product-table td {
+            font-size: 0.85rem;
+            /* Reduced font size */
+            color: #333;
+        }
+
+        .product-table tbody tr:hover {
+            background-color: #fbfbfb;
+        }
+
+        .product-table img {
+            width: 35px;
+            /* Slightly smaller image */
+            height: 35px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            border: 1px solid #eee;
+        }
+
+        .product-table .action-buttons button {
+            padding: 0.3rem 0.6rem;
+            /* Further reduced padding */
+            font-size: 0.75rem;
+            /* Smaller font size */
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .product-table .btn-ubah-detail {
+            background-color: #ec4899;
+            color: white;
+        }
+
+        .product-table .btn-ubah-detail:hover {
+            background-color: #db2777;
+        }
+
+        /* Modal (Popup) Styling for Logout */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            /* Red color for confirm */
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body class="font-sans h-screen overflow-hidden">
+
+    <div class="flex h-full">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo">
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
+                    </li>
+                    <li class="active">
+                        <span>🏬</span> Toko Kita
+                    </li>
+                    <li>
+                        <span>💬</span> Chat
+                    </li>
+                    <li id="logout-button">
+                        <span>➡️</span> Logout
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Toko Kita</h1>
+
+            <div class="card">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                    <div class="input-group">
+                        <label for="namaProduk">Nama Produk</label>
+                        <input type="text" id="namaProduk" placeholder="Input...">
+                    </div>
+                    <div class="input-group">
+                        <label for="kategori">Kategori</label>
+                        <input type="text" id="kategori" placeholder="Input...">
+                    </div>
+                    <div class="input-group">
+                        <label for="fee">Fee</label>
+                        <input type="text" id="fee" placeholder="Loading..." disabled
+                            class="bg-gray-100 cursor-not-allowed">
+                        <span class="text-gray-500 text-xs mt-1">(dari pengaturan toko)</span>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button id="btn-cari" class="btn-primary">Cari</button>
+                    <button id="btn-reset" class="btn-secondary">Reset Filter</button>
+                </div>
+            </div>
+
+            <div class="product-count-bar">
+                <div class="product-count-info">
+                    <span id="product-count">0 Produk</span>
+                    <div class="progress-bar-container">
+                        <div id="product-progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="btn-tambah-produk" class="btn-primary">+ Tambah Produk</button>
+                    <button id="btn-edit-toko" class="btn-secondary">Toko</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>NAMA PRODUK</th>
+                            <th>NEGARA ASAL</th>
+                            <th>KATEGORI</th>
+                            <th>HARGA</th>
+                            <th>STATUS</th>
+                            <th>STOK</th>
+                            <th>FOTO</th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body">
+                        <tr>
+                            <td colspan="9" class="text-center text-gray-500 py-4">Memuat produk...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+            <p class="text-gray-700">Apakah Anda yakin ingin keluar dari akun ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-logout" class="btn-cancel">Batal</button>
+                <button id="confirm-logout" class="btn-confirm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
+        // --- YOUR FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
+            authDomain: "tittpgo-7f884.firebaseapp.com",
+            projectId: "tittpgo-28f84",
+            storageBucket: "tittpgo-7f884.appspot.com",
+            messagingSenderId: "816687553591",
+            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        // const auth = firebase.auth(); // Uncomment if using Firebase Authentication
+
+        // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
+        let currentJastiperId = localStorage.getItem('jastiperId');
+        if (!currentJastiperId) {
+            console.warn("Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing.");
+            const tempJastiperId = "contoh_jastiper_id_untuk_testing"; // Ganti ini dengan ID jastiper yang valid dari Firestore Anda untuk pengujian
+            localStorage.setItem('jastiperId', tempJastiperId); // Simpan untuk sesi demo
+            currentJastiperId = tempJastiperId;
+        } else {
+            console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+        }
+
+        // DOM Elements
+        const namaProdukInput = document.getElementById('namaProduk');
+        const kategoriInput = document.getElementById('kategori');
+        const feeInput = document.getElementById('fee');
+        const btnCari = document.getElementById('btn-cari');
+        const btnReset = document.getElementById('btn-reset');
+        const productCountSpan = document.getElementById('product-count');
+        const productProgressBar = document.getElementById('product-progress-bar');
+        const productTableBody = document.getElementById('product-table-body');
+
+        // Logout Modal elements
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logout-modal');
+        const cancelLogoutButton = document.getElementById('cancel-logout');
+        const confirmLogoutButton = document.getElementById('confirm-logout');
+
+        // Batas maksimum produk (misalnya 2000 seperti di gambar)
+        const MAX_PRODUCTS_LIMIT = 2000;
+
+        // Fungsi pembantu untuk membuat query dengan filter jastiperId
+        function createJastiperQuery(collectionRef) {
+            if (currentJastiperId) {
+                return collectionRef.where("jastiperId", "==", currentJastiperId);
+            }
+            console.warn("Peringatan: Tidak ada Jastiper ID. Data mungkin tidak difilter.");
+            return collectionRef;
+        }
+
+        // Function to fetch and display products
+        async function fetchProducts(filters = {}) {
+            productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-500 py-4">Memuat produk...</td></tr>';
+
+            try {
+                let productsRef = createJastiperQuery(db.collection('produk'));
+
+                // Apply filters
+                if (filters.namaProduk) {
+                    const searchName = filters.namaProduk.toLowerCase();
+                    productsRef = productsRef.where('namaProdukLowerCase', '>=', searchName)
+                        .where('namaProdukLowerCase', '<=', searchName + '\uf8ff');
+                }
+                if (filters.kategori) {
+                    productsRef = productsRef.where('kategori', '==', filters.kategori);
+                }
+
+                const snapshot = await productsRef.get();
+
+                if (snapshot.empty) {
+                    productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-600 py-4">Tidak ada produk ditemukan.</td></tr>';
+                    productCountSpan.textContent = `0 Produk / ${MAX_PRODUCTS_LIMIT}`;
+                    productProgressBar.style.width = `0%`;
+                    return;
+                }
+
+                productTableBody.innerHTML = ''; // Clear loading message
+                let productCount = 0;
+                snapshot.forEach((doc, index) => {
+                    const product = doc.data();
+                    productCount++;
+                    const row = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${product.namaProduk || 'N/A'}</td>
+                            <td>${product.negaraAsal || 'N/A'}</td>
+                            <td>${product.kategori || 'N/A'}</td>
+                            <td>Rp ${product.harga ? product.harga.toLocaleString('id-ID') : 'N/A'}</td>
+                            <td>${product.status || 'N/A'}</td>
+                            <td>${product.stok !== undefined ? product.stok : 'N/A'}</td>
+                            <td>
+                                ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.namaProduk}">` : '<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">No Img</div>'}
+                            </td>
+                            <td class="action-buttons">
+                                <button class="btn-ubah-detail" data-id="${doc.id}">Ubah Detail</button>
+                            </td>
+                        </tr>
+                    `;
+                    productTableBody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Update product count and progress bar
+                productCountSpan.textContent = `${productCount} Produk / ${MAX_PRODUCTS_LIMIT}`;
+                const progressPercentage = (productCount / MAX_PRODUCTS_LIMIT) * 100;
+                productProgressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-red-500 py-4">Gagal memuat produk. Coba lagi nanti.</td></tr>';
+                productCountSpan.textContent = `Error / ${MAX_PRODUCTS_LIMIT}`;
+                productProgressBar.style.width = `0%`;
+            }
+        }
+
+        // Function to fetch store fee
+        async function fetchStoreFee() {
+            try {
+                let tokoQuery = createJastiperQuery(db.collection('toko'));
+                const tokoSnapshot = await tokoQuery.limit(1).get(); // Asumsi 1 jastiper punya 1 toko utama
+
+                if (!tokoSnapshot.empty) {
+                    const tokoData = tokoSnapshot.docs[0].data();
+                    if (tokoData.fee !== undefined) {
+                        feeInput.value = `Rp ${tokoData.fee.toLocaleString('id-ID')}`; // Format sebagai mata uang
+                    } else {
+                        feeInput.value = 'N/A';
+                    }
+                } else {
+                    feeInput.value = 'N/A';
+                }
+            } catch (error) {
+                console.error("Error fetching store fee:", error);
+                feeInput.value = 'Error';
+            }
+        }
+
+        // Event Listeners
+        btnCari.addEventListener('click', () => {
+            const filters = {
+                namaProduk: namaProdukInput.value.trim(),
+                kategori: kategoriInput.value.trim(),
+            };
+            fetchProducts(filters);
+        });
+
+        btnReset.addEventListener('click', () => {
+            namaProdukInput.value = '';
+            kategoriInput.value = '';
+            fetchProducts(); // Load all products again
+        });
+
+        // Event listener untuk tombol Ubah Detail (menggunakan event delegation)
+        productTableBody.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-ubah-detail')) {
+                const productId = event.target.dataset.id;
+                if (productId) {
+                    // Redirect ke halaman edit_produk.html dengan ID produk
+                    window.location.href = `edit_produk.html?id=${productId}`;
+                }
+            }
+        });
+
+        // Event listener untuk tombol Tambah Produk
+        document.getElementById('btn-tambah-produk').addEventListener('click', () => {
+            alert("Fungsi Tambah Produk akan mengarahkan ke halaman/modal penambahan produk baru.");
+            // window.location.href = 'tambah_produk.html'; // Contoh: halaman tambah produk baru
+        });
+
+        // Event listener untuk tombol Edit Toko
+        document.getElementById('btn-edit-toko').addEventListener('click', () => {
+            alert("Fungsi Edit Toko akan mengarahkan ke halaman pengaturan toko.");
+            // window.location.href = 'edit_toko.html'; // Contoh: halaman edit pengaturan toko
+        });
+
+
+        // Event listener untuk tombol logout (membuka modal)
+        logoutButton.addEventListener('click', () => {
+            logoutModal.classList.add('show');
+        });
+
+        // Event listener untuk tombol "Batal" di modal
+        cancelLogoutButton.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        // Event listener untuk tombol "Logout" di modal
+        confirmLogoutButton.addEventListener('click', () => {
+            localStorage.removeItem('jastiperId');
+            alert("Anda telah logout.");
+            window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+        });
+
+        // Panggil fungsi untuk memuat data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            if (currentJastiperId) {
+                fetchProducts();
+                fetchStoreFee();
+            } else {
+                // If no jastiperId after default attempt, redirect to login
+                // window.location.href = 'halaman_login_anda.html'; 
+            }
+        });
+    </script>
+</body>
+
+</html>

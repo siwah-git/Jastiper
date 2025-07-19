@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Jastiper - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://i.ibb.co/G0sTW8C/bg-titipgo.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+            /* Prevent scroll on body, main content handles it */
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            /* Fixed width */
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            /* Allow sidebar to scroll if content is long */
+        }
+
+        .sidebar-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-header img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav ul {
+            padding: 1rem 0;
+            flex-grow: 1;
+            /* Allow navigation to take available space */
+        }
+
+        .sidebar-nav li {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #333;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav li:hover {
+            background-color: #f8e5f0;
+            color: #ec4899;
+        }
+
+        .sidebar-nav li.active {
+            background-color: #f8e5f0;
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        .sidebar-nav li.active span {
+            font-weight: 800;
+            /* Make emoji/icon bolder if it's an actual icon */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            /* Enable scrolling for main content */
+            position: relative;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            /* Slightly transparent white */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Overview Boxes in "Yang Perlu Dilakukan" - MODIFIED */
+        .overview-grid {
+            display: flex;
+            /* Menggunakan flex untuk tata letak horizontal */
+            align-items: flex-start;
+            /* Agar item sejajar di atas */
+            padding: 0 1rem;
+            /* Tambahkan padding kiri dan kanan */
+            margin-bottom: 1.5rem;
+            /* Tambahkan margin bawah agar tombol tidak terlalu dekat */
+        }
+
+        .overview-box {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            /* Sesuaikan padding */
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            /* Membuat setiap box memiliki lebar yang sama */
+            margin: 0 0.5rem;
+            /* Tambahkan margin kiri dan kanan antar box */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            /* Untuk pseudo-element border */
+        }
+
+        .overview-box:first-child {
+            margin-left: 0;
+        }
+
+        .overview-box:last-child {
+            margin-right: 0;
+        }
+
+        /* Pemisah Vertikal */
+        .overview-box:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -0.5rem;
+            /* Posisikan di kanan box, menempel ke margin */
+            top: 10%;
+            height: 80%;
+            border-right: 1px solid #eee;
+            /* Gunakan border-right untuk pemisah */
+        }
+
+        .overview-box .number {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+            color: #ec4899;
+        }
+
+        .overview-box .label {
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        /* Button "Pesanan" */
+        .btn-pesanan {
+            background-color: #ec4899;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
+            width: auto;
+            /* Lebar sesuai konten */
+            display: block;
+            /* Agar mengambil baris sendiri jika perlu */
+            margin-left: auto;
+            /* Pindahkan ke kanan */
+            margin-right: 1rem;
+            /* Sesuaikan dengan padding .overview-grid */
+        }
+
+        .btn-pesanan:hover {
+            background-color: #db2777;
+        }
+
+        /* Chart Styling */
+        #salesChart {
+            max-height: 180px;
+            /* Adjust height for the chart */
+        }
+
+        /* Statistik (right side of Performa Toko) */
+        .statistik-box {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+            /* For background icons */
+            overflow: hidden;
+            /* Hide overflowing background icons */
+        }
+
+        .statistik-box .value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #ec4899;
+            /* Pink color */
+            margin-bottom: 0.25rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .statistik-box .label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Background icons for statistik boxes */
+        .statistik-box::before {
+            content: '';
+            position: absolute;
+            opacity: 0.08;
+            /* Very subtle */
+            z-index: 0;
+            pointer-events: none;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 60%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Using specific background images for the statistik boxes, or you can use icons */
+        .statistik-box.pengunjung::before {
+            background-image: url('https://i.ibb.co/5c94wFk/eye-icon.png');
+            /* Placeholder eye icon */
+        }
+
+        .statistik-box.pesanan::before {
+            background-image: url('https://i.ibb.co/h9r746x/cart-icon.png');
+            /* Placeholder cart icon */
+        }
+
+        .statistik-box.produk-dilihat::before {
+            background-image: url('https://i.ibb.co/P44n01S/product-view-icon.png');
+            /* Placeholder product view icon */
+        }
+
+        /* Modal (Popup) Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            /* Red color for confirm */
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body class="font-sans h-screen overflow-hidden">
+
+    <div class="flex h-full">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo">
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <span>📋</span> To-Do List
+                    </li>
+                    <li>
+                        <span>🏬</span> Toko Kita
+                    </li>
+                    <li>
+                        <span>💬</span> Chat
+                    </li>
+                    <li id="logout-button">
+                        <span>➡️</span> Logout
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Dashboard Jastiper</h1>
+
+            <div class="card mb-6">
+                <h2 class="text-lg font-bold mb-1">Yang Perlu Dilakukan</h2>
+                <p class="text-sm text-gray-500 mb-3">Hal-hal yang perlu anda tangani</p>
+                <div class="overview-grid">
+                    <div class="overview-box">
+                        <p class="number" id="count-belum-bayar">0</p>
+                        <p class="label">Belum Bayar</p>
+                    </div>
+                    <div class="overview-box">
+                        <p class="number" id="count-pengiriman-diproses">0</p>
+                        <p class="label">Pengiriman diproses</p>
+                    </div>
+                    <div class="overview-box">
+                        <p class="number" id="count-perlu-diproses">0</p>
+                        <p class="label">Pesanan perlu di proses</p>
+                    </div>
+                    <div class="overview-box">
+                        <p class="number" id="count-pengikut-toko">0</p>
+                        <p class="label">Pengikut Toko</p>
+                    </div>
+                    <div class="overview-box">
+                        <p class="number" id="count-produk-diblokir">0</p>
+                        <p class="label">Produk diblokir</p>
+                    </div>
+                    <div class="overview-box">
+                        <p class="number" id="count-produk-habis">0</p>
+                        <p class="label">Produk Habis</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="btn-pesanan">Pesanan</button>
+                </div>
+            </div>
+
+            <div class="mb-6 flex flex-col lg:flex-row gap-4">
+                <div class="w-full lg:w-2/3 card">
+                    <h2 class="text-lg font-bold mb-2">Performa Toko</h2>
+                    <p class="text-sm text-gray-500 mb-3">Tinjauan Toko - Penjualan hari ini</p>
+                    <canvas id="salesChart" height="110"></canvas>
+                </div>
+
+                <div class="w-full lg:w-1/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                    <div class="statistik-box pengunjung">
+                        <p class="value" id="count-total-pengunjung">46</p>
+                        <p class="label">Total Pengunjung</p>
+                    </div>
+                    <div class="statistik-box pesanan">
+                        <p class="value" id="count-total-pesanan-berhasil">0</p>
+                        <p class="label">Pesanan Berhasil</p>
+                    </div>
+                    <div class="statistik-box produk-dilihat">
+                        <p class="value" id="count-produk-dilihat">46</p>
+                        <p class="label">Produk yang dilihat</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+            <p class="text-gray-700">Apakah Anda yakin ingin keluar dari akun ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-logout" class="btn-cancel">Batal</button>
+                <button id="confirm-logout" class="btn-confirm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- YOUR FIREBASE CONFIGURATION ---
+        // Ganti dengan detail proyek Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
+            authDomain: "tittpgo-7f884.firebaseapp.com",
+            projectId: "tittpgo-28f84",
+            storageBucket: "tittpgo-7f884.appspot.com",
+            messagingSenderId: "816687553591",
+            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        // const auth = firebase.auth(); // Uncomment if using Firebase Authentication
+
+        // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
+        // Asumsi: Setelah login berhasil, Anda menyimpan jastiperId di localStorage.
+        // Ini adalah cara paling umum untuk aplikasi web sederhana tanpa session management yang kompleks.
+        const currentJastiperId = localStorage.getItem('jastiperId');
+        // Pastikan halaman login Anda menyimpan jastiperId seperti ini:
+        // localStorage.setItem('jastiperId', 'ID_DARI_JASTIPER_YANG_LOGIN');
+
+        // Jika Anda menggunakan Firebase Authentication, Anda bisa melakukannya seperti ini:
+        /*
+        let currentJastiperId = null;
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentJastiperId = user.uid; // Firebase Auth UID sebagai jastiperId
+                console.log("Jastiper ID dari Firebase Auth:", currentJastiperId);
+                loadDashboardData(); // Muat data setelah ID jastiper didapatkan
+            } else {
+                // Pengguna belum login atau sesi berakhir, arahkan ke halaman login
+                console.warn("Pengguna tidak terautentikasi. Mengarahkan ke halaman login.");
+                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+            }
+        });
+        */
+
+        // Penting: Jika currentJastiperId tidak ada, pengguna belum login.
+        // Dalam produksi, Anda harus mengarahkan mereka ke halaman login.
+        if (!currentJastiperId) {
+            console.warn("Jastiper ID tidak ditemukan di localStorage. Mengarahkan ke halaman login...");
+            // window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+            // Untuk demo/pengembangan, Anda bisa set ID statis sementara jika belum ada sistem login:
+            // currentJastiperId = "contoh_jastiper_id_untuk_testing"; 
+            // Pastikan ID ini ada di koleksi Firestore Anda untuk pengujian.
+        } else {
+            console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+        }
+
+        // Get DOM elements for counts in "Yang Perlu Dilakukan"
+        const countBelumBayar = document.getElementById('count-belum-bayar');
+        const countPengirimanDiproses = document.getElementById('count-pengiriman-diproses');
+        const countPerluDiproses = document.getElementById('count-perlu-diproses');
+        const countPengikutToko = document.getElementById('count-pengikut-toko');
+        const countProdukDiblokir = document.getElementById('count-produk-diblokir');
+        const countProdukHabis = document.getElementById('count-produk-habis');
+
+        // Get DOM elements for counts in "Performa Toko"
+        const countTotalPengunjung = document.getElementById('count-total-pengunjung');
+        const countTotalPesananBerhasil = document.getElementById('count-total-pesanan-berhasil');
+        const countProdukDilihat = document.getElementById('count-produk-dilihat');
+
+        // Logout Modal elements
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logout-modal');
+        const cancelLogoutButton = document.getElementById('cancel-logout');
+        const confirmLogoutButton = document.getElementById('confirm-logout');
+
+        let salesChartInstance = null; // To store the Chart.js instance
+
+        // Fungsi pembantu untuk membuat query dengan filter jastiperId
+        // Ini akan menambahkan .where("jastiperId", "==", currentJastiperId) jika currentJastiperId ada
+        function createJastiperQuery(collectionRef) {
+            if (currentJastiperId) {
+                // Pastikan nama field di koleksi Anda adalah 'jastiperId'
+                return collectionRef.where("jastiperId", "==", currentJastiperId);
+            }
+            // Jika tidak ada jastiperId (misal, belum login), query tidak akan difilter.
+            // Dalam aplikasi produksi, Anda akan mengarahkan pengguna ke halaman login di sini.
+            console.warn("Peringatan: Tidak ada Jastiper ID. Data mungkin tidak difilter.");
+            return collectionRef;
+        }
+
+        // Function to fetch and display counts for "Yang Perlu Dilakukan"
+        async function fetchToDoCounts() {
+            try {
+                // Fetch counts from 'pemesanan' collection based on status_pemesanan
+                let pemesananQuery = createJastiperQuery(db.collection('pemesanan'));
+                const pemesananSnapshot = await pemesananQuery.get();
+
+                let belumBayar = 0;
+                let pengirimanDiproses = 0;
+                let perluDiproses = 0;
+
+                pemesananSnapshot.forEach(doc => {
+                    const order = doc.data();
+                    if (order.status_pemesanan === 'Belum Bayar') {
+                        belumBayar++;
+                    } else if (order.status_pemesanan === 'Pengiriman diproses') {
+                        pengirimanDiproses++;
+                    } else if (order.status_pemesanan === 'Pesanan perlu di proses') {
+                        perluDiproses++;
+                    }
+                });
+
+                countBelumBayar.textContent = belumBayar;
+                countPengirimanDiproses.textContent = pengirimanDiproses;
+                countPerluDiproses.textContent = perluDiproses;
+
+                // Fetch count for 'Produk Habis' and 'Produk diblokir' from 'produk' collection
+                let produkCollectionRef = db.collection('produk');
+                let produkFilteredQuery = createJastiperQuery(produkCollectionRef);
+
+                const produkDiblokirSnapshot = await produkFilteredQuery.where("diblokir", "==", true).get();
+                countProdukDiblokir.textContent = produkDiblokirSnapshot.size;
+
+                const produkHabisSnapshot = await produkFilteredQuery.where("stok", "==", 0).get();
+                countProdukHabis.textContent = produkHabisSnapshot.size;
+
+                // Fetch 'Pengikut Toko' from 'toko' collection
+                let tokoQuery = createJastiperQuery(db.collection('toko'));
+                // Asumsi 1 jastiper punya 1 dokumen toko yang relevan. Jika ada beberapa, Anda perlu logika agregasi.
+                const tokoSnapshot = await tokoQuery.limit(1).get();
+
+                if (!tokoSnapshot.empty) {
+                    const tokoData = tokoSnapshot.docs[0].data();
+                    // Asumsi field jumlahPengikut ada di dokumen toko
+                    countPengikutToko.textContent = tokoData.jumlahPengikut !== undefined ? tokoData.jumlahPengikut : 0;
+                } else {
+                    countPengikutToko.textContent = 0; // Atau default lainnya jika tidak ada data toko
+                }
+
+            } catch (error) {
+                console.error("Error fetching To-Do counts:", error);
+                countBelumBayar.textContent = '-';
+                countPengirimanDiproses.textContent = '-';
+                countPerluDiproses.textContent = '-';
+                countProdukDiblokir.textContent = '-';
+                countProdukHabis.textContent = '-';
+                countPengikutToko.textContent = '-';
+            }
+        }
+
+        // Function to fetch sales data for the chart and total successful orders from 'pembayaran'
+        async function fetchSalesDataAndSuccessfulOrders() {
+            try {
+                let pembayaranRef = createJastiperQuery(db.collection('pembayaran'))
+                    .where('status_pembayaran', '==', 'Berhasil')
+                    .orderBy('tanggalPembayaran', 'asc');
+                const snapshot = await pembayaranRef.get();
+
+                let totalSuccessfulOrders = 0;
+                const salesDataByHour = {}; // Aggregate sales by hour
+
+                snapshot.forEach(doc => {
+                    const payment = doc.data();
+                    totalSuccessfulOrders++;
+                    if (payment.tanggalPembayaran && typeof payment.jumlah === 'number') { // Pastikan jumlah adalah angka
+                        const date = payment.tanggalPembayaran.toDate();
+                        // Filter untuk data hari ini saja jika diperlukan untuk "Penjualan hari ini"
+                        const today = new Date();
+                        if (date.toDateString() === today.toDateString()) {
+                            const hour = date.getHours(); // Group by hour
+                            salesDataByHour[hour] = (salesDataByHour[hour] || 0) + payment.jumlah;
+                        }
+                    }
+                });
+
+                countTotalPesananBerhasil.textContent = totalSuccessfulOrders;
+
+                // Prepare data for Chart.js
+                const labels = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
+                const data = labels.map((_, i) => salesDataByHour[i] || 0);
+
+                // Destroy old chart instance if it exists
+                if (salesChartInstance) {
+                    salesChartInstance.destroy();
+                }
+
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                salesChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Penjualan (Rp)',
+                            data: data,
+                            backgroundColor: 'rgba(236, 72, 153, 0.7)', // Pink color
+                            borderColor: 'rgba(236, 72, 153, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return `Rp ${context.raw.toLocaleString('id-ID')}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Jam'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#eee'
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        return `Rp ${value.toLocaleString('id-ID')}`;
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Penjualan'
+                                }
+                            }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error fetching sales data and successful orders:", error);
+                countTotalPesananBerhasil.textContent = '-';
+                if (salesChartInstance) {
+                    salesChartInstance.destroy();
+                }
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                salesChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: [], datasets: [] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+        }
+
+        // Fungsi utama untuk memuat semua data dashboard
+        function loadDashboardData() {
+            fetchToDoCounts();
+            // fetchProducts(); // Dihilangkan
+            // fetchRecentOrders(); // Dihilangkan
+            fetchSalesDataAndSuccessfulOrders();
+        }
+
+        // Event listener untuk tombol logout (membuka modal)
+        logoutButton.addEventListener('click', () => {
+            logoutModal.classList.add('show');
+        });
+
+        // Event listener untuk tombol "Batal" di modal
+        cancelLogoutButton.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        // Event listener untuk tombol "Logout" di modal
+        confirmLogoutButton.addEventListener('click', () => {
+            // Hapus jastiperId dari localStorage saat logout
+            localStorage.removeItem('jastiperId');
+
+            // Jika menggunakan Firebase Auth, uncomment bagian ini:
+            /*
+            auth.signOut().then(() => {
+                console.log("User signed out.");
+                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+                alert("Gagal logout: " + error.message);
+            });
+            */
+
+            // Untuk demo ini, langsung redirect jika tidak menggunakan Firebase Auth
+            alert("Anda telah logout.");
+            window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+        });
+
+        // Panggil fungsi utama untuk memuat data saat DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hanya muat data jika jastiperId berhasil didapatkan.
+            // Jika currentJastiperId null, pesan peringatan sudah ditampilkan di atas.
+            if (currentJastiperId) {
+                loadDashboardData();
+            } else {
+                // Ini akan terjadi jika currentJastiperId kosong dari localStorage
+                // dan Anda tidak memiliki Firebase Auth. Anda harus mengarahkan ke login.
+                console.warn("Jastiper ID tidak ditemukan. Pastikan sudah login dan ID tersimpan.");
+                // Jika ingin otomatis redirect, aktifkan baris ini:
+                // window.location.href = 'halaman_login_anda.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

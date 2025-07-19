@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('https://i.ibb.co/G0sTW8C/bg-titipgo.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-header img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-nav ul {
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #333;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-nav li:hover {
+            background-color: #f8e5f0;
+            color: #ec4899;
+        }
+
+        .sidebar-nav li.active {
+            background-color: #f8e5f0;
+            color: #ec4899;
+            font-weight: 600;
+        }
+
+        .sidebar-nav li.active span {
+            font-weight: 800;
+        }
+
+        .sidebar-nav li a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .chat-main-content {
+            flex-grow: 1;
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.75rem;
+            margin: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-list-panel {
+            width: 300px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .chat-list-panel h2 {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chat-list-item:hover {
+            background-color: #f8e5f0;
+        }
+
+        .chat-list-item.active {
+            background-color: #ec4899;
+            color: white;
+        }
+
+        .chat-list-item.active .chat-list-name,
+        .chat-list-item.active .chat-list-last-message {
+            color: white;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .chat-item-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .chat-list-name {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #333;
+        }
+
+        .chat-list-last-message {
+            font-size: 0.85rem;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.sent {
+            background-color: #ec4899;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message-bubble.received {
+            background-color: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            color: #999;
+            margin-bottom: 0.25rem;
+        }
+
+        .message-timestamp {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+
+        .message-bubble.received .message-timestamp {
+            color: #777;
+            text-align: left;
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            gap: 1rem;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+        }
+
+        .chat-input-area button {
+            background-color: #ec4899;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .chat-input-area button:hover:not(:disabled) {
+            background-color: #db2777;
+        }
+
+        .chat-input-area button:disabled {
+            background-color: #f8cce0;
+            cursor: not-allowed;
+        }
+
+        /* Modal (Popup) Styling for Logout */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo">
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a></li>
+                <li><span>🏬</span> <a href="toko_kita.html">Toko Kita</a></li>
+                <li class="active"><span>💬</span> <a href="chat.html">Chat</a></li>
+                <li><span>👤</span> <a href="atur_profil.html">Atur Profil</a></li>
+                <li id="logout-button"><span>➡️</span> Logout</li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="chat-main-content">
+        <div class="chat-list-panel">
+            <h2>Daftar Chat</h2>
+            <div id="chat-list" class="flex flex-col">
+                <div class="chat-list-item" id="admin-chat-entry">
+                    <div class="chat-avatar">A</div>
+                    <div class="chat-item-info">
+                        <div class="chat-list-name">Admin TitipGo</div>
+                        <div class="chat-list-last-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-window">
+            <div class="chat-header" id="chat-header">Pilih Chat</div>
+            <div id="messages-container" class="chat-messages">
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="message-input" placeholder="Ketik pesan Anda..." disabled>
+                <button id="send-message-btn" disabled>Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="logout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+            <p class="text-gray-700">Apakah Anda yakin ingin keluar dari akun ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-logout" class="btn-cancel">Batal</button>
+                <button id="confirm-logout" class="btn-confirm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- YOUR FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
+            authDomain: "tittpgo-7f884.firebaseapp.com",
+            projectId: "tittpgo-28f84",
+            storageBucket: "tittpgo-7f884.appspot.com",
+            messagingSenderId: "816687553591",
+            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- GLOBAL VARIABLES ---
+        let currentJastiperId = null;
+        let currentChatId = null;
+        let unsubscribeMessages = null; // To detach listener when changing chats
+
+        // --- Admin ID (hardcoded for demo, adjust as needed) ---
+        // Anda perlu menentukan ID admin yang sebenarnya di Firestore/Auth
+        // Ini bisa menjadi UID akun admin di Firebase Auth
+        const ADMIN_ID = "admin_titipgo_id_contoh"; // Ganti dengan ID admin yang sebenarnya
+
+        // --- DOM Elements ---
+        const chatListContainer = document.getElementById('chat-list');
+        const chatHeader = document.getElementById('chat-header');
+        const messagesContainer = document.getElementById('messages-container');
+        const messageInput = document.getElementById('message-input');
+        const sendMessageBtn = document.getElementById('send-message-btn');
+        const adminChatEntry = document.getElementById('admin-chat-entry');
+
+        // --- Authentikasi dan Inisialisasi Data Pengguna ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentJastiperId = user.uid;
+                localStorage.setItem('jastiperId', currentJastiperId); // Simpan UID ke localStorage
+                console.log("Jastiper ID (from Auth):", currentJastiperId);
+                loadChatList(); // Muat daftar chat setelah user terautentikasi
+            } else {
+                currentJastiperId = localStorage.getItem('jastiperId'); // Fallback ke localStorage jika tidak ada auth user
+                console.warn("Pengguna tidak terautentikasi oleh Firebase Auth. Fitur chat tidak berfungsi penuh.");
+                if (!currentJastiperId) {
+                    alert("Anda belum login. Silakan login terlebih dahulu.");
+                    window.location.href = 'halaman_login_anda.html'; // Ganti dengan halaman login Anda
+                } else {
+                    // Jika ada ID di localStorage tapi tidak terautentikasi,
+                    // chat mungkin bisa dimuat tapi pengiriman pesan butuh auth.
+                    loadChatList();
+                }
+            }
+        });
+
+        // --- Fungsi Helper: Mendapatkan Nama Pengguna dari ID ---
+        // Ini adalah fungsi dummy. Dalam aplikasi nyata, Anda mungkin memiliki koleksi 'users'
+        // atau 'jastiper' yang menyimpan data profil yang bisa diakses dengan ID.
+        const userCache = {
+            [ADMIN_ID]: { nama: "Admin TitipGo" } // Tambahkan nama admin ke cache
+        }; // Cache untuk menyimpan nama pengguna
+
+        async function getUserNameById(userId) {
+            if (userCache[userId]) {
+                return userCache[userId].nama;
+            }
+            if (userId === currentJastiperId) {
+                // Return current jastiper's name (placeholder, get from profile data if available)
+                return "Anda"; // Or fetch from jastiper profile
+            }
+            try {
+                const doc = await db.collection('jastiper').doc(userId).get();
+                if (doc.exists) {
+                    userCache[userId] = doc.data();
+                    return userCache[userId].nama || userCache[userId].username || "Jastiper Tidak Dikenal";
+                }
+                // Anda mungkin juga perlu mencari di koleksi 'users' jika ada
+                // const userDoc = await db.collection('users').doc(userId).get();
+                // if (userDoc.exists) { /* ... */ }
+
+                return "Pengguna Tidak Dikenal";
+            } catch (error) {
+                console.error("Error getting user name:", error);
+                return "Pengguna Tidak Dikenal";
+            }
+        }
+
+        // --- Memuat Daftar Chat ---
+        async function loadChatList() {
+            if (!currentJastiperId) return;
+
+            // Clear previous chat list
+            // Ensure adminChatEntry is preserved or re-added properly
+            const adminEntry = chatListContainer.querySelector('#admin-chat-entry');
+            chatListContainer.innerHTML = '';
+            chatListContainer.appendChild(adminEntry);
+
+
+            db.collection('chats')
+                .where('participants', 'array-contains', currentJastiperId)
+                .orderBy('lastMessageTimestamp', 'desc')
+                .onSnapshot(async (snapshot) => {
+                    snapshot.docChanges().forEach(async (change) => {
+                        const chat = change.doc.data();
+                        const chatId = change.doc.id;
+
+                        // Determine the other participant's ID
+                        const otherParticipantId = chat.participants.find(id => id !== currentJastiperId);
+
+                        // Handle the Admin chat entry specifically
+                        if (otherParticipantId === ADMIN_ID) {
+                            adminChatEntry.dataset.chatId = chatId;
+                            adminChatEntry.querySelector('.chat-list-last-message').textContent = chat.lastMessage ? chat.lastMessage.text : "Belum ada pesan";
+                            adminChatEntry.onclick = () => selectChat(chatId, "Admin TitipGo");
+                            // Move admin entry to top if it's the most recent chat
+                            if (change.type === 'added' || change.type === 'modified') {
+                                if (chatListContainer.firstChild !== adminChatEntry) {
+                                    chatListContainer.prepend(adminChatEntry);
+                                }
+                            }
+                            return; // Skip processing as a regular chat list item
+                        }
+
+                        let chatListItem = document.getElementById(`chat-item-${chatId}`);
+                        const otherParticipantName = await getUserNameById(otherParticipantId);
+
+                        if (change.type === 'added') {
+                            chatListItem = document.createElement('div');
+                            chatListItem.id = `chat-item-${chatId}`;
+                            chatListItem.classList.add('chat-list-item');
+                            chatListItem.dataset.chatId = chatId;
+                            chatListItem.innerHTML = `
+                                <div class="chat-avatar">${otherParticipantName ? otherParticipantName.charAt(0).toUpperCase() : '?'}</div>
+                                <div class="chat-item-info">
+                                    <div class="chat-list-name">${otherParticipantName}</div>
+                                    <div class="chat-list-last-message">${chat.lastMessage ? chat.lastMessage.text : "Belum ada pesan"}</div>
+                                </div>
+                            `;
+                            chatListItem.onclick = () => selectChat(chatId, otherParticipantName);
+                            // Insert based on order (most recent first)
+                            chatListContainer.insertBefore(chatListItem, chatListContainer.childNodes[1]); // After admin entry
+                        } else if (change.type === 'modified') {
+                            if (chatListItem) {
+                                chatListItem.querySelector('.chat-list-last-message').textContent = chat.lastMessage ? chat.lastMessage.text : "Belum ada pesan";
+                                // Reorder if modified and it's the newest
+                                if (chatListContainer.childNodes[1] !== chatListItem) { // If not already second (after admin)
+                                    chatListContainer.insertBefore(chatListItem, chatListContainer.childNodes[1]);
+                                }
+                            }
+                        } else if (change.type === 'removed') {
+                            if (chatListItem) {
+                                chatListItem.remove();
+                            }
+                        }
+                    });
+                    // Re-select current chat to maintain active state
+                    if (currentChatId) {
+                        const activeItem = document.getElementById(`chat-item-${currentChatId}`) || document.getElementById('admin-chat-entry');
+                        if (activeItem) {
+                            document.querySelectorAll('.chat-list-item').forEach(item => item.classList.remove('active'));
+                            activeItem.classList.add('active');
+                        }
+                    }
+                }, (error) => {
+                    console.error("Error listening to chat list:", error);
+                });
+        }
+
+        // --- Memilih dan Memuat Pesan Chat ---
+        async function selectChat(chatId, chatName) {
+            if (unsubscribeMessages) {
+                unsubscribeMessages(); // Detach previous listener
+            }
+
+            // Update active state in chat list
+            document.querySelectorAll('.chat-list-item').forEach(item => item.classList.remove('active'));
+            const selectedItem = document.getElementById(`chat-item-${chatId}`) || document.getElementById('admin-chat-entry');
+            if (selectedItem) {
+                selectedItem.classList.add('active');
+            }
+
+            currentChatId = chatId;
+            chatHeader.textContent = chatName;
+            messagesContainer.innerHTML = ''; // Clear previous messages
+            messageInput.disabled = false;
+            sendMessageBtn.disabled = false;
+            messageInput.focus();
+
+            unsubscribeMessages = db.collection('chats').doc(chatId).collection('messages')
+                .orderBy('timestamp')
+                .onSnapshot((snapshot) => {
+                    snapshot.docChanges().forEach(async (change) => {
+                        const message = change.doc.data();
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message-bubble');
+
+                        const isSentByMe = message.senderId === currentJastiperId;
+                        messageElement.classList.add(isSentByMe ? 'sent' : 'received');
+
+                        const senderName = await getUserNameById(message.senderId); // Get sender name
+
+                        let timestampText = '';
+                        if (message.timestamp && typeof message.timestamp.toDate === 'function') {
+                            const date = message.timestamp.toDate();
+                            timestampText = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                        }
+
+                        messageElement.innerHTML = `
+                            <div class="message-text">${message.text}</div>
+                            <div class="message-timestamp">${timestampText}</div>
+                        `;
+                        // Optionally add sender name for received messages in groups
+                        // if (!isSentByMe && chat.type === 'group') { // Assuming type field in chat doc
+                        //     const senderDiv = document.createElement('div');
+                        //     senderDiv.classList.add('message-sender');
+                        //     senderDiv.textContent = senderName;
+                        //     messageElement.prepend(senderDiv);
+                        // }
+
+                        if (change.type === 'added') {
+                            messagesContainer.appendChild(messageElement);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+                        } else if (change.type === 'modified') {
+                            // Find and update existing message if needed (less common for chat, but possible)
+                            // This part might need more robust logic if messages can be edited/deleted
+                        } else if (change.type === 'removed') {
+                            // Remove message element
+                        }
+                    });
+                }, (error) => {
+                    console.error("Error listening to messages:", error);
+                });
+        }
+
+        // --- Mengirim Pesan ---
+        sendMessageBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText === '' || !currentChatId || !currentJastiperId) {
+                return;
+            }
+
+            const messageData = {
+                senderId: currentJastiperId,
+                text: messageText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                // Add message to sub-collection
+                await db.collection('chats').doc(currentChatId).collection('messages').add(messageData);
+
+                // Update last message in the parent chat document
+                await db.collection('chats').doc(currentChatId).update({
+                    lastMessage: {
+                        text: messageText,
+                        senderId: currentJastiperId,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    lastMessageTimestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                messageInput.value = ''; // Clear input field
+                messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+            } catch (error) {
+                console.error("Error sending message:", error);
+                alert("Gagal mengirim pesan: " + error.message);
+            }
+        }
+
+        // --- Menghubungi Admin ---
+        adminChatEntry.addEventListener('click', async () => {
+            if (!currentJastiperId) {
+                alert("Anda harus login untuk menghubungi admin.");
+                return;
+            }
+
+            const participants = [currentJastiperId, ADMIN_ID].sort(); // Ensure consistent order
+
+            // Try to find an existing chat with admin
+            const existingChatQuery = await db.collection('chats')
+                .where('participants', '==', participants)
+                .limit(1)
+                .get();
+
+            if (!existingChatQuery.empty) {
+                const chatId = existingChatQuery.docs[0].id;
+                selectChat(chatId, "Admin TitipGo");
+            } else {
+                // Create a new chat with admin
+                try {
+                    const newChatRef = await db.collection('chats').add({
+                        participants: participants,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastMessage: null,
+                        lastMessageTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        type: "direct_admin",
+                        nameForJastiper: "Admin TitipGo", // Name displayed for jastiper
+                        nameForOther: await getUserNameById(currentJastiperId) // Name displayed for admin
+                    });
+                    console.log("New chat with admin created:", newChatRef.id);
+                    selectChat(newChatRef.id, "Admin TitipGo");
+                } catch (error) {
+                    console.error("Error creating chat with admin:", error);
+                    alert("Gagal memulai chat dengan admin: " + error.message);
+                }
+            }
+        });
+
+
+        // Logout functionality (from toko_kita.html, ensure consistency)
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logout-modal');
+        const cancelLogoutButton = document.getElementById('cancel-logout');
+        const confirmLogoutButton = document.getElementById('confirm-logout');
+
+        logoutButton.addEventListener('click', () => { logoutModal.classList.add('show'); });
+        cancelLogoutButton.addEventListener('click', () => { logoutModal.classList.remove('show'); });
+        confirmLogoutButton.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                localStorage.removeItem('jastiperId');
+                alert("Anda telah logout.");
+                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+                alert("Gagal logout: " + error.message);
+            });
+        });
+    </script>
+</body>
+
+</html>
