@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Detail Produk - [Nama Produk] - TitipGo Admin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Custom styles */
+      .truncate-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Definisi lebar sidebar yang konsisten */
+      :root {
+        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+      }
+
+      .main-content {
+        margin-left: var(--sidebar-width);
+        flex-grow: 1; /* Penting untuk flexbox layout */
+      }
+
+      body {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen bg-gray-100">
+    <aside
+      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+    >
+      <div>
+        <nav class="space-y-2 p-4">
+          <img
+            src="asset/images/logosiwah.png"
+            alt="Logo"
+            class="w-48 h-20 object-contain mb-4"
+          />
+
+          <a
+            href="admin-dashboard.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+          </a>
+          <a
+            href="admin-katalog.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+          </a>
+          <a
+            href="admin-pengguna.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+          </a>
+          <a
+            href="admin-pesanan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+          </a>
+          <a
+            href="admin-aduan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+          </a>
+          <a
+            href="admin-laporan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+          </a>
+          <a
+            href="admin-pendapatan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+          </a>
+          <a
+            href="admin-profil.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+          </a>
+          <a
+            href="admin-about-us.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main class="main-content p-8 overflow-y-auto">
+      <div
+        class="bg-gradient-to-r from-pink-600 to-red-600 p-6 text-white flex items-center justify-between mb-8 rounded-lg shadow-lg"
+      >
+        <div class="flex items-center">
+          <a
+            href="admin-katalog.html"
+            class="text-white hover:text-pink-100 mr-4"
+          >
+            <i class="fas fa-arrow-left text-2xl"></i>
+          </a>
+          <h1 class="text-2xl font-bold">
+            Detail Produk: Baju Batik Pria Modern
+          </h1>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          >
+            <i class="fas fa-edit mr-2"></i> Edit
+          </button>
+          <button
+            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          >
+            <i class="fas fa-trash-alt mr-2"></i> Hapus
+          </button>
+          <a
+            href="#"
+            class="text-pink-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+            ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+          >
+        </div>
+      </div>
+
+      <nav class="text-sm text-gray-600 mb-6">
+        <ol class="list-none p-0 inline-flex">
+          <li class="flex items-center">
+            <a
+              href="admin-dashboard.html"
+              class="text-blue-600 hover:text-blue-800"
+              >Dashboard</a
+            >
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center">
+            <a
+              href="admin-katalog.html"
+              class="text-blue-600 hover:text-blue-800"
+              >Manajemen Katalog</a
+            >
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center text-gray-500">
+            Baju Batik Pria Modern
+          </li>
+        </ol>
+      </nav>
+
+      <div class="flex flex-col space-y-6">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div
+            class="flex flex-col md:flex-row items-start md:items-center mb-6 border-b pb-4"
+          >
+            <img
+              src="https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Batik+Pria"
+              alt="Baju Batik Pria Modern"
+              class="w-full md:w-64 h-auto md:h-64 object-cover rounded-lg shadow-lg mb-4 md:mb-0 md:mr-6"
+            />
+            <div>
+              <span
+                class="text-sm font-semibold text-pink-600 bg-pink-100 px-3 py-1 rounded-full"
+                >Tersedia</span
+              >
+              <h2 class="text-3xl font-bold text-gray-800 mt-2 mb-2">
+                Baju Batik Pria Modern "Kencana"
+              </h2>
+              <p class="text-green-600 text-3xl font-bold mb-4">Rp 250.000</p>
+              <div class="flex items-center text-gray-600 text-sm mb-2">
+                <i class="fas fa-star text-yellow-500 mr-1"></i> 4.8 (120
+                Ulasan)
+              </div>
+              <p class="text-gray-700 text-md leading-relaxed">
+                Kemeja batik pria modern dengan motif Kencana yang elegan,
+                terbuat dari bahan katun berkualitas tinggi. Nyaman dipakai
+                untuk acara formal maupun semi-formal.
+              </p>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+            >
+              <i class="fas fa-info-circle text-blue-500 mr-2"></i> Detail
+              Produk
+            </h3>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm"
+            >
+              <p><strong>SKU:</strong> BBP-Kencana-001</p>
+              <p><strong>Kategori:</strong> Pakaian Pria, Batik</p>
+              <p><strong>Brand:</strong> Batik Nusantara</p>
+              <p><strong>Berat:</strong> 0.3 kg</p>
+              <p><strong>Dimensi:</strong> 60x40x2 cm</p>
+              <p><strong>Material:</strong> Katun Prima</p>
+              <p><strong>Kondisi:</strong> Baru</p>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+            >
+              <i class="fas fa-file-invoice text-green-500 mr-2"></i> Deskripsi
+              Lengkap
+            </h3>
+            <p class="text-gray-700 leading-relaxed text-sm">
+              Baju Batik Pria Modern "Kencana" adalah pilihan tepat bagi Anda
+              yang menginginkan gaya klasik dengan sentuhan modern. Motif
+              Kencana yang rumit dan detail memberikan kesan mewah dan
+              eksklusif. Terbuat dari 100% katun prima, kemeja ini sangat nyaman
+              di kulit, menyerap keringat, dan tidak mudah kusut. Desain
+              slim-fit modern memberikan siluet yang rapi dan kekinian. Cocok
+              untuk menghadiri pesta pernikahan, acara kantor, atau kegiatan
+              semi-formal lainnya.
+              <br /><br />
+              Tersedia dalam berbagai ukuran: M, L, XL, XXL.
+              <br />
+              Petunjuk Perawatan: Cuci terpisah, jangan gunakan pemutih, setrika
+              dengan suhu rendah.
+            </p>
+          </div>
+
+          <div class="mb-6">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+            >
+              <i class="fas fa-images text-purple-500 mr-2"></i> Galeri Gambar
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <img
+                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+2"
+                alt="Batik Pria Tampak Depan"
+                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+              />
+              <img
+                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+3"
+                alt="Batik Pria Detail Motif"
+                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+              />
+              <img
+                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+4"
+                alt="Batik Pria Belakang"
+                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+              />
+              <img
+                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+5"
+                alt="Batik Pria Bahan"
+                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-user-tie text-teal-600 mr-2"></i> Informasi
+            Jastiper
+          </h3>
+          <div class="flex items-center mb-4">
+            <img
+              src="https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper"
+              alt="Foto Jastiper"
+              class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-teal-400"
+            />
+            <div>
+              <p class="text-lg font-semibold text-gray-800">
+                Jastiper Dhea Anindita
+              </p>
+              <p class="text-sm text-gray-600">ID Jastiper: JSTP001</p>
+            </div>
+          </div>
+          <ul class="text-gray-700 space-y-2 text-sm">
+            <li>
+              <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi
+              Asal: Singapura
+            </li>
+            <li>
+              <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
+              <a
+                href="mailto:dhea.anindita@example.com"
+                class="text-blue-600 hover:underline"
+                >dhea.anindita@example.com</a
+              >
+            </li>
+            <li>
+              <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
+              <a href="tel:+6281211223344" class="text-blue-600 hover:underline"
+                >+62 812 1122 3344</a
+              >
+            </li>
+            <li class="mt-3">
+              <a
+                href="admin-pengguna-detail.html?id=JSTP001"
+                class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+              >
+                Lihat Profil Jastiper
+                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-boxes text-orange-500 mr-2"></i> Stok & Varian
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg">
+              <thead>
+                <tr
+                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
+                >
+                  <th class="py-3 px-6 text-left">Varian</th>
+                  <th class="py-3 px-6 text-center">Stok</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 text-sm">
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-6 text-left whitespace-nowrap">Size M</td>
+                  <td class="py-3 px-6 text-center">
+                    <span
+                      class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
+                      >Tersedia (50)</span
+                    >
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-6 text-left whitespace-nowrap">Size L</td>
+                  <td class="py-3 px-6 text-center">
+                    <span
+                      class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
+                      >Tersedia (75)</span
+                    >
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-6 text-left whitespace-nowrap">Size XL</td>
+                  <td class="py-3 px-6 text-center">
+                    <span
+                      class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs"
+                      >Stok Rendah (15)</span
+                    >
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="py-3 px-6 text-left whitespace-nowrap">
+                    Size XXL
+                  </td>
+                  <td class="py-3 px-6 text-center">
+                    <span
+                      class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs"
+                      >Habis (0)</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-history text-blue-500 mr-2"></i> Riwayat Aktivitas
+          </h3>
+          <ul class="text-gray-700 space-y-3 text-sm">
+            <li class="flex items-start">
+              <i class="fas fa-calendar-alt text-gray-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Dibuat:</strong> 15 Januari 2025, 10:30 AM
+                <p class="text-xs text-gray-500">
+                  Oleh:
+                  <a
+                    href="admin-pengguna-detail.html?id=JSTP001"
+                    class="text-blue-600 hover:underline"
+                    >Jastiper Dhea Anindita</a
+                  >
+                </p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-pencil-alt text-gray-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Terakhir Diperbarui:</strong> 18 Juli 2025, 09:15 AM
+                <p class="text-xs text-gray-500">
+                  Oleh: Admin Editor (perbaikan deskripsi & harga)
+                </p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-chart-line text-gray-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Penjualan Terakhir:</strong> 19 Juli 2025 (2 Pcs)
+                <p class="text-xs text-gray-500">Total Terjual: 500 Pcs</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-globe text-orange-500 mr-2"></i> SEO & Metadata
+          </h3>
+          <ul class="text-gray-700 space-y-2 text-sm">
+            <li>
+              <strong>Meta Judul:</strong> Baju Batik Modern Pria | TitipGo
+            </li>
+            <li>
+              <strong>Meta Deskripsi:</strong> Kemeja batik pria motif Kencana.
+              Katun premium, nyaman, elegan.
+            </li>
+            <li>
+              <strong>Keyword:</strong> batik pria, kemeja batik, batik modern,
+              baju batik, kencana
+            </li>
+            <li>
+              <strong>Slug URL:</strong> /produk/baju-batik-pria-modern-kencana
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.split("/").pop();
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop();
+
+          let isLinkActive = false;
+
+          // Special handling for detail pages: highlight parent menu
+          if (
+            linkFileName === "admin-katalog.html" &&
+            currentPath.startsWith("admin-katalog-detail")
+          ) {
+            isLinkActive = true;
+          } else if (linkFileName === currentPath) {
+            isLinkActive = true;
+          } else if (
+            (currentPath === "" || currentPath === "index.html") &&
+            linkFileName === "admin-dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

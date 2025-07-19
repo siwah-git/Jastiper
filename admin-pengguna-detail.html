@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Detail Produk - [Nama Produk] - TitipGo Admin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Custom styles */
+      .truncate-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Definisi lebar sidebar yang konsisten */
+      :root {
+        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+      }
+
+      .main-content {
+        margin-left: var(--sidebar-width);
+        flex-grow: 1; /* Penting untuk flexbox layout */
+      }
+
+      body {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen bg-gray-100">
+    <aside
+      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+    >
+      <div>
+        <nav class="space-y-2 p-4">
+          <img
+            src="asset/images/logosiwah.png"
+            alt="Logo"
+            class="w-48 h-20 object-contain mb-4"
+          />
+
+          <a
+            href="admin-dashboard.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+          </a>
+          <a
+            href="admin-katalog.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+          </a>
+          <a
+            href="admin-pengguna.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+          </a>
+          <a
+            href="admin-pesanan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+          </a>
+          <a
+            href="admin-aduan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+          </a>
+          <a
+            href="admin-laporan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+          </a>
+          <a
+            href="admin-pendapatan.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+          </a>
+          <a
+            href="admin-profil.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+          </a>
+          <a
+            href="admin-about-us.html"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main class="main-content p-8 overflow-y-auto">
+      <div
+          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+          <a
+            href="admin-pengguna.html"
+            class="text-white hover:text-pink-100 mr-4"
+          >
+          </a>
+          <p class="text-2xl font-bold">Detail Pengguna : Rahul</p>
+            <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+        </div>
+
+          <button
+            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          >
+            <i class="fas fa-ban mr-2"></i> Blokir Pengguna
+          </button>
+        </div>
+      </div>
+
+      <nav class="text-sm text-gray-600 mb-6">
+        <ol class="list-none p-0 inline-flex">
+          <li class="flex items-center">
+            <a
+              href="admin-dashboard.html"
+              class="text-blue-600 hover:text-blue-800"
+              >Dashboard</a
+            >
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center">
+            <a
+              href="admin-pengguna.html"
+              class="text-blue-600 hover:text-blue-800"
+              >Manajemen Pengguna</a
+            >
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center text-gray-500">Budi Santoso</li>
+        </ol>
+      </nav>
+
+      <div class="flex flex-col space-y-6">
+        <div
+          class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center"
+        >
+          <img
+            src="https://via.placeholder.com/150/007BFF/FFFFFF?text=Budi"
+            alt="Foto Profil Budi Santoso"
+            class="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg mb-4"
+          />
+          <h2 class="text-2xl font-bold text-gray-800">Budi Santoso</h2>
+          <p class="text-md text-gray-600 mb-2">ID : U-00123</p>
+          <span
+            class="bg-green-100 text-green-700 text-sm font-semibold px-3 py-1 rounded-full"
+            >Aktif</span
+          >
+          <span
+            class="bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mt-2"
+            >Pembeli</span
+          >
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-user text-blue-500 mr-2"></i> Informasi Dasar
+          </h3>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm mb-6"
+          >
+            <p><strong>Nama Lengkap:</strong> Budi Santoso</p>
+            <p><strong>Email:</strong> budi.santoso@example.com</p>
+            <p><strong>Telepon:</strong> +62 812 3456 7890</p>
+            <p><strong>Tanggal Registrasi:</strong> 10 Januari 2024</p>
+            <p><strong>Jenis Kelamin:</strong> Pria</p>
+            <p><strong>Tanggal Lahir:</strong> 15 Mei 1990</p>
+          </div>
+
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-map-marker-alt text-green-500 mr-2"></i> Alamat
+            Pengiriman Utama
+          </h3>
+          <p class="text-gray-700 text-sm mb-6 leading-relaxed">
+            Jl. Merdeka No. 45 RT 001/RW 002, Kel. Sukamaju, Kec. Jatiasih, Kota
+            Bekasi, Jawa Barat 17423
+          </p>
+
+          <div id="jastiper-specific-info" class="border-t pt-6 mt-6">
+            <h3
+              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+            >
+              <i class="fas fa-id-card text-teal-600 mr-2"></i> Informasi
+              Jastiper
+            </h3>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm mb-6"
+            >
+              <p>
+                <strong>Nama Jastiper:</strong> TitipGo Jastip (Nama Brand
+                Jastiper)
+              </p>
+              <p><strong>Negara Asal Jastip:</strong> Singapura</p>
+              <p>
+                <strong>Status Verifikasi:</strong>
+                <span
+                  class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
+                  >Terverifikasi</span
+                >
+              </p>
+              <p>
+                <strong>Nomor KTP/Identitas:</strong> 3275xxxxxxxxxxxx (Hidden)
+              </p>
+            </div>
+            <div class="mb-4">
+              <p class="font-semibold text-gray-800 mb-2">
+                Dokumen Verifikasi:
+              </p>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-gray-600 text-sm mb-1">Foto KTP Depan:</p>
+                  <img
+                    src="https://via.placeholder.com/200x120/ADD8E6/FFFFFF?text=KTP+Depan"
+                    alt="Foto KTP Depan"
+                    class="w-full h-auto object-cover rounded-md border border-gray-300 shadow-sm"
+                  />
+                  <a
+                    href="path/to/ktp_depan_budi.jpg"
+                    target="_blank"
+                    class="text-blue-600 text-xs hover:underline mt-1 block"
+                    >Lihat Gambar Penuh</a
+                  >
+                </div>
+                <div>
+                  <p class="text-gray-600 text-sm mb-1">
+                    Foto KTP Dengan Wajah:
+                  </p>
+                  <img
+                    src="https://via.placeholder.com/200x120/ADD8E6/FFFFFF?text=KTP+Wajah"
+                    alt="Foto KTP dengan Wajah"
+                    class="w-full h-auto object-cover rounded-md border border-gray-300 shadow-sm"
+                  />
+                  <a
+                    href="path/to/ktp_wajah_budi.jpg"
+                    target="_blank"
+                    class="text-blue-600 text-xs hover:underline mt-1 block"
+                    >Lihat Gambar Penuh</a
+                  >
+                </div>
+              </div>
+              <div class="mt-4 flex gap-3">
+                <button
+                  class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-4 rounded-md flex items-center"
+                >
+                  <i class="fas fa-check-circle mr-2"></i> Setujui Verifikasi
+                </button>
+                <button
+                  class="bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-4 rounded-md flex items-center"
+                >
+                  <i class="fas fa-times-circle mr-2"></i> Tolak Verifikasi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-chart-pie text-purple-500 mr-2"></i> Statistik
+            Pengguna
+          </h3>
+          <ul class="text-gray-700 space-y-2 text-sm">
+            <li><strong>Total Pesanan:</strong> 150</li>
+            <li><strong>Total Belanja:</strong> Rp 15.000.000</li>
+            <li>
+              <strong>Jumlah Katalog Diunggah:</strong> 25
+              <span class="text-xs text-gray-500">(Jika Jastiper)</span>
+            </li>
+            <li>
+              <strong>Aduan Diterima:</strong> 2
+              <span class="text-red-500">(Perlu Ditinjau)</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-history text-orange-500 mr-2"></i> Riwayat Pesanan
+            Terbaru
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg">
+              <thead>
+                <tr
+                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
+                >
+                  <th class="py-3 px-4 text-left">ID Pesanan</th>
+                  <th class="py-3 px-4 text-left">Total</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 text-sm">
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="pesanan-detail.html?id=ORD001"
+                      class="text-blue-600 hover:underline"
+                      >ORD001</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 500.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-xs"
+                      >Selesai</span
+                    >
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="pesanan-detail.html?id=ORD002"
+                      class="text-blue-600 hover:underline"
+                      >ORD002</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 2.100.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-yellow-200 text-yellow-800 py-1 px-2 rounded-full text-xs"
+                      >Diproses</span
+                    >
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="pesanan-detail.html?id=ORD003"
+                      class="text-blue-600 hover:underline"
+                      >ORD003</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 150.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-red-200 text-red-800 py-1 px-2 rounded-full text-xs"
+                      >Dibatalkan</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center mt-4">
+            <a
+              href="pesanan.html?user_id=U-00123"
+              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >Lihat Semua Pesanan <i class="fas fa-angle-right ml-1"></i
+            ></a>
+          </div>
+        </div>
+
+        <div
+          id="jastiper-catalog-list"
+          class="bg-white p-6 rounded-lg shadow-md"
+        >
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-boxes text-purple-500 mr-2"></i> Katalog Terbaru
+            Diunggah
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg">
+              <thead>
+                <tr
+                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
+                >
+                  <th class="py-3 px-4 text-left">Nama Barang</th>
+                  <th class="py-3 px-4 text-left">Harga</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-700 text-sm">
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="admin-katalog-detail.html?id=PROD001"
+                      class="text-blue-600 hover:underline"
+                      >Kemeja Batik Modern</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 250.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-xs"
+                      >Disetujui</span
+                    >
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="admin-katalog-detail.html?id=PROD002"
+                      class="text-blue-600 hover:underline"
+                      >Sneaker Vintage</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 750.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-yellow-200 text-yellow-800 py-1 px-2 rounded-full text-xs"
+                      >Pending</span
+                    >
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <a
+                      href="admin-katalog-detail.html?id=PROD003"
+                      class="text-blue-600 hover:underline"
+                      >Tas Kulit Import</a
+                    >
+                  </td>
+                  <td class="py-3 px-4">Rp 1.200.000</td>
+                  <td class="py-3 px-4 text-center">
+                    <span
+                      class="bg-red-200 text-red-800 py-1 px-2 rounded-full text-xs"
+                      >Ditolak</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center mt-4">
+            <a
+              href="admin-katalog.html?jastiper_id=U-00123"
+              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >Lihat Semua Katalog <i class="fas fa-angle-right ml-1"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.split("/").pop();
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop();
+
+          let isLinkActive = false;
+
+          // Special handling for detail pages: highlight parent menu
+          if (
+            linkFileName === "admin-katalog.html" &&
+            currentPath.startsWith("admin-katalog-detail")
+          ) {
+            isLinkActive = true;
+          } else if (linkFileName === currentPath) {
+            isLinkActive = true;
+          } else if (
+            (currentPath === "" || currentPath === "index.html") &&
+            linkFileName === "admin-dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
