@@ -10,8 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -436,53 +434,18 @@
     </div>
 
     <script>
-        // --- YOUR FIREBASE CONFIGURATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
-            authDomain: "tittpgo-7f884.firebaseapp.com",
-            projectId: "tittpgo-28f84",
-            storageBucket: "tittpgo-7f884.appspot.com",
-            messagingSenderId: "816687553591",
-            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
-        };
+        // No Firebase configuration needed as connections are removed.
+        // const firebaseConfig = { ... };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+        // Firebase initialization removed
+        // const app = firebase.initializeApp(firebaseConfig);
+        // const db = firebase.firestore();
+        // const auth = firebase.auth();
 
+        let currentJastiperId = null; // No longer dynamic, just a placeholder.
 
-        const currentJastiperId = localStorage.getItem('jastiperId');
-        // Pastikan halaman login Anda menyimpan jastiperId seperti ini:
-        // localStorage.setItem('jastiperId', 'ID_DARI_JASTIPER_YANG_LOGIN');
-
-        // Jika Anda menggunakan Firebase Authentication, Anda bisa melakukannya seperti ini:
-        /*
-        let currentJastiperId = null;
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentJastiperId = user.uid; // Firebase Auth UID sebagai jastiperId
-                console.log("Jastiper ID dari Firebase Auth:", currentJastiperId);
-                loadDashboardData(); // Muat data setelah ID jastiper didapatkan
-            } else {
-                // Pengguna belum login atau sesi berakhir, arahkan ke halaman login
-                console.warn("Pengguna tidak terautentikasi. Mengarahkan ke halaman login.");
-                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
-            }
-        });
-        */
-
-        // Penting: Jika currentJastiperId tidak ada, pengguna belum login.
-        // Dalam produksi, Anda harus mengarahkan mereka ke halaman login.
-        if (!currentJastiperId) {
-            console.warn("Jastiper ID tidak ditemukan di localStorage. Mengarahkan ke halaman login...");
-            // window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
-            // Untuk demo/pengembangan, Anda bisa set ID statis sementara jika belum ada sistem login:
-            // currentJastiperId = "contoh_jastiper_id_untuk_testing"; 
-            // Pastikan ID ini ada di koleksi Firestore Anda untuk pengujian.
-        } else {
-            console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
-        }
+        // Firebase Auth state change listener removed
+        // auth.onAuthStateChanged((user) => { ... });
 
         // Get DOM elements for counts in "Yang Perlu Dilakukan"
         const countBelumBayar = document.getElementById('count-belum-bayar');
@@ -505,237 +468,128 @@
 
         let salesChartInstance = null; // To store the Chart.js instance
 
-        // Fungsi pembantu untuk membuat query dengan filter jastiperId
-        // Ini akan menambahkan .where("jastiperId", "==", currentJastiperId) jika currentJastiperId ada
-        function createJastiperQuery(collectionRef) {
-            if (currentJastiperId) {
-                // Pastikan nama field di koleksi Anda adalah 'jastiperId'
-                return collectionRef.where("jastiperId", "==", currentJastiperId);
-            }
-            // Jika tidak ada jastiperId (misal, belum login), query tidak akan difilter.
-            // Dalam aplikasi produksi, Anda akan mengarahkan pengguna ke halaman login di sini.
-            console.warn("Peringatan: Tidak ada Jastiper ID. Data mungkin tidak difilter.");
-            return collectionRef;
+        // All Firebase-related functions are replaced with static updates or removed.
+
+        // Function to simulate fetching and displaying counts (now static)
+        function fetchToDoCounts() {
+            // These values are now hardcoded or left at their initial HTML values (0)
+            countBelumBayar.textContent = '5'; // Example static value
+            countPengirimanDiproses.textContent = '2'; // Example static value
+            countPerluDiproses.textContent = '3'; // Example static value
+            countPengikutToko.textContent = '120'; // Example static value
+            countProdukDiblokir.textContent = '1'; // Example static value
+            countProdukHabis.textContent = '7'; // Example static value
         }
 
-        // Function to fetch and display counts for "Yang Perlu Dilakukan"
-        async function fetchToDoCounts() {
-            try {
-                // Fetch counts from 'pemesanan' collection based on status_pemesanan
-                let pemesananQuery = createJastiperQuery(db.collection('pemesanan'));
-                const pemesananSnapshot = await pemesananQuery.get();
+        // Function to simulate fetching sales data for the chart and total successful orders (now static)
+        function fetchSalesDataAndSuccessfulOrders() {
+            countTotalPesananBerhasil.textContent = '50'; // Example static value
 
-                let belumBayar = 0;
-                let pengirimanDiproses = 0;
-                let perluDiproses = 0;
+            // Static data for the chart
+            const labels = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
+            const data = Array.from({ length: 24 }, () => Math.floor(Math.random() * 5000000) + 100000); // Random sales data
 
-                pemesananSnapshot.forEach(doc => {
-                    const order = doc.data();
-                    if (order.status_pemesanan === 'Belum Bayar') {
-                        belumBayar++;
-                    } else if (order.status_pemesanan === 'Pengiriman diproses') {
-                        pengirimanDiproses++;
-                    } else if (order.status_pemesanan === 'Pesanan perlu di proses') {
-                        perluDiproses++;
-                    }
-                });
-
-                countBelumBayar.textContent = belumBayar;
-                countPengirimanDiproses.textContent = pengirimanDiproses;
-                countPerluDiproses.textContent = perluDiproses;
-
-                // Fetch count for 'Produk Habis' and 'Produk diblokir' from 'produk' collection
-                let produkCollectionRef = db.collection('produk');
-                let produkFilteredQuery = createJastiperQuery(produkCollectionRef);
-
-                const produkDiblokirSnapshot = await produkFilteredQuery.where("diblokir", "==", true).get();
-                countProdukDiblokir.textContent = produkDiblokirSnapshot.size;
-
-                const produkHabisSnapshot = await produkFilteredQuery.where("stok", "==", 0).get();
-                countProdukHabis.textContent = produkHabisSnapshot.size;
-
-                // Fetch 'Pengikut Toko' from 'toko' collection
-                let tokoQuery = createJastiperQuery(db.collection('toko'));
-                // Asumsi 1 jastiper punya 1 dokumen toko yang relevan. Jika ada beberapa, Anda perlu logika agregasi.
-                const tokoSnapshot = await tokoQuery.limit(1).get();
-
-                if (!tokoSnapshot.empty) {
-                    const tokoData = tokoSnapshot.docs[0].data();
-                    // Asumsi field jumlahPengikut ada di dokumen toko
-                    countPengikutToko.textContent = tokoData.jumlahPengikut !== undefined ? tokoData.jumlahPengikut : 0;
-                } else {
-                    countPengikutToko.textContent = 0; // Atau default lainnya jika tidak ada data toko
-                }
-
-            } catch (error) {
-                console.error("Error fetching To-Do counts:", error);
-                countBelumBayar.textContent = '-';
-                countPengirimanDiproses.textContent = '-';
-                countPerluDiproses.textContent = '-';
-                countProdukDiblokir.textContent = '-';
-                countProdukHabis.textContent = '-';
-                countPengikutToko.textContent = '-';
+            // Destroy old chart instance if it exists
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
             }
-        }
 
-        // Function to fetch sales data for the chart and total successful orders from 'pembayaran'
-        async function fetchSalesDataAndSuccessfulOrders() {
-            try {
-                let pembayaranRef = createJastiperQuery(db.collection('pembayaran'))
-                    .where('status_pembayaran', '==', 'Berhasil')
-                    .orderBy('tanggalPembayaran', 'asc');
-                const snapshot = await pembayaranRef.get();
-
-                let totalSuccessfulOrders = 0;
-                const salesDataByHour = {}; // Aggregate sales by hour
-
-                snapshot.forEach(doc => {
-                    const payment = doc.data();
-                    totalSuccessfulOrders++;
-                    if (payment.tanggalPembayaran && typeof payment.jumlah === 'number') { // Pastikan jumlah adalah angka
-                        const date = payment.tanggalPembayaran.toDate();
-                        // Filter untuk data hari ini saja jika diperlukan untuk "Penjualan hari ini"
-                        const today = new Date();
-                        if (date.toDateString() === today.toDateString()) {
-                            const hour = date.getHours(); // Group by hour
-                            salesDataByHour[hour] = (salesDataByHour[hour] || 0) + payment.jumlah;
-                        }
-                    }
-                });
-
-                countTotalPesananBerhasil.textContent = totalSuccessfulOrders;
-
-                // Prepare data for Chart.js
-                const labels = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-                const data = labels.map((_, i) => salesDataByHour[i] || 0);
-
-                // Destroy old chart instance if it exists
-                if (salesChartInstance) {
-                    salesChartInstance.destroy();
-                }
-
-                const ctx = document.getElementById('salesChart').getContext('2d');
-                salesChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Penjualan (Rp)',
-                            data: data,
-                            backgroundColor: 'rgba(236, 72, 153, 0.7)', // Pink color
-                            borderColor: 'rgba(236, 72, 153, 1)',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        return `Rp ${context.raw.toLocaleString('id-ID')}`;
-                                    }
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            salesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Penjualan (Rp)',
+                        data: data,
+                        backgroundColor: 'rgba(236, 72, 153, 0.7)', // Pink color
+                        borderColor: 'rgba(236, 72, 153, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `Rp ${context.raw.toLocaleString('id-ID')}`;
                                 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                            title: {
+                                display: true,
+                                text: 'Jam'
                             }
                         },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false,
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Jam'
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#eee'
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return `Rp ${value.toLocaleString('id-ID')}`;
                                 }
                             },
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: '#eee'
-                                },
-                                ticks: {
-                                    callback: function (value) {
-                                        return `Rp ${value.toLocaleString('id-ID')}`;
-                                    }
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Jumlah Penjualan'
-                                }
+                            title: {
+                                display: true,
+                                text: 'Jumlah Penjualan'
                             }
                         }
                     }
-                });
-
-            } catch (error) {
-                console.error("Error fetching sales data and successful orders:", error);
-                countTotalPesananBerhasil.textContent = '-';
-                if (salesChartInstance) {
-                    salesChartInstance.destroy();
                 }
-                const ctx = document.getElementById('salesChart').getContext('2d');
-                salesChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: { labels: [], datasets: [] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-                });
-            }
+            });
         }
 
-        // Fungsi utama untuk memuat semua data dashboard
+        // Function to simulate fetching traffic data (now static)
+        function fetchTrafficData() {
+            // These values are now hardcoded or left at their initial HTML values (46)
+            // If you want dynamic, you'd integrate with your new backend.
+            countTotalPengunjung.textContent = '1500'; // Example static value
+            countProdukDilihat.textContent = '3200'; // Example static value
+        }
+
+
+        // Main function to load all dashboard data
         function loadDashboardData() {
             fetchToDoCounts();
-            // fetchProducts(); // Dihilangkan
-            // fetchRecentOrders(); // Dihilangkan
             fetchSalesDataAndSuccessfulOrders();
+            fetchTrafficData();
         }
 
-        // Event listener untuk tombol logout (membuka modal)
+        // Event listener for logout button (opens modal)
         logoutButton.addEventListener('click', () => {
             logoutModal.classList.add('show');
         });
 
-        // Event listener untuk tombol "Batal" di modal
+        // Event listener for "Cancel" button in modal
         cancelLogoutButton.addEventListener('click', () => {
             logoutModal.classList.remove('show');
         });
 
-        // Event listener untuk tombol "Logout" di modal
+        // Event listener for "Logout" button in modal (no actual Firebase logout)
         confirmLogoutButton.addEventListener('click', () => {
-            // Hapus jastiperId dari localStorage saat logout
-            localStorage.removeItem('jastiperId');
-
-
-            auth.signOut().then(() => {
-                console.log("User signed out.");
-                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
-            }).catch((error) => {
-                console.error("Error signing out:", error);
-                alert("Gagal logout: " + error.message);
-            });
-
-            // Untuk demo ini, langsung redirect jika tidak menggunakan Firebase Auth
-            alert("Anda telah logout.");
-            window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
+            console.log("Simulating logout (no Firebase connection).");
+            // You might redirect the user to a login page or home page here
+            alert("Anda telah logout (simulasi).");
+            logoutModal.classList.remove('show'); // Close modal
+            // Remove any locally stored 'session' data if applicable for your new system.
+            // localStorage.removeItem('jastiperId'); // No longer needed as we removed Firebase
         });
 
-        // Panggil fungsi utama untuk memuat data saat DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Hanya muat data jika jastiperId berhasil didapatkan.
-            // Jika currentJastiperId null, pesan peringatan sudah ditampilkan di atas.
-            if (currentJastiperId) {
-                loadDashboardData();
-            } else {
-                // Ini akan terjadi jika currentJastiperId kosong dari localStorage
-                // dan Anda tidak memiliki Firebase Auth. Anda harus mengarahkan ke login.
-                console.warn("Jastiper ID tidak ditemukan. Pastikan sudah login dan ID tersimpan.");
-                // Jika ingin otomatis redirect, aktifkan baris ini:
-                // window.location.href = 'halaman_login_anda.html';
-            }
-        });
+        // Load data when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+
     </script>
 </body>
 

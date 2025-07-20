@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk Baru</title>
+    <title>Edit Produk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -12,7 +12,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            /* Using the Inter font */
             background-image: url('https://i.ibb.co/G0sTW8C/bg-titipgo.png');
+            /* Customizable Background Image */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -24,9 +26,11 @@
         /* Sidebar Styling */
         .sidebar {
             width: 250px;
-            /* Fixed width */
+            /* Fixed width - Customizable */
             background-color: #fff;
+            /* Sidebar background color - Customizable */
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            /* Sidebar shadow - Customizable */
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -44,6 +48,7 @@
 
         .sidebar-header img {
             height: 40px;
+            /* Logo height - Customizable */
             object-fit: contain;
         }
 
@@ -66,13 +71,17 @@
 
         .sidebar-nav li:hover {
             background-color: #f8e5f0;
+            /* Hover background color - Customizable */
             color: #ec4899;
+            /* Hover text color - Customizable */
         }
 
         /* Active state for sidebar navigation */
         .sidebar-nav li.active {
             background-color: #f8e5f0;
+            /* Active background color - Customizable */
             color: #ec4899;
+            /* Active text color - Customizable */
             font-weight: 600;
         }
 
@@ -103,7 +112,7 @@
         /* Card Styling (re-used for main sections) */
         .card {
             background-color: rgba(255, 255, 255, 0.9);
-            /* Slightly transparent white */
+            /* Slightly transparent white - Customizable */
             border-radius: 0.75rem;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -144,11 +153,12 @@
         .input-group textarea:focus {
             outline: none;
             border-color: #ec4899;
+            /* Focus border color - Customizable */
             box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
         }
 
         /* Image Preview for Product Photo */
-        #product-image-preview {
+        #edit-product-image-preview {
             width: 120px;
             /* Adjusted size */
             height: 120px;
@@ -163,6 +173,7 @@
         /* Button Styling */
         .btn-primary {
             background-color: #ec4899;
+            /* Primary button background - Customizable */
             color: white;
             padding: 0.75rem 1.25rem;
             border-radius: 0.5rem;
@@ -174,10 +185,12 @@
 
         .btn-primary:hover {
             background-color: #db2777;
+            /* Primary button hover background - Customizable */
         }
 
         .btn-secondary {
             background-color: #f0f0f0;
+            /* Secondary button background - Customizable */
             color: #333;
             padding: 0.75rem 1.25rem;
             border-radius: 0.5rem;
@@ -189,10 +202,12 @@
 
         .btn-secondary:hover {
             background-color: #e0e0e0;
+            /* Secondary button hover background - Customizable */
         }
 
         .btn-danger {
             background-color: #ef4444;
+            /* Danger button background - Customizable */
             color: white;
             padding: 0.75rem 1.25rem;
             border-radius: 0.5rem;
@@ -204,6 +219,7 @@
 
         .btn-danger:hover {
             background-color: #dc2626;
+            /* Danger button hover background - Customizable */
         }
 
         /* Modal (Popup) Styling for Logout */
@@ -330,9 +346,9 @@
         </div>
 
         <div class="main-content">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Produk Baru</h1>
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Produk</h1>
 
-            <form id="add-product-form">
+            <form id="edit-product-form">
                 <div class="card mb-6">
                     <div class="tab-container">
                         <div class="tab-button active" data-tab="info-produk">Informasi Produk</div>
@@ -343,46 +359,46 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="mb-4">
-                                    <label for="imageUrl" class="block text-sm font-medium text-gray-700 mb-2">Foto
-                                        Produk:</label>
-                                    <input type="url" id="imageUrl"
+                                    <label for="edit-imageUrl" class="block text-sm font-medium text-gray-700 mb-2">Foto
+                                        Produk (URL):</label>
+                                    <input type="url" id="edit-imageUrl"
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                                         placeholder="URL Gambar Produk">
-                                    <img id="product-image-preview" src="" alt="Product Image" class="mt-2 hidden">
+                                    <img id="edit-product-image-preview" src="" alt="Product Image" class="mt-2 hidden">
                                 </div>
 
                                 <div class="input-group">
-                                    <label for="namaProduk">Nama Produk:</label>
-                                    <input type="text" id="namaProduk" required>
+                                    <label for="edit-namaProduk">Nama Produk:</label>
+                                    <input type="text" id="edit-namaProduk" required>
                                 </div>
                                 <div class="input-group">
-                                    <label for="kategori">Kategori:</label>
-                                    <select id="kategori" class="w-full">
+                                    <label for="edit-kategori">Kategori:</label>
+                                    <select id="edit-kategori" class="w-full">
                                         <option value="">Pilih Kategori</option>
                                     </select>
                                 </div>
                                 <div class="input-group">
-                                    <label for="deskripsi">Deskripsi:</label>
-                                    <textarea id="deskripsi" rows="4"></textarea>
+                                    <label for="edit-deskripsi">Deskripsi:</label>
+                                    <textarea id="edit-deskripsi" rows="4"></textarea>
                                 </div>
                             </div>
 
                             <div>
                                 <div class="input-group">
-                                    <label for="status">Keterangan:</label>
-                                    <select id="status" class="w-full">
+                                    <label for="edit-status">Keterangan:</label>
+                                    <select id="edit-status" class="w-full">
                                         <option value="READY ID">READY ID</option>
                                         <option value="KOSONG">KOSONG</option>
                                         <option value="PRE-ORDER">PRE-ORDER</option>
                                     </select>
                                 </div>
                                 <div class="input-group">
-                                    <label for="harga">Harga:</label>
-                                    <input type="number" id="harga" required>
+                                    <label for="edit-harga">Harga:</label>
+                                    <input type="number" id="edit-harga" required>
                                 </div>
                                 <div class="input-group">
-                                    <label for="stok">Stok:</label>
-                                    <input type="number" id="stok" required>
+                                    <label for="edit-stok">Stok:</label>
+                                    <input type="number" id="edit-stok" required>
                                 </div>
                             </div>
                         </div>
@@ -392,41 +408,43 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div class="input-group">
-                                    <label for="merk">Merk:</label>
-                                    <input type="text" id="merk">
+                                    <label for="edit-merk">Merk:</label>
+                                    <input type="text" id="edit-merk">
                                 </div>
                                 <div class="input-group">
-                                    <label for="negaraAsal">Negara Asal:</label>
-                                    <input type="text" id="negaraAsal">
+                                    <label for="edit-negaraAsal">Negara Asal:</label>
+                                    <input type="text" id="edit-negaraAsal">
                                 </div>
                                 <div class="input-group">
-                                    <label for="jenis">Jenis:</label>
-                                    <select id="jenis" class="w-full">
+                                    <label for="edit-jenis">Jenis:</label>
+                                    <select id="edit-jenis" class="w-full">
                                         <option value="">Pilih Jenis (Pilih Kategori Dahulu)</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
                                 <div class="input-group">
-                                    <label for="berat">Berat (kg):</label>
-                                    <input type="number" id="berat" step="0.01" placeholder="0.00">
+                                    <label for="edit-berat">Berat (kg):</label>
+                                    <input type="number" id="edit-berat" step="0.01" placeholder="0.00">
                                 </div>
                                 <div class="input-group">
-                                    <label for="batasPesan">Batas Pesan:</label>
-                                    <input type="date" id="batasPesan">
+                                    <label for="edit-batasPesan">Batas Pesan:</label>
+                                    <input type="date" id="edit-batasPesan">
                                 </div>
                                 <div class="input-group">
-                                    <label for="fee">Fee (Otomatis):</label>
-                                    <input type="text" id="fee" disabled class="bg-gray-100 cursor-not-allowed">
+                                    <label for="edit-fee">Fee (Otomatis):</label>
+                                    <input type="text" id="edit-fee" disabled class="bg-gray-100 cursor-not-allowed">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-end mt-4"> <button type="submit" class="btn-primary">Tambah Produk</button>
+                <div class="flex justify-start mt-4">
+                    <button type="submit" class="btn-primary">Simpan Perubahan</button>
                     <button type="button" class="btn-secondary ml-4"
                         onclick="window.location.href='toko_kita.html'">Batal</button>
+                    <button type="button" id="btn-hapus-produk" class="btn-danger ml-4">Hapus</button>
                 </div>
             </form>
         </div>
@@ -446,21 +464,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script>
-        // --- YOUR FIREBASE CONFIGURATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ", //
-            authDomain: "tittpgo-7f884.firebaseapp.com",
-            projectId: "tittpgo-28f84", //
-            storageBucket: "tittpgo-7f884.appspot.com",
-            messagingSenderId: "816687553591", //
-            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        // const auth = firebase.auth(); // Uncomment if using Firebase Authentication
-
         // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
         let currentJastiperId = localStorage.getItem('jastiperId');
         if (!currentJastiperId) {
@@ -472,24 +475,28 @@
             console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
         }
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
         // DOM Elements
-        const form = document.getElementById('add-product-form');
-        const namaProdukInput = document.getElementById('namaProduk');
-        const negaraAsalInput = document.getElementById('negaraAsal');
-        const kategoriSelect = document.getElementById('kategori');
-        const hargaInput = document.getElementById('harga');
-        const stokInput = document.getElementById('stok');
-        const statusSelect = document.getElementById('status');
-        const imageUrlInput = document.getElementById('imageUrl');
-        const imagePreview = document.getElementById('product-image-preview');
+        const form = document.getElementById('edit-product-form');
+        const namaProdukInput = document.getElementById('edit-namaProduk');
+        const negaraAsalInput = document.getElementById('edit-negaraAsal');
+        const kategoriSelect = document.getElementById('edit-kategori'); // Changed to Select
+        const hargaInput = document.getElementById('edit-harga');
+        const stokInput = document.getElementById('edit-stok');
+        const statusSelect = document.getElementById('edit-status');
+        const imageUrlInput = document.getElementById('edit-imageUrl');
+        const imagePreview = document.getElementById('edit-product-image-preview');
 
         // New fields
-        const deskripsiInput = document.getElementById('deskripsi');
-        const merkInput = document.getElementById('merk');
-        const beratInput = document.getElementById('berat');
-        const batasPesanInput = document.getElementById('batasPesan');
-        const jenisSelect = document.getElementById('jenis');
-        const feeInput = document.getElementById('fee'); // Untuk menampilkan fee toko
+        const deskripsiInput = document.getElementById('edit-deskripsi');
+        const merkInput = document.getElementById('edit-merk');
+        const beratInput = document.getElementById('edit-berat');
+        const batasPesanInput = document.getElementById('edit-batasPesan');
+        const jenisSelect = document.getElementById('edit-jenis'); // Changed to Select
+        const feeInput = document.getElementById('edit-fee'); // Untuk menampilkan fee toko
+        const btnHapusProduk = document.getElementById('btn-hapus-produk'); // Tombol Hapus
 
         // Tab Elements
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -524,27 +531,29 @@
             });
         }
 
-        // Event listener untuk setiap tombol tab
+        // Event Listeners for tabs
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const tabName = button.dataset.tab;
-                activateTab(tabName);
+                activateTab(button.dataset.tab);
             });
         });
 
         // Fungsi untuk mengisi dropdown "Kategori"
-        function populateKategoriOptions() {
+        function populateKategoriOptions(selectedCategory = '') {
             kategoriSelect.innerHTML = '<option value="">Pilih Kategori</option>'; // Opsi default
             for (const category in categoryAndTypeOptions) {
                 const option = document.createElement('option');
                 option.value = category;
                 option.textContent = category;
+                if (category === selectedCategory) {
+                    option.selected = true;
+                }
                 kategoriSelect.appendChild(option);
             }
         }
 
         // Fungsi untuk mengisi ulang dropdown "Jenis" berdasarkan "Kategori" yang dipilih
-        function updateJenisOptions() {
+        function updateJenisOptions(selectedType = '') {
             const selectedCategory = kategoriSelect.value;
             const options = categoryAndTypeOptions[selectedCategory] || []; // Ambil array jenis, atau array kosong jika tidak ada
 
@@ -564,34 +573,95 @@
                 const option = document.createElement('option');
                 option.value = jenis;
                 option.textContent = jenis;
+                if (jenis === selectedType) {
+                    option.selected = true;
+                }
                 jenisSelect.appendChild(option);
             });
         }
 
         // Event Listener untuk perubahan kategori
-        kategoriSelect.addEventListener('change', updateJenisOptions);
+        kategoriSelect.addEventListener('change', () => {
+            updateJenisOptions(); // Reset jenis saat kategori berubah
+        });
 
 
-        async function fetchStoreFeeForAddPage() {
+        async function loadProductData(id) {
+            if (!id) {
+                console.error("Product ID not found in URL.");
+                alert("ID Produk tidak ditemukan. Kembali ke halaman Toko Kita.");
+                window.location.href = 'toko_kita.html';
+                return;
+            }
+
             try {
-                let tokoQuery = db.collection('toko');
-                if (currentJastiperId) {
-                    tokoQuery = tokoQuery.where("jastiperId", "==", currentJastiperId);
-                }
-                const tokoSnapshot = await tokoQuery.limit(1).get();
+                // Since Firebase is removed, this function will no longer fetch from Firestore.
+                // You'll need to replace this with your new data fetching logic (e.g., an API call).
+                // For demonstration, we'll simulate loading product data.
+                console.log("Simulating loading product data for ID:", id);
+                const product = {
+                    namaProduk: "Contoh Produk",
+                    negaraAsal: "Jepang",
+                    kategori: "Makanan & Minuman",
+                    harga: 150000,
+                    stok: 50,
+                    status: "READY ID",
+                    imageUrl: "https://via.placeholder.com/150",
+                    deskripsi: "Ini adalah contoh deskripsi produk.",
+                    merk: "Contoh Merk",
+                    berat: 0.25,
+                    batasPesan: "2025-12-31", // Example date string
+                    jenis: "Snack",
+                    jastiperId: currentJastiperId // Ensure this matches for editing
+                };
 
-                if (!tokoSnapshot.empty) {
-                    const tokoData = tokoSnapshot.docs[0].data();
-                    if (tokoData.fee !== undefined) {
-                        feeInput.value = `Rp ${tokoData.fee.toLocaleString('id-ID')}`;
-                    } else {
-                        feeInput.value = 'N/A';
-                    }
-                } else {
-                    feeInput.value = 'N/A';
+                if (product.jastiperId !== currentJastiperId) {
+                    alert("Anda tidak memiliki izin untuk mengedit produk ini.");
+                    window.location.href = 'toko_kita.html';
+                    return;
                 }
+
+                namaProdukInput.value = product.namaProduk || '';
+                negaraAsalInput.value = product.negaraAsal || '';
+                hargaInput.value = product.harga || 0;
+                stokInput.value = product.stok !== undefined ? product.stok : 0;
+                statusSelect.value = product.status || 'READY ID';
+                imageUrlInput.value = product.imageUrl || '';
+
+                // Populate Kategori and Jenis dropdowns
+                populateKategoriOptions(product.kategori); // Pass existing category to select it
+                updateJenisOptions(product.jenis);       // Pass existing type to select it
+
+
+                // Isi field baru
+                deskripsiInput.value = product.deskripsi || '';
+                merkInput.value = product.merk || '';
+                beratInput.value = product.berat !== undefined ? product.berat : 0;
+                batasPesanInput.value = product.batasPesan || '';
+
+                if (product.imageUrl) {
+                    imagePreview.src = imageUrlInput.value; // Use current input value for immediate preview
+                    imagePreview.classList.remove('hidden');
+                } else {
+                    imagePreview.classList.add('hidden');
+                }
+
+                fetchStoreFeeForEditPage(); // Panggil untuk mengisi fee toko
             } catch (error) {
-                console.error("Error fetching store fee for add page:", error);
+                console.error("Error loading product:", error);
+                alert("Terjadi kesalahan saat memuat data produk.");
+                window.location.href = 'toko_kita.html';
+            }
+        }
+
+        async function fetchStoreFeeForEditPage() {
+            try {
+                // Since Firebase is removed, this function will no longer fetch from Firestore.
+                // Simulate a store fee.
+                const simulatedFee = 15000; // Example fee
+                feeInput.value = `Rp ${simulatedFee.toLocaleString('id-ID')}`;
+            } catch (error) {
+                console.error("Error fetching store fee for edit page:", error);
                 feeInput.value = 'Error';
             }
         }
@@ -599,18 +669,11 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!currentJastiperId) {
-                alert("Anda harus login untuk menambah produk.");
-                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL login Anda
-                return;
-            }
-
-            const newProductData = {
-                jastiperId: currentJastiperId, // Penting: Menambahkan jastiperId ke produk
+            const updatedData = {
                 namaProduk: namaProdukInput.value,
-                namaProdukLowerCase: namaProdukInput.value.toLowerCase(), // Untuk pencarian
+                namaProdukLowerCase: namaProdukInput.value.toLowerCase(), // Tambahkan ini
                 negaraAsal: negaraAsalInput.value,
-                kategori: kategoriSelect.value,
+                kategori: kategoriSelect.value, // Updated to select value
                 harga: parseFloat(hargaInput.value),
                 stok: parseInt(stokInput.value),
                 status: statusSelect.value,
@@ -618,30 +681,47 @@
                 deskripsi: deskripsiInput.value,
                 merk: merkInput.value,
                 berat: parseFloat(beratInput.value),
-                // Konversi tanggal ke Firestore Timestamp jika ada
-                batasPesan: batasPesanInput.value ? firebase.firestore.Timestamp.fromDate(new Date(batasPesanInput.value)) : null,
-                jenis: jenisSelect.value, // Menggunakan nilai dari jenisSelect
-                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Tambahkan timestamp pembuatan
+                batasPesan: batasPesanInput.value || null, // No longer a Firebase Timestamp
+                jenis: jenisSelect.value, // Updated to select value
             };
 
             // Validasi tambahan untuk kategori dan jenis
-            if (!newProductData.kategori) {
+            if (!updatedData.kategori) {
                 alert("Mohon pilih Kategori produk.");
                 return;
             }
-            if (!newProductData.jenis) {
+            if (!updatedData.jenis) {
                 alert("Mohon pilih Jenis produk.");
                 return;
             }
 
-
             try {
-                await db.collection('produk').add(newProductData);
-                alert("Produk baru berhasil ditambahkan!");
+                // Since Firebase is removed, this will no longer update Firestore.
+                // You'll need to replace this with your new data update logic (e.g., an API call).
+                console.log("Simulating product update for ID:", productId, updatedData);
+                alert("Detail produk berhasil diperbarui! (Simulasi)");
                 window.location.href = 'toko_kita.html'; // Kembali ke daftar produk
             } catch (error) {
-                console.error("Error adding new product:", error);
-                alert("Gagal menambahkan produk baru: " + error.message);
+                console.error("Error updating product:", error);
+                alert("Gagal memperbarui produk: " + error.message);
+            }
+        });
+
+        // Event listener untuk tombol Hapus Produk
+        btnHapusProduk.addEventListener('click', async () => {
+            if (!productId) return;
+
+            if (confirm("Apakah Anda yakin ingin menghapus produk ini secara permanen?")) {
+                try {
+                    // Since Firebase is removed, this will no longer delete from Firestore.
+                    // You'll need to replace this with your new data deletion logic (e.g., an API call).
+                    console.log("Simulating product deletion for ID:", productId);
+                    alert("Produk berhasil dihapus! (Simulasi)");
+                    window.location.href = 'toko_kita.html'; // Kembali ke daftar produk
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    alert("Gagal menghapus produk: " + error.message);
+                }
             }
         });
 
@@ -657,13 +737,16 @@
 
         // Initial load
         document.addEventListener('DOMContentLoaded', () => {
-            fetchStoreFeeForAddPage();
-            activateTab('info-produk'); // Aktifkan tab "Informasi Produk" secara default
-            populateKategoriOptions(); // Isi dropdown kategori saat halaman dimuat
-            updateJenisOptions(); // Panggil pertama kali untuk mengisi dropdown "Jenis" (akan menampilkan placeholder)
+            if (currentJastiperId) {
+                loadProductData(productId);
+                activateTab('info-produk'); // Aktifkan tab "Informasi Produk" secara default
+            } else {
+                alert("Anda harus login untuk mengedit produk.");
+                window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL login Anda
+            }
         });
 
-        // Logout functionality
+        // Logout functionality (same as toko_kita.html)
         const logoutButton = document.getElementById('logout-button');
         const logoutModal = document.getElementById('logout-modal');
         const cancelLogoutButton = document.getElementById('cancel-logout');
