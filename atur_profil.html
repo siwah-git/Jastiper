@@ -563,7 +563,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
     <script>
-        // --- YOUR FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
             authDomain: "tittpgo-7f884.firebaseapp.com",
@@ -573,12 +572,10 @@
             appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
         let currentJastiperId = localStorage.getItem('jastiperId');
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -600,7 +597,7 @@
         });
 
 
-        // --- TAB FUNCTIONALITY ---
+
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
@@ -614,7 +611,7 @@
             });
         });
 
-        // --- DOM Elements for Store Info Tab ---
+
         const formInformasiToko = document.getElementById('form-informasi-toko');
         const storeProfileImageUrlInput = document.getElementById('store-profile-imageUrl');
         const storeProfileImagePreview = document.getElementById('store-profile-image-preview');
@@ -629,7 +626,7 @@
         const storeAlamatTokoInput = document.getElementById('store-alamatToko');
         let originalStoreData = {};
 
-        // --- DOM Elements for Profile Tab ---
+
         const formProfil = document.getElementById('form-profil');
         const profileNamaInput = document.getElementById('profile-nama');
         const profileUsernameInput = document.getElementById('profile-username');
@@ -651,14 +648,9 @@
         let originalProfileData = {};
 
 
-        // Function to set form fields enabled/disabled and button visibility
         function setFormEditMode(formElement, isEditMode) {
             console.log(`Setting form ${formElement.id} to edit mode: ${isEditMode}`);
 
-            // List of input IDs that should *never* be enabled by this function
-            const permanentlyDisabledIds = [
-                // 'store-fee' is removed from here to make it editable
-            ];
 
             const inputs = formElement.querySelectorAll('input, textarea, select');
             inputs.forEach(input => {
@@ -687,6 +679,7 @@
             }
 
 
+
             formElement.classList.toggle('edit-mode', isEditMode);
 
             const saveButton = formElement.querySelector('.btn-save');
@@ -695,7 +688,7 @@
             }
         }
 
-        // Function to update image preview for store photos (with placeholder text)
+
         function updateStoreImagePreview(inputElement, imgElement, placeholderElement) {
             if (inputElement.value) {
                 imgElement.src = inputElement.value;
@@ -708,11 +701,11 @@
             }
         }
 
-        // Event listeners for store image URL inputs
+
         storeProfileImageUrlInput.addEventListener('input', () => updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder));
         storeBackgroundImageUrlInput.addEventListener('input', () => updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder));
 
-        // Event listener for personal profile image URL input
+
         profileImageUrlInput.addEventListener('input', () => {
             if (profileImageUrlInput.value) {
                 profileImagePreview.src = profileImageUrlInput.value;
@@ -729,9 +722,9 @@
 
         // Helper function to clean fee input for saving (remove non-numeric chars)
         function cleanFeeForSave(feeString) {
-            // Remove 'Rp', dots, commas, and other non-digit characters
+
             const cleaned = feeString.replace(/[^0-9]/g, '');
-            return parseInt(cleaned) || 0; // Parse as integer, default to 0 if invalid
+            return parseInt(cleaned) || 0;
         }
 
 
@@ -872,7 +865,6 @@
             }
         });
 
-        // --- Save Personal Profile Information ---
         formProfil.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -988,7 +980,6 @@
             }
         });
 
-        // --- "Batal" (Cancel Edit) Functionality ---
         document.querySelectorAll('.btn-cancel-edit').forEach(button => {
             button.addEventListener('click', () => {
                 const formType = button.dataset.form;
@@ -1003,9 +994,8 @@
                     storeBackgroundImageUrlInput.value = originalStoreData.backgroundImageUrl || '';
                     updateStoreImagePreview(storeProfileImageUrlInput, storeProfileImagePreview, storeProfilePlaceholder);
                     updateStoreImagePreview(storeBackgroundImageUrlInput, storeBackgroundImagePreview, storeBackgroundPlaceholder);
-                    setFormEditMode(formInformasiToko, false); // Switch back to view mode
+                    setFormEditMode(formInformasiToko, false);
                 } else if (formType === 'profile') {
-                    // Revert profile form to original data
                     profileNamaInput.value = originalProfileData.nama || '';
                     profileUsernameInput.value = originalProfileData.username || '';
                     profileEmailInput.value = originalProfileData.email || '';
@@ -1021,8 +1011,6 @@
             });
         });
 
-
-        // Logout functionality
         const logoutButton = document.getElementById('logout-button');
         const logoutModal = document.getElementById('logout-modal');
         const cancelLogoutButton = document.getElementById('cancel-logout');

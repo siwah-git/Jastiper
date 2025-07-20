@@ -437,7 +437,6 @@
 
     <script>
         // --- YOUR FIREBASE CONFIGURATION ---
-        // Ganti dengan detail proyek Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCaEVRX88dod-9BWHpCQ_RTlIHwus-29RQ",
             authDomain: "tittpgo-7f884.firebaseapp.com",
@@ -450,11 +449,9 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        // const auth = firebase.auth(); // Uncomment if using Firebase Authentication
+        const auth = firebase.auth();
 
-        // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
-        // Asumsi: Setelah login berhasil, Anda menyimpan jastiperId di localStorage.
-        // Ini adalah cara paling umum untuk aplikasi web sederhana tanpa session management yang kompleks.
+
         const currentJastiperId = localStorage.getItem('jastiperId');
         // Pastikan halaman login Anda menyimpan jastiperId seperti ini:
         // localStorage.setItem('jastiperId', 'ID_DARI_JASTIPER_YANG_LOGIN');
@@ -711,8 +708,7 @@
             // Hapus jastiperId dari localStorage saat logout
             localStorage.removeItem('jastiperId');
 
-            // Jika menggunakan Firebase Auth, uncomment bagian ini:
-            /*
+
             auth.signOut().then(() => {
                 console.log("User signed out.");
                 window.location.href = 'halaman_login_anda.html'; // Ganti dengan URL halaman login Anda
@@ -720,7 +716,6 @@
                 console.error("Error signing out:", error);
                 alert("Gagal logout: " + error.message);
             });
-            */
 
             // Untuk demo ini, langsung redirect jika tidak menggunakan Firebase Auth
             alert("Anda telah logout.");

@@ -54,22 +54,14 @@
             flex-direction: column;
             justify-content: center;
             text-align: center;
-            /* Ensures logo and h1 are centered */
         }
 
-        /* New scrollable content wrapper */
         .scrollable-content {
             overflow-y: auto;
-            /* This makes only this part scrollable */
             padding-top: 0.5rem;
-            /* Add some padding if needed at the top of scrollable area */
             padding-bottom: 0.5rem;
-            /* Add some padding if needed at the bottom of scrollable area */
-            /* Calculate max-height based on available space, adjusting for logo, title, and footer */
             max-height: calc(95vh - 120px);
-            /* Adjust 120px based on actual height of logo, title, and footer (p and message div) */
             flex-grow: 1;
-            /* Allow it to grow and take available space */
         }
 
 
@@ -161,7 +153,6 @@
 
         .role-button img {
             display: none;
-            /* Hide the images */
         }
 
         .role-button span {
@@ -177,44 +168,35 @@
         /* Warna default (tidak terpilih) untuk Jastiper dan Pembeli */
         .role-button[data-role="jastiper"] {
             background-color: #FFC0CB;
-            /* Pink */
             border-color: #FFC0CB;
             color: #333;
-            /* Darker text for better contrast */
         }
 
         .role-button[data-role="pembeli"] {
             background-color: #ADD8E6;
-            /* Light Blue */
             border-color: #ADD8E6;
             color: #333;
-            /* Darker text for better contrast */
         }
 
         /* Warna saat terpilih */
         .role-button[data-role="jastiper"].selected {
             background-color: #FF69B4;
-            /* Deeper Pink solid */
             border-color: #FF69B4;
             box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.5);
             transform: translateY(-2px);
             color: white;
-            /* White text for selected */
         }
 
         .role-button[data-role="pembeli"].selected {
             background-color: #3b82f6;
-            /* Blue solid */
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
             transform: translateY(-2px);
             color: white;
-            /* White text for selected */
         }
 
         /* Menyesuaikan jarak antar input form agar lebih ringkas */
         .scrollable-content .space-y-4>div {
-            /* Target children inside scrollable-content */
             margin-bottom: 0.5rem;
         }
 
@@ -224,12 +206,10 @@
 
         /* Menyesuaikan margin untuk logo dan judul */
         .register-container>img {
-            /* Direct child of container */
             margin-bottom: 0.5rem;
         }
 
         .register-container>h1 {
-            /* Direct child of container */
             margin-bottom: 0.5rem;
             font-size: 2rem;
         }
@@ -242,9 +222,26 @@
             margin-top: 1rem;
         }
 
-        /* Sembunyikan tombol submit */
+        /* Tampilkan tombol submit */
         #registerForm button[type="submit"] {
-            display: none;
+            display: block;
+            /* Mengembalikan tampilan tombol submit */
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #28a745;
+            /* Green color for submit button */
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            /* Memberikan jarak dari elemen di atasnya */
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #registerForm button[type="submit"]:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -316,6 +313,9 @@
                 </div>
                 <input type="hidden" id="selectedRole" name="selectedRole" required>
 
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">
+                    Daftar
+                </button>
             </form>
         </div>
         <p class="mt-6 text-sm">Sudah punya akun? <a href="login_user.html" class="text-blue-600 hover:underline">Masuk
@@ -327,7 +327,7 @@
     <script>
         // --- KONFIGURASI FIREBASE ANDA ---
         const firebaseConfig = {
-            apiKey: "AIzaSyC...G2Mtu3ZGQ3fh...", // <-- GANTI DENGAN API KEY ANDA
+            apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ", // <-- GANTI DENGAN API KEY ANDA
             authDomain: "tittpgo-7f884.firebaseapp.com",
             projectId: "tittpgo-7f884",
             storageBucket: "tittpgo-7f884.appspot.com",
@@ -375,43 +375,26 @@
                 button.classList.add('selected');
                 currentSelectedRole = button.dataset.role; // Simpan peran yang dipilih
                 selectedRoleInput.value = currentSelectedRole; // Set nilai hidden input
-
-                // After selecting a role, check if all required fields are filled to trigger registration
-                const allFieldsFilled = emailInput.value && passwordInput.value && confirmPasswordInput.value &&
-                    fullNameInput.value && phoneNumberInput.value && dobInput.value &&
-                    genderSelect.value && addressInput.value && selectedRoleInput.value;
-
-                if (allFieldsFilled) {
-                    await handleRegister(); // Call registration function directly
-                } else {
-                    showMessage("Mohon lengkapi semua data formulir sebelum melanjutkan.", "error");
-                }
+                showMessage(''); // Bersihkan pesan saat peran dipilih
             }
         });
 
-        // Function to check if all form fields are filled (used for initial validation)
-        function areAllFieldsFilled() {
-            return emailInput.value && passwordInput.value && confirmPasswordInput.value &&
-                fullNameInput.value && phoneNumberInput.value && dobInput.value &&
-                genderSelect.value && addressInput.value;
-        }
-
-
-        // Fungsi Pendaftaran
-        async function handleRegister() {
-            showMessage(''); // Clear previous messages
+        // Fungsi Pendaftaran (dipanggil saat form disubmit)
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Mencegah reload halaman
+            showMessage(''); // Bersihkan pesan sebelumnya
 
             const email = emailInput.value;
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
             const fullName = fullNameInput.value;
             const phoneNumber = phoneNumberInput.value;
-            const dob = dobInput.value;
+            const dob = dobInput.value; // Format: YYYY-MM-DD string
             const gender = genderSelect.value;
             const address = addressInput.value;
-            const selectedRole = selectedRoleInput.value; // Get role from hidden input
+            const selectedRole = selectedRoleInput.value; // Dapatkan peran dari hidden input
 
-            // Validate form input before proceeding
+            // Validasi input form sebelum melanjutkan
             if (!email || !password || !confirmPassword || !fullName || !phoneNumber || !dob || !gender || !address) {
                 showMessage("Mohon lengkapi semua data formulir.");
                 return;
@@ -428,30 +411,65 @@
             }
 
             try {
-                // 1. Create user in Firebase Authentication
+                // 1. Buat pengguna di Firebase Authentication
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 console.log("Pendaftaran berhasil di Auth! UID:", user.uid);
 
-                // 2. Save additional user data to Firestore based on role
+                // 2. Simpan data pengguna tambahan ke Firestore berdasarkan peran
                 const userData = {
-                    uid: user.uid,
                     email: email,
-                    namaLengkap: fullName,
-                    nomorTelepon: phoneNumber,
-                    tanggalLahir: dob,
-                    jenisKelamin: gender,
-                    alamatLengkap: address,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp() // Server timestamp
+                    // HAPUS INI UNTUK KEAMANAN! Password diurus oleh Firebase Auth.
+                    // password: password, 
+
+                    nama: fullName, // Menggunakan 'nama' sesuai Firestore Anda
+                    // Mengubah 'phoneNumber' (string) ke 'no_telepon' (number)
+                    // Pastikan phoneNumber hanya berisi angka. Jika tidak, parseInt akan gagal.
+                    no_telepon: parseInt(phoneNumber),
+                    // Mengubah 'dob' (string YYYY-MM-DD) ke 'tanggal_lahir' (Timestamp)
+                    tanggal_lahir: firebase.firestore.Timestamp.fromDate(new Date(dob)),
+                    jenis_kelamin: gender,
+                    alamat: address, // Menggunakan 'alamat' sesuai Firestore Anda
+
+                    // Field tambahan untuk koleksi 'jastiper' yang mungkin default atau kosong saat pendaftaran
+                    // Ini diisi agar struktur Firestore Anda lengkap sesuai yang Anda berikan
+                    biaya_jasa: "", // string, default kosong
+                    // id_jastiper: user.uid, // Jika di Firestore Anda ingin 'id_jastiper' bertipe 'number', ini akan menjadi konflik karena user.uid adalah string. 
+                    // Pilihan: 1. Ubah tipe id_jastiper di Firestore menjadi string. 
+                    // 2. Hapus id_jastiper dari userData jika UID sudah cukup sebagai ID dokumen.
+                    // 3. Implementasi logika untuk menghasilkan ID numerik unik di sini (lebih kompleks).
+                    // Untuk saat ini, jika Anda tetap ingin field ini dan tipenya number, 
+                    // Anda harus menyediakan mekanisme ID unik numerik. 
+                    // Saya akan biarkan ini dikomentari agar Anda bisa memilih.
+                    instagram: "", // string, default kosong
+                    jadwal_jastip: "", // string, default kosong
+                    jam_operasional: "", // string, default kosong
+                    nama_jastiper: fullName, // string, diasumsikan sama dengan nama
+                    negara_jastip: "", // string, default kosong
+                    status_akun: "active", // string, status default. Bisa "pending" atau "active"
+                    tanggal_daftar: new Date().toISOString().slice(0, 10), // string YYYY-MM-DD
+                    username: email.split('@')[0], // string, contoh: mengambil username dari email
+                    whatsapps: phoneNumber, // string, diasumsikan sama dengan nomor telepon
+
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp() // Timestamp server
                 };
 
-                // Firestore collection is determined by the selected role
-                await db.collection(selectedRole).doc(user.uid).set(userData); // Use UID as document ID
+                // Periksa apakah no_telepon berhasil diubah ke number
+                if (isNaN(userData.no_telepon)) {
+                    showMessage("Nomor Telepon tidak valid. Harap masukkan hanya angka.", "error");
+                    await user.delete(); // Hapus akun dari Auth jika data Firestore bermasalah
+                    return;
+                }
 
+                // Koleksi Firestore ditentukan oleh peran yang dipilih
+                await db.collection(selectedRole).doc(user.uid).set(userData);
+
+                // Tampilkan pop-up dan pesan sukses
+                alert('Pendaftaran Berhasil! Akun Anda telah dibuat.');
                 showMessage('Pendaftaran berhasil! Mengalihkan ke halaman login...', 'success');
                 setTimeout(() => {
-                    window.location.href = 'login_user.html'; // Redirect to login page after registration
-                }, 2000); // Wait 2 seconds before redirect
+                    window.location.href = 'login_user.html'; // Alihkan ke halaman login setelah pendaftaran
+                }, 2000); // Tunggu 2 detik sebelum mengalihkan
 
             } catch (error) {
                 console.error("Pendaftaran gagal:", error.code, error.message);
@@ -465,7 +483,7 @@
                 }
                 showMessage(errorMessage, 'error');
             }
-        }
+        });
     </script>
 </body>
 

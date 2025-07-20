@@ -26,7 +26,7 @@
             overflow: hidden;
         }
 
-        /* Overlay untuk efek blur dan opasitas */
+
         body::before {
             content: '';
             position: absolute;
@@ -35,7 +35,6 @@
             right: 0;
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
-            /* Opasitas 50% untuk keseimbangan antara gelap dan transparan */
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             z-index: 1;
@@ -44,80 +43,51 @@
         .login-container {
             position: relative;
             z-index: 2;
-            /* Mengubah background menjadi hitam transparan */
             background-color: rgba(0, 0, 0, 0.6);
-            /* Hitam dengan opasitas 60% */
             padding: 2.5rem;
-            /* Tambah padding agar konten tidak terlalu mepet */
             border-radius: 0.75rem;
-            /* Sedikit lebih melengkung */
             box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -5px rgba(0, 0, 0, 0.1);
-            /* Shadow lebih kuat */
-
-            /* Mengatur ukuran untuk menjadi persegi panjang berdiri */
-            /* max-width akan membatasi lebar, dan padding/konten akan menentukan tingginya secara otomatis */
             max-width: 380px;
-            /* Lebar maksimum yang sedikit lebih besar dari sm (384px) tapi lebih ramping */
-            /* min-height tidak perlu jika konten cukup banyak, tapi bisa ditambahkan jika formnya sangat pendek */
-            /* min-height: 500px; */
-            /* Contoh jika ingin tinggi minimal */
         }
 
-        /* Mengubah warna teks di dalam container agar tetap terlihat */
+
         .login-container h1,
         .login-container p,
         .login-container a,
-        .login-container label
-
-        /* jika ada label */
-            {
+        .login-container label {
             color: white;
-            /* Semua teks di dalam container menjadi putih */
         }
 
-        /* Menyesuaikan warna placeholder input */
+
         .login-container input::placeholder {
             color: rgba(255, 255, 255, 0.7);
-            /* Placeholder putih transparan */
         }
 
-        /* Menyesuaikan border input */
         .login-container input {
             border-color: rgba(255, 255, 255, 0.3);
-            /* Border input putih transparan */
             background-color: rgba(255, 255, 255, 0.1);
-            /* Background input sedikit transparan */
             color: white;
-            /* Teks input putih */
         }
 
         .login-container input:focus {
             border-color: #3b82f6;
-            /* Warna fokus tetap biru */
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-            /* Shadow fokus */
         }
 
-        /* Menyesuaikan warna link 'Lupa password?' */
         .login-container a.text-blue-600 {
             color: #93c5fd;
-            /* Light blue untuk link, agar kontras */
         }
 
         .login-container a.text-blue-600:hover {
             color: #dbeafe;
-            /* Lebih terang saat hover */
         }
 
-        /* Menyesuaikan warna teks pesan error/sukses */
         .login-container #message.text-red-600 {
             color: #fca5a5;
-            /* Warna merah muda untuk pesan error agar terlihat di background gelap */
         }
 
         .login-container #message.text-green-600 {
             color: #a7f3d0;
-            /* Warna hijau muda untuk pesan sukses */
         }
     </style>
 </head>
@@ -151,9 +121,9 @@
     </div>
 
     <script>
-        // --- KONFIGURASI FIREBASE ANDA ---
+        // --- KONFIGURASI FIREBASE ---
         const firebaseConfig = {
-            apiKey: "AIzaSyC...G2Mtu3ZGQ3fh...", // <-- GANTI DENGAN API KEY ANDA
+            apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
             authDomain: "tittpgo-7f884.firebaseapp.com",
             projectId: "tittpgo-7f884",
             storageBucket: "tittpgo-7f884.appspot.com",
@@ -161,26 +131,23 @@
             appId: "1:616687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
         };
 
-        // Inisialisasi Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();      // Untuk Otentikasi
-        const db = firebase.firestore();    // Untuk mengambil data dari Firestore
 
-        // Dapatkan elemen-elemen dari DOM
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const messageDiv = document.getElementById('message');
-        // registerLink tidak lagi memerlukan event listener JS karena sudah dihandle oleh href HTML
 
-        // Fungsi untuk menampilkan pesan (error atau sukses)
         function showMessage(msg, type = 'error') {
             messageDiv.textContent = msg;
-            // Class Tailwind CSS untuk warna pesan tetap di-set melalui JavaScript
+
             messageDiv.className = `mt-4 text-sm ${type === 'error' ? 'text-red-600' : 'text-green-600'}`;
         }
 
-        // Fungsi untuk mencari peran pengguna di koleksi yang berbeda
         async function getUserRoleByEmail(email) {
             const roles = ['admin', 'pembeli', 'jastiper'];
 
@@ -197,10 +164,9 @@
             return null;
         }
 
-        // Fungsi Login
         async function handleLogin(e) {
-            e.preventDefault(); // Mencegah refresh halaman
-            showMessage(''); // Bersihkan pesan sebelumnya
+            e.preventDefault();
+            showMessage('');
 
             const email = emailInput.value;
             const password = passwordInput.value;
@@ -218,7 +184,7 @@
                     console.log("Peran pengguna ditemukan:", role);
                     switch (role) {
                         case 'jastiper':
-                            window.location.href = 'dashboard-jastiper.html';
+                            window.location.href = 'dashboard_jastiper.html';
                             break;
                         case 'pembeli':
                             window.location.href = 'pembeli_dashboard.html';
@@ -248,7 +214,6 @@
             }
         }
 
-        // Event Listener untuk form login
         loginForm.addEventListener('submit', handleLogin);
 
     </script>
