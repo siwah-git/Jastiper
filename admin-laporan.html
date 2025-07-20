@@ -2,23 +2,55 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dashboard - TitipGo Admin</title>
+    <title>Laporan - TitipGo Admin</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* Custom styles */
+      :root {
+        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+      }
+
+      .main-content {
+        margin-left: var(--sidebar-width);
+        flex-grow: 1;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      /* Optional: Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
         class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
@@ -32,7 +64,7 @@
 
             <a
               href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-home mr-3"></i> Dashboard
             </a>
@@ -62,7 +94,7 @@
             </a>
             <a
               href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
             >
               <i class="fas fa-chart-line mr-3"></i> Laporan
             </a>
@@ -91,240 +123,436 @@
         </footer>
       </aside>
 
-      <!-- Konten utama -->
-      <main class="ml-64 w-full p-6 overflow-y-auto">
-        <!-- Header -->
+      <main class="main-content p-6 overflow-y-auto">
         <div
           class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
         >
-          <p class="text-lg font-semibold">
-            Laporan
-          </p>
-          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+          <p class="text-lg font-semibold">Laporan</p>
+          <a
+            href="admin-login.html"
+            class="ml-auto text-red-300 hover:text-red-200"
+            >Logout</a
+          >
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center ">
-             <a href="admin-laporan-detail.html"></a>
+          <div
+            class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
+          >
+            <a href="admin-laporan-detail.html"></a>
             <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
             <p class="text-gray-600 text-sm">Total Pendapatan</p>
             <p class="text-xl font-bold text-gray-800">Rp. 110.000.000,-</p>
-        </div>
-        <div class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center">
+          </div>
+          <div
+            class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
+          >
             <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
             <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
             <p class="text-xl font-bold text-gray-800">1.000</p>
-        </div>
-        <div class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center">
+          </div>
+          <div
+            class="bg-gray-50 p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
+          >
             <i class="fas fa-user-check text-green-500 text-3xl mb-2"></i>
             <p class="text-gray-600 text-sm">Total Jastiper Aktif</p>
             <p class="text-xl font-bold text-gray-800">100</p>
+          </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-gray-50 p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Grafik Pendapatan Bulanan</h2>
-            <div class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
-            
-                <canvas id="pendapatanChart"></canvas>
+        <div class="grid grid-cols-1 gap-6 mb-8">
+          <div class="bg-gray-50 p-4 rounded-md shadow">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+              Grafik Pendapatan Bulanan
+            </h2>
+            <div
+              class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500 font-bold"
+            >
+              <canvas id="pendapatanChart"></canvas>
             </div>
-        </div>
-        <div class="bg-gray-50 p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Pie Chart Kategori</h2>
+          </div>
+          <div class="bg-gray-50 p-4 rounded-md shadow">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">
+              Pie Chart Kategori
+            </h2>
             <p class="text-gray-600 text-sm mb-4">Kategori Paling Favorit</p>
-            <div class="flex items-center justify-center lg:justify-between flex-col lg:flex-row">
-                <div class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold mb-4 lg:mb-0 lg:mr-4">
-                    <canvas id="kategoriPieChart"></canvas>
-                </div>
-                <div class="text-sm text-gray-700 space-y-2">
-                    <p><span class="inline-block w-3 h-3 bg-blue-500 rounded-full mr-2"></span>40% Fashion</p>
-                    <p><span class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>25% Skincare</p>
-                    <p><span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>15% Elektronik</p>
-                    <p><span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"></span>10% Buku</p>
-                    <p><span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"></span>10% Koleksi</p>
-                </div>
+            <div
+              class="flex flex-col items-center justify-center lg:flex-row lg:justify-center"
+            >
+              <div
+                class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold mb-4 lg:mb-0 lg:mr-8"
+              >
+                <canvas id="kategoriPieChart"></canvas>
+              </div>
+              <div class="text-sm text-gray-700 space-y-2">
+                <p>
+                  <span
+                    class="inline-block w-3 h-3 bg-blue-500 rounded-full mr-2"
+                  ></span
+                  >40% Fashion
+                </p>
+                <p>
+                  <span
+                    class="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"
+                  ></span
+                  >25% Skincare
+                </p>
+                <p>
+                  <span
+                    class="inline-block w-3 h-3 bg-yellow-500 rounded-full mr-2"
+                  ></span
+                  >15% Elektronik
+                </p>
+                <p>
+                  <span
+                    class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-2"
+                  ></span
+                  >10% Buku
+                </p>
+                <p>
+                  <span
+                    class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2"
+                  ></span
+                  >10% Koleksi
+                </p>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="bg-gray-50 p-4 rounded-md shadow">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Tabel Rekap Laporan</h2>
-        <div class="mb-4">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
-                Ekspor
+        <div class="bg-gray-50 p-4 rounded-md shadow">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            Tabel Rekap Laporan
+          </h2>
+          <div class="mb-4">
+            <button
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200"
+            >
+              Ekspor
             </button>
-        </div>
-        <div class="overflow-x-auto rounded-md border border-gray-200">
+          </div>
+          <div class="overflow-x-auto rounded-md border border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-blue-500">
-                    <tr>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Bulan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Tahun</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Pendapatan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Jumlah Pesanan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Jumlah Jastiper Baru</th>
-                        <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">Januari</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">2024</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 10.000.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">50</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">5</td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">Februari</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">2024</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 12.000.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">60</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">7</td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
-                        </td>
-                    </tr>
-                    </tbody>
+              <thead class="bg-blue-500">
+                <tr>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Bulan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Tahun
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Pendapatan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Jumlah Pesanan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Jumlah Jastiper Baru
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="py-3 px-4 text-sm text-gray-700">Januari</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">2024</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">
+                    Rp. 10.000.000
+                  </td>
+                  <td class="py-3 px-4 text-sm text-gray-700">50</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">5</td>
+                  <td class="py-3 px-4 text-sm text-center">
+                    <a
+                      href="#"
+                      class="text-blue-600 hover:text-blue-900"
+                      title="Lihat Detail"
+                      ><i class="fas fa-info-circle"></i
+                    ></a>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 text-sm text-gray-700">Februari</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">2024</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">
+                    Rp. 12.000.000
+                  </td>
+                  <td class="py-3 px-4 text-sm text-gray-700">60</td>
+                  <td class="py-3 px-4 text-sm text-gray-700">7</td>
+                  <td class="py-3 px-4 text-sm text-center">
+                    <a
+                      href="#"
+                      class="text-blue-600 hover:text-blue-900"
+                      title="Lihat Detail"
+                      ><i class="fas fa-info-circle"></i
+                    ></a>
+                  </td>
+                </tr>
+              </tbody>
             </table>
-        </div>
-        <div class="mt-6 flex justify-between items-center">
+          </div>
+          <div class="mt-6 flex justify-between items-center">
             <div class="text-sm text-gray-700">
-                Menampilkan 1 sampai 10 dari 100 data
+              Menampilkan 1 sampai 10 dari 100 data
             </div>
             <div class="flex">
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">Previous</button>
-                <button class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300">1</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">Next</button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50"
+              >
+                Previous
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300"
+              >
+                1
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+              >
+                2
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+              >
+                3
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50"
+              >
+                Next
+              </button>
             </div>
+          </div>
         </div>
+      </main>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
         // Data untuk Grafik Pendapatan Bulanan
-        const pendapatanCtx = document.getElementById('pendapatanChart').getContext('2d');
+        const pendapatanCtx = document
+          .getElementById("pendapatanChart")
+          .getContext("2d");
         const pendapatanChart = new Chart(pendapatanCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'], // Sesuai gambar
-                datasets: [{
-                    label: 'Pendapatan Bulanan',
-                    data: [4, 5, 6, 7, 6, 8, 7, 5, 6, 8, 7, 5, 6, 7], // Contoh data, sesuaikan dengan data aktual Anda
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
+          type: "bar",
+          data: {
+            labels: [
+              "Jun",
+              "Jul",
+              "Agu",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des",
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+            ],
+            datasets: [
+              {
+                label: "Pendapatan Bulanan",
+                data: [4, 5, 6, 7, 6, 8, 7, 5, 6, 8, 7, 5, 6, 7],
+                backgroundColor: function (context) {
+                  const chart = context.chart;
+                  const { ctx, chartArea } = chart;
+
+                  if (!chartArea) {
+                    return "rgba(75, 192, 192, 0.6)";
+                  }
+
+                  const gradientSegment = ctx.createLinearGradient(
+                    0,
+                    chartArea.bottom,
+                    0,
+                    chartArea.top
+                  );
+                  gradientSegment.addColorStop(0, "rgba(59, 130, 246, 0.8)"); // Biru (blue-500 dengan sedikit opacity)
+                  gradientSegment.addColorStop(1, "rgba(236, 72, 153, 0.8)"); // Pink (pink-500 dengan sedikit opacity)
+                  return gradientSegment;
+                },
+                borderColor: function (context) {
+                  const chart = context.chart;
+                  const { ctx, chartArea } = chart;
+
+                  if (!chartArea) {
+                    return "rgba(75, 192, 192, 1)";
+                  }
+
+                  const gradientBorder = ctx.createLinearGradient(
+                    0,
+                    chartArea.bottom,
+                    0,
+                    chartArea.top
+                  );
+                  gradientBorder.addColorStop(0, "rgba(59, 130, 246, 1)"); // Biru
+                  gradientBorder.addColorStop(1, "rgba(236, 72, 153, 1)"); // Pink
+                  return gradientBorder;
+                },
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Jumlah",
+                },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: "Bln (2025)",
+                },
+              },
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Penting agar bisa mengatur tinggi div container
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Jumlah' // Sesuaikan dengan 'Jml' di gambar
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Bln (2025)' // Sesuaikan dengan 'Bln (2025)' di gambar
-                        }
-                    }
-                }
-            }
+          },
         });
 
         // Data untuk Pie Chart Kategori
-        const kategoriCtx = document.getElementById('kategoriPieChart').getContext('2d');
+        const kategoriCtx = document
+          .getElementById("kategoriPieChart")
+          .getContext("2d");
         const kategoriPieChart = new Chart(kategoriCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Fashion', 'Skincare', 'Elektronik', 'Buku', 'Koleksi'],
-                datasets: [{
-                    data: [40, 25, 15, 10, 10], // Persentase sesuai gambar
-                    backgroundColor: [
-                        'rgb(59, 130, 246)', // Blue-500
-                        'rgb(239, 68, 68)',   // Red-500
-                        'rgb(245, 158, 11)',  // Yellow-500
-                        'rgb(168, 85, 247)',  // Purple-500
-                        'rgb(34, 197, 94)'    // Green-500
-                    ],
-                    hoverOffset: 4
-                }]
+          type: "pie",
+          data: {
+            labels: ["Fashion", "Skincare", "Elektronik", "Buku", "Koleksi"],
+            datasets: [
+              {
+                data: [40, 25, 15, 10, 10], // Persentase sesuai gambar
+                backgroundColor: [
+                  "rgb(59, 130, 246)", // Blue-500
+                  "rgb(239, 68, 68)", // Red-500
+                  "rgb(245, 158, 11)", // Yellow-500
+                  "rgb(168, 85, 247)", // Purple-500
+                  "rgb(34, 197, 94)", // Green-500
+                ],
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false // Sembunyikan legend bawaan chart.js karena kita pakai legend custom
-                    }
-                }
-            }
+          },
         });
-    });
-</script>
+      });
 
-        <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
+      // Skrip untuk menyorot navigasi sidebar
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.split("/").pop();
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
-        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop();
 
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+          let isLinkActive = false;
 
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
+          // Highlight 'Laporan' for admin-laporan.html
+          if (
+            linkFileName === "admin-laporan.html" &&
+            currentPath.includes("admin-laporan.html")
+          ) {
+            isLinkActive = true;
+          }
+          // Special handling for other detail pages to highlight parent menu
+          else if (
+            linkFileName === "admin-pengguna.html" &&
+            currentPath.startsWith("admin-pengguna-detail")
+          ) {
+            isLinkActive = true;
+          } else if (
+            linkFileName === "admin-katalog.html" &&
+            (currentPath.startsWith("admin-katalog-detail") ||
+              currentPath.startsWith("admin-katalog-add") ||
+              currentPath.startsWith("admin-katalog-edit"))
+          ) {
+            isLinkActive = true;
+          } else if (
+            linkFileName === "admin-pesanan.html" &&
+            currentPath.startsWith("admin-pesanan-detail")
+          ) {
+            isLinkActive = true;
+          }
+          // Highlight 'Manajemen Admin' for all admin-related pages (list, add, edit, detail)
+          else if (
+            linkFileName === "admin-list.html" &&
+            (currentPath.startsWith("admin-list") ||
+              currentPath.startsWith("admin-add") ||
+              currentPath.startsWith("admin-edit") ||
+              currentPath.startsWith("admin-detail"))
+          ) {
+            isLinkActive = true;
+          }
+          // Default matching for exact file names
+          else if (linkFileName === currentPath) {
+            isLinkActive = true;
+          }
+          // Highlight dashboard if current path is root or index.html
+          else if (
+            (currentPath === "" || currentPath === "index.html") &&
+            linkFileName === "admin-dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
 
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
-
-
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
-
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+          }
         });
-    });
-</script>
+      });
+    </script>
   </body>
 </html>
