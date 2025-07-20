@@ -1,11 +1,12 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// js/firebase-config.js
+// Import fungsi-fungsi Firebase dari CDN (Modular SDK v9)
+// PENTING: Gunakan versi yang konsisten. Saya rekomendasikan 9.6.0 yang lebih stabil
+// jika 12.0.0 masih bermasalah dengan error-error tak terduga.
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Untuk Authentication
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js"; // Untuk Analytics (opsional)
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your web app's Firebase configuration (INI BAGIAN YANG UNIK UNTUK PROYEK ANDA)
 const firebaseConfig = {
   apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
   authDomain: "titipgo-28f84.firebaseapp.com",
@@ -16,6 +17,10 @@ const firebaseConfig = {
   measurementId: "G-CS3V405F3B",
 };
 
-// Initialize Firebase
+// Initialize Firebase services
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app); // Inisialisasi Auth
+const analytics = getAnalytics(app); // Inisialisasi Analytics (opsional)
+
+// Export objek dan layanan agar bisa diimpor di file lain
+export { app, auth, analytics };
