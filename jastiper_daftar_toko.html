@@ -1,114 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Daftar Toko Baru</title>
-    <script src="https://cdn.jsdelivr.net/npm/@twind/core@1.1.3"></script>
-    <script>
-        // Inisialisasi Twind
-        twind.install();
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background-image: url("asset/images/background.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 1rem;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            display: block;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+        }
+
+        .btn-primary {
+            background-color: #ec4899;
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #db2777;
+        }
+
+        /* Modal Styling (reused from other files, ensuring consistency) */
+        /* Removed modal styling as per request to remove custom popup */
+    </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body>
+    <div class="card">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Daftar Toko Baru
+        </h1>
+        <p class="text-sm text-gray-600 mb-6 text-center">
+            Silakan lengkapi informasi toko Anda untuk memulai.
+        </p>
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center mb-6">Daftar Toko Baru</h1>
+        <form id="register-store-form">
+            <div class="mb-4 input-group">
+                <label for="namaToko">Nama Toko:</label>
+                <input type="text" id="namaToko" required />
+            </div>
+            <div class="mb-4 input-group">
+                <label for="negaraToko">Negara:</label>
+                <input type="text" id="negaraToko" required />
+            </div>
+            <div class="mb-4 input-group">
+                <label for="fee">Fee (dalam angka, contoh: 15000):</label>
+                <input type="number" id="fee" required min="0" />
+            </div>
+            <div class="mb-4 input-group">
+                <label for="deskripsiToko">Deskripsi Toko:</label>
+                <textarea id="deskripsiToko" rows="4"></textarea>
+            </div>
+            <div class="mb-4 input-group">
+                <label for="alamatToko">Alamat Toko:</label>
+                <textarea id="alamatToko" rows="2"></textarea>
+            </div>
+            <div class="mb-6 input-group">
+                <label for="profileImageUrl">URL Gambar Profil Toko (Opsional):</label>
+                <input type="url" id="profileImageUrl" placeholder="https://example.com/gambar_profil.jpg" />
+            </div>
 
-        <form id="createShopForm" class="space-y-4">
-            <div>
-                <label for="nama_toko" class="block text-sm font-medium text-gray-700 mb-1">Nama Toko:</label>
-                <input type="text" id="nama_toko" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="alamat_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap:</label>
-                <input type="text" id="alamat_lengkap" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="negara_asal" class="block text-sm font-medium text-gray-700 mb-1">Negara Asal:</label>
-                <input type="text" id="negara_asal" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-            </div>
-            <button type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Daftar Toko
-            </button>
+            <button type="submit" class="btn-primary">Daftarkan Toko</button>
         </form>
-
-        <p id="message" class="mt-4 text-center text-sm"></p>
     </div>
 
+    <!-- Modal for Success Message (Removed as per request) -->
+
+    <!-- Firebase SDK (Compatibility version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
     <script>
-        // firebase-config.js content goes here
-        // Pastikan ini adalah konfigurasi Firebase Anda yang sebenarnya
+        // Firebase Configuration (Embedded directly)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Ganti dengan API Key Anda
-            authDomain: "YOUR_AUTH_DOMAIN", // Ganti dengan Auth Domain Anda
-            projectId: "YOUR_PROJECT_ID",   // Ganti dengan Project ID Anda
-            storageBucket: "YOUR_STORAGE_BUCKET", // Ganti dengan Storage Bucket Anda
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Ganti dengan Messaging Sender ID Anda
-            appId: "YOUR_APP_ID" // Ganti dengan App ID Anda
+            apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+            authDomain: "titipgo-28f84.firebaseapp.com",
+            projectId: "titipgo-28f84",
+            storageBucket: "titipgo-28f84.firebasestorage.app",
+            messagingSenderId: "816687535591",
+            appId: "1:816687535591:web:eaecf2fcc994636a319942",
+            measurementId: "G-CS3V405F3B",
         };
 
-        // Initialize Firebase
+        // Initialize Firebase App
         firebase.initializeApp(firebaseConfig);
-
+        // Get Firestore and Auth instances
         const db = firebase.firestore();
-    </script>
+        const auth = firebase.auth();
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const createShopForm = document.getElementById('createShopForm');
-            const messageElement = document.getElementById('message');
+        const registerStoreForm = document.getElementById("register-store-form");
+        // Removed successModal and closeSuccessModalButton variables
 
-            createShopForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
+        registerStoreForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-                const nama_toko = document.getElementById('nama_toko').value;
-                const alamat_lengkap = document.getElementById('alamat_lengkap').value;
-                const negara_asal = document.getElementById('negara_asal').value;
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Anda harus login untuk mendaftarkan toko.");
+                // Removed console.warn for navigation
+                // window.location.href = "halaman_login_anda.html"; // If there's a login page
+                return;
+            }
 
-                // Mendapatkan referensi koleksi 'shops' (atau nama koleksi toko Anda)
-                const shopsCollection = db.collection('shops'); // Ganti 'shops' jika nama koleksi Anda berbeda
+            const jastiperId = user.uid;
+            const namaToko = document.getElementById("namaToko").value;
+            const negaraToko = document.getElementById("negaraToko").value;
+            const fee = parseFloat(document.getElementById("fee").value);
+            const deskripsiToko = document.getElementById("deskripsiToko").value;
+            const alamatToko = document.getElementById("alamatToko").value;
+            const profileImageUrl = document.getElementById("profileImageUrl").value;
 
+            const newStoreData = {
+                namaToko: namaToko,
+                namaTokoLowerCase: namaToko.toLowerCase(),
+                negaraToko: negaraToko,
+                fee: fee,
+                deskripsiToko: deskripsiToko,
+                alamatToko: alamatToko,
+                gambar: profileImageUrl, // Sesuaikan dengan nama field di koleksi 'toko'
+                created_at: firebase.firestore.FieldValue.serverTimestamp(),
+                ownerId: jastiperId, // Simpan ownerId di dokumen toko
+                totalViews: 0,
+                pengikut: [], // Array kosong untuk pengikut
+            };
+
+            try {
+                // Gunakan set() dengan ID dokumen yang sama dengan jastiperId
+                await db.collection("toko").doc(jastiperId).set(newStoreData);
+                console.log("Toko berhasil didaftarkan untuk Jastiper ID:", jastiperId);
+
+                // Tampilkan alert sukses
+                alert("Toko Anda berhasil didaftarkan!");
+
+                // Langsung arahkan ke dashboard
+                window.location.href = "jastiper_dashboard.html";
+
+            } catch (error) {
+                console.error("Error mendaftarkan toko:", error);
+                alert("Gagal mendaftarkan toko: " + error.message);
+            }
+        });
+
+        // Redirect if already has a store
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const jastiperId = user.uid;
                 try {
-                    // Buat objek data toko dengan hanya field yang diisi awal
-                    const newShopData = {
-                        nama_toko: nama_toko,
-                        alamat_lengkap: alamat_lengkap,
-                        negara_asal: negara_asal,
-                        // Field lain diinisialisasi dengan nilai default atau kosong
-                        Instagram: "",
-                        deskripsi: "",
-                        fee: 0,
-                        gambar: "",
-                        id_toko: 0, // Akan diisi saat mengubah profil atau di-generate secara otomatis
-                        id_user: "", // Akan diisi saat user login atau diatur
-                        jumlah_pengikut: 0,
-                        no_toko: "",
-                        pengikut: 0,
-                        whatsApp: ""
-                    };
-
-                    // Tambahkan data toko baru ke Firestore
-                    // .add() akan membuat ID dokumen otomatis
-                    await shopsCollection.add(newShopData);
-
-                    messageElement.textContent = 'Toko berhasil didaftarkan!';
-                    messageElement.className = 'mt-4 text-center text-sm text-green-600';
-                    createShopForm.reset(); // Reset form setelah berhasil
+                    const storeDoc = await db.collection("toko").doc(jastiperId).get();
+                    if (storeDoc.exists) {
+                        alert("Anda sudah memiliki toko. Mengarahkan Anda ke halaman 'Dashboard Jastiper'.");
+                        window.location.href = "jastiper_dashboard.html";
+                    }
                 } catch (error) {
-                    console.error("Error menambahkan toko:", error);
-                    messageElement.textContent = 'Gagal mendaftarkan toko. Silakan coba lagi.';
-                    messageElement.className = 'mt-4 text-center text-sm text-red-600';
+                    console.error("Error checking existing store:", error);
                 }
-            });
+            }
         });
     </script>
 </body>

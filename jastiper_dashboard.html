@@ -15,8 +15,8 @@
     body {
       font-family: "Inter", sans-serif;
       background-image: url("asset/images/background.png");
+      /* Pastikan path ini benar */
       background-size: contain;
-      /* Changed to contain */
       background-repeat: no-repeat;
       background-position: center;
       height: 100vh;
@@ -96,8 +96,8 @@
       background-image: linear-gradient(rgba(255, 255, 255, 0.3),
           rgba(255, 255, 255, 0.3)),
         url("asset/images/titipgo_logo_remove.png");
+      /* Pastikan path ini benar */
       background-size: contain;
-      /* Changed to contain */
       background-position: center;
       background-repeat: no-repeat;
     }
@@ -112,7 +112,6 @@
     }
 
     /* Button Styling */
-    /* Menyesuaikan gaya untuk tag 'a' agar terlihat seperti button */
     .btn-primary {
       background-color: #ec4899;
       color: white;
@@ -123,9 +122,7 @@
       box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
       cursor: pointer;
       text-decoration: none;
-      /* Penting: menghilangkan underline default pada link */
       display: inline-block;
-      /* Agar padding dan margin berfungsi seperti block */
     }
 
     .btn-primary:hover {
@@ -427,12 +424,39 @@
   </div>
 
   <script type="module">
-    // Import Firebase services
-    import { db, auth, collection, query, where, getDocs, getDoc, doc } from './firebase-config.js';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    // Inisialisasi Firebase App dan layanan di sini
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      query,
+      where,
+      getDocs,
+      getDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+    // Konfigurasi Firebase Anda (disematkan langsung)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+      authDomain: "titipgo-28f84.firebaseapp.com",
+      projectId: "titipgo-28f84",
+      storageBucket: "titipgo-28f84.firebasestorage.app",
+      messagingSenderId: "816687535591",
+      appId: "1:816687535591:web:eaecf2fcc994636a319942",
+      measurementId: "G-CS3V405F3B",
+    };
+
+    // Inisialisasi Firebase App
+    const app = initializeApp(firebaseConfig);
+    // Dapatkan instance Firestore
+    const db = getFirestore(app);
+    // Dapatkan instance Auth
+    const auth = getAuth(app);
 
 
-    let currentTokoId = localStorage.getItem("tokoId");
+    let currentTokoId = null;
 
     // Listen for Firebase authentication state changes
     onAuthStateChanged(auth, (user) => {
@@ -444,22 +468,13 @@
         loadDashboardData(); // Load data once authenticated
       } else {
         // User is signed out
-        console.warn("No Toko ID found (user not authenticated). Redirecting to login.");
+        console.warn("No Toko ID found (user not authenticated).");
         localStorage.removeItem("tokoId"); // Clear any stale ID
-        window.location.href = "halaman_login_anda.html"; // Redirect to login page
+        // Karena navigasi langsung ke file lokal tidak didukung, kita hanya log dan tampilkan pesan.
+        alert("Anda belum login. Silakan login di lingkungan yang mendukung navigasi.");
+        console.warn("Navigasi ke halaman login tidak dapat dilakukan di lingkungan pratinjau ini.");
       }
     });
-
-    // Fallback if onAuthStateChanged doesn't immediately provide ID
-    if (!currentTokoId) {
-      console.warn(
-        "Toko ID not found in localStorage initially. Waiting for Firebase Auth."
-      );
-      // Data loading will be triggered by onAuthStateChanged
-    } else {
-      console.log("Toko ID (from localStorage):", currentTokoId);
-      loadDashboardData(); // Attempt to load data if ID is already present
-    }
 
 
     // Get DOM elements for counts in "Yang Perlu Dilakukan"
@@ -495,7 +510,10 @@
 
     // --- Function to fetch and display counts from Firebase "pemesanan" collection ---
     async function fetchToDoCounts() {
-      if (!currentTokoId) return; // Ensure tokoId is available
+      if (!currentTokoId) {
+        console.warn("fetchToDoCounts: Toko ID not available.");
+        return; // Ensure tokoId is available
+      }
 
       try {
         // Get orders relevant to the current toko
@@ -575,7 +593,10 @@
 
     // --- Function to fetch sales data for the chart based on total orders per 6 hours ---
     async function fetchSalesData() {
-      if (!currentTokoId) return;
+      if (!currentTokoId) {
+        console.warn("fetchSalesData: Toko ID not available.");
+        return;
+      }
 
       try {
         // Initialize an array for 4 segments of 6 hours
@@ -598,7 +619,8 @@
 
         salesSnapshot.forEach((doc) => {
           const order = doc.data();
-          if (order.orderDate) {
+          // Pastikan orderDate adalah instance Timestamp sebelum memanggil toDate()
+          if (order.orderDate && typeof order.orderDate.toDate === 'function') {
             const orderDate = order.orderDate.toDate(); // Convert Firebase Timestamp to Date object
             const hour = orderDate.getHours();
 
@@ -611,6 +633,8 @@
             } else if (hour >= 18 && hour < 24) {
               ordersPer6Hours[3]++;
             }
+          } else {
+            console.warn("orderDate is not a valid Firebase Timestamp:", order.orderDate);
           }
         });
 
@@ -698,7 +722,10 @@
 
     // Function to fetch traffic data (Total Pengunjung, Produk yang dilihat)
     async function fetchTrafficData() {
-      if (!currentTokoId) return;
+      if (!currentTokoId) {
+        console.warn("fetchTrafficData: Toko ID not available.");
+        return;
+      }
 
       try {
         const docRefToko = doc(db, "toko", currentTokoId);
@@ -720,7 +747,7 @@
     // Main function to load all dashboard data
     async function loadDashboardData() {
       if (!currentTokoId) {
-        console.warn("Toko ID not available yet for data loading.");
+        console.warn("loadDashboardData: Toko ID not available yet for data loading.");
         return;
       }
       await fetchToDoCounts();
@@ -746,7 +773,8 @@
         localStorage.removeItem("tokoId");
         alert("Anda telah logout.");
         logoutModal.classList.remove("show");
-        window.location.href = "halaman_login_anda.html";
+        // Karena navigasi langsung ke file lokal tidak didukung, kita hanya log dan tampilkan pesan.
+        console.warn("Navigasi ke halaman login tidak dapat dilakukan di lingkungan pratinjau ini.");
       } catch (error) {
         console.error("Error during logout:", error);
         alert("Terjadi kesalahan saat logout. Silakan coba lagi.");
