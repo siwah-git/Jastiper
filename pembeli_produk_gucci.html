@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <title>Baju Gucci G6000 Man Limited Edition</title>
@@ -14,6 +15,7 @@
       font-family: 'Poppins', sans-serif;
       background-color: #f5f7fa;
     }
+
     .header-search {
       font-size: 1rem;
       height: 36px;
@@ -23,24 +25,32 @@
       width: 180px;
       font-weight: 600;
     }
+
     @media (min-width: 1024px) {
-      .header-search { width: 220px; }
+      .header-search {
+        width: 220px;
+      }
     }
+
     .header-search::placeholder {
       color: #a0aec0;
       opacity: 1;
       font-size: 1rem;
       font-weight: 600;
     }
-    .icon-nav, nav svg {
+
+    .icon-nav,
+    nav svg {
       width: 28px !important;
       height: 28px !important;
       min-width: 28px;
       min-height: 28px;
     }
+
     .icon-nav:hover {
       filter: brightness(0.7);
     }
+
     .nav-center {
       flex-grow: 1;
       display: flex;
@@ -48,21 +58,25 @@
       align-items: center;
       gap: 2rem;
     }
-    .nav-center a, .nav-center .dropdown-kategori > a {
+
+    .nav-center a,
+    .nav-center .dropdown-kategori>a {
       padding: 0;
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 0.01em;
     }
+
     .dropdown-kategori .dropdown-content {
       min-width: 160px;
       border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
       background: #fff;
       padding: 0;
       margin-top: 4px;
       z-index: 50;
     }
+
     .dropdown-kategori .dropdown-content a {
       display: block;
       padding: 10px 18px;
@@ -72,241 +86,310 @@
       border-bottom: 1px solid #f0f0f0;
       transition: background 0.15s, color 0.15s;
     }
+
     .dropdown-kategori .dropdown-content a:last-child {
       border-bottom: none;
     }
+
     .dropdown-kategori .dropdown-content a:hover {
       background: #f5f7fa;
       color: #1976d2;
     }
+
     .logo-titipgo {
       width: 112px !important;
       min-width: 112px;
       max-width: 128px;
     }
+
     @media (max-width: 900px) {
-      .icon-nav, nav svg { width: 24px !important; height: 24px !important; }
-      .logo-titipgo { width: 90px !important; }
-      .header-search { font-size: 1rem; height: 36px; width: 180px; }
-      .header-search::placeholder { font-size: 1rem; }
-      .nav-center a, .nav-center .dropdown-kategori > a { font-size: 1rem; }
+
+      .icon-nav,
+      nav svg {
+        width: 24px !important;
+        height: 24px !important;
+      }
+
+      .logo-titipgo {
+        width: 90px !important;
+      }
+
+      .header-search {
+        font-size: 1rem;
+        height: 36px;
+        width: 180px;
+      }
+
+      .header-search::placeholder {
+        font-size: 1rem;
+      }
+
+      .nav-center a,
+      .nav-center .dropdown-kategori>a {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
+
 <body class="font-sans bg-gray-100 m-0">
   <!-- HEADER KONSISTEN DENGAN DASHBOARD, RESPONSIF, UKURAN SAMA -->
   <header class="bg-white shadow-md py-2 px-6 flex justify-between items-center fixed w-full top-0 z-50">
     <div class="flex items-center space-x-4">
       <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="w-24 sm:w-24">
       <div class="relative hidden md:block">
-        <input type="text" placeholder="Cari Barang..." class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
-        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor" viewBox="0 0 20 20">
+        <input type="text" placeholder="Cari Barang..."
+          class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
+        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+          viewBox="0 0 20 20">
           <path d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
         </svg>
       </div>
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-8">
       <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-lg">Beranda</a>
-      <div class="dropdown-kategori relative inline-block">
-        <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-lg">Kategori &#9662;</a>
-        <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200" id="dropdownKategori" style="display:none;">
-          <a href="pembeli_produk_gucci.html" class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600 transition">Produk</a>
-          <a href="pembeli_kategori.html" class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600 transition">Pilih Produk</a>
-        </div>
-      </div>
+      <a href="pembeli_kategori.html"
+        class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
       <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-lg">Hubungi kami</a>
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
       <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+          </path>
         </svg>
       </a>
-      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600" onclick="alert('Belum ada notifikasi!');return false;">
+      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+        onclick="alert('Belum ada notifikasi!');return false;">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
         </svg>
       </a>
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon" style="cursor:pointer;">
-      <div id="userDropdown" class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-        <a href="pembeli_akun.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-        <a href="pembeli_pesanan_saya.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-        <a href="#" onclick="openChatCS();return false;" class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
-        <a href="#" onclick="logoutUser();return false;" class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-    </div>
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon"
+        style="cursor:pointer;">
+      <div id="userDropdown"
+        class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+        <a href="pembeli_akun.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+        <a href="pembeli_pesanan_saya.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
+        <a href="#" onclick="logoutUser();return false;"
+          class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+      </div>
     </nav>
   </header>
   <main class="pt-20">
-  <!-- Modal Chat CS -->
-  <div id="chatCSModal" class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
-    <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
-      <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
-        <span class="font-bold text-lg">Chat dengan CS</span>
-        <button onclick="document.getElementById('chatCSModal').style.display='none'" class="bg-none border-none text-2xl cursor-pointer">&times;</button>
-      </div>
-      <div class="px-5 pt-5 min-h-[80px]">
-        <div id="chatCSMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
-      </div>
-      <div class="flex items-center px-5 pt-2 gap-2">
-        <input id="chatCSInput" type="text" placeholder="Tulis pesan..." class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
-        <button onclick="sendCSMessage()" class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
-      </div>
-    </div>
-  </div>
-  <div class="relative max-w-7xl mx-auto rounded-xl shadow-lg flex flex-col md:flex-row gap-8 p-8 mb-8 bg-[#eaf3fb] border border-gray-200 mt-12 items-start min-h-[340px]">
-    <button class="absolute right-8 top-8 bg-white border border-red-600 text-red-600 rounded px-6 py-2 text-sm font-semibold cursor-pointer shadow hover:bg-red-50" onclick="laporkan()">Laporkan</button>
-    <div class="flex-shrink-0">
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-44 h-auto rounded-lg object-cover bg-white border border-gray-200" />
-    </div>
-    <div class="flex-1 min-w-0 flex flex-col justify-start">
-      <div class="text-2xl font-bold text-gray-900 mb-2">Baju Gucci G6000 Man Limited Edition</div>
-      <div class="mb-2 text-sm font-medium flex items-center gap-2"><span class="text-yellow-400">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5.0 <span class="text-gray-400">|</span> 1,2 rb Penilaian <span class="text-gray-400">|</span> 5,8 rb Penjualan</div>
-      <div class="text-2xl text-red-700 font-bold mb-4">Rp. 3.000.000</div>
-      <div class="flex flex-col gap-2 mb-2">
-        <div class="flex mb-6"><div class="w-28 font-semibold text-gray-700">Pengiriman</div><div class="flex-1 text-gray-700">Estimasi Tiba 20-23 Agustus 2025</div></div>
-        <div class="flex mb-6"><div class="w-28 font-semibold text-gray-700">Warna</div><div class="flex-1 text-gray-700">Hitam Putih Abu-abu Biru Hijau</div></div>
-        <div class="flex mb-6"><div class="w-28 font-semibold text-gray-700">Ukuran</div><div class="flex-1 text-gray-700">S M L XL XXL</div></div>
-        <div class="flex items-center"><div class="w-28 font-semibold text-gray-700">Kuantitas</div><div class="flex-1 flex items-center gap-2"><button class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button">-</button><input type="number" value="2" min="1" max="30" class="produk-qty-input w-12 px-2 py-1 border border-gray-300 rounded text-center" /><button class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button">+</button><span class="ml-3 text-gray-500">Stock 30</span></div></div>
-      </div>
-      <div class="flex gap-4 mt-4">
-        <button class="bg-white text-black border border-gray-400 px-6 py-2 rounded font-semibold shadow hover:bg-gray-100" onclick="masukkanKeranjang()">Masukkan Keranjang</button>
-        <button class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800" onclick="beliSekarang()">Beli Sekarang</button>
+    <!-- Modal Chat CS -->
+    <div id="chatCSModal"
+      class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
+      <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
+        <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
+          <span class="font-bold text-lg">Chat dengan CS</span>
+          <button onclick="document.getElementById('chatCSModal').style.display='none'"
+            class="bg-none border-none text-2xl cursor-pointer">&times;</button>
+        </div>
+        <div class="px-5 pt-5 min-h-[80px]">
+          <div id="chatCSMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
+        </div>
+        <div class="flex items-center px-5 pt-2 gap-2">
+          <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+            class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
+          <button onclick="sendCSMessage()"
+            class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
+        </div>
       </div>
     </div>
-    <div class="w-full md:w-1/3 md:mt-0 flex flex-col md:self-start">
-      <div class="text-blue-700 font-bold mb-2">Deskripsi Produk</div>
-      <ul class="list-disc ml-6 text-gray-700 text-sm mb-4">
-        <li>Brand: Gucci (Original & Authentic)</li>
-        <li>Model: G6000 Limited Edition</li>
-        <li>Bahan: 100% Katun Premium – nyaman, adem & tahan lama</li>
-        <li>Warna Tersedia: Hitam, Putih, Abu-abu, Biru, Hijau</li>
-        <li>Ukuran Tersedia: S, M, L, XL, XXL</li>
-        <li>Logo: Gucci G6000 original dengan bordiran rapi</li>
-      </ul>
-      <div class="text-blue-700 font-bold mb-2">Kenapa Beli di Kami?</div>
-      <ol class="list-decimal ml-6 text-gray-700 text-sm">
-        <li>Produk dijamin ORIGINAL dari Gucci Official Store</li>
-        <li>Jasa titip aman & terpercaya, pengiriman sesuai estimasi</li>
-        <li>Garansi uang kembali jika produk tidak sesuai pesanan</li>
-        <li>Cocok untuk hadiah, koleksi, atau outfit eksklusif sehari-hari</li>
-        <li>Tersedia sekarang – Masukkan ke keranjang & checkout sebelum kehabisan!</li>
-      </ol>
+    <div
+      class="relative max-w-7xl mx-auto rounded-xl shadow-lg flex flex-col md:flex-row gap-8 p-8 mb-8 bg-[#eaf3fb] border border-gray-200 mt-12 items-start min-h-[340px]">
+      <button
+        class="absolute right-8 top-8 bg-white border border-red-600 text-red-600 rounded px-6 py-2 text-sm font-semibold cursor-pointer shadow hover:bg-red-50"
+        onclick="laporkan()">Laporkan</button>
+      <div class="flex-shrink-0">
+        <img src="asset/images/ootd (1).jpg" alt="OOTD"
+          class="w-44 h-auto rounded-lg object-cover bg-white border border-gray-200" />
+      </div>
+      <div class="flex-1 min-w-0 flex flex-col justify-start">
+        <div class="text-2xl font-bold text-gray-900 mb-2">Baju Gucci G6000 Man Limited Edition</div>
+        <div class="mb-2 text-sm font-medium flex items-center gap-2"><span
+            class="text-yellow-400">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5.0 <span class="text-gray-400">|</span>
+          1,2 rb Penilaian <span class="text-gray-400">|</span> 5,8 rb Penjualan</div>
+        <div class="text-2xl text-red-700 font-bold mb-4">Rp. 3.000.000</div>
+        <div class="flex flex-col gap-2 mb-2">
+          <div class="flex mb-6">
+            <div class="w-28 font-semibold text-gray-700">Pengiriman</div>
+            <div class="flex-1 text-gray-700">Estimasi Tiba 20-23 Agustus 2025</div>
+          </div>
+          <div class="flex mb-6">
+            <div class="w-28 font-semibold text-gray-700">Warna</div>
+            <div class="flex-1 text-gray-700">Hitam Putih Abu-abu Biru Hijau</div>
+          </div>
+          <div class="flex mb-6">
+            <div class="w-28 font-semibold text-gray-700">Ukuran</div>
+            <div class="flex-1 text-gray-700">S M L XL XXL</div>
+          </div>
+          <div class="flex items-center">
+            <div class="w-28 font-semibold text-gray-700">Kuantitas</div>
+            <div class="flex-1 flex items-center gap-2"><button
+                class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button">-</button><input
+                type="number" value="2" min="1" max="30"
+                class="produk-qty-input w-12 px-2 py-1 border border-gray-300 rounded text-center" /><button
+                class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button">+</button><span
+                class="ml-3 text-gray-500">Stock 30</span></div>
+          </div>
+        </div>
+        <div class="flex gap-4 mt-4">
+          <button
+            class="bg-white text-black border border-gray-400 px-6 py-2 rounded font-semibold shadow hover:bg-gray-100"
+            onclick="masukkanKeranjang()">Masukkan Keranjang</button>
+          <button class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800"
+            onclick="beliSekarang()">Beli Sekarang</button>
+        </div>
+      </div>
+      <div class="w-full md:w-1/3 md:mt-0 flex flex-col md:self-start">
+        <div class="text-blue-700 font-bold mb-2">Deskripsi Produk</div>
+        <ul class="list-disc ml-6 text-gray-700 text-sm mb-4">
+          <li>Brand: Gucci (Original & Authentic)</li>
+          <li>Model: G6000 Limited Edition</li>
+          <li>Bahan: 100% Katun Premium – nyaman, adem & tahan lama</li>
+          <li>Warna Tersedia: Hitam, Putih, Abu-abu, Biru, Hijau</li>
+          <li>Ukuran Tersedia: S, M, L, XL, XXL</li>
+          <li>Logo: Gucci G6000 original dengan bordiran rapi</li>
+        </ul>
+        <div class="text-blue-700 font-bold mb-2">Kenapa Beli di Kami?</div>
+        <ol class="list-decimal ml-6 text-gray-700 text-sm">
+          <li>Produk dijamin ORIGINAL dari Gucci Official Store</li>
+          <li>Jasa titip aman & terpercaya, pengiriman sesuai estimasi</li>
+          <li>Garansi uang kembali jika produk tidak sesuai pesanan</li>
+          <li>Cocok untuk hadiah, koleksi, atau outfit eksklusif sehari-hari</li>
+          <li>Tersedia sekarang – Masukkan ke keranjang & checkout sebelum kehabisan!</li>
+        </ol>
+      </div>
     </div>
-  </div>
-  <div class="flex items-center gap-3 bg-[#eaf3fb] border border-gray-200 rounded-xl shadow p-6 max-w-7xl mx-auto mb-8 mt-8">
-    <span class="text-green-500 text-lg">&#9679;</span>
-    <span class="font-bold text-gray-900">Rifal Store</span>
-    <span class="text-gray-500 text-xs">Aktif 5 Menit yang lalu</span>
-    <button class="ml-4 bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100" onclick="hubungiToko()">Hubungi Toko</button>
-    <button class="bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100" onclick="kunjungiToko()">Kunjungi Toko</button>
-    <span class="ml-auto text-gray-700 text-xs">Pengikut <b>300</b></span>
-    <span class="text-gray-700 text-xs">Produk <b>20</b></span>
-  </div>
-  <script>
-    // Interaktif: tombol + dan -
-    const qtyInput = document.querySelector('.produk-qty-input');
-    document.querySelectorAll('.produk-qty-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        let val = parseInt(qtyInput.value, 10);
-        if (this.textContent === '-' && val > 1) qtyInput.value = val - 1;
-        if (this.textContent === '+') qtyInput.value = val + 1;
+    <div
+      class="flex items-center gap-3 bg-[#eaf3fb] border border-gray-200 rounded-xl shadow p-6 max-w-7xl mx-auto mb-8 mt-8">
+      <span class="text-green-500 text-lg">&#9679;</span>
+      <span class="font-bold text-gray-900">Rifal Store</span>
+      <span class="text-gray-500 text-xs">Aktif 5 Menit yang lalu</span>
+      <button
+        class="ml-4 bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
+        onclick="hubungiToko()">Hubungi Toko</button>
+      <button
+        class="bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
+        onclick="kunjungiToko()">Kunjungi Toko</button>
+      <span class="ml-auto text-gray-700 text-xs">Pengikut <b>300</b></span>
+      <span class="text-gray-700 text-xs">Produk <b>20</b></span>
+    </div>
+    <script>
+      // Interaktif: tombol + dan -
+      const qtyInput = document.querySelector('.produk-qty-input');
+      document.querySelectorAll('.produk-qty-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          let val = parseInt(qtyInput.value, 10);
+          if (this.textContent === '-' && val > 1) qtyInput.value = val - 1;
+          if (this.textContent === '+') qtyInput.value = val + 1;
+        });
       });
-    });
-    // Masukkan Keranjang
-    function masukkanKeranjang() {
-      const produk = {
-        name: 'Baju Gucci G6000 Man Limited Edition',
-        color: 'Hitam',
-        size: 'M',
-        quantity: parseInt(document.querySelector('.produk-qty-input').value, 10),
-        price: 3000000,
-        store: 'Rifal Store'
-      };
-      let cart = JSON.parse(localStorage.getItem('checkoutCart') || '[]');
-      cart.push(produk);
-      localStorage.setItem('checkoutCart', JSON.stringify(cart));
-      window.location.href = 'pembeli_keranjang.html';
-    }
-    // Beli Sekarang
-    function beliSekarang() {
-      const produk = {
-        name: 'Baju Gucci G6000 Man Limited Edition',
-        color: 'Hitam',
-        size: 'M',
-        quantity: parseInt(document.querySelector('.produk-qty-input').value, 10),
-        price: 3000000,
-        store: 'Rifal Store'
-      };
-      localStorage.setItem('checkoutProduct', JSON.stringify(produk));
-      window.location.href = 'pembeli_checkout.html';
-    }
-    // Laporkan
-    function laporkan() {
-      alert('Terima kasih atas laporan Anda!');
-    }
-    // Hubungi Toko
-    function hubungiToko() {
-      alert('Fitur chat toko akan segera hadir!');
-    }
-    // Kunjungi Toko
-    function kunjungiToko() {
-      window.location.href = 'toko.html?nama=Rifal%20Store';
-    }
-    // Dropdown kategori (klik)
-    // Dropdown Kategori
-    const kategoriMenu = document.getElementById('kategoriMenu');
-    const dropdownKategori = document.getElementById('dropdownKategori');
-    if (kategoriMenu && dropdownKategori) {
-      kategoriMenu.addEventListener('click', function(e) {
-        e.preventDefault();
-        dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-      });
-      document.addEventListener('click', function(e) {
-        if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-          dropdownKategori.style.display = 'none';
-        }
-      });
-    }
-    // Dropdown User
-    const userIcon = document.getElementById('userIcon');
-    const userDropdown = document.getElementById('userDropdown');
-    if (userIcon && userDropdown) {
-      userIcon.onclick = function(e) {
-        e.stopPropagation();
-        userDropdown.classList.toggle('hidden');
-      };
-      document.addEventListener('click', function(e) {
-        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-          userDropdown.classList.add('hidden');
-        }
-      });
-    }
-    function logoutUser() {
-      alert('Berhasil logout!');
-      userDropdown.classList.add('hidden');
-    }
-    function openChatCS() {
-      document.getElementById('chatCSModal').style.display = 'flex';
-      document.getElementById('chatCSMessages').innerHTML = '<b>CS:</b> Ada yang bisa kami bantu?';
-    }
-    function sendCSMessage() {
-      var input = document.getElementById('chatCSInput');
-      var messages = document.getElementById('chatCSMessages');
-      if(input.value.trim() !== '') {
-        messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
-        setTimeout(function(){
-          messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
-        }, 800);
-        input.value = '';
+      // Masukkan Keranjang
+      function masukkanKeranjang() {
+        const produk = {
+          name: 'Baju Gucci G6000 Man Limited Edition',
+          color: 'Hitam',
+          size: 'M',
+          quantity: parseInt(document.querySelector('.produk-qty-input').value, 10),
+          price: 3000000,
+          store: 'Rifal Store'
+        };
+        let cart = JSON.parse(localStorage.getItem('checkoutCart') || '[]');
+        cart.push(produk);
+        localStorage.setItem('checkoutCart', JSON.stringify(cart));
+        window.location.href = 'pembeli_keranjang.html';
       }
-    }
-  </script>
-<!-- Integrasi Firebase Firestore -->
-<script type="module">
-import { db, auth } from './js/firebase-config.js';
-// Contoh: Ambil data produk
-// import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
-// const products = await getDocs(collection(db, "products"));
-</script>
+      // Beli Sekarang
+      function beliSekarang() {
+        const produk = {
+          name: 'Baju Gucci G6000 Man Limited Edition',
+          color: 'Hitam',
+          size: 'M',
+          quantity: parseInt(document.querySelector('.produk-qty-input').value, 10),
+          price: 3000000,
+          store: 'Rifal Store'
+        };
+        localStorage.setItem('checkoutProduct', JSON.stringify(produk));
+        window.location.href = 'pembeli_checkout.html';
+      }
+      // Laporkan
+      function laporkan() {
+        alert('Terima kasih atas laporan Anda!');
+      }
+      // Hubungi Toko
+      function hubungiToko() {
+        alert('Fitur chat toko akan segera hadir!');
+      }
+      // Kunjungi Toko
+      function kunjungiToko() {
+        window.location.href = 'toko.html?nama=Rifal%20Store';
+      }
+      // Dropdown kategori (klik)
+      // Dropdown Kategori
+      const kategoriMenu = document.getElementById('kategoriMenu');
+      const dropdownKategori = document.getElementById('dropdownKategori');
+      if (kategoriMenu && dropdownKategori) {
+        kategoriMenu.addEventListener('click', function (e) {
+          e.preventDefault();
+          dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function (e) {
+          if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
+            dropdownKategori.style.display = 'none';
+          }
+        });
+      }
+      // Dropdown User
+      const userIcon = document.getElementById('userIcon');
+      const userDropdown = document.getElementById('userDropdown');
+      if (userIcon && userDropdown) {
+        userIcon.onclick = function (e) {
+          e.stopPropagation();
+          userDropdown.classList.toggle('hidden');
+        };
+        document.addEventListener('click', function (e) {
+          if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+            userDropdown.classList.add('hidden');
+          }
+        });
+      }
+      function logoutUser() {
+        alert('Berhasil logout!');
+        userDropdown.classList.add('hidden');
+      }
+      function openChatCS() {
+        document.getElementById('chatCSModal').style.display = 'flex';
+        document.getElementById('chatCSMessages').innerHTML = '<b>CS:</b> Ada yang bisa kami bantu?';
+      }
+      function sendCSMessage() {
+        var input = document.getElementById('chatCSInput');
+        var messages = document.getElementById('chatCSMessages');
+        if (input.value.trim() !== '') {
+          messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+          setTimeout(function () {
+            messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
+          }, 800);
+          input.value = '';
+        }
+      }
+    </script>
+    <!-- Integrasi Firebase Firestore -->
+    <script type="module">
+      import { db, auth } from './js/firebase-config.js';
+      // Contoh: Ambil data produk
+      // import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
+      // const products = await getDocs(collection(db, "products"));
+    </script>
 </body>
-</html> 
+
+</html>
