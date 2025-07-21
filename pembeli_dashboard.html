@@ -17,7 +17,8 @@
         /* Custom CSS untuk overriding atau menambahkan style Tailwind */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #ffffff; /* Warna background putih */
+            background-color: #ffffff;
+            /* Warna background putih */
         }
 
         .hero-section {
@@ -31,10 +32,13 @@
         /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
         .country-card {
-            background-color: #ffffff; /* Card background putih */
-            border-radius: 0.5rem; /* rounded-lg */
+            background-color: #ffffff;
+            /* Card background putih */
+            border-radius: 0.5rem;
+            /* rounded-lg */
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* shadow-md */
             transition: transform 0.2s ease-in-out;
         }
 
@@ -46,60 +50,77 @@
         .product-card img,
         .country-card img {
             width: 100%;
-            height: 128px; /* h-32 */
+            height: 128px;
+            /* h-32 */
             object-fit: cover;
-            border-bottom: 1px solid #eee; /* Sedikit pemisah visual */
+            border-bottom: 1px solid #eee;
+            /* Sedikit pemisah visual */
         }
 
         /* Mengubah warna teks placeholder pada input */
         .header-search::placeholder {
-            color: #a0aec0; /* Tailwind gray-400 */
-            opacity: 1; /* override default opacity */
+            color: #a0aec0;
+            /* Tailwind gray-400 */
+            opacity: 1;
+            /* override default opacity */
         }
 
         .footer-logo {
-            filter: brightness(0.6); /* Menggelapkan logo footer agar terlihat di bg abu-abu */
+            filter: brightness(0.6);
+            /* Menggelapkan logo footer agar terlihat di bg abu-abu */
         }
 
         /* Style untuk ikon di header */
         .header-icon {
-            color: #4a5568; /* Tailwind gray-700 */
+            color: #4a5568;
+            /* Tailwind gray-700 */
             transition: color 0.2s ease-in-out;
         }
 
         .header-icon:hover {
-            color: #e53e3e; /* Tailwind red-600, mendekati pink */
+            color: #e53e3e;
+            /* Tailwind red-600, mendekati pink */
         }
 
         /* Overlay untuk hero section */
         .hero-section .overlay-dark {
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparan gelap */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparan gelap */
         }
 
         /* Overlay untuk section produk best-seller */
         #produk-best-seller-section {
-            background-color: #E0F2F7; /* Warna biru muda yang sesuai gambar */
+            background-color: #E0F2F7;
+            /* Warna biru muda yang sesuai gambar */
             padding: 3rem 0;
         }
+
         #produk-best-seller-section h2 {
-            color: #2C3E50; /* Warna teks gelap */
+            color: #2C3E50;
+            /* Warna teks gelap */
         }
 
         /* Overlay untuk section negara terpopuler */
         #negara-terpopuler-section {
-            background-color: #F7FAFC; /* Warna putih keabu-abuan */
+            background-color: #F7FAFC;
+            /* Warna putih keabu-abuan */
             padding: 3rem 0;
         }
+
         #negara-terpopuler-section h2 {
-            color: #1A202C; /* Warna teks sangat gelap */
+            color: #1A202C;
+            /* Warna teks sangat gelap */
         }
 
         /* Penyesuaian untuk teks "Apa itu TitipGo?" */
         .titipgo-description-section {
-            background-color: #ffffff; /* Ubah ke putih */
-            color: #4a5568; /* Teks abu-abu gelap */
+            background-color: #ffffff;
+            /* Ubah ke putih */
+            color: #4a5568;
+            /* Teks abu-abu gelap */
             padding: 2rem 1rem;
-            text-align: center; /* Pastikan judul di tengah */
+            text-align: center;
+            /* Pastikan judul di tengah */
         }
 
         .titipgo-description-section h2 {
@@ -109,16 +130,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1A202C; /* Warna teks judul */
+            color: #1A202C;
+            /* Warna teks judul */
         }
 
         .titipgo-description-section p {
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.7; /* Lebih banyak spasi baris */
+            line-height: 1.7;
+            /* Lebih banyak spasi baris */
             font-size: 1rem;
-            text-align: justify; /* Rata kiri kanan untuk kerapihan */
+            text-align: justify;
+            /* Rata kiri kanan untuk kerapihan */
         }
 
         .titipgo-description-section img.logo-in-text {
@@ -133,11 +157,13 @@
             justify-content: center;
             align-items: center;
             /* Menambahkan jarak antar item navigasi */
-            gap: 2rem; /* Menggunakan gap untuk jarak antar elemen flexbox */
+            gap: 2rem;
+            /* Menggunakan gap untuk jarak antar elemen flexbox */
         }
 
         .nav-center a {
-            padding: 0; /* Menghilangkan padding yang sudah ada jika menggunakan gap */
+            padding: 0;
+            /* Menghilangkan padding yang sudah ada jika menggunakan gap */
         }
 
         .country-card {
@@ -160,7 +186,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black overlay */
             color: white;
             padding: 0.5rem 0;
             text-align: center;
@@ -187,7 +214,8 @@
 
         <nav class="nav-center hidden md:flex">
             <a href="#" class="text-gray-700 hover:text-pink-600 font-medium">Beranda</a>
-            <a href="#" class="text-gray-700 hover:text-pink-600 font-medium">Kategori</a>
+            <a href="pembeli_kategori.html" <a href="#"
+                class="text-gray-700 hover:text-pink-600 font-medium">Kategori</a>
             <a href="#" class="text-gray-700 hover:text-pink-600 font-medium">Hubungi kami</a>
         </nav>
 
@@ -201,7 +229,7 @@
                 </svg>
             </a>
 
-            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600">
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -221,11 +249,13 @@
     </header>
 
     <main class="pt-20">
-        <section id="hero-section" class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
+        <section id="hero-section"
+            class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
             <div class="relative z-10 text-white p-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">Travel Anywhere, Shop Everywhere</h1>
-                <p class="text-lg md:text-xl max-w-2xl mx-auto">Solusi mudah untuk kamu yang mau belanja dari luar negeri
+                <p class="text-lg md:text-xl max-w-2xl mx-auto">Solusi mudah untuk kamu yang mau belanja dari luar
+                    negeri
                     dengan mudah dan aman</p>
             </div>
         </section>
@@ -241,16 +271,20 @@
                 diantar oleh Jastiper terpercaya. Gabung dan nikmati pengalaman belanja dari berbagai negara hanya dalam
                 satu aplikasi. Platform digital terbaik untuk mendukung bisnis untuk menemukan penemuan baru dari
                 barang-barang produk unggulan. Kami siap mengantarkan Anda kemana pun Anda inginkan! TitipGo adalah
-                aplikasi revolusioner yang dirancang untuk mengubah cara Anda berbelanja dari luar negeri. Dengan TitipGo,
-                Anda dapat menemukan dan membeli produk-produk unik dari berbagai negara dengan mudah dan aman. Apakah Anda
+                aplikasi revolusioner yang dirancang untuk mengubah cara Anda berbelanja dari luar negeri. Dengan
+                TitipGo,
+                Anda dapat menemukan dan membeli produk-produk unik dari berbagai negara dengan mudah dan aman. Apakah
+                Anda
                 mencari fashion terbaru dari Paris, gadget inovatif dari Tokyo, atau kerajinan tangan otentik dari Bali,
                 TitipGo memiliki semuanya. Kami menghubungkan Anda dengan jastiper terpercaya yang siap membantu Anda
                 mendapatkan barang impian Anda tanpa kerumitan. Dengan TitipGo, belanja internasional jadi lebih mudah,
-                terjangkau, dan bertanggung jawab. Kami percaya bahwa setiap orang berhak memiliki akses ke produk-produk
-                berkualitas dari seluruh dunia, dan kami hadir untuk mewujudkannya. Titip Barang Jadi Mudah, Cari Jastiper
+                terjangkau, dan bertanggung jawab. Kami percaya bahwa setiap orang berhak memiliki akses ke
+                produk-produk
+                berkualitas dari seluruh dunia, dan kami hadir untuk mewujudkannya. Titip Barang Jadi Mudah, Cari
+                Jastiper
                 Bawa Oleh-Oleh.
             </p>
-            </section>
+        </section>
 
         <section id="produk-best-seller-section" class="relative py-12 text-center">
             <div class="relative z-10 p-4">
