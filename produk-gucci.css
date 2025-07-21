@@ -1,0 +1,1758 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+}
+
+/* HEADER: Hanya seragamkan gap antar elemen, style font dan warna kembali seperti awal */
+.header {
+    background: #fff;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid #0090ff;
+    gap: 32px;
+}
+
+.header>*:last-child {
+    margin-right: 0 !important;
+}
+
+.header img {
+    height: 48px;
+    margin-right: 16px;
+}
+
+.header .logo {
+    height: 48px;
+    margin-right: 16px;
+}
+
+.header .logo-text {
+    margin-right: 0;
+}
+
+.header .judul {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: 8px;
+}
+
+.header nav {
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+    gap: 24px;
+}
+
+.header nav a {
+    margin: 0;
+    color: #2d2d2d;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.header nav a:hover {
+    color: #1976d2;
+}
+
+.header input {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 7px 16px;
+    width: 220px;
+    border-radius: 4px;
+    border: 1px solid #d1d1d1;
+    background: #f7f7f7;
+    font-size: 15px;
+}
+
+/* HEADER ICON ALIGN RIGHT */
+.header .header-icons {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 0;
+}
+
+.icon-nav {
+    width: 28px;
+    height: 28px;
+    margin-left: 0;
+    margin-right: 0;
+    vertical-align: middle;
+    object-fit: contain;
+    cursor: pointer;
+    transition: filter 0.15s;
+}
+
+.icon-nav:hover {
+    filter: brightness(0.7);
+}
+
+@media (max-width: 900px) {
+    .header {
+        padding: 10px 8vw;
+        gap: 12px;
+    }
+
+    .header .header-icons {
+        gap: 0;
+    }
+
+    .header img,
+    .header .logo {
+        height: 34px;
+    }
+
+    .header input {
+        width: 120px;
+        font-size: 13px;
+    }
+
+    .header nav a {
+        font-size: 13px;
+    }
+
+    .icon-nav {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* END HEADER GAP SAMA DASHBOARD */
+
+.pink-bar {
+    height: 32px;
+    background: #ff0080;
+    width: 100%;
+}
+
+.container {
+    background: #fff;
+    padding: 40px 0 0 0;
+    min-height: 100vh;
+}
+
+/* --- KERANJANG --- */
+.cart-container {
+    background: #e5e5e5;
+    padding: 32px 0 0 0;
+    min-height: 100vh;
+}
+
+.cart-store {
+    background: #fff;
+    border: 8px solid #ccc;
+    border-radius: 8px;
+    margin: 0 auto 18px auto;
+    padding: 0 24px 18px 24px;
+    max-width: 98%;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.cart-store-header {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 16px 0 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.cart-store-header input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: #00c800;
+    margin-right: 12px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-top: 2px solid #bbb;
+    padding: 16px 0 0 0;
+    margin-top: 0;
+}
+
+.cart-item input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: #00c800;
+    margin-right: 12px;
+}
+
+.item-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 18px;
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.item-variant {
+    font-size: 14px;
+    color: #444;
+}
+
+.item-price,
+.item-total {
+    width: 140px;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 18px;
+}
+
+.item-qty {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #222;
+    border-radius: 4px;
+    margin: 0 18px;
+    background: #fff;
+}
+
+.item-qty button {
+    background: #fff;
+    border: 1px solid #222;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.item-qty button:hover {
+    background: #eee;
+}
+
+.item-qty span {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.hapus {
+    color: #1a0dab;
+    margin-left: 18px;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.cart-actions {
+    display: flex;
+    align-items: center;
+    padding: 18px 0 18px 8px;
+    border-top: 2px solid #bbb;
+    background: #fff;
+    max-width: 98%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.cart-actions input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: #00c800;
+    margin-right: 12px;
+}
+
+.cart-actions .hapus {
+    margin-left: 12px;
+    margin-right: auto;
+}
+
+.cart-actions .total-label {
+    margin-right: 8px;
+    margin-left: auto;
+    font-size: 15px;
+}
+
+.cart-actions .total-harga {
+    color: #ff0000;
+    font-size: 17px;
+    font-weight: bold;
+    margin-right: 18px;
+}
+
+.cart-actions .checkout {
+    background: #22c100;
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    padding: 7px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cart-actions .checkout:hover {
+    background: #1a9e00;
+}
+
+footer {
+    background: #e5e5e5;
+    padding: 32px 0 24px 0;
+    margin-top: 0;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 180px;
+}
+
+.footer-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.footer-link {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: #222;
+    cursor: pointer;
+    border-bottom: 1px solid #888;
+    width: fit-content;
+}
+
+.footer-logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-section .icon {
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.icon-nav {
+    width: 28px;
+    height: 28px;
+    margin-left: 24px;
+    vertical-align: middle;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .footer-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section,
+    .footer-logo {
+        margin-bottom: 18px;
+    }
+}
+
+.produk-main-box {
+    background: #eaf3fb;
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-start;
+    padding: 24px 24px 18px 24px;
+    max-width: 1100px;
+    margin: 24px auto 0 auto;
+    box-sizing: border-box;
+    position: relative;
+    gap: 0;
+}
+
+.produk-btn-lapor {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    background: #fff;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+    border-radius: 4px;
+    padding: 5px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.produk-img-col {
+    width: 150px;
+    min-width: 120px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-right: 28px;
+}
+
+.produk-img-col img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #d1d1d1;
+}
+
+.produk-info-col {
+    flex: 1.6;
+    min-width: 0;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 18px;
+}
+
+.produk-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.produk-rating {
+    color: #f5a623;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.produk-price {
+    color: #d32f2f;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.produk-table-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.produk-table-label {
+    width: 80px;
+    color: #222;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+.produk-table-value {
+    color: #222;
+    font-size: 13px;
+    margin-right: 16px;
+}
+
+.produk-qty-wrap {
+    display: inline-flex;
+    align-items: center;
+}
+
+.produk-qty-btn {
+    background: #fff;
+    border: 1px solid #222;
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+    cursor: pointer;
+    margin: 0 1px;
+}
+
+.produk-qty-input {
+    width: 28px;
+    padding: 2px 2px;
+    border-radius: 4px;
+    border: 1px solid #bdbdbd;
+    font-size: 13px;
+    text-align: center;
+    margin: 0 1px;
+}
+
+.produk-btn-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.produk-btn-black {
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.produk-btn-blue {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.produk-desc-col {
+    flex: 1;
+    min-width: 180px;
+    max-width: 260px;
+    background: transparent;
+    border-radius: 0;
+    padding-left: 0;
+    font-size: 13px;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 2px;
+}
+
+.produk-desc-title {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 13px;
+    color: #1976d2;
+}
+
+.produk-desc-list {
+    margin: 0 0 6px 14px;
+    color: #444;
+    font-size: 13px;
+    padding-left: 0;
+}
+
+.produk-store-box {
+    background: #eaf3fb;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    max-width: 1100px;
+    margin: 18px auto 0 auto;
+    box-sizing: border-box;
+    font-size: 13px;
+    gap: 8px;
+}
+
+.produk-store-icon {
+    font-size: 18px;
+    color: #222;
+}
+
+.produk-store-title {
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.produk-store-status {
+    color: #4caf50;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.produk-store-btn {
+    background: #fff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+.produk-store-meta {
+    color: #222;
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+.produk-store-meta b {
+    color: #1976d2;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .produk-main-box {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 2vw;
+    }
+
+    .produk-img-col {
+        margin-right: 0;
+        margin-bottom: 12px;
+        justify-content: flex-start;
+    }
+
+    .produk-info-col {
+        margin-right: 0;
+        padding-left: 0;
+    }
+
+    .produk-desc-col {
+        max-width: 100%;
+        padding-left: 0;
+        margin-top: 10px;
+    }
+
+    .produk-store-box {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 2vw;
+        gap: 6px;
+    }
+}
+
+.checkout-main {
+    background: #f5f7fa;
+    padding: 28px 0 28px 0;
+    min-height: 100vh;
+}
+
+.checkout-section {
+    background: #eaf6fa;
+    margin: 0 auto 12px auto;
+    max-width: 1100px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    padding: 18px 28px;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-alamat {
+    padding: 18px 28px 10px 28px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-alamat-judul {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.checkout-alamat-ubah {
+    color: #1976d2;
+    font-size: 14px;
+    position: absolute;
+    right: 28px;
+    top: 18px;
+    cursor: pointer;
+}
+
+.checkout-alamat-detail {
+    font-size: 14px;
+    margin-left: 18px;
+    margin-top: 2px;
+    color: #222;
+}
+
+.checkout-produk {
+    background: #eaf6fa;
+    border-radius: 6px;
+    padding: 0 0 12px 0;
+    margin-bottom: 12px;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-produk-header {
+    display: flex;
+    align-items: center;
+    background: #eaf6fa;
+    border-bottom: 1px solid #d6eaf5;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px 18px 8px 18px;
+    border-radius: 6px 6px 0 0;
+}
+
+.checkout-produk-title {
+    flex: 2;
+}
+
+.checkout-produk-harga {
+    flex: 1;
+    text-align: right;
+}
+
+.checkout-produk-jumlah {
+    flex: 0.7;
+    text-align: center;
+}
+
+.checkout-produk-total {
+    flex: 1;
+    text-align: right;
+}
+
+.checkout-produk-box {
+    border: 1px solid #d6eaf5;
+    border-radius: 0 0 6px 6px;
+    margin: 0 18px 0 18px;
+    background: #fff;
+    padding-bottom: 8px;
+}
+
+.checkout-produk-toko {
+    font-weight: bold;
+    font-size: 13px;
+    padding: 8px 0 6px 10px;
+    border-bottom: 1px solid #d6eaf5;
+}
+
+.checkout-produk-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0 6px 0;
+}
+
+.checkout-produk-img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 14px 0 10px;
+}
+
+.checkout-produk-info {
+    flex: 2;
+    min-width: 0;
+}
+
+.checkout-produk-nama {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.checkout-produk-varian {
+    font-size: 13px;
+    color: #444;
+}
+
+.checkout-produk-harga {
+    flex: 1;
+    text-align: right;
+    font-size: 14px;
+}
+
+.checkout-produk-jumlah {
+    flex: 0.7;
+    text-align: center;
+    font-size: 14px;
+}
+
+.checkout-produk-total {
+    flex: 1;
+    text-align: right;
+    font-size: 14px;
+}
+
+.checkout-pesan {
+    display: flex;
+    align-items: center;
+    background: #eaf6fa;
+    padding: 10px 28px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    gap: 14px;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-pesan-input {
+    flex: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #bdbdbd;
+    font-size: 14px;
+    margin: 0 12px 0 0;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+.checkout-pengiriman {
+    margin-left: auto;
+    font-size: 14px;
+}
+
+.checkout-pengiriman-estimasi {
+    color: #222;
+}
+
+.checkout-voucher {
+    display: flex;
+    align-items: center;
+    background: #eaf6fa;
+    padding: 10px 28px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    gap: 14px;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-voucher-link {
+    color: #1976d2;
+    margin: 0 12px 0 0;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.checkout-metode-row {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 8px;
+}
+
+.checkout-metode {
+    font-size: 14px;
+}
+
+.checkout-metode-bank {
+    color: #222;
+}
+
+.checkout-metode-ubah {
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.checkout-rincian {
+    background: #eaf6fa;
+    border-radius: 6px;
+    padding: 14px 28px 18px 28px;
+    max-width: 340px;
+    margin: 0 28px 0 auto;
+    box-sizing: border-box;
+    border: 1px solid #d6eaf5;
+}
+
+.checkout-rincian-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.checkout-rincian-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.checkout-rincian-total {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.checkout-total-harga {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.checkout-btn {
+    background: #22c100;
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    padding: 7px 24px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.checkout-btn:hover {
+    background: #1a9e00;
+}
+
+@media (max-width: 900px) {
+
+    .checkout-main,
+    .checkout-section,
+    .checkout-rincian {
+        padding-left: 2vw !important;
+        padding-right: 2vw !important;
+    }
+
+    .checkout-section,
+    .checkout-produk-box,
+    .checkout-rincian {
+        max-width: 98vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .checkout-rincian {
+        margin: 24px auto 0 auto;
+        max-width: 98vw;
+    }
+}
+
+.modal-bank {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.modal-bank-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.18);
+    z-index: 1;
+}
+
+.modal-bank-content {
+    position: absolute;
+    z-index: 2;
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 18px 12px 18px;
+    width: 320px;
+    min-width: 0;
+    max-width: 96vw;
+    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.13);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1.5px solid #e0e0e0;
+    right: 56px;
+    top: 330px;
+    transition: box-shadow 0.2s, left 0.2s, top 0.2s;
+}
+
+.modal-bank-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1976d2;
+    text-align: center;
+    cursor: move;
+    user-select: none;
+}
+
+.modal-bank-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 3px 4px;
+    transition: background 0.15s;
+}
+
+.modal-bank-row:hover {
+    background: #f3f8fd;
+}
+
+.modal-bank-row input[type=radio] {
+    margin-right: 4px;
+    accent-color: #1976d2;
+}
+
+.modal-bank-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    margin-right: 6px;
+}
+
+.modal-bank-btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+#modalBankPilih {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#modalBankBatal {
+    background: #fff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .modal-bank-content {
+        left: 50% !important;
+        right: auto !important;
+        top: 120px !important;
+        transform: translateX(-50%);
+        width: 96vw;
+        min-width: 0;
+        max-width: 96vw;
+        padding: 10px 2vw 8px 2vw;
+    }
+}
+
+/* Payment Page Styles */
+.pay-main {
+    background: #f5f7fa;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 36px 20px;
+}
+
+.pay-box {
+    background: #eaf6fa;
+    border: 2px solid #2196f3;
+    border-radius: 6px;
+    max-width: 900px;
+    width: 100%;
+    padding: 38px 48px 32px 48px;
+    box-sizing: border-box;
+    font-size: 15px;
+    color: #222;
+}
+
+.pay-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.pay-label {
+    flex: 1;
+    font-weight: 500;
+}
+
+.pay-value {
+    flex: 1;
+    text-align: right;
+    font-weight: 500;
+}
+
+.pay-value-red {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.pay-bank-section {
+    margin: 24px 0;
+}
+
+.pay-bank-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pay-bank-logo img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.pay-bank-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pay-bank-name {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.pay-bank-label {
+    font-size: 13px;
+    color: #444;
+}
+
+.pay-bank-number {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #1976d2;
+    font-weight: bold;
+}
+
+.pay-copy-btn {
+    background: #fff;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+    border-radius: 4px;
+    padding: 2px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pay-copy-btn:hover {
+    background: #e3f0ff;
+}
+
+.pay-instructions {
+    margin: 24px 0;
+}
+
+.pay-instruction-item {
+    background: #fff;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e0e0e0;
+}
+
+.pay-instruction-header {
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.pay-arrow {
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+.pay-instruction-content {
+    padding: 0 24px 14px 32px;
+    font-size: 14px;
+    color: #222;
+}
+
+.pay-instruction-content ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.pay-instruction-content li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.pay-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.pay-ok-btn {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 48px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pay-ok-btn:hover {
+    background: #1256a3;
+}
+
+@media (max-width: 900px) {
+    .pay-box {
+        padding: 18px 4vw;
+    }
+
+    .pay-instruction-content {
+        padding: 0 16px 14px 24px;
+    }
+}
+
+/* Rating Modal Styles */
+.rating-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.rating-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.rating-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.rating-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.rating-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.rating-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.rating-product-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.rating-product-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.rating-product-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.3;
+}
+
+.rating-sections {
+    margin-bottom: 24px;
+}
+
+.rating-section {
+    margin-bottom: 20px;
+}
+
+.rating-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.rating-subsection {
+    margin-bottom: 16px;
+    margin-left: 16px;
+}
+
+.rating-sub-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 4px;
+}
+
+.star {
+    font-size: 24px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.star:hover {
+    color: #ffd700;
+}
+
+.star.hover {
+    color: #ffd700;
+}
+
+.star.active {
+    color: #ffd700;
+}
+
+.rating-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+.rating-btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.rating-btn-back {
+    background: #f5f5f5;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.rating-btn-back:hover {
+    background: #e0e0e0;
+}
+
+.rating-btn-submit {
+    background: #4caf50;
+    color: white;
+}
+
+.rating-btn-submit:hover {
+    background: #45a049;
+}
+
+@media (max-width: 768px) {
+    .rating-modal-content {
+        width: 95%;
+        max-height: 90%;
+    }
+
+    .rating-modal-body {
+        padding: 16px;
+    }
+
+    .rating-actions {
+        flex-direction: column;
+    }
+
+    .rating-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Empty Cart Styles */
+.keranjang-kosong {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-cart-icon {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+    margin-bottom: 20px;
+}
+
+.keranjang-kosong h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.keranjang-kosong p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.btn-belanja {
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-belanja:hover {
+    background: #1256a3;
+}
+
+.btn-hapus-semua {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-hapus-semua:hover {
+    background: #d32f2f;
+}
+
+.keranjang-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+#itemCount {
+    font-weight: 500;
+    color: #666;
+}
+
+/* Empty Orders Styles */
+.pesanan-kosong {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.no-orders-icon {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+    margin-bottom: 20px;
+}
+
+.pesanan-kosong h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.pesanan-kosong p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+/* New Cart Styles */
+.keranjang-main {
+    background: #fff;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+    overflow: hidden;
+}
+
+.keranjang-content {
+    padding: 20px;
+}
+
+.keranjang-store-section {
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.keranjang-store-header {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+
+.keranjang-store-header input[type="checkbox"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    accent-color: #1976d2;
+}
+
+.keranjang-store-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.keranjang-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+}
+
+.keranjang-item:last-child {
+    border-bottom: none;
+}
+
+.keranjang-item-checkbox {
+    margin-right: 16px;
+}
+
+.keranjang-item-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #1976d2;
+}
+
+.keranjang-item-image {
+    margin-right: 16px;
+}
+
+.keranjang-item-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.keranjang-item-info {
+    flex: 1;
+    margin-right: 16px;
+}
+
+.keranjang-item-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.keranjang-item-variant {
+    font-size: 12px;
+    color: #666;
+}
+
+.keranjang-item-price {
+    font-weight: 600;
+    font-size: 14px;
+    color: #d32f2f;
+    margin-right: 16px;
+    min-width: 120px;
+    text-align: right;
+}
+
+.keranjang-item-quantity {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.keranjang-item-quantity button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keranjang-item-quantity button:hover {
+    background: #f5f5f5;
+}
+
+.keranjang-item-quantity span {
+    margin: 0 12px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+.keranjang-item-total {
+    font-weight: 600;
+    font-size: 14px;
+    color: #d32f2f;
+    margin-right: 16px;
+    min-width: 120px;
+    text-align: right;
+}
+
+.keranjang-item-actions {
+    min-width: 80px;
+}
+
+.keranjang-footer {
+    background: #f8f9fa;
+    padding: 16px 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.keranjang-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.keranjang-select-all {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.keranjang-select-all input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #1976d2;
+}
+
+.keranjang-select-all label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.keranjang-total {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.keranjang-total span:first-child {
+    font-size: 14px;
+    color: #333;
+}
+
+.keranjang-total span:last-child {
+    font-weight: 600;
+    font-size: 16px;
+    color: #d32f2f;
+}
+
+.btn-checkout {
+    width: 100%;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-checkout:hover {
+    background: #388e3c;
+}
+
+/* DROPDOWN KATEGORI RAPIH */
+.dropdown-kategori {
+    position: relative;
+}
+
+.dropdown-kategori .dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+    border-radius: 8px;
+    min-width: 160px;
+    z-index: 1001;
+    padding: 0;
+    margin-top: 4px;
+}
+
+.dropdown-kategori.open .dropdown-content {
+    display: block;
+}
+
+/* END DROPDOWN KATEGORI RAPIH */

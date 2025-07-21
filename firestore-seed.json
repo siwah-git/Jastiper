@@ -1,0 +1,90 @@
+{
+    "users": [
+        {
+            "uid": "user1",
+            "username": "dwirestykartika",
+            "email": "dwi@titipgo.com",
+            "photoURL": "https://cdn-icons-png.flaticon.com/512/747/747376.png",
+            "alamat": "Jl. Menuju Kesuksesan No.15",
+            "telepon": "08123456789",
+            "createdAt": "2024-06-01T10:00:00Z"
+        }
+    ],
+    "stores": [
+        {
+            "id": "store1",
+            "nama": "Rifal Store",
+            "alamat": "Jl. Toko No.1",
+            "logo": "asset/logo.png",
+            "status": "aktif",
+            "createdAt": "2024-06-01T10:00:00Z"
+        }
+    ],
+    "products": [
+        {
+            "id": "produk1",
+            "nama": "Baju Gucci G6000 Man Limited Edition",
+            "harga": 3000000,
+            "gambar": "asset/ootd (1).jfif",
+            "deskripsi": "Baju limited edition...",
+            "varian": [
+                "Hitam, M",
+                "Putih, L"
+            ],
+            "storeId": "store1",
+            "createdAt": "2024-06-01T10:00:00Z"
+        }
+    ],
+    "orders": [
+        {
+            "id": "order1",
+            "userId": "user1",
+            "products": [
+                {
+                    "productId": "produk1",
+                    "qty": 2,
+                    "varian": "Hitam, M",
+                    "harga": 3000000
+                }
+            ],
+            "total": 6300000,
+            "status": "Sedang Dikemas",
+            "alamat": "Jl. Menuju Kesuksesan No.15",
+            "createdAt": "2024-06-01T10:00:00Z",
+            "storeId": "store1"
+        }
+    ],
+    "ratings": [
+        {
+            "id": "rating1",
+            "orderId": "order1",
+            "userId": "user1",
+            "produkRating": 5,
+            "jastiperRating": 4,
+            "kirimRating": 5,
+            "createdAt": "2024-06-01T12:00:00Z",
+            "ulasan": "Barang bagus, pengiriman cepat!"
+        }
+    ],
+    "chats": [
+        {
+            "id": "chat1",
+            "orderId": "order1",
+            "userId": "user1",
+            "storeId": "store1",
+            "pesan": [
+                {
+                    "sender": "user1",
+                    "message": "Kak pesanannya kapan?",
+                    "timestamp": "2024-06-01T11:00:00Z"
+                },
+                {
+                    "sender": "store1",
+                    "message": "Sedang dikemas ya kak!",
+                    "timestamp": "2024-06-01T11:05:00Z"
+                }
+            ],
+            "createdAt": "2024-06-01T11:00:00Z"
+        }
+    ]
+}

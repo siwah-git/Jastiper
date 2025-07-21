@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Saya - TitipGo</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+
+        .akun-main {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 0 0 0;
+            gap: 32px;
+        }
+
+        .akun-sidebar {
+            width: 260px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 24px 18px 18px 18px;
+            min-height: 400px;
+            margin-top: 0;
+        }
+
+        .akun-user-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .akun-user-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #f5f7fa;
+            object-fit: cover;
+        }
+
+        .akun-username {
+            font-weight: bold;
+            font-size: 16px;
+            color: #222;
+        }
+
+        .akun-edit-link {
+            color: #1976d2;
+            font-size: 13px;
+            text-decoration: underline;
+            margin-top: 2px;
+            display: inline-block;
+        }
+
+        .akun-menu {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .akun-menu-item {
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: #333;
+            font-size: 15px;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .akun-menu-item.active,
+        .akun-menu-item:hover {
+            background: #eaf6fa;
+            color: #1976d2;
+        }
+
+        .akun-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pesanan-content {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 32px 28px 28px 28px;
+            min-height: 400px;
+            flex: 1;
+        }
+
+        .pesanan-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .pesanan-tab {
+            padding: 8px 18px;
+            border-radius: 12px 12px 0 0;
+            background: #f1f5fb;
+            color: #ec4899;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            border: 1px solid #f9a8d4;
+            border-bottom: none;
+            outline: none;
+            transition: background 0.15s, color 0.15s;
+            text-decoration: none;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .pesanan-tab.active,
+        .pesanan-tab:focus {
+            background: #ec4899;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.10);
+            border-color: #ec4899;
+        }
+
+        .pesanan-tab:not(.active):hover {
+            background: #fdf2f8;
+            color: #be185d;
+        }
+
+        .pesanan-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #222;
+        }
+
+        .pesanan-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            margin-bottom: 18px;
+            padding: 18px 18px 12px 18px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .pesanan-store-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .pesanan-store-name {
+            font-weight: bold;
+            font-size: 15px;
+            color: #1976d2;
+        }
+
+        .pesanan-store-btn {
+            background: #fff;
+            color: #d2196f;
+            border: 1px solid #1976d2;
+            border-radius: 4px;
+            padding: 4px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pesanan-store-btn:hover {
+            background: #e3f0ff;
+        }
+
+        .pesanan-product {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 8px;
+        }
+
+        .pesanan-product-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pesanan-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .pesanan-product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pesanan-product-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .pesanan-product-variant {
+            font-size: 13px;
+            color: #444;
+        }
+
+        .pesanan-product-status-completed {
+            color: #22c100;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .pesanan-product-price {
+            font-weight: 600;
+            font-size: 15px;
+            color: #d32f2f;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .pesanan-total {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .pesanan-total-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .pesanan-total-amount {
+            font-weight: bold;
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .pesanan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pesanan-action-btn {
+            background: #fff;
+            color: #d2196f;
+            border: 1px solid #d2197f;
+            border-radius: 4px;
+            padding: 6px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .pesanan-action-btn:hover {
+            background: #e3f0ff;
+            color: #1256a3;
+        }
+
+        .pesanan-action-btn-active {
+            background: #1976d2;
+            color: #fff;
+            border: 1px solid #1976d2;
+        }
+
+        .pesanan-action-btn-active:hover {
+            background: #1256a3;
+            color: #fff;
+        }
+
+        .pesanan-kosong {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .no-orders-icon {
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .pesanan-kosong h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .pesanan-kosong p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .btn-belanja {
+            background: #d2197f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-belanja:hover {
+            background: #a31267;
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-gray-100 m-0">
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center fixed w-full top-0 z-50">
+        <div class="flex items-center space-x-4">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+            <a href="pembeli_dashboard.html"
+                class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block">
+                <a href="#" id="kategoriMenu"
+                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori &#9662;</a>
+                <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+                    id="dropdownKategori" style="display:none;">
+                    <a href="pembeli_produk_gucci.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
+                    <a href="pembeli_kategori.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+                        Produk</a>
+                </div>
+            </div>
+            <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+                onclick="alert('Belum ada notifikasi!');return false;">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+    <main class="pt-32">
+        <h1 class="page-title"
+            style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">PESANAN
+            SAYA</h1>
+
+        <!-- Main Content -->
+        <div class="akun-main">
+            <!-- Left Sidebar -->
+            <div class="akun-sidebar">
+                <div class="akun-user-info">
+                    <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="akun-user-icon">
+                    <div class="akun-user-details">
+                        <div class="akun-username">dwirestykartika</div>
+                    </div>
+                </div>
+
+                <div class="akun-menu">
+                    <a href="akun-saya.html" class="akun-menu-item">Akun Saya</a>
+                    <a href="#" class="akun-menu-item active">Pesanan Saya</a>
+                    <a href="#" class="akun-menu-item">Notifikasi</a>
+                    <a href="#" class="akun-menu-item">Voucher Saya</a>
+                </div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full mx-auto p-6 mt-6">
+                <!-- Order Status Tabs -->
+                <div class="pesanan-tabs">
+                    <a href="#" class="pesanan-tab">Semua</a>
+                    <a href="#" class="pesanan-tab">Belum Dibayar</a>
+                    <a href="#" class="pesanan-tab">Sedang Dikemas <span class="pesanan-count">(1)</span></a>
+                    <a href="#" class="pesanan-tab">Dikirim</a>
+                    <a href="#" class="pesanan-tab active">Selesai</a>
+                    <a href="#" class="pesanan-tab">Dibatalkan</a>
+                </div>
+
+                <!-- Section Title -->
+                <h2 class="pesanan-section-title">Pesanan Selesai</h2>
+
+                <!-- Semua box pesanan hanya render dari JS -->
+                <div class="pesanan-content"></div>
+            </div>
+        </div>
+
+        <!-- Modal Rating Pop-up -->
+        <div id="ratingModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 hidden">
+            <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-8 mx-auto">
+                <h2 class="text-2xl font-bold text-center mb-6">Nilai Produk</h2>
+                <!-- Preview Produk -->
+                <div class="flex items-center gap-4 bg-gray-100 rounded p-4 mb-6">
+                    <img src="asset/ootd (1).jfif" alt="OOTD"
+                        class="w-16 h-16 rounded object-cover border border-gray-300">
+                    <div>
+                        <div class="font-semibold text-base">Baju Gucci G6000 Man Limited Edition</div>
+                        <div class="text-xs text-gray-500">No Pesanan 7262726G22</div>
+                        <div class="text-xs text-pink-600 font-semibold">Sedang Dikemas</div>
+                    </div>
+                </div>
+                <!-- Rating Bintang -->
+                <form id="ratingForm" class="space-y-6">
+                    <div>
+                        <label class="block font-semibold mb-1">Nilai Produk</label>
+                        <div class="flex gap-1 text-2xl" id="stars-produk">
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Layanan Jastiper</label>
+                        <div class="flex gap-1 text-2xl" id="stars-jastiper">
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Jasa Kirim</label>
+                        <div class="flex gap-1 text-2xl" id="stars-kirim">
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                            <span class="star cursor-pointer">☆</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-8">
+                        <button type="button" onclick="hideRatingModal()"
+                            class="px-6 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Kembali</button>
+                        <button type="submit"
+                            class="px-6 py-2 rounded bg-pink-600 text-white font-semibold hover:bg-pink-700">Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Modal -->
+        <div id="chatModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 hidden">
+            <div class="bg-white rounded shadow-lg w-[600px] max-w-full border border-gray-400">
+                <div class="flex border-b border-gray-300 items-center justify-between px-4 py-2">
+                    <span class="font-bold text-lg">Chat</span>
+                    <button onclick="hideChatModal()"
+                        class="text-gray-500 hover:text-pink-600 text-2xl leading-none">&times;</button>
+                </div>
+                <div class="flex h-[320px]">
+                    <!-- Sidebar Kontak -->
+                    <div class="w-1/3 border-r border-gray-200 p-3 flex flex-col gap-2 bg-gray-50">
+                        <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
+                            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png"
+                                class="w-7 h-7 rounded-full" />
+                            <div>
+                                <div class="font-semibold text-sm">Dwi Store</div>
+                                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
+                            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png"
+                                class="w-7 h-7 rounded-full" />
+                            <div>
+                                <div class="font-semibold text-sm">Resty Store</div>
+                                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
+                            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png"
+                                class="w-7 h-7 rounded-full" />
+                            <div>
+                                <div class="font-semibold text-sm">Kartika Store</div>
+                                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Panel Chat Kanan -->
+                    <div class="flex-1 flex flex-col">
+                        <div class="p-3 border-b border-gray-200 font-semibold">Apa yang ingin kamu tanyakan?</div>
+                        <div class="p-3 flex items-center gap-3 border-b border-gray-200">
+                            <img src="asset/ootd (1).jfif" class="w-12 h-12 rounded border border-gray-300" />
+                            <div>
+                                <div class="font-medium text-sm">Baju Gucci G6000 Man Limited Edition</div>
+                                <div class="text-xs text-gray-500">No Pesanan 7262726G22</div>
+                                <div class="text-xs text-pink-600 font-semibold">Sedang Dikemas</div>
+                            </div>
+                        </div>
+                        <div class="flex-1"></div>
+                        <div class="border-t border-gray-200 p-2 flex items-center">
+                            <input type="text" class="flex-1 border-none focus:ring-0 text-sm"
+                                placeholder="Tulis Pesan" />
+                            <button class="ml-2 text-pink-600 font-semibold hover:underline"
+                                onclick="sendMessage()">Kirim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== DAFTAR PESANAN DARI FIRESTORE ====== -->
+        <div id="orders-list" class="mt-6"></div>
+
+        <script>
+            // Dropdown Kategori
+            const kategoriMenu = document.getElementById('kategoriMenu');
+            const dropdownKategori = document.getElementById('dropdownKategori');
+            if (kategoriMenu && dropdownKategori) {
+                kategoriMenu.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', function (e) {
+                    if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
+                        dropdownKategori.style.display = 'none';
+                    }
+                });
+            }
+            // Dropdown User
+            const userIcon = document.getElementById('userIcon');
+            const userDropdown = document.getElementById('userDropdown');
+            if (userIcon && userDropdown) {
+                userIcon.onclick = function (e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                };
+                document.addEventListener('click', function (e) {
+                    if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Search Functionality ---
+            const searchInput = document.querySelector('.header-search');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        const searchTerm = this.value;
+                        if (searchTerm.trim()) {
+                            alert('Mencari: ' + searchTerm);
+                        }
+                    }
+                });
+            }
+
+            // --- Modal Rating ---
+            function showRatingModal() {
+                document.getElementById('ratingModal').classList.remove('hidden');
+            }
+            function hideRatingModal() {
+                document.getElementById('ratingModal').classList.add('hidden');
+            }
+            function makeStarRating(containerId) {
+                const container = document.getElementById(containerId);
+                const stars = container.querySelectorAll('.star');
+                let rating = 0;
+                stars.forEach((star, idx) => {
+                    star.addEventListener('mouseenter', () => {
+                        stars.forEach((s, i) => s.textContent = i <= idx ? '★' : '☆');
+                    });
+                    star.addEventListener('mouseleave', () => {
+                        stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+                    });
+                    star.addEventListener('click', () => {
+                        rating = idx + 1;
+                        stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+                    });
+                });
+                container.dataset.rating = rating;
+            }
+            makeStarRating('stars-produk');
+            makeStarRating('stars-jastiper');
+            makeStarRating('stars-kirim');
+            document.getElementById('ratingForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                alert('Terima kasih atas rating Anda!');
+                hideRatingModal();
+            });
+
+            // --- Modal Chat ---
+            function showChatModal() {
+                document.getElementById('chatModal').classList.remove('hidden');
+            }
+            function hideChatModal() {
+                document.getElementById('chatModal').classList.add('hidden');
+            }
+
+            // --- Chat Send ---
+            const chatInput = document.querySelector('.chat-quick-input');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') sendMessage();
+                });
+            }
+            function sendMessage() {
+                const input = document.querySelector('#chatModal input[type="text"]');
+                if (input && input.value.trim()) {
+                    alert('Terima kasih, pesan Anda telah dikirim!');
+                    input.value = '';
+                }
+            }
+
+            // --- Chat Contact Selection ---
+            document.querySelectorAll('.chat-contact').forEach(function (contact) {
+                contact.addEventListener('click', function () {
+                    document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // --- Notifikasi & Kunjungi Toko ---
+            function showNotifications() {
+                alert('Anda memiliki 3 notifikasi baru!');
+            }
+            function kunjungiToko() {
+                alert('Fitur kunjungi toko akan segera hadir!');
+            }
+
+            // --- Dropdown User Icon Akun ---
+            function logoutUser() {
+                alert('Berhasil logout!');
+                if (userDropdown) userDropdown.classList.add('hidden');
+            }
+            function openChatCS() {
+                alert('Fitur chat CS akan segera hadir!');
+                if (userDropdown) userDropdown.classList.add('hidden');
+            }
+
+            // --- Pesanan ---
+            let orders = [];
+            let currentTab = 'sedang-dikemas';
+            function loadOrders() {
+                orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                if (orders.some(order => order.status === 'Sedang Dikemas')) {
+                    currentTab = 'sedang-dikemas';
+                } else if (orders.length > 0) {
+                    currentTab = 'semua';
+                }
+                displayOrders();
+            }
+            // --- Pesanan Selesai ---
+            function pesananSelesai(orderIndex) {
+                if (confirm('Apakah Anda yakin pesanan sudah selesai?')) {
+                    orders[orderIndex].status = 'Selesai';
+                    localStorage.setItem('orders', JSON.stringify(orders));
+                    currentTab = 'selesai';
+                    displayOrders();
+                }
+            }
+            // --- Display Orders Dinamis ---
+            function displayOrders() {
+                const content = document.querySelector('.pesanan-content');
+                let filteredOrders = [];
+                let sectionTitle = '';
+                switch (currentTab) {
+                    case 'semua': filteredOrders = orders; sectionTitle = 'Semua Pesanan'; break;
+                    case 'belum-dibayar': filteredOrders = orders.filter(order => order.status === 'Belum Dibayar'); sectionTitle = 'Pesanan Belum Dibayar'; break;
+                    case 'sedang-dikemas': filteredOrders = orders.filter(order => order.status === 'Sedang Dikemas'); sectionTitle = 'Pesanan Sedang Dikemas'; break;
+                    case 'dikirim': filteredOrders = orders.filter(order => order.status === 'Dikirim'); sectionTitle = 'Pesanan Dikirim'; break;
+                    case 'selesai': filteredOrders = orders.filter(order => order.status === 'Selesai'); sectionTitle = 'Pesanan Selesai'; break;
+                    case 'dibatalkan': filteredOrders = orders.filter(order => order.status === 'Dibatalkan'); sectionTitle = 'Pesanan Dibatalkan'; break;
+                }
+                document.querySelector('.pesanan-section-title').textContent = sectionTitle;
+                if (filteredOrders.length === 0) {
+                    content.innerHTML = `<div class="pesanan-kosong"><img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="No Orders" class="no-orders-icon"><h3>Tidak ada pesanan</h3><p>Belum ada pesanan dengan status ini.</p><button class="btn-belanja" onclick="window.location.href='pembeli_produk_gucci.html'">Mulai Belanja</button></div>`;
+                    return;
+                }
+                content.innerHTML = filteredOrders.map((order, index) => {
+                    let actionButtons = '';
+                    if (order.status === 'Sedang Dikemas') {
+                        actionButtons = `
+        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="pesananSelesai(${index})">Pesanan Selesai</button>
+        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>
+      `;
+                    } else if (order.status === 'Selesai') {
+                        actionButtons = `
+        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="showRatingModal()">Nilai</button>
+        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>
+      `;
+                    } else {
+                        actionButtons = `<button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>`;
+                    }
+                    return `
+      <div class="border border-gray-300 rounded bg-white mt-2 mb-8">
+        <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-base">${order.products && order.products[0] && order.products[0].store ? order.products[0].store : (order.store || 'Rifal Store')}</span>
+            <button class="px-2 py-1 border border-pink-600 rounded bg-pink-600 text-white text-xs hover:bg-pink-700 hover:border-pink-700 ml-2" onclick="kunjungiToko()">Kunjungi Toko</button>
+          </div>
+          <span class="text-sm text-gray-700">Pesanan ${order.status}</span>
+        </div>
+        <div class="flex flex-row gap-4 px-4 py-4 items-center">
+          <img src="asset/images/ootd.jpeg" alt="Baju Gucci" class="w-20 h-20 object-cover rounded border border-gray-200">
+          <div class="flex-1">
+            <div class="font-semibold text-base mb-1">${order.products && order.products[0] ? order.products[0].name : 'Baju Gucci G6000 Man Limited Edition'}</div>
+            <div class="text-gray-600 text-sm mb-1">${order.products && order.products[0] ? (order.products[0].variant || order.products[0].color + ', ' + order.products[0].size + ' (' + order.products[0].quantity + ')') : 'Hitam, M (2)'}</div>
+          </div>
+          <div class="text-right min-w-[120px]">
+            <div class="text-red-600 font-semibold text-base">Rp. ${order.products && order.products[0] ? order.products[0].price.toLocaleString('id-ID') : '3.000.000'}</div>
+          </div>
+        </div>
+        <div class="flex justify-end items-center px-4 pb-4">
+          <div class="mr-8 text-base">Total Pesanan: <span class="text-red-600 font-semibold">Rp. ${(order.total || (order.products && order.products[0] ? order.products[0].price * (order.products[0].quantity || 1) : 6300000)).toLocaleString('id-ID')}</span></div>
+          ${actionButtons}
+        </div>
+      </div>
+    `;
+                }).join('');
+            }
+
+            // Tab Navigation
+            const pesananTabs = document.querySelectorAll('.pesanan-tab');
+            pesananTabs.forEach(function (tab) {
+                tab.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    pesananTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabText = this.textContent.toLowerCase();
+                    if (tabText.includes('semua')) currentTab = 'semua';
+                    else if (tabText.includes('belum dibayar')) currentTab = 'belum-dibayar';
+                    else if (tabText.includes('sedang dikemas')) currentTab = 'sedang-dikemas';
+                    else if (tabText.includes('dikirim')) currentTab = 'dikirim';
+                    else if (tabText.includes('selesai')) currentTab = 'selesai';
+                    else if (tabText.includes('dibatalkan')) currentTab = 'dibatalkan';
+                    displayOrders();
+                });
+            });
+
+            // Load orders saat halaman dimuat
+            window.onload = function () {
+                loadOrders();
+            };
+        </script>
+
+        <!-- Integrasi Firebase Firestore -->
+        <script type="module">
+            import { db, auth } from './js/firebase-config.js';
+            import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+            async function loadOrdersFromFirestore() {
+                const userId = localStorage.getItem('userId');
+                const q = query(collection(db, "orders"), where("userId", "==", userId));
+                const querySnapshot = await getDocs(q);
+                const orders = [];
+                querySnapshot.forEach((doc) => {
+                    orders.push({ id: doc.id, ...doc.data() });
+                });
+                // Render ke HTML
+                const container = document.getElementById('orders-list');
+                if (!orders.length) {
+                    container.innerHTML = '<div class="text-gray-500 text-center py-8">Belum ada pesanan.</div>';
+                    return;
+                }
+                container.innerHTML = orders.map(order => `
+          <div class="border p-4 rounded mb-4 bg-white shadow">
+            <div class="mb-2 flex flex-wrap justify-between items-center">
+              <div><b>ID:</b> ${order.id}</div>
+              <div class="text-pink-600 font-semibold">${order.status}</div>
+            </div>
+            <div class="mb-1"><b>Total:</b> Rp. ${order.total.toLocaleString('id-ID')}</div>
+            <div class="mb-1"><b>Alamat:</b> ${order.alamat}</div>
+            <div class="mb-1"><b>Metode Bayar:</b> ${order.metodeBayar || '-'}</div>
+            <div><b>Produk:</b> ${order.products.map(p => `${p.varian || ''} x${p.qty || 1}`).join(', ')}</div>
+          </div>
+        `).join('');
+            }
+            window.addEventListener('DOMContentLoaded', loadOrdersFromFirestore);
+        </script>
+
+        <!-- Footer -->
+        <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
+            <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div class="mb-6 md:mb-0 text-left">
+                    <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
+                    <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
+                    <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
+                    <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
+                </div>
+                <div class="text-center mb-6 md:mb-0">
+                    <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
+                        class="mx-auto w-32 mb-2 footer-logo">
+                    <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
+                </div>
+                <div class="text-left md:text-right">
+                    <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
+                    <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+                        </svg>
+                        Facebook
+                    </a>
+                    <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
+                        </svg>
+                        Youtube
+                    </a>
+                    <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979 4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+                        </svg>
+                        Instagram
+                    </a>
+                </div>
+            </div>
+        </footer>
+</body>
+
+</html>

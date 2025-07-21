@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilai Produk - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-blue-50 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-8 mx-auto mt-12">
+        <h2 class="text-2xl font-bold text-center mb-6">Nilai Produk</h2>
+        <!-- Preview Produk -->
+        <div class="flex items-center gap-4 bg-gray-100 rounded p-4 mb-6">
+            <img src="asset/ootd (1).jfif" alt="Produk" class="w-16 h-16 rounded object-cover border border-gray-300">
+            <div>
+                <div class="font-semibold text-base">Baju Gucci G6000 Man Limited Edition</div>
+                <div class="text-xs text-gray-500">No Pesanan 7262726G22</div>
+            </div>
+        </div>
+        <!-- Rating Bintang -->
+        <form id="ratingForm" class="space-y-6">
+            <div>
+                <label class="block font-semibold mb-1">Nilai Produk</label>
+                <div class="flex gap-1 text-2xl" id="stars-produk">
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">Layanan Jastiper</label>
+                <div class="flex gap-1 text-2xl" id="stars-jastiper">
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">Jasa Kirim</label>
+                <div class="flex gap-1 text-2xl" id="stars-kirim">
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                    <span class="star cursor-pointer">☆</span>
+                </div>
+            </div>
+            <div class="flex justify-between mt-8">
+                <button type="button" onclick="window.history.back()"
+                    class="px-6 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Kembali</button>
+                <button type="submit"
+                    class="px-6 py-2 rounded bg-pink-600 text-white font-semibold hover:bg-pink-700">Kirim</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function makeStarRating(containerId) {
+            const container = document.getElementById(containerId);
+            const stars = container.querySelectorAll('.star');
+            let rating = 0;
+            stars.forEach((star, idx) => {
+                star.addEventListener('mouseenter', () => {
+                    stars.forEach((s, i) => s.textContent = i <= idx ? '★' : '☆');
+                });
+                star.addEventListener('mouseleave', () => {
+                    stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+                });
+                star.addEventListener('click', () => {
+                    rating = idx + 1;
+                    stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+                });
+            });
+            container.dataset.rating = rating;
+        }
+        makeStarRating('stars-produk');
+        makeStarRating('stars-jastiper');
+        makeStarRating('stars-kirim');
+        document.getElementById('ratingForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Terima kasih atas rating Anda!');
+            window.location.href = 'pembeli_pesanan_saya.html';
+        });
+    </script>
+</body>
+
+</html>
