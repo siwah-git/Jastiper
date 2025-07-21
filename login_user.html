@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Login Admin - TitipGo</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <script type="module" src="./js/firebase-config.js"></script>
+
+    <style>
+        /* Gaya dasar untuk body */
+        body {
+            /* Background dari gambar seperti yang terlihat pada gambar yang diberikan */
+            background-image: url('asset/images/Bg_login.jpeg');
+            /* Ganti dengan path gambar Anda */
+            background-size: cover;
+            /* Memastikan gambar menutupi seluruh layar */
+            background-position: center;
+            /* Memusatkan gambar */
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            /* Tinggi minimal 100% dari viewport height */
+            display: flex;
+            justify-content: center;
+            /* Pusatkan konten horizontal */
+            align-items: center;
+            /* Pusatkan konten vertikal */
+            font-family: 'Inter', sans-serif;
+            /* Menggunakan font Inter */
+            position: relative;
+            overflow: hidden;
+            /* Mencegah scrolling pada body */
+        }
+
+        /* Overlay gelap di atas background untuk efek visual */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Warna overlay gelap dengan transparansi 40% */
+            z-index: 0;
+        }
+
+        /* Styling untuk container login utama */
+        .login-container {
+            width: 100%;
+            /* --- PENYESUAIAN UKURAN KOTAK --- */
+            max-width: 320px;
+            /* Lebar ditambah sedikit dari 300px */
+            /* --- PENYESUAIAN LATAR BELAKANG GELAP TRANSPARAN --- */
+            background-color: rgba(0, 0, 0, 0.3);
+            /* Latar belakang hitam dengan transparansi 30% (lebih gelap) */
+            border-radius: 1.5rem;
+            /* Sudut melengkung */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                /* Bayangan halus */
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding-left: 1.5rem;
+            /* Padding kiri */
+            padding-right: 1.5rem;
+            /* Padding kanan */
+            padding-top: 1.25rem;
+            /* Tinggi dipendekkan dari 1.5rem */
+            padding-bottom: 1.25rem;
+            /* Tinggi dipendekkan dari 1.5rem */
+            text-align: center;
+            backdrop-filter: blur(10px) saturate(180%);
+            /* Efek frosted glass */
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            /* Untuk kompatibilitas Safari */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Border putih tipis transparan (lebih gelap) */
+            z-index: 1;
+            /* Agar di atas overlay background */
+        }
+
+        .login-logo {
+            max-width: 120px;
+            /* Ukuran logo disesuaikan dengan tinggi yang lebih pendek */
+            height: auto;
+            margin: 0 auto 1rem auto;
+            /* Pusatkan logo dan beri margin bawah yang lebih kecil */
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            /* Sedikit bayangan pada logo */
+        }
+
+        /* Styling untuk input fields */
+        .form-input-custom {
+            background-color: rgba(255, 255, 255, 0.15);
+            /* Background input lebih transparan agar kontras dengan kotak gelap */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            /* Border input lebih transparan */
+            border-radius: 0.5rem;
+            padding-top: 0.6rem;
+            /* Padding atas input dipendekkan */
+            padding-bottom: 0.6rem;
+            /* Padding bawah input dipendekkan */
+            color: #ffffff;
+            /* Warna teks input putih */
+        }
+
+        .form-input-custom:focus {
+            outline: none;
+            border-color: #9333ea;
+            /* Warna border ungu saat fokus */
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.5);
+            /* Ring ungu saat fokus */
+        }
+
+        .form-input-custom::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            /* Warna placeholder putih lebih transparan */
+        }
+
+        /* Styling untuk ikon di dalam input */
+        .input-icon {
+            color: rgba(255, 255, 255, 0.5) !important;
+            /* Warna ikon putih lebih transparan */
+        }
+
+        /* Styling untuk tombol login */
+        .login-button {
+            background-color: #9333ea;
+            /* Warna ungu solid */
+            border: none;
+            color: white;
+            padding-top: 0.6rem;
+            /* Padding atas tombol dipendekkan */
+            padding-bottom: 0.6rem;
+            /* Padding bawah tombol dipendekkan */
+            padding-left: 1rem;
+            padding-right: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            /* Transisi saat hover */
+        }
+
+        .login-button:hover {
+            background-color: #7e22ce;
+            /* Warna ungu lebih gelap saat hover */
+        }
+
+        /* Styling untuk link teks */
+        .text-link-custom {
+            color: #9333ea;
+            /* Warna ungu */
+            font-weight: 600;
+        }
+
+        .text-link-custom:hover {
+            text-decoration: underline;
+            color: #7e22ce;
+            /* Warna ungu lebih gelap saat hover */
+        }
+
+        /* Styling untuk judul dan paragraf di dalam login-container */
+        .login-container h2 {
+            color: #ffffff;
+            /* Judul putih */
+            font-weight: 800;
+            font-size: 1.75rem;
+            /* Ukuran judul disesuaikan dengan tinggi yang lebih pendek */
+            margin-bottom: 0.5rem;
+            /* Margin bawah disesuaikan */
+        }
+
+        .login-container p {
+            color: rgba(255, 255, 255, 0.7);
+            /* Paragraf putih lebih transparan */
+            margin-bottom: 1rem;
+            /* Margin bawah disesuaikan */
+        }
+
+        /* Styling untuk checkbox "Ingat Saya" */
+        #remember-me {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #9333ea;
+            /* Warna centang */
+        }
+
+        #remember-me:checked {
+            background-color: #9333ea;
+            border-color: #9333ea;
+        }
+
+        .text-checkbox-label {
+            color: rgba(255, 255, 255, 0.7);
+            /* Warna label checkbox putih lebih transparan */
+        }
+
+        /* Styling untuk loading overlay */
+        #loading-overlay {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #loading-overlay>div {
+            border-top-color: #9333ea;
+            border-bottom-color: #9333ea;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay"
+        class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+
+    <div class="login-container">
+        <img src="asset/images/logosiwah.png" alt="TitipGo Logo" class="login-logo" />
+
+        <h2 class="text-3xl font-extrabold text-white mb-4">Log in</h2>
+        <p class="text-white text-opacity-80 mb-8">
+            Selamat datang kembali, silakan masuk ke akun Anda.
+        </p>
+
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="email" class="sr-only">Username</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    <input id="email" name="email" type="text" autocomplete="username" required
+                        class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Username" />
+                </div>
+            </div>
+
+            <div>
+                <label for="password" class="sr-only">Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock input-icon"></i>
+                    </div>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                        class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Password" />
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                        onclick="togglePasswordVisibility()">
+                        <i id="togglePasswordIcon" class="fas fa-eye input-icon hover:text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                    <label for="remember-me" class="ml-2 block text-sm text-checkbox-label">
+                        Ingat Saya
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="admin-forgot-password.html" class="font-medium text-link-custom hover:text-blue-500">
+                        Lupa password?
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                    class="w-full flex justify-center py-3 px-4 login-button focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Log in
+                </button>
+            </div>
+            <p id="errorMessage" class="text-red-300 text-sm mt-4 hidden"></p>
+        </form>
+
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p class="text-white text-opacity-80">
+                Belum punya akun admin? <a href="daftar_login.html" class="font-medium text-link-custom">Daftar
+                    disini</a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import modul Firebase Auth dari firebase-config.js
+        import { auth } from "./js/firebase-config.js";
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+
+        // Fungsi untuk mengaktifkan/menonaktifkan tampilan password
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePasswordIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
+        // Dapatkan elemen-elemen form
+        const loginForm = document.getElementById("loginForm");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const errorMessageDisplay = document.getElementById("errorMessage");
+        const loadingOverlay = document.getElementById("loading-overlay");
+
+        if (loginForm) {
+            console.log("loginForm ditemukan.");
+        } else {
+            console.error("Error FATAL: loginForm tidak ditemukan! Periksa ID pada tag <form>.");
+        }
+        if (emailInput) {
+            console.log("emailInput (username) ditemukan.");
+        }
+        if (passwordInput) {
+            console.log("passwordInput ditemukan.");
+        }
+        if (errorMessageDisplay) {
+            console.log("errorMessageDisplay ditemukan.");
+        }
+        if (loadingOverlay) {
+            console.log("loadingOverlay ditemukan.");
+        }
+
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault(); // Mencegah refresh halaman
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            // Tampilkan loading overlay dan sembunyikan pesan error sebelumnya
+            loadingOverlay.classList.remove("hidden");
+            errorMessageDisplay.classList.add("hidden");
+
+            try {
+                // Autentikasi pengguna dengan Firebase
+                await signInWithEmailAndPassword(auth, email, password);
+                // Redirect ke dashboard setelah berhasil login
+                window.location.href = "admin-dashboard.html";
+            } catch (error) {
+                // Sembunyikan loading overlay jika ada error
+                loadingOverlay.classList.add("hidden");
+
+                let message = "Terjadi kesalahan saat login. Silakan coba lagi.";
+                switch (error.code) {
+                    case "auth/user-not-found":
+                    case "auth/wrong-password":
+                        message = "Username atau password salah. Silakan periksa kembali.";
+                        break;
+                    case "auth/invalid-email":
+                        message = "Format username/email tidak valid.";
+                        break;
+                    case "auth/too-many-requests":
+                        message = "Terlalu banyak percobaan login gagal. Coba lagi nanti.";
+                        break;
+                    default:
+                        message = "Login gagal: " + error.message;
+                        break;
+                }
+                errorMessageDisplay.textContent = message;
+                errorMessageDisplay.classList.remove("hidden");
+            }
+        });
+    </script>
+</body>
+
+</html>
