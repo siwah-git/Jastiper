@@ -106,18 +106,18 @@
       </div>
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-8">
-      <a href="dashboard.html" class="text-gray-700 hover:text-pink-600 font-semibold text-lg">Beranda</a>
+      <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-lg">Beranda</a>
       <div class="dropdown-kategori relative inline-block">
         <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-lg">Kategori &#9662;</a>
         <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200" id="dropdownKategori" style="display:none;">
-          <a href="produk-gucci.html" class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600 transition">Produk</a>
-          <a href="kategori.html" class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600 transition">Pilih Produk</a>
+          <a href="pembeli_produk_gucci.html" class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600 transition">Produk</a>
+          <a href="pembeli_kategori.html" class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600 transition">Pilih Produk</a>
         </div>
       </div>
       <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-lg">Hubungi kami</a>
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
-      <a href="keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+      <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
@@ -129,8 +129,8 @@
       </a>
       <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon" style="cursor:pointer;">
       <div id="userDropdown" class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-        <a href="akun-saya.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-        <a href="pesanan_saya.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+        <a href="pembeli_akun.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+        <a href="pembeli_pesanan_saya.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
         <a href="#" onclick="openChatCS();return false;" class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
         <a href="#" onclick="logoutUser();return false;" class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
     </div>
@@ -225,7 +225,7 @@
       let cart = JSON.parse(localStorage.getItem('checkoutCart') || '[]');
       cart.push(produk);
       localStorage.setItem('checkoutCart', JSON.stringify(cart));
-      window.location.href = 'keranjang.html';
+      window.location.href = 'pembeli_keranjang.html';
     }
     // Beli Sekarang
     function beliSekarang() {
@@ -238,7 +238,7 @@
         store: 'Rifal Store'
       };
       localStorage.setItem('checkoutProduct', JSON.stringify(produk));
-      window.location.href = 'checkout.html';
+      window.location.href = 'pembeli_checkout.html';
     }
     // Laporkan
     function laporkan() {
