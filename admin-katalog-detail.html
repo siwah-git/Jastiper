@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Detail Produk - TitipGo Admin</title>
+    <title>Manajemen Katalog - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -11,49 +11,41 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      /* Custom styles */
-      .truncate-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* number of lines to show */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      /* Definisi lebar sidebar yang konsisten */
-      :root {
-        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
-      }
-
-      .sidebar {
-        width: var(--sidebar-width);
-      }
-
-      .main-content {
-        margin-left: var(--sidebar-width);
-        flex-grow: 1; /* Penting untuk flexbox layout */
-        /* Gaya background tetap */
+      #mainContent {
         background-image: linear-gradient(
             rgba(255, 255, 255, 0.3),
             rgba(255, 255, 255, 0.3)
           ),
-          url("asset/images/background.png");
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-attachment: fixed; /* Ini membuat background tidak bergerak */
+        position: relative;
+        overflow: hidden;
       }
 
-      body {
-        min-height: 100vh;
+      /* Optional: Overlay tambahan jika diperlukan */
+      /* #mainContent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1); 
+        z-index: 0;
+        border-radius: inherit;
+      } */
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
       }
 
-      /* Style untuk membuat background kartu sedikit transparan */
+      /* Style untuk membuat background kartu statistik sedikit transparan */
       .card-bg-transparent {
         background-color: rgba(
           255,
@@ -62,26 +54,15 @@
           0.8
         ); /* Putih dengan opasitas 80% */
       }
-
-      /* Optional: Overlay tambahan jika diperlukan */
-      .main-content > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      .blue-header-transparent {
-        background-color: rgba(
-          37,
-          99,
-          235,
-          0.8
-        ); /* blue-600 dengan opasitas 80% */
+      /* Added for header transparency */
+      .header-bg-transparent {
+        background-color: rgba(255, 255, 255, 0.8);
       }
     </style>
   </head>
-  <body class="flex min-h-screen bg-gray-100">
+  <body class="flex">
     <aside
-      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+      class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
     >
       <div>
         <nav class="space-y-2 p-4">
@@ -93,21 +74,21 @@
 
           <a
             href="admin-dashboard.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+            <i class="fas fa-home mr-3"></i> Dashboard
           </a>
           <a
             href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out bg-pink-600 text-white font-semibold"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
           </a>
           <a
             href="admin-pengguna.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
           </a>
           <a
             href="admin-toko.html"
@@ -117,39 +98,39 @@
           </a>
           <a
             href="admin-pesanan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
           </a>
           <a
             href="admin-aduan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+            <i class="fas fa-envelope mr-3"></i> Aduan
           </a>
           <a
             href="admin-laporan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+            <i class="fas fa-chart-line mr-3"></i> Laporan
           </a>
           <a
             href="admin-pendapatan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
           </a>
           <a
             href="admin-profil.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+            <i class="fas fa-user-circle mr-3"></i> Profil
           </a>
           <a
-            href="admin-about-us.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
-            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+            <i class="fas fa-user-circle mr-3"></i> Tentang Kami
           </a>
         </nav>
       </div>
@@ -157,7 +138,6 @@
         &copy; 2025 TitipGo. All rights reserved.
       </footer>
     </aside>
-
     <main
       id="mainContent"
       class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
@@ -172,81 +152,105 @@
         background-repeat: no-repeat;
       "
     >
-      <div
-        class="blue-header-transparent p-4 text-white flex items-center justify-between mb-6 rounded-lg shadow-md"
-      >
-        <p id="productDetailTitle" class="text-lg font-semibold">
-          Detail Produk
-        </p>
-        <div class="flex gap-3">
-          <button
-            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-          >
-            <i class="fas fa-trash-alt mr-2"></i> Hapus
-          </button>
-          <a
-            href="#"
-            id="logoutButton"
-            class="text-pink-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-            ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-          >
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold" id="productDetailTitle" >Detail Produk: Memuat....</p>
+        <div class="flex gap-3 text-right ml-auto">
+          </div>
+          <div class="text-right flex gap-3">
+            <!-- Tombol aksi produk, misalnya Edit/Hapus -->
+            <button
+              id="edit-product-button"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+            >
+              <i class="fas fa-edit mr-2"></i> Edit Produk
+            </button>
+            <button
+              id="delete-product-button"
+              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+            >
+              <i class="fas fa-trash-alt mr-2"></i> Hapus Produk
+            </button>
+            <a
+              href="#"
+              id="logoutButton"
+              class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
         </div>
-      </div>
 
-      <nav class="text-sm text-gray-600 mb-6">
-        <ol class="list-none p-0 inline-flex">
-          <li class="flex items-center">
-            <a
-              href="admin-dashboard.html"
-              class="text-blue-600 hover:text-blue-800"
-              >Dashboard</a
+        <!-- Breadcrumb Dinamis -->
+        <nav class="text-sm text-gray-600 mb-6">
+          <ol class="list-none p-0 inline-flex">
+            <li class="flex items-center">
+              <a
+                href="admin-dashboard.html"
+                class="text-blue-600 hover:text-blue-800"
+                >Dashboard</a
+              >
+              <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            </li>
+            <li class="flex items-center">
+              <a
+                href="admin-katalog.html"
+                class="text-blue-600 hover:text-blue-800"
+                >Manajemen Katalog</a
+              >
+              <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            </li>
+            <li
+              id="breadcrumbProductName"
+              class="flex items-center text-gray-500"
             >
-            <i class="fas fa-chevron-right mx-2 text-xs"></i>
-          </li>
-          <li class="flex items-center">
-            <a
-              href="admin-katalog.html"
-              class="text-blue-600 hover:text-blue-800"
-              >Manajemen Katalog</a
-            >
-            <i class="fas fa-chevron-right mx-2 text-xs"></i>
-          </li>
-          <li
-            class="flex items-center text-gray-500"
-            id="breadcrumbProductName"
-          >
-            Nama Produk
-          </li>
-        </ol>
-      </nav>
+              Memuat...
+            </li>
+          </ol>
+        </nav>
 
-      <div id="productDetailContent" class="flex flex-col space-y-6">
-        <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
-          <p class="text-center text-gray-500">Memuat detail produk...</p>
+        <!-- Konten Detail Produk (akan diisi oleh JavaScript) -->
+        <div id="productDetailContent" class="flex flex-col space-y-6">
+          <!-- Initial loading state -->
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <p class="text-gray-600 text-lg">Memuat data produk...</p>
+          </div>
         </div>
       </div>
     </main>
 
-    <script>
-      // PERHATIAN: GANTI DENGAN KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-      // Anda bisa mendapatkan ini dari Firebase Console -> Project settings -> Your apps
+    <!-- Firebase SDKs (Modular SDK v9.6.0) -->
+    <script type="module">
+      // Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.0)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        deleteDoc,
+        collection,
+      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
+
+      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
       const firebaseConfig = {
-        apiKey: "YOUR_API_KEY", // <--- GANTI INI
-        authDomain: "YOUR_AUTH_DOMAIN", // <--- GANTI INI
-        projectId: "YOUR_PROJECT_ID", // <--- GANTI INI
-        storageBucket: "YOUR_STORAGE_BUCKET", // <--- GANTI INI
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // <--- GANTI INI
-        appId: "YOUR_APP_ID", // <--- GANTI INI
-        // measurementId: "YOUR_MEASUREMENT_ID", // Opsional, jika Anda menggunakan Analytics
+        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+        authDomain: "titipgo-28f84.firebaseapp.com",
+        projectId: "titipgo-28f84",
+        storageBucket: "titipgo-28f84.firebasestorage.app",
+        messagingSenderId: "816687535591",
+        appId: "1:816687535591:web:eaecf2fcc994636a319942",
+        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
       };
 
       // Inisialisasi Firebase
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      const db = firebase.firestore();
-      const auth = firebase.auth();
-      const storage = firebase.storage(); // Jika Anda menggunakan Firebase Storage
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const storage = getStorage(app);
 
       // --- Fungsi untuk Mendapatkan Parameter URL (Product ID) ---
       function getUrlParameter(name) {
@@ -264,129 +268,168 @@
         const productDetailContent = document.getElementById(
           "productDetailContent"
         );
-        // Pastikan elemen dengan ID 'productDetailTitle' ada di HTML Anda
         const productDetailTitle =
           document.getElementById("productDetailTitle");
         const breadcrumbProductName = document.getElementById(
           "breadcrumbProductName"
         );
+        const pageTitleEl = document.getElementById("page-title");
+        const editProductButton = document.getElementById(
+          "edit-product-button"
+        );
+        const deleteProductButton = document.getElementById(
+          "delete-product-button"
+        );
 
-        if (!productId) {
-          productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">ID Produk tidak ditemukan di URL.</div>`;
-          // Update title dan breadcrumb meskipun error
-          document.title = `Error - TitipGo Admin`;
-          if (productDetailTitle)
-            productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-          if (breadcrumbProductName)
-            breadcrumbProductName.textContent = `Tidak Ditemukan`;
-          return;
-        }
+        // Set initial loading state for the content area
+        productDetailContent.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <p class="text-gray-600 text-lg">Memuat data produk...</p>
+          </div>
+        `;
+      }
+      pageTitleEl.textContent = `Memuat Produk - TitipGo Admin`;
+      if (productDetailTitle)
+        productDetailTitle.textContent = `Memuat Detail Produk...`;
+      if (breadcrumbProductName)
+        breadcrumbProductName.textContent = `Memuat...`;
+      if (editProductButton) editProductButton.classList.add("hidden");
+      if (deleteProductButton) deleteProductButton.classList.add("hidden");
 
-        try {
-          // Asumsi struktur data Anda adalah "produk" (huruf kecil)
-          // Berdasarkan screenshot Firebase, koleksi Anda bernama "produk"
-          const productDoc = await db
-            .collection("produk") // <--- Pastikan nama koleksi sesuai (produk, bukan products)
-            .doc(productId)
-            .get();
+      if (!productId) {
+        productDetailContent.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
+              <p class="text-red-500 text-xl font-semibold">ID Produk tidak ditemukan di URL.</p>
+              <p class="text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID produk yang valid.</p>
+              <div class="mt-4">
+                <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
+                </a>
+              </div>
+            </div>
+          `;
+        pageTitleEl.textContent = `Error - TitipGo Admin`;
+        if (productDetailTitle)
+          productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+        if (breadcrumbProductName)
+          breadcrumbProductName.textContent = `Tidak Ditemukan`;
+        return;
+      }
 
-          if (productDoc.exists) {
-            const productData = productDoc.data();
+      try {
+        // Ambil data produk dari koleksi "produk"
+        const productDocRef = doc(db, "produk", productId);
+        const productDoc = await getDoc(productDocRef);
 
-            // Ambil informasi jastiper/toko
-            let jastiperInfo = {
-              name: "Tidak Diketahui",
-              id: "",
-              location: "Tidak Diketahui",
-              email: "#",
-              phone: "#",
-              profileUrl: "#",
-              photoUrl: "", // Tambahkan placeholder untuk photoUrl
-            };
+        if (productDoc.exists()) {
+          const productData = productDoc.data();
 
-            // Berdasarkan screenshot Firebase, koleksi user Anda bernama "users"
-            if (productData.jastiperId) {
-              const jastiperDoc = await db
-                .collection("user") // <--- Pastikan nama koleksi sesuai (users, bukan user)
-                .doc(productData.jastiperId)
-                .get();
-              if (jastiperDoc.exists) {
-                const jastiperData = jastiperDoc.data();
-                jastiperInfo = {
-                  name: jastiperData.name || "Nama Jastiper",
-                  id: productData.jastiperId,
-                  location: jastiperData.location || "Lokasi",
-                  email: jastiperData.email || "#",
-                  phone: jastiperData.phone || "#",
-                  profileUrl: `admin-pengguna-detail.html?id=${productData.jastiperId}`, // Asumsi link ke detail pengguna
-                  photoUrl:
-                    jastiperData.photoUrl ||
-                    "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper", // Ambil dari data jastiper
-                };
-              }
-            }
+          // Ambil informasi jastiper/toko
+          let jastiperInfo = {
+            name: "Tidak Diketahui",
+            id: "",
+            location: "Tidak Diketahui",
+            email: "#",
+            phone: "#",
+            profileUrl: "#",
+            photoUrl:
+              "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper",
+          };
 
-            // Dapatkan URL gambar utama dari Firebase Storage jika disimpan di sana
-            let mainImageUrl =
-              productData.mainImage ||
-              "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Tidak+Ada+Gambar";
-            // Pastikan storage diinisialisasi sebelum digunakan
-            if (mainImageUrl.startsWith("gs://") && storage) {
-              try {
-                const imageRef = storage.refFromURL(mainImageUrl);
-                mainImageUrl = await imageRef.getDownloadURL();
-              } catch (storageError) {
-                console.warn(
-                  "Error fetching main image from storage:",
-                  storageError
-                );
-                mainImageUrl =
-                  "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Gagal+Muat+Gambar";
-              }
-            }
-
-            // Dapatkan URL galeri gambar
-            let galleryImagesHtml = "";
-            if (
-              productData.galleryImages &&
-              productData.galleryImages.length > 0
-            ) {
-              for (const imgUrl of productData.galleryImages) {
-                let downloadUrl = imgUrl;
-                if (imgUrl.startsWith("gs://") && storage) {
-                  try {
-                    const imageRef = storage.refFromURL(imgUrl);
-                    downloadUrl = await imageRef.getDownloadURL();
-                  } catch (storageError) {
-                    console.warn(
-                      "Error fetching gallery image from storage:",
-                      storageError
-                    );
-                    downloadUrl =
-                      "https://via.placeholder.com/100x100/CCCCCC/000000?text=Error";
-                  }
+          if (productData.jastiperId) {
+            const jastiperDocRef = doc(db, "users", productData.jastiperId); // Asumsi jastiper ada di koleksi 'users'
+            const jastiperDoc = await getDoc(jastiperDocRef);
+            if (jastiperDoc.exists()) {
+              const jastiperData = jastiperDoc.data();
+              jastiperInfo = {
+                name: jastiperData.fullName || "Nama Jastiper",
+                id: productData.jastiperId,
+                location: jastiperData.originCountry || "Lokasi", // Asumsi originCountry adalah lokasi
+                email: jastiperData.email || "#",
+                phone: jastiperData.phoneNumber || "#",
+                profileUrl: `admin-pengguna-detail.html?id=${productData.jastiperId}`,
+                photoUrl:
+                  jastiperData.profilePictureUrl ||
+                  "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper",
+              };
+              // Fetch jastiper photo from storage if it's a gs:// path
+              if (jastiperInfo.photoUrl.startsWith("gs://")) {
+                try {
+                  const photoRef = ref(storage, jastiperInfo.photoUrl);
+                  jastiperInfo.photoUrl = await getDownloadURL(photoRef);
+                } catch (error) {
+                  console.warn(
+                    "Error fetching jastiper photo from storage:",
+                    error
+                  );
+                  jastiperInfo.photoUrl =
+                    "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=Error";
                 }
-                galleryImagesHtml += `
-                        <img
-                          src="${downloadUrl}"
-                          alt="Gambar Produk"
-                          class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-                        />
-                    `;
               }
-            } else {
-              galleryImagesHtml = `
-                    <p class="text-gray-500 text-sm italic">Tidak ada gambar galeri.</p>
+            }
+          }
+
+          // Dapatkan URL gambar utama dari Firebase Storage jika disimpan di sana
+          let mainImageUrl =
+            productData.mainImage ||
+            "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Tidak+Ada+Gambar";
+          if (mainImageUrl.startsWith("gs://")) {
+            try {
+              const imageRef = ref(storage, mainImageUrl);
+              mainImageUrl = await getDownloadURL(imageRef);
+            } catch (storageError) {
+              console.warn(
+                "Error fetching main image from storage:",
+                storageError
+              );
+              mainImageUrl =
+                "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Gagal+Muat+Gambar";
+            }
+          }
+
+          // Dapatkan URL galeri gambar
+          let galleryImagesHtml = "";
+          if (
+            productData.galleryImages &&
+            productData.galleryImages.length > 0
+          ) {
+            for (const imgPath of productData.galleryImages) {
+              let downloadUrl = imgPath;
+              if (imgPath.startsWith("gs://")) {
+                try {
+                  const imageRef = ref(storage, imgPath);
+                  downloadUrl = await getDownloadURL(imageRef);
+                } catch (storageError) {
+                  console.warn(
+                    "Error fetching gallery image from storage:",
+                    storageError
+                  );
+                  downloadUrl =
+                    "https://via.placeholder.com/100x100/CCCCCC/000000?text=Error";
+                }
+              }
+              galleryImagesHtml += `
+                  <img
+                    src="${downloadUrl}"
+                    alt="Gambar Produk"
+                    class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+                    onclick="window.open('${downloadUrl}', '_blank');"
+                  />
                 `;
             }
+          } else {
+            galleryImagesHtml = `
+                <p class="text-gray-500 text-sm italic col-span-full">Tidak ada gambar galeri.</p>
+              `;
+          }
 
-            // Render konten produk
-            productDetailContent.innerHTML = `
-              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+          // Render konten produk
+          productDetailContent.innerHTML = `
+              <div class="bg-white p-6 rounded-lg shadow-md">
                 <div class="flex flex-col md:flex-row items-start md:items-center mb-6 border-b pb-4">
                   <img
                     src="${mainImageUrl}"
-                    alt="${productData.name || "Nama Produk"}"
+                    alt="${productData.productName || "Nama Produk"}"
                     class="w-full md:w-64 h-auto md:h-64 object-cover rounded-lg shadow-lg mb-4 md:mb-0 md:mr-6"
                   />
                   <div>
@@ -399,7 +442,7 @@
                     >${productData.stock > 0 ? "Tersedia" : "Habis"}</span
                     >
                     <h2 class="text-3xl font-bold text-gray-800 mt-2 mb-2">
-                      ${productData.name || "Nama Produk"}
+                      ${productData.productName || "Nama Produk"}
                     </h2>
                     <p class="text-green-600 text-3xl font-bold mb-4">Rp ${(
                       productData.price || 0
@@ -473,7 +516,7 @@
                 </div>
               </div>
 
-              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+              <div class="bg-white p-6 rounded-lg shadow-md">
                 <h3
                   class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
                 >
@@ -528,7 +571,7 @@
                 </ul>
               </div>
 
-              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+              <div class="bg-white p-6 rounded-lg shadow-md">
                 <h3
                   class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
                 >
@@ -550,28 +593,28 @@
                           ? productData.variants
                               .map(
                                 (variant) => `
-                              <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                <td class="py-3 px-6 text-left whitespace-nowrap">${
-                                  variant.name
-                                }</td>
-                                <td class="py-3 px-6 text-center">
-                                  <span
-                                    class="${
-                                      variant.stock > 10
-                                        ? "bg-green-200 text-green-800"
-                                        : variant.stock > 0
-                                        ? "bg-yellow-200 text-yellow-800"
-                                        : "bg-red-200 text-red-800"
-                                    } py-1 px-3 rounded-full text-xs"
-                                  >${
-                                    variant.stock > 0
-                                      ? `Tersedia (${variant.stock})`
-                                      : "Habis (0)"
-                                  }</span
-                                  >
-                                </td>
-                              </tr>
-                            `
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                  <td class="py-3 px-6 text-left whitespace-nowrap">${
+                                    variant.name || "N/A"
+                                  }</td>
+                                  <td class="py-3 px-6 text-center">
+                                    <span
+                                      class="${
+                                        variant.stock > 10
+                                          ? "bg-green-200 text-green-800"
+                                          : variant.stock > 0
+                                          ? "bg-yellow-200 text-yellow-800"
+                                          : "bg-red-200 text-red-800"
+                                      } py-1 px-3 rounded-full text-xs"
+                                    >${
+                                      variant.stock > 0
+                                        ? `Tersedia (${variant.stock})`
+                                        : "Habis (0)"
+                                    }</span
+                                    >
+                                  </td>
+                                </tr>
+                              `
                               )
                               .join("")
                           : `<tr><td colspan="2" class="py-3 px-6 text-center text-gray-500">Tidak ada varian.</td></tr>`
@@ -581,7 +624,7 @@
                 </div>
               </div>
 
-              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+              <div class="bg-white p-6 rounded-lg shadow-md">
                 <h3
                   class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
                 >
@@ -595,7 +638,7 @@
                         productData.createdAt
                           ? new Date(
                               productData.createdAt.toDate()
-                            ).toLocaleString()
+                            ).toLocaleString("id-ID")
                           : "N/A"
                       }
                       <p class="text-xs text-gray-500">
@@ -615,13 +658,13 @@
                         productData.updatedAt
                           ? new Date(
                               productData.updatedAt.toDate()
-                            ).toLocaleString()
+                            ).toLocaleString("id-ID")
                           : "N/A"
                       }
                       <p class="text-xs text-gray-500">
                         Oleh: ${productData.lastUpdatedBy || "Sistem"} (${
-              productData.lastUpdateReason || "N/A"
-            })
+            productData.lastUpdateReason || "N/A"
+          })
                       </p>
                     </div>
                   </li>
@@ -632,7 +675,7 @@
                         productData.lastSoldDate
                           ? new Date(
                               productData.lastSoldDate.toDate()
-                            ).toLocaleDateString()
+                            ).toLocaleDateString("id-ID")
                           : "N/A"
                       } (${productData.lastSoldQuantity || 0} Pcs)
                       <p class="text-xs text-gray-500">Total Terjual: ${
@@ -643,7 +686,7 @@
                 </ul>
               </div>
 
-              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+              <div class="bg-white p-6 rounded-lg shadow-md">
                 <h3
                   class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
                 >
@@ -652,7 +695,7 @@
                 <ul class="text-gray-700 space-y-2 text-sm">
                   <li>
                     <strong>Meta Judul:</strong> ${
-                      productData.metaTitle || productData.name || "N/A"
+                      productData.metaTitle || productData.productName || "N/A"
                     } | TitipGo
                   </li>
                   <li>
@@ -674,105 +717,108 @@
               </div>
             `;
 
-            // Update title dan breadcrumb
-            document.title = `Detail Produk - ${productData.name} - TitipGo Admin`;
-            if (productDetailTitle)
-              productDetailTitle.textContent = `Detail Produk: ${productData.name}`;
-            if (breadcrumbProductName)
-              breadcrumbProductName.textContent = productData.name;
-          } else {
-            productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">Produk tidak ditemukan.</div>`;
-            document.title = `Produk Tidak Ditemukan - TitipGo Admin`;
-            if (productDetailTitle)
-              productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-            if (breadcrumbProductName)
-              breadcrumbProductName.textContent = `Tidak Ditemukan`;
-          }
-        } catch (error) {
-          console.error("Error fetching product detail:", error);
-          let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
-          if (error.code === "unavailable") {
-            errorMessage =
-              "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
-          } else {
-            errorMessage = error.message;
-          }
-          productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">Terjadi kesalahan saat memuat detail produk: ${errorMessage}</div>`;
-          document.title = `Error - TitipGo Admin`;
+          // Update title dan breadcrumb
+          pageTitleEl.textContent = `Detail Produk - ${
+            productData.productName || "N/A"
+          } - TitipGo Admin`;
           if (productDetailTitle)
-            productDetailTitle.textContent = `Error Loading Product`;
+            productDetailTitle.textContent = `Detail Produk: ${
+              productData.productName || "N/A"
+            }`;
           if (breadcrumbProductName)
-            breadcrumbProductName.textContent = `Error`;
+            breadcrumbProductName.textContent =
+              productData.productName || "N/A";
+
+          // Tampilkan tombol aksi setelah data dimuat
+          if (editProductButton) editProductButton.classList.remove("hidden");
+          if (deleteProductButton)
+            deleteProductButton.classList.remove("hidden");
+
+          // --- Fungsionalitas Tombol Aksi Produk ---
+          editProductButton.onclick = () => {
+            // Arahkan ke halaman edit produk, misalnya:
+            alert("Fungsi Edit Produk akan diarahkan ke halaman form edit.");
+            // window.location.href = `admin-katalog-edit.html?id=${productId}`;
+          };
+
+          deleteProductButton.onclick = async () => {
+            if (
+              confirm(
+                `Apakah Anda yakin ingin menghapus produk "${
+                  productData.productName || "ini"
+                }" secara permanen? Aksi ini tidak bisa dibatalkan!`
+              )
+            ) {
+              try {
+                await deleteDoc(productDocRef); // Menggunakan deleteDoc
+                alert("Produk berhasil dihapus.");
+                window.location.href = "admin-katalog.html"; // Redirect kembali ke daftar katalog
+              } catch (error) {
+                console.error("Error deleting product:", error);
+                alert("Gagal menghapus produk. Coba lagi.");
+              }
+            }
+          };
+        } else {
+          // Jika dokumen produk tidak ada di Firestore
+          productDetailContent.innerHTML = `
+              <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
+                <p class="text-red-500 text-xl font-semibold">Produk dengan ID #${productId} tidak ditemukan.</p>
+                <p class="text-gray-600 mt-2">Mungkin ID produk salah atau produk telah dihapus.</p>
+                <div class="mt-4">
+                  <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
+                  </a>
+                </div>
+              </div>
+            `;
+          pageTitleEl.textContent = `Produk Tidak Ditemukan - TitipGo Admin`;
+          if (productDetailTitle)
+            productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+          if (breadcrumbProductName)
+            breadcrumbProductName.textContent = `Tidak Ditemukan`;
         }
+      } catch (error) {
+        console.error("Error fetching product detail:", error);
+        let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
+        if (error.code === "unavailable") {
+          errorMessage =
+            "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
+        } else {
+          errorMessage = error.message;
+        }
+        productDetailContent.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
+              <p class="text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail produk.</p>
+              <p class="text-gray-600 mt-2">Detail: ${errorMessage}</p>
+              <div class="mt-4">
+                <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
+                </a>
+              </div>
+            </div>
+          `;
+        pageTitleEl.textContent = `Error - TitipGo Admin`;
+        if (productDetailTitle)
+          productDetailTitle.textContent = `Error Loading Product`;
+        if (breadcrumbProductName) breadcrumbProductName.textContent = `Error`;
       }
 
-      // --- Sidebar Active State & Initial Load ---
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentPath = window.location.pathname.split("/").pop();
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
-
-          let isLinkActive = false;
-
-          // Special handling for detail pages: highlight parent menu
-          if (
-            linkFileName === "admin-katalog.html" &&
-            currentPath.startsWith("admin-katalog-detail") // Pastikan nama file detail sesuai
-          ) {
-            isLinkActive = true;
-          } else if (linkFileName === currentPath) {
-            isLinkActive = true;
-          } else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-          }
-        });
-
-        // Load product detail when the page loads
-        loadProductDetail();
-      });
-
-      // Contoh sederhana fungsi logout (pastikan ada di semua halaman)
-      document
-        .getElementById("logoutButton") // Menggunakan ID untuk button logout
-        .addEventListener("click", async (e) => {
+      // --- Fungsionalitas Logout ---
+      const logoutButton = document.getElementById("logoutButton");
+      if (logoutButton) {
+        logoutButton.addEventListener("click", async (e) => {
           e.preventDefault();
           try {
             await auth.signOut();
             alert("Anda telah logout!");
-            window.location.href = "login.html"; // Arahkan ke halaman login
+            window.location.href = "login.html"; // Arahkan ke halaman login Anda
           } catch (error) {
             console.error("Error during logout:", error);
             alert("Gagal logout: " + error.message);
           }
         });
+      }
     </script>
   </body>
 </html>

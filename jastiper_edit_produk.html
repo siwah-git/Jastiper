@@ -13,7 +13,7 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
-        background-image: url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
+        background-image: url("asset/images/background.png");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -293,7 +293,7 @@
     <div class="flex h-full">
       <div class="sidebar">
         <div class="sidebar-header">
-          <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo" />
+          <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
         </div>
         <nav class="sidebar-nav">
           <ul>
@@ -301,9 +301,9 @@
               <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
             </li>
             <li class="active">
-              <span>🏬</span> <a href="toko_kita.html">Toko Kita</a>
+              <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
             </li>
-            <li><span>💬</span> Chat</li>
+            <li><span>💬</span><a href="jastiper_chat.html">Toko Kita</a></li>
             <li id="logout-button"><span>➡️</span> Logout</li>
           </ul>
         </nav>
@@ -475,7 +475,7 @@
             <button
               type="button"
               class="btn-secondary ml-4"
-              onclick="window.location.href='toko_kita.html'"
+              onclick="window.location.href='jastiper_toko_kita.html'"
             >
               Batal
             </button>
@@ -668,7 +668,7 @@
         if (!id) {
           console.error("Product ID not found in URL.");
           alert("ID Produk tidak ditemukan. Kembali ke halaman Toko Kita.");
-          window.location.href = "toko_kita.html";
+          window.location.href = "jastiper_toko_kita.html";
           return;
         }
 
@@ -695,7 +695,7 @@
 
           if (product.jastiperId !== currentJastiperId) {
             alert("Anda tidak memiliki izin untuk mengedit produk ini.");
-            window.location.href = "toko_kita.html";
+            window.location.href = "jastiper_toko_kita.html";
             return;
           }
 
@@ -727,7 +727,7 @@
         } catch (error) {
           console.error("Error loading product:", error);
           alert("Terjadi kesalahan saat memuat data produk.");
-          window.location.href = "toko_kita.html";
+          window.location.href = "jastiper_toko_kita.html";
         }
       }
 
@@ -782,7 +782,7 @@
             updatedData
           );
           alert("Detail produk berhasil diperbarui! (Simulasi)");
-          window.location.href = "toko_kita.html"; // Kembali ke daftar produk
+          window.location.href = "jastiper_toko_kita.html"; // Kembali ke daftar produk
         } catch (error) {
           console.error("Error updating product:", error);
           alert("Gagal memperbarui produk: " + error.message);
@@ -803,7 +803,7 @@
             // You'll need to replace this with your new data deletion logic (e.g., an API call).
             console.log("Simulating product deletion for ID:", productId);
             alert("Produk berhasil dihapus! (Simulasi)");
-            window.location.href = "toko_kita.html"; // Kembali ke daftar produk
+            window.location.href = "jastiper_toko_kita.html"; // Kembali ke daftar produk
           } catch (error) {
             console.error("Error deleting product:", error);
             alert("Gagal menghapus produk: " + error.message);
