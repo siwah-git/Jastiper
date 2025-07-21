@@ -27,7 +27,18 @@
             background-position: center;
             /* Ganti URL di bawah ini dengan path/URL gambar yang Anda lampirkan */
             background-image: url('asset/images/beranda.jpeg');
+            /* Mengatur tinggi dinamis agar mengisi sisa ruang setelah header */
+            min-height: calc(100vh - 64px);
+            /* Assuming header height is roughly 64px (py-1 + some height) */
+            /* You might need to adjust 64px based on your actual header height */
         }
+
+        /* If you want the hero section to always be exactly 80vh of the remaining viewport,
+            you might combine with the existing h-[80vh] like this:
+            height: 80vh; /* This sets its height relative to viewport height */
+        /* But if you want it to fill the remaining space after header, min-height: calc() is better.
+             For fixed header and content starting right after, you typically make the first section
+             take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
 
         /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
@@ -194,78 +205,16 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-
-        /* Tambahan style untuk dropdown agar konsisten dan rapi */
-        .dropdown-kategori .dropdown-content,
-        #userDropdown {
-            min-width: 160px;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
-            background: #fff;
-            padding: 0;
-            margin-top: 4px;
-        }
-
-        .dropdown-kategori .dropdown-content a,
-        #userDropdown a {
-            display: block;
-            padding: 10px 18px;
-            color: #222;
-            text-decoration: none;
-            font-size: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.15s, color 0.15s;
-        }
-
-        .dropdown-kategori .dropdown-content a:last-child,
-        #userDropdown a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-kategori .dropdown-content a:hover,
-        #userDropdown a:hover {
-            background: #f5f7fa;
-            color: #1976d2;
-        }
-
-        .icon-nav {
-            width: 28px;
-            height: 28px;
-            margin-left: 24px;
-            vertical-align: middle;
-            object-fit: contain;
-            cursor: pointer;
-            transition: filter 0.15s;
-        }
-
-        .icon-nav:hover {
-            filter: brightness(0.7);
-        }
-
-        @media (max-width: 900px) {
-            .icon-nav {
-                margin-left: 12px;
-                width: 24px;
-                height: 24px;
-            }
-
-            .dropdown-kategori .dropdown-content,
-            #userDropdown {
-                min-width: 120px;
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 
 <body class="font-sans bg-white text-gray-800">
-
     <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
         <div class="flex items-center space-x-3">
-            <img src="asset/logo.png" alt="Logo TitipGo" class="w-20 sm:w-20 logo-titipgo">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
             <div class="relative hidden md:block">
                 <input type="text" placeholder="Cari Barang..."
-                    class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
                 <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
                     viewBox="0 0 20 20">
                     <path
@@ -274,23 +223,24 @@
             </div>
         </div>
         <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-            <a href="dashboard.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-            <div class="dropdown-kategori relative inline-block">
-                <a href="#" id="kategoriMenu"
-                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori &#9662;</a>
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html" id="kategoriMenu"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
                 <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
                     id="dropdownKategori" style="display:none;">
-                    <a href="produk-gucci.html"
+                    <a href="pembeli_produk_gucci.html"
                         class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
-                    <a href="kategori.html"
+                    <a href="pembeli_kategori.html"
                         class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
                         Produk</a>
                 </div>
             </div>
-            <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
-        </nav>
-        <nav class="flex items-center space-x-4 sm:space-x-6">
-            <a href="keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
                 <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -298,7 +248,7 @@
                     </path>
                 </svg>
             </a>
-            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"
                 onclick="alert('Belum ada notifikasi!');return false;">
                 <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -311,20 +261,21 @@
                 id="userIcon" style="cursor:pointer;">
             <div id="userDropdown"
                 class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-                <a href="akun-saya.html"
+                <a href="pembeli_akun.html"
                     class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-                <a href="pesanan_saya.html"
+                <a href="pembeli_pesanan_saya.html"
                     class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
                 <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
                     CS</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
                 <a href="#" onclick="logoutUser();return false;"
                     class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
             </div>
         </nav>
     </header>
-
-    <main class="pt-20">
+    <main class="">
         <section id="hero-section"
             class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
@@ -364,67 +315,59 @@
 
         <section id="produk-best-seller-section" class="relative py-12 text-center">
             <div class="relative z-10 p-4">
-                <h2 class="text-3xl font-bold mb-10">Produk Best-Seller</h2>
+                <h2 class="text-3xl font-bold mb-10">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk1.jpeg" alt="Produk Gucci"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">Gucci Dionysus Bag</p>
                         <span class="text-sm text-gray-500">Italy</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk2.jpeg" alt="Produk LV Capucines"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">LV Capucines BB</p>
                         <span class="text-sm text-gray-500">France</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk3.jpeg" alt="Produk Nike Air Force"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">Nike Air Force 1 '07</p>
                         <span class="text-sm text-gray-500">USA</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk4.jpeg" alt="Produk iPhone 15 Pro Max"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">iPhone 15 Pro Max</p>
                         <span class="text-sm text-gray-500">USA</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk5.jpeg" alt="Produk Dior Saddle Bag"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">Dior Saddle Bag</p>
                         <span class="text-sm text-gray-500">France</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk6.jpeg" alt="Produk Prada Re-Edition"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">Prada Re-Edition</p>
                         <span class="text-sm text-gray-500">Italy</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk7.jpeg" alt="Produk Adidas Samba OG"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">Adidas Samba OG</p>
                         <span class="text-sm text-gray-500">Germany</span>
-                    </a>
-                    <a href="produk-gucci.html" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3"
-                        style="display:block;text-decoration:none;">
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
                         <img src="asset/images/produk8.jpeg" alt="Produk iPad Air 5"
                             class="w-full h-32 object-cover rounded mb-2">
                         <p class="font-semibold text-lg">iPad Air 5</p>
                         <span class="text-sm text-gray-500">USA</span>
-                    </a>
+                    </div>
                 </div>
-                <button onclick="window.location.href='kategori.html'"
+                <button
                     class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
                     Lihat Semua
                 </button>
@@ -432,49 +375,49 @@
         </section>
 
         <section id="negara-terpopuler-section" class="py-10 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara Terpopuler</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
             <div id="negara-terpopuler"
                 class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                <div class="country-card">
                     <img src="asset/images/negara1.jpeg" alt="Japan">
                     <div class="country-name-overlay">Japan</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara2.jpeg" alt="France">
                     <div class="country-name-overlay">France</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara3.jpeg" alt="South Korea">
                     <div class="country-name-overlay">South Korea</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara4.jpeg" alt="USA">
                     <div class="country-name-overlay">USA</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara5.jpeg" alt="Malaysia">
                     <div class="country-name-overlay">Malaysia</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara6.jpeg" alt="UK">
                     <div class="country-name-overlay">UK</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara7.jpeg" alt="Australia">
                     <div class="country-name-overlay">Australia</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara8.jpeg" alt="Singapore">
                     <div class="country-name-overlay">Singapore</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara9.jpeg" alt="Thailand">
                     <div class="country-name-overlay">Thailand</div>
-                </a>
-                <a href="kategori.html" class="country-card" style="display:block;text-decoration:none;">
+                </div>
+                <div class="country-card">
                     <img src="asset/images/negara10.jpeg" alt="Germany">
                     <div class="country-name-overlay">Germany</div>
-                </a>
+                </div>
             </div>
             <button
                 class="mt-10 bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md">
@@ -484,49 +427,43 @@
     </main>
 
     <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div class="mb-6 md:mb-0 text-left">
-                <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
-                <a href="#" class="block hover:text-pink-600 mb-1"
-                    onclick="alert('Tentang Kami TitipGo');return false;">Tentang Kami</a>
-                <a href="#" class="block hover:text-pink-600 mb-1"
-                    onclick="alert('FAQ TitipGo');return false;">Pertanyaan Umum</a>
-                <a href="#" class="block hover:text-pink-600"
-                    onclick="alert('Hubungi kami di admin@titipgo.com');return false;">Hubungi Kami</a>
-            </div>
-            <div class="text-center mb-6 md:mb-0">
-                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
-                    class="mx-auto w-32 mb-2 footer-logo">
-                <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
-            </div>
-            <div class="text-left md:text-right">
-                <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
-                    </svg>
-                    Facebook
-                </a>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
-                    </svg>
-                    Youtube
-                </a>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979 4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
-                    </svg>
-                    Instagram
-                </a>
-            </div>
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div class="mb-6 md:mb-0 text-left">
+            <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
+            <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
+            <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
+            <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
         </div>
-    </footer>
-
-    <!-- Modal Chat CS -->
+        <div class="text-center mb-6 md:mb-0">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
+                class="mx-auto w-32 mb-2 footer-logo">
+        </div>
+        <div class="text-left md:text-right">
+            <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
+            <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+                </svg>
+                Facebook
+            </a>
+            <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
+                </svg>
+                Youtube
+            </a>
+            <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979 4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+                </svg>
+                Instagram
+            </a>
+        </div>
+    </div>
+</footer>
     <div id="chatCSModal"
         style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
         <div
@@ -549,11 +486,6 @@
         </div>
     </div>
     <script type="module">
-        import { db, auth } from './js/firebase-config.js';
-        // Contoh: Ambil data produk
-        // import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
-        // const products = await getDocs(collection(db, "products"));
-
         // --- KONFIGURASI FIREBASE ANDA ---
         const firebaseConfig = {
             apiKey: "AIzaSyCAEVRX88dod-9BWHPCQ_RTIIHWtws-29RQ", // Ini API Key dari gambar image_9696fc.jpg
@@ -566,8 +498,8 @@
 
         // Inisialisasi Firebase
         const app = firebase.initializeApp(firebaseConfig);
-        // const db = firebase.firestore(); // Dapatkan instance Firestore
-        // const auth = firebase.auth(); // Dapatkan instance Auth
+        const db = firebase.firestore(); // Dapatkan instance Firestore
+        const auth = firebase.auth(); // Dapatkan instance Auth
 
         // --- PENGATURAN SLIDER HERO SECTION ---
         const heroImages = [
@@ -586,71 +518,82 @@
         }
 
         // Panggil fungsi untuk mengubah gambar setiap beberapa detik (misalnya 5 detik)
-        // setInterval(changeHeroImage, 5000); // Aktifkan jika Anda ingin slider gambar otomatis
+        setInterval(changeHeroImage, 5000); // Aktifkan slider gambar otomatis
 
-        // Tambahkan event listener untuk tombol atau indikator slider jika ada
-        // Contoh: document.getElementById('next-button').addEventListener('click', changeHeroImage);
+        // --- FUNGSI DROPDOWN MENU ---
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
 
-        // function logoutUser() {
-        //   alert('Berhasil logout!');
-        //   if (userDropdown) userDropdown.classList.add('hidden');
-        // }
+        userIcon.addEventListener('click', function (event) {
+            event.preventDefault(); // Mencegah link default action
+            userDropdown.classList.toggle('hidden');
+        });
 
-        // function openChatCS() {
-        //   alert('Fitur chat CS akan segera hadir!');
-        //   if (userDropdown) userDropdown.classList.add('hidden');
-        // }
-        // function sendCSMessage() {
-        //   var input = document.getElementById('chatCSInput');
-        //   var messages = document.getElementById('chatCSMessages');
-        //   if(input.value.trim() !== '') {
-        //     messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
-        //     setTimeout(function(){
-        //       messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
-        //     }, 800);
-        //     input.value = '';
-        //   }
-        // }
-    </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            // Dropdown Kategori
-            const kategoriMenu = document.getElementById('kategoriMenu');
-            const dropdownKategori = document.getElementById('dropdownKategori');
-            if (kategoriMenu && dropdownKategori) {
-                kategoriMenu.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-                });
-                document.addEventListener('click', function (e) {
-                    if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-                        dropdownKategori.style.display = 'none';
-                    }
-                });
-            }
-            // Dropdown User
-            const userIcon = document.getElementById('userIcon');
-            const userDropdown = document.getElementById('userDropdown');
-            if (userIcon && userDropdown) {
-                userIcon.onclick = function (e) {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('hidden');
-                };
-                document.addEventListener('click', function (e) {
-                    if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-                        userDropdown.classList.add('hidden');
-                    }
-                });
-            }
-            window.logoutUser = function () {
-                alert('Berhasil logout!');
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
-            window.openChatCS = function () {
-                alert('Fitur chat CS akan segera hadir!');
-                if (userDropdown) userDropdown.classList.add('hidden');
+        // Tutup dropdown jika klik di luar area dropdown
+        document.addEventListener('click', function (event) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
             }
         });
+
+        // Dropdown Kategori
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+
+        kategoriMenu.addEventListener('click', function (event) {
+            event.preventDefault();
+            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+                dropdownKategori.style.display = 'none';
+            }
+        });
+
+
+        // Fungsi Logout (contoh sederhana, perlu implementasi Firebase Auth)
+        function logoutUser() {
+            // Implementasi logout Firebase Authentication
+            auth.signOut().then(() => {
+                alert("Anda telah logout!");
+                window.location.href = "index.html"; // Redirect ke halaman login setelah logout
+            }).catch((error) => {
+                console.error("Error logging out: ", error);
+                alert("Gagal logout. Silakan coba lagi.");
+            });
+        }
+
+        // Fungsi untuk membuka modal chat CS
+        function openChatCS() {
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?"; // Pesan awal
+            document.getElementById('chatCSInput').value = ''; // Kosongkan input
+        }
+
+        // Fungsi untuk mengirim pesan ke CS (contoh sederhana, tidak terhubung ke backend)
+        function sendCSMessage() {
+            const chatInput = document.getElementById('chatCSInput');
+            const chatMessages = document.getElementById('chatCSMessages');
+            const message = chatInput.value.trim();
+
+            if (message !== '') {
+                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
+                chatInput.value = '';
+
+                // Contoh balasan otomatis (bukan dari CS sungguhan)
+                setTimeout(() => {
+                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // Gulir ke bawah
+                }, 1000);
+            }
+        }
+
+        // Expose functions to global scope for onclick attributes
+        window.logoutUser = logoutUser;
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+
     </script>
 </body>
 

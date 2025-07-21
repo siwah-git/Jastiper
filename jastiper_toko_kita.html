@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Toko Kita - TitipGo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
 
+<<<<<<< HEAD
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -20,363 +12,389 @@
         height: 100vh;
         overflow: hidden;
       }
+=======
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toko Kita - TitipGo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+>>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
 
-      /* Sidebar Styling */
-      .sidebar {
-        width: 250px;
-        background-color: #fff;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-      }
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-image: url("asset/images/background.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-      .sidebar-header {
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-bottom: 1px solid #e0e0e0;
-      }
+    /* Sidebar Styling */
+    .sidebar {
+      width: 250px;
+      background-color: #fff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
 
-      .sidebar-header img {
-        height: 40px;
-        object-fit: contain;
-      }
+    .sidebar-header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
 
-      .sidebar-nav ul {
-        padding: 1rem 0;
-        flex-grow: 1;
-      }
+    .sidebar-header img {
+      height: 40px;
+      object-fit: contain;
+    }
 
-      .sidebar-nav li {
-        padding: 0.75rem 1.5rem;
-        margin: 0.25rem 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: #333;
-        transition: background-color 0.2s, color 0.2s;
-      }
+    .sidebar-nav ul {
+      padding: 1rem 0;
+      flex-grow: 1;
+    }
 
-      .sidebar-nav li:hover {
-        background-color: #f8e5f0;
-        color: #ec4899;
-      }
+    .sidebar-nav li {
+      padding: 0.75rem 1.5rem;
+      margin: 0.25rem 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #333;
+      transition: background-color 0.2s, color 0.2s;
+    }
 
-      .sidebar-nav li.active {
-        background-color: #f8e5f0;
-        color: #ec4899;
-        font-weight: 600;
-      }
+    .sidebar-nav li:hover {
+      background-color: #f8e5f0;
+      color: #ec4899;
+    }
 
-      .sidebar-nav li.active span {
-        font-weight: 800;
-      }
+    .sidebar-nav li.active {
+      background-color: #f8e5f0;
+      color: #ec4899;
+      font-weight: 600;
+    }
 
-      .sidebar-nav li a {
-        text-decoration: none;
-        color: inherit;
-      }
+    .sidebar-nav li.active span {
+      font-weight: 800;
+    }
 
-      /* Main Content Area */
-      .main-content {
-        flex-grow: 1;
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow: hidden;
-        background-color: rgba(255, 255, 255, 0.95);
-        border-radius: 0.75rem;
-        margin: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
+    .sidebar-nav li a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-      /* Card Styling */
-      .card {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-      }
+    /* Main Content Area */
+    .main-content {
+      flex-grow: 1;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 0.75rem;
+      margin: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
 
-      /* Form Input Styling */
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 0.75rem;
-        justify-content: space-between;
-        min-height: 70px; /* Ensure consistent height for input groups */
-      }
+    /* Card Styling */
+    .card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
 
-      .input-group label {
-        font-size: 0.85rem;
-        color: #555;
-        margin-bottom: 0.2rem;
-        font-weight: 500;
-      }
+    /* Form Input Styling */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0.75rem;
+      justify-content: space-between;
+      min-height: 70px;
+      /* Ensure consistent height for input groups */
+    }
 
-      .input-group input,
-      .input-group select,
-      .input-group textarea {
-        flex-grow: 1;
-        padding: 0.4rem 0.6rem;
-        border: 1px solid #ccc;
-        border-radius: 0.375rem;
-        font-size: 0.85rem;
-        color: #333;
-        background-color: #f9f9f9;
-      }
+    .input-group label {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+    }
 
-      .input-group input:focus,
-      .input-group select:focus,
-      .input-group textarea:focus {
-        outline: none;
-        border-color: #ec4899;
-        box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
-      }
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      flex-grow: 1;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 0.85rem;
+      color: #333;
+      background-color: #f9f9f9;
+    }
 
-      /* Button Styling */
-      .btn-primary {
-        background-color: #ec4899;
-        color: white;
-        padding: 0.6rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s;
-        box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
-        cursor: pointer;
-        font-size: 0.9rem;
-      }
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+    }
 
-      .btn-primary:hover {
-        background-color: #db2777;
-      }
+    /* Button Styling */
+    .btn-primary {
+      background-color: #ec4899;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+      cursor: pointer;
+      font-size: 0.9rem;
+      /* Added for anchor tag styling */
+      text-decoration: none;
+      display: inline-block;
+    }
 
-      .btn-secondary {
-        background-color: #f0f0f0;
-        color: #333;
-        padding: 0.6rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s, border-color 0.2s;
-        border: 1px solid #ccc;
-        cursor: pointer;
-        font-size: 0.9rem;
-      }
+    .btn-primary:hover {
+      background-color: #db2777;
+    }
 
-      .btn-secondary:hover {
-        background-color: #e0e0e0;
-      }
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 0.9rem;
+      /* Added for anchor tag styling */
+      text-decoration: none;
+      display: inline-block;
+    }
 
-      .btn-danger {
-        background-color: #ef4444;
-        color: white;
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s;
-        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-        cursor: pointer;
-      }
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
 
-      .btn-danger:hover {
-        background-color: #dc2626;
-      }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+    }
 
-      /* Product Count and Action Buttons Styling */
-      .product-count-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: #f8e5f0;
-        border-radius: 0.5rem;
-        padding: 0.6rem 1rem;
-        margin-bottom: 1.5rem;
-        font-weight: 600;
-        color: #ec4899;
-        font-size: 0.9rem;
-        flex-shrink: 0;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        gap: 1rem; /* Spacing between items when wrapped */
-      }
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
 
-      .product-count-info {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex-grow: 1;
-        flex-wrap: wrap; /* Allow wrapping for count and progress */
-      }
+    /* Product Count and Action Buttons Styling */
+    .product-count-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f8e5f0;
+      border-radius: 0.5rem;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: #ec4899;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      /* Allow wrapping on smaller screens */
+      gap: 1rem;
+      /* Spacing between items when wrapped */
+    }
 
-      .product-count-info span {
-        font-weight: 800;
-      }
+    .product-count-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-grow: 1;
+      flex-wrap: wrap;
+      /* Allow wrapping for count and progress */
+    }
 
-      .progress-bar-container {
-        width: 120px;
-        height: 8px;
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        overflow: hidden;
-      }
+    .product-count-info span {
+      font-weight: 800;
+    }
 
-      .progress-bar {
-        height: 100%;
-        background-color: #ec4899;
-        width: 0%;
-        transition: width 0.5s ease-in-out;
-      }
+    .progress-bar-container {
+      width: 120px;
+      height: 8px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
 
-      /* Table Container */
-      .table-container {
-        flex-grow: 1;
-        overflow-y: auto;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        background-color: #fff;
-        min-height: 0;
-      }
+    .progress-bar {
+      height: 100%;
+      background-color: #ec4899;
+      width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
 
-      .product-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 800px; /* Ensure horizontal scroll on smaller screens if content is wide */
-      }
+    /* Table Container */
+    .table-container {
+      flex-grow: 1;
+      overflow-y: auto;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      background-color: #fff;
+      min-height: 0;
+    }
 
-      .product-table th,
-      .product-table td {
-        padding: 0.6rem 0.75rem;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-      }
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+      /* Ensure horizontal scroll on smaller screens if content is wide */
+    }
 
-      .product-table th {
-        background-color: #f8f8f8;
-        font-weight: 600;
-        color: #555;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
+    .product-table th,
+    .product-table td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
 
-      .product-table td {
-        font-size: 0.85rem;
-        color: #333;
-      }
+    .product-table th {
+      background-color: #f8f8f8;
+      font-weight: 600;
+      color: #555;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-      .product-table tbody tr:hover {
-        background-color: #fbfbfb;
-      }
+    .product-table td {
+      font-size: 0.85rem;
+      color: #333;
+    }
 
-      .product-table img {
-        width: 35px;
-        height: 35px;
-        object-fit: cover;
-        border-radius: 0.25rem;
-        border: 1px solid #eee;
-      }
+    .product-table tbody tr:hover {
+      background-color: #fbfbfb;
+    }
 
-      .product-table .action-buttons button {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.75rem;
-        border-radius: 0.375rem;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
+    .product-table img {
+      width: 35px;
+      height: 35px;
+      object-fit: cover;
+      border-radius: 0.25rem;
+      border: 1px solid #eee;
+    }
 
-      .product-table .btn-ubah-detail {
-        background-color: #ec4899;
-        color: white;
-      }
+    .product-table .action-buttons button {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
 
-      .product-table .btn-ubah-detail:hover {
-        background-color: #db2777;
-      }
+    .product-table .btn-ubah-detail {
+      background-color: #ec4899;
+      color: white;
+    }
 
-      /* Modal (Popup) Styling for Logout */
-      .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-      }
+    .product-table .btn-ubah-detail:hover {
+      background-color: #db2777;
+    }
 
-      .modal-overlay.show {
-        opacity: 1;
-        visibility: visible;
-      }
+    /* Modal (Popup) Styling for Logout */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-      .modal-content {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        text-align: center;
-        max-width: 400px;
-        width: 90%;
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
 
-      .modal-overlay.show .modal-content {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
 
-      .modal-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 1.5rem;
-        gap: 1rem;
-      }
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-      .modal-buttons button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s;
-      }
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
 
-      .modal-buttons .btn-cancel {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ccc;
-      }
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
 
-      .modal-buttons .btn-cancel:hover {
-        background-color: #e0e0e0;
-      }
+    .modal-buttons .btn-cancel {
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+    }
 
-      .modal-buttons .btn-confirm {
-        background-color: #ef4444;
-        color: white;
-        border: 1px solid #ef4444;
-      }
+    .modal-buttons .btn-cancel:hover {
+      background-color: #e0e0e0;
+    }
 
-      .modal-buttons .btn-confirm:hover {
-        background-color: #dc2626;
-      }
-    </style>
-  </head>
+    .modal-buttons .btn-confirm {
+      background-color: #ef4444;
+      color: white;
+      border: 1px solid #ef4444;
+    }
 
+<<<<<<< HEAD
   <body class="font-sans h-screen overflow-hidden">
     <div class="flex h-full">
       <aside class="sidebar">
@@ -396,289 +414,369 @@
           </ul>
         </nav>
       </aside>
+=======
+    .modal-buttons .btn-confirm:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+>>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
 
-      <main class="main-content">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">Toko Kita</h1>
+<body class="font-sans h-screen overflow-hidden">
+  <div class="flex h-full">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
+          </li>
+          <li class="active">
+            <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
+          </li>
+          <li><span>💬</span><a href="jastiper_chat.html">Chat</a></li>
+          <li id="logout-button"><span>➡️</span> Logout</li>
+        </ul>
+      </nav>
+    </aside>
 
-        <section class="card">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div class="input-group">
-              <label for="namaProduk">Nama Produk</label>
-              <input type="text" id="namaProduk" placeholder="Input..." />
-            </div>
-            <div class="input-group">
-              <label for="kategori">Kategori</label>
-              <input type="text" id="kategori" placeholder="Input..." />
-            </div>
-            <div class="input-group">
-              <label for="fee">Fee</label>
-              <input
-                type="text"
-                id="fee"
-                value="Rp 15.000"
-                disabled
-                class="bg-gray-100 cursor-not-allowed"
-              />
-              <span class="text-gray-500 text-xs mt-1"
-                >(dari pengaturan toko)</span
-              >
-            </div>
-          </div>
-          <div class="flex justify-end gap-3">
-            <button id="btn-cari" class="btn-primary">Cari</button>
-            <button id="btn-reset" class="btn-secondary">Reset Filter</button>
-          </div>
-        </section>
+    <main class="main-content">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Toko Kita</h1>
 
-        <div class="product-count-bar">
-          <div class="product-count-info">
-            <span id="product-count">658 Produk / 2000</span>
-            <div class="progress-bar-container">
-              <div id="product-progress-bar" class="progress-bar"></div>
-            </div>
+      <section class="card">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="input-group">
+            <label for="namaProduk">Nama Produk</label>
+            <input type="text" id="namaProduk" placeholder="Input..." />
           </div>
-          <div class="flex gap-2 flex-wrap justify-end">
-            <button id="btn-tambah-produk" class="btn-primary">
-              + Tambah Produk
-            </button>
-            <button id="btn-edit-toko" class="btn-secondary">Toko</button>
+          <div class="input-group">
+            <label for="kategori">Kategori</label>
+            <select id="kategori">
+              <option value="">Pilih Kategori</option>
+              <option value="Fashion & Aksesoris">Fashion & Aksesoris</option>
+              <option value="Kosmetik & Skincare">Kosmetik & Skincare</option>
+              <option value="Elektronik & Gadget">Elektronik & Gadget</option>
+              <option value="Makanan & Minuman">Makanan & Minuman</option>
+              <option value="Mainan & Hobi">Mainan & Hobi</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="fee">Fee</label>
+            <input type="text" id="fee" value="Loading..." disabled class="bg-gray-100 cursor-not-allowed" />
+            <span class="text-gray-500 text-xs mt-1">(dari pengaturan toko)</span>
           </div>
         </div>
+        <div class="flex justify-end gap-3">
+          <button id="btn-cari" class="btn-primary">Cari</button>
+          <button id="btn-reset" class="btn-secondary">Reset Filter</button>
+        </div>
+      </section>
 
-        <section class="flex flex-col flex-grow min-h-0">
-          <div class="table-container">
-            <table class="product-table">
-              <thead>
-                <tr>
-                  <th>NO</th>
-                  <th>NAMA PRODUK</th>
-                  <th>NEGARA ASAL</th>
-                  <th>KATEGORI</th>
-                  <th>HARGA</th>
-                  <th>STATUS</th>
-                  <th>STOK</th>
-                  <th>FOTO</th>
-                  <th>AKSI</th>
-                </tr>
-              </thead>
-              <tbody id="product-table-body"></tbody>
-            </table>
+      <div class="product-count-bar">
+        <div class="product-count-info">
+          <span id="product-count">0 Produk / 2000</span>
+          <div class="progress-bar-container">
+            <div id="product-progress-bar" class="progress-bar"></div>
           </div>
-        </section>
-      </main>
-    </div>
-
-    <div id="logout-modal" class="modal-overlay">
-      <div class="modal-content">
-        <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
-        <p class="text-gray-700">
-          Apakah Anda yakin ingin keluar dari akun ini?
-        </p>
-        <div class="modal-buttons">
-          <button id="cancel-logout" class="btn-cancel">Batal</button>
-          <button id="confirm-logout" class="btn-confirm">Logout</button>
+        </div>
+        <div class="flex gap-2 flex-wrap justify-end">
+          <a href="jastiper_tambah_produk.html" class="btn-primary">
+            + Tambah Produk
+          </a>
+          <a href="jastiper_toko_profil.html" class="btn-secondary">Toko</a>
         </div>
       </div>
+
+      <section class="flex flex-col flex-grow min-h-0">
+        <div class="table-container">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th>NO</th>
+                <th>NAMA PRODUK</th>
+                <th>NEGARA ASAL</th>
+                <th>KATEGORI</th>
+                <th>HARGA</th>
+                <th>STATUS</th>
+                <th>STOK</th>
+                <th>FOTO</th>
+                <th>AKSI</th>
+              </tr>
+            </thead>
+            <tbody id="product-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="logout-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+      <p class="text-gray-700">
+        Apakah Anda yakin ingin keluar dari akun ini?
+      </p>
+      <div class="modal-buttons">
+        <button id="cancel-logout" class="btn-cancel">Batal</button>
+        <button id="confirm-logout" class="btn-confirm">Logout</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-      // DOM Elements
-      const namaProdukInput = document.getElementById("namaProduk");
-      const kategoriInput = document.getElementById("kategori");
-      const feeInput = document.getElementById("fee");
-      const btnCari = document.getElementById("btn-cari");
-      const btnReset = document.getElementById("btn-reset");
-      const productCountSpan = document.getElementById("product-count");
-      const productProgressBar = document.getElementById(
-        "product-progress-bar"
-      );
-      const productTableBody = document.getElementById("product-table-body");
+  <script type="module">
+    import {
+      auth,
+      db,
+      signOut,
+      onAuthStateChanged,
+      collection,
+      query,
+      where,
+      getDocs,
+      doc,
+      getDoc
+    } from './firebase-config.js';
 
-      // Logout Modal elements
-      const logoutButton = document.getElementById("logout-button");
-      const logoutModal = document.getElementById("logout-modal");
-      const cancelLogoutButton = document.getElementById("cancel-logout");
-      const confirmLogoutButton = document.getElementById("confirm-logout");
+    // DOM Elements
+    const namaProdukInput = document.getElementById("namaProduk");
+    const kategoriInput = document.getElementById("kategori");
+    const feeInput = document.getElementById("fee");
+    const btnCari = document.getElementById("btn-cari");
+    const btnReset = document.getElementById("btn-reset");
+    const productCountSpan = document.getElementById("product-count");
+    const productProgressBar = document.getElementById("product-progress-bar");
+    const productTableBody = document.getElementById("product-table-body");
 
-      // Static product data (sesuai permintaan sebelumnya, menggunakan data statis)
-      const staticProducts = [
-        {
-          id: "product1",
-          namaProduk: "SAKAMOTO'S DAY'S OFF VOL.1",
-          negaraAsal: "JEPANG",
-          kategori: "MAINAN & HOBI",
-          harga: 90000,
-          status: "READY ID",
-          stok: 10,
-          imageUrl: "https://i.ibb.co/Lh5R7J2/product1.png",
-        },
-        {
-          id: "product2",
-          namaProduk:
-            "(Permen) [ENSKY] Dandadan Clear Card Collection Gum First Limited Edition 16-pack BOX",
-          negaraAsal: "JEPANG",
-          kategori: "MAINAN & HOBI",
-          harga: 66000,
-          status: "READY ID",
-          stok: 10,
-          imageUrl: "https://i.ibb.co/k2c5g9v/product2.png",
-        },
-        {
-          id: "product3",
-          namaProduk:
-            "PORTER PLAN 2WAY SHOULDER BAG 728-08710: Solusi Tas Travel dan Harian yang Stylish",
-          negaraAsal: "JEPANG",
-          kategori: "FASHION",
-          harga: 667000,
-          status: "READY ID",
-          stok: 10,
-          imageUrl: "https://i.ibb.co/C0V4k17/product5.png",
-        },
-        {
-          id: "product4",
-          namaProduk: "SAKAMOTO'S DAY'S",
-          negaraAsal: "JEPANG",
-          kategori: "MAINAN & HOBI",
-          harga: 78000,
-          status: "READY ID",
-          stok: 10,
-          imageUrl: "https://i.ibb.co/Lh5R7J2/product1.png",
-        },
-      ];
+    // Logout Modal elements
+    const logoutButton = document.getElementById("logout-button");
+    const logoutModal = document.getElementById("logout-modal");
+    const cancelLogoutButton = document.getElementById("cancel-logout");
+    const confirmLogoutButton = document.getElementById("confirm-logout");
 
-      const MAX_PRODUCTS_LIMIT = 2000;
+    let currentTokoId = null; // Changed from jastiperId to tokoId
+    const MAX_PRODUCTS_LIMIT = 2000;
 
-      // Function to display products
-      function displayProducts(productsToDisplay) {
-        productTableBody.innerHTML = ""; // Clear existing rows
+    // Function to display products
+    function displayProducts(productsToDisplay) {
+      productTableBody.innerHTML = ""; // Clear existing rows
 
-        if (productsToDisplay.length === 0) {
-          productTableBody.innerHTML =
-            '<tr><td colspan="9" class="text-center text-gray-600 py-4">Tidak ada produk ditemukan.</td></tr>';
-          return;
-        }
-
-        productsToDisplay.forEach((product, index) => {
-          const row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${product.namaProduk || "N/A"}</td>
-                        <td>${product.negaraAsal || "N/A"}</td>
-                        <td>${product.kategori || "N/A"}</td>
-                        <td>Rp ${
-                          product.harga
-                            ? product.harga.toLocaleString("id-ID")
-                            : "N/A"
-                        }</td>
-                        <td>${product.status || "N/A"}</td>
-                        <td>${
-                          product.stok !== undefined ? product.stok : "N/A"
-                        }</td>
-                        <td>
-                            ${
-                              product.imageUrl
-                                ? `<img src="${product.imageUrl}" alt="${product.namaProduk}">`
-                                : '<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">No Img</div>'
-                            }
-                        </td>
-                        <td class="action-buttons">
-                            <button class="btn-ubah-detail" data-id="${
-                              product.id
-                            }">Ubah Detail</button>
-                        </td>
-                    </tr>
-                `;
-          productTableBody.insertAdjacentHTML("beforeend", row);
-        });
+      if (productsToDisplay.length === 0) {
+        productTableBody.innerHTML =
+          '<tr><td colspan="9" class="text-center text-gray-600 py-4">Tidak ada produk ditemukan.</td></tr>';
+        return;
       }
 
-      // Function to update product count and progress bar
-      function updateProductCountAndProgress(currentCount) {
-        productCountSpan.textContent = `${currentCount} Produk / ${MAX_PRODUCTS_LIMIT}`;
-        const progressPercentage = (currentCount / MAX_PRODUCTS_LIMIT) * 100;
-        productProgressBar.style.width = `${Math.min(
-          progressPercentage,
-          100
-        )}%`;
-      }
-
-      // Event Listeners
-      btnCari.addEventListener("click", () => {
-        const namaProdukFilter = namaProdukInput.value.trim().toLowerCase();
-        const kategoriFilter = kategoriInput.value.trim().toLowerCase();
-
-        const filteredProducts = staticProducts.filter((product) => {
-          const matchesNamaProduk =
-            namaProdukFilter === "" ||
-            (product.namaProduk &&
-              product.namaProduk.toLowerCase().includes(namaProdukFilter));
-          const matchesKategori =
-            kategoriFilter === "" ||
-            (product.kategori &&
-              product.kategori.toLowerCase().includes(kategoriFilter));
-          return matchesNamaProduk && matchesKategori;
-        });
-        displayProducts(filteredProducts);
-        updateProductCountAndProgress(filteredProducts.length);
-      });
-
-      btnReset.addEventListener("click", () => {
-        namaProdukInput.value = "";
-        kategoriInput.value = "";
-        displayProducts(staticProducts); // Display all static products again
-        updateProductCountAndProgress(staticProducts.length);
-      });
-
-      // Event listener for Ubah Detail button (using event delegation)
-      productTableBody.addEventListener("click", (event) => {
-        if (event.target.classList.contains("btn-ubah-detail")) {
-          const productId = event.target.dataset.id;
-          if (productId) {
-            alert(`Mengedit detail produk dengan ID: ${productId}`);
-            // window.location.href = `edit_produk.html?id=${productId}`; // Example redirect
+      productsToDisplay.forEach((product, index) => {
+        const row = `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${product.namaProduk || "N/A"}</td>
+            <td>${product.negaraAsal || "N/A"}</td>
+            <td>${product.kategori || "N/A"}</td>
+            <td>Rp ${product.harga ? product.harga.toLocaleString("id-ID") : "N/A"}</td>
+            <td>${product.status || "N/A"}</td>
+            <td>${product.stok !== undefined ? product.stok : "N/A"}</td>
+            <td>
+              ${product.imageUrl
+            ? `<img src="${product.imageUrl}" alt="${product.namaProduk}">`
+            : '<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">No Img</div>'
           }
+            </td>
+            <td class="action-buttons">
+              <button class="btn-ubah-detail" data-id="${product.id}">Ubah Detail</button>
+            </td>
+          </tr>
+        `;
+        productTableBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    // Function to update product count and progress bar
+    function updateProductCountAndProgress(currentCount) {
+      productCountSpan.textContent = `${currentCount} Produk / ${MAX_PRODUCTS_LIMIT}`;
+      const progressPercentage = (currentCount / MAX_PRODUCTS_LIMIT) * 100;
+      productProgressBar.style.width = `${Math.min(
+        progressPercentage,
+        100
+      )}%`;
+    }
+
+    // Function to fetch and display products from Firestore
+    async function fetchAndDisplayProducts(tokoId, filters = {}) {
+      if (!tokoId) {
+        console.warn("Toko ID is not available. Cannot fetch products.");
+        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-red-600 py-4">Error: Toko ID not found. Please log in again.</td></tr>';
+        updateProductCountAndProgress(0);
+        return;
+      }
+
+      const productsRef = collection(db, "products");
+      // Query products where 'tokoId' field matches the current user's UID
+      let q = query(productsRef, where("tokoId", "==", tokoId));
+
+      if (filters.namaProduk) {
+        // For partial matching, you might need to use a different query approach or client-side filtering
+        // Firestore doesn't support "contains" for indexed fields directly without advanced setup (e.g., Algolia)
+        // For simplicity, this will filter after fetching if exact match is not suitable.
+        // For proper full-text search, consider a dedicated search service.
+      }
+      if (filters.kategori) {
+        q = query(q, where("kategori", "==", filters.kategori));
+      }
+
+      try {
+        const querySnapshot = await getDocs(q);
+        let products = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        // Apply client-side filtering for namaProduk if a value is provided
+        if (filters.namaProduk) {
+          const lowerCaseFilter = filters.namaProduk.toLowerCase();
+          products = products.filter(product =>
+            product.namaProduk && product.namaProduk.toLowerCase().includes(lowerCaseFilter)
+          );
+        }
+
+        displayProducts(products);
+        updateProductCountAndProgress(products.length);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-red-600 py-4">Error loading products.</td></tr>';
+        updateProductCountAndProgress(0);
+      }
+    }
+
+    // Function to fetch and display store fee
+    async function fetchStoreFee(tokoId) {
+      if (!tokoId) {
+        feeInput.value = "N/A (No ID)";
+        return;
+      }
+      try {
+        // Fetch fee from 'toko' collection using the tokoId as the document ID
+        const tokoDocRef = doc(db, "toko", tokoId);
+        const tokoDocSnap = await getDoc(tokoDocRef);
+
+        if (tokoDocSnap.exists()) {
+          const tokoData = tokoDocSnap.data();
+          if (tokoData && tokoData.fee !== undefined) {
+            feeInput.value = `Rp ${tokoData.fee.toLocaleString("id-ID")}`;
+          } else {
+            feeInput.value = "Fee not set";
+          }
+        } else {
+          feeInput.value = "Store data not found";
+        }
+      } catch (error) {
+        console.error("Error fetching store fee:", error);
+        feeInput.value = "Error loading fee";
+      }
+    }
+
+
+    // Event Listeners
+    btnCari.addEventListener("click", () => {
+      const filters = {
+        namaProduk: namaProdukInput.value.trim(),
+        kategori: kategoriInput.value.trim(),
+      };
+      fetchAndDisplayProducts(currentTokoId, filters);
+    });
+
+    btnReset.addEventListener("click", () => {
+      namaProdukInput.value = "";
+      kategoriInput.value = "";
+      fetchAndDisplayProducts(currentTokoId); // Fetch all products for the current tokoId again
+    });
+
+    // Event listener for Ubah Detail button (using event delegation)
+    productTableBody.addEventListener("click", (event) => {
+      if (event.target.classList.contains("btn-ubah-detail")) {
+        const productId = event.target.dataset.id;
+        if (productId) {
+          // Mengarahkan ke jastiper_edit_produk.html dengan ID produk sebagai parameter
+          window.location.href = `jastiper_edit_produk.html?id=${productId}`;
+        }
+      }
+    });
+
+    // Event listener for logout button (opens modal)
+    logoutButton.addEventListener("click", () => {
+      logoutModal.classList.add("show");
+    });
+
+    // Event listener for "Cancel" button in modal
+    cancelLogoutButton.addEventListener("click", () => {
+      logoutModal.classList.remove("show");
+    });
+
+    // Event listener for "Logout" button in modal
+    confirmLogoutButton.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("Anda telah logout.");
+        window.location.href = 'halaman_login_anda.html'; // Redirect to your login page
+      } catch (error) {
+        console.error("Error during logout:", error);
+        alert("Terjadi kesalahan saat logout. Silakan coba lagi.");
+      }
+    });
+
+    // Initial load and Firebase Auth State management
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        currentTokoId = user.uid; // Use Firebase User ID as Toko ID
+        fetchAndDisplayProducts(currentTokoId);
+        fetchStoreFee(currentTokoId);
+      } else {
+        // User is signed out
+        console.log("No user signed in.");
+        // Redirect to login page if no user is authenticated
+        window.location.href = 'halaman_login_anda.html'; // Ensure this points to your actual login page
+      }
+
+      // Script to highlight sidebar item - Add this section
+      const currentPath = window.location.pathname.split("/").pop();
+      const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
+
+      sidebarLinks.forEach((item) => {
+        const link = item.querySelector("a");
+        if (link) {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop();
+
+          let isLinkActive = false;
+
+          if (currentPath === linkFileName) {
+            isLinkActive = true;
+          } else if (
+            currentPath === "" &&
+            linkFileName === "jastiper_dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        } else if (
+          item.id === "logout-button" &&
+          currentPath === "logout"
+        ) {
+          // This part is for highlighting "Logout" if it were a separate page,
+          // but typically logout is an action. Can be removed or adjusted.
+          item.classList.add("active");
         }
       });
+    });
+  </script>
+</body>
 
-      // Event listener for Tambah Produk button
-      document
-        .getElementById("btn-tambah-produk")
-        .addEventListener("click", () => {
-          alert(
-            "Fungsi Tambah Produk akan mengarahkan ke halaman/modal penambahan produk baru."
-          );
-          // window.location.href = 'tambah_produk.html'; // Example: new product add page
-        });
-
-      // Event listener for Toko button
-      document.getElementById("btn-edit-toko").addEventListener("click", () => {
-        alert("Fungsi Edit Toko akan mengarahkan ke halaman pengaturan toko.");
-        // window.location.href = 'edit_toko.html'; // Example: edit store settings page
-      });
-
-      // Event listener for logout button (opens modal)
-      logoutButton.addEventListener("click", () => {
-        logoutModal.classList.add("show");
-      });
-
-      // Event listener for "Cancel" button in modal
-      cancelLogoutButton.addEventListener("click", () => {
-        logoutModal.classList.remove("show");
-      });
-
-      // Event listener for "Logout" button in modal
-      confirmLogoutButton.addEventListener("click", () => {
-        localStorage.removeItem("jastiperId"); // Simulate clearing user session
-        alert("Anda telah logout (simulasi).");
-        // window.location.href = 'halaman_login_anda.html'; // Redirect to your login page
-      });
-
-      // Initial load
-      document.addEventListener("DOMContentLoaded", () => {
-        displayProducts(staticProducts);
-        updateProductCountAndProgress(staticProducts.length);
-        // Fee is already set statically in HTML.
-      });
-    </script>
-  </body>
 </html>

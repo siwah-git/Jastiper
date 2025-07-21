@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Informasi Toko</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
 
+<<<<<<< HEAD
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -20,284 +12,299 @@
         height: 100vh;
         overflow: hidden;
       }
+=======
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Toko</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+>>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
 
-      /* Sidebar Styling */
-      .sidebar {
-        width: 250px;
-        background-color: #fff;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-      }
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-image: url("asset/images/background.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-      .sidebar-header {
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-bottom: 1px solid #e0e0e0;
-      }
+    /* Sidebar Styling */
+    .sidebar {
+      width: 250px;
+      background-color: #fff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
 
-      .sidebar-header img {
-        height: 40px;
-        object-fit: contain;
-      }
+    .sidebar-header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
 
-      .sidebar-nav ul {
-        padding: 1rem 0;
-        flex-grow: 1;
-      }
+    .sidebar-header img {
+      height: 40px;
+      object-fit: contain;
+    }
 
-      .sidebar-nav li {
-        padding: 0.75rem 1.5rem;
-        margin: 0.25rem 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: #333;
-        transition: background-color 0.2s, color 0.2s;
-      }
+    .sidebar-nav ul {
+      padding: 1rem 0;
+      flex-grow: 1;
+    }
 
-      .sidebar-nav li:hover {
-        background-color: #f8e5f0;
-        color: #ec4899;
-      }
+    .sidebar-nav li {
+      padding: 0.75rem 1.5rem;
+      margin: 0.25rem 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #333;
+      transition: background-color 0.2s, color 0.2s;
+    }
 
-      /* Active state for sidebar navigation */
-      .sidebar-nav li.active {
-        background-color: #f8e5f0;
-        color: #ec4899;
-        font-weight: 600;
-      }
+    .sidebar-nav li:hover {
+      background-color: #f8e5f0;
+      color: #ec4899;
+    }
 
-      .sidebar-nav li.active span {
-        font-weight: 800;
-      }
+    /* Active state for sidebar navigation */
+    .sidebar-nav li.active {
+      background-color: #f8e5f0;
+      color: #ec4899;
+      font-weight: 600;
+    }
 
-      .sidebar-nav li a {
-        text-decoration: none;
-        color: inherit;
-      }
+    .sidebar-nav li.active span {
+      font-weight: 800;
+    }
 
-      /* Main Content Area */
-      .main-content {
-        flex-grow: 1;
-        padding: 1.5rem;
-        overflow-y: auto;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Center the card horizontally */
-        justify-content: flex-start;
-        /* Align card to the top */
-      }
+    .sidebar-nav li a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-      /* Card Styling (re-used for main sections) */
-      .card {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        width: 100%;
-        /* Make card take full width of main-content */
-        max-width: 800px;
-        /* Limit max width of the card */
-      }
+    /* Main Content Area */
+    .main-content {
+      flex-grow: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Center the card horizontally */
+      justify-content: flex-start;
+      /* Align card to the top */
+    }
 
-      /* Form Input Styling */
-      .input-group label {
-        font-size: 0.9rem;
-        color: #555;
-        margin-bottom: 0.25rem;
-        font-weight: 500;
-      }
+    /* Card Styling (re-used for main sections) */
+    .card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      /* Make card take full width of main-content */
+      max-width: 800px;
+      /* Limit max width of the card */
+    }
 
-      .input-group input,
-      .input-group select,
-      .input-group textarea {
-        border: 1px solid #ccc;
-        border-radius: 0.375rem;
-        font-size: 0.9rem;
-        color: #333;
-        background-color: #f9f9f9;
-        padding: 0.5rem 0.75rem;
-        /* Consistent padding */
-      }
+    /* Form Input Styling */
+    .input-group label {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
 
-      .input-group input:focus,
-      .input-group select:focus,
-      .input-group textarea:focus {
-        outline: none;
-        border-color: #ec4899;
-        box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
-      }
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 0.9rem;
+      color: #333;
+      background-color: #f9f9f9;
+      padding: 0.5rem 0.75rem;
+      /* Consistent padding */
+    }
 
-      /* Disabled/Read-only style */
-      .input-group input:disabled,
-      .input-group select:disabled,
-      .input-group textarea:disabled,
-      .input-group input[readonly],
-      .input-group select[readonly],
-      .input-group textarea[readonly] {
-        background-color: #e9ecef;
-        cursor: not-allowed;
-        color: #6c757d;
-      }
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+    }
 
-      /* Image Preview for Store Profile Photo */
-      #store-profile-image-preview {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 0.5rem;
-        border: 1px solid #eee;
-        margin-top: 0.5rem;
-      }
+    /* Disabled/Read-only style */
+    .input-group input:disabled,
+    .input-group select:disabled,
+    .input-group textarea:disabled,
+    .input-group input[readonly],
+    .input-group select[readonly],
+    .input-group textarea[readonly] {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+      color: #6c757d;
+    }
 
-      /* Placeholder image style */
-      .profile-photo-placeholder {
-        width: 120px;
-        height: 120px;
-        border: 1px solid #ccc;
-        border-radius: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f0f0f0;
-        color: #888;
-        font-size: 0.875rem;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        /* Space between placeholder and URL input */
-      }
+    /* Image Preview for Store Profile Photo */
+    #store-profile-image-preview {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      border: 1px solid #eee;
+      margin-top: 0.5rem;
+    }
 
-      /* Button Styling */
-      .btn-primary {
-        background-color: #ec4899;
-        color: white;
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s;
-        box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
-        cursor: pointer;
-      }
+    /* Placeholder image style */
+    .profile-photo-placeholder {
+      width: 120px;
+      height: 120px;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      color: #888;
+      font-size: 0.875rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      /* Space between placeholder and URL input */
+    }
 
-      .btn-primary:hover {
-        background-color: #db2777;
-      }
+    /* Button Styling */
+    .btn-primary {
+      background-color: #ec4899;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+      cursor: pointer;
+    }
 
-      .btn-secondary {
-        background-color: #f0f0f0;
-        color: #333;
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s, border-color 0.2s;
-        border: 1px solid #ccc;
-        cursor: pointer;
-      }
+    .btn-primary:hover {
+      background-color: #db2777;
+    }
 
-      .btn-secondary:hover {
-        background-color: #e0e0e0;
-      }
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
 
-      .btn-danger {
-        background-color: #ef4444;
-        color: white;
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: background-color 0.2s;
-        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-        cursor: pointer;
-      }
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
 
-      .btn-danger:hover {
-        background-color: #dc2626;
-      }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+      cursor: pointer;
+    }
 
-      /* Modal (Popup) Styling for Logout */
-      .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-      }
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
 
-      .modal-overlay.show {
-        opacity: 1;
-        visibility: visible;
-      }
+    /* Modal (Popup) Styling for Logout */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-      .modal-content {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        text-align: center;
-        max-width: 400px;
-        width: 90%;
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
 
-      .modal-overlay.show .modal-content {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
 
-      .modal-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 1.5rem;
-        gap: 1rem;
-      }
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-      .modal-buttons button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s;
-      }
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
 
-      .modal-buttons .btn-cancel {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ccc;
-      }
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
 
-      .modal-buttons .btn-cancel:hover {
-        background-color: #e0e0e0;
-      }
+    .modal-buttons .btn-cancel {
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+    }
 
-      .modal-buttons .btn-confirm {
-        background-color: #ef4444;
-        color: white;
-        border: 1px solid #ef4444;
-      }
+    .modal-buttons .btn-cancel:hover {
+      background-color: #e0e0e0;
+    }
 
-      .modal-buttons .btn-confirm:hover {
-        background-color: #dc2626;
-      }
-    </style>
-  </head>
+    .modal-buttons .btn-confirm {
+      background-color: #ef4444;
+      color: white;
+      border: 1px solid #ef4444;
+    }
 
+<<<<<<< HEAD
   <body>
     <div class="flex h-full">
       <div class="sidebar">
@@ -316,370 +323,340 @@
             <li id="logout-button"><span>➡️</span> Logout</li>
           </ul>
         </nav>
+=======
+    .modal-buttons .btn-confirm:hover {
+      background-color: #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex h-full">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
+>>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
       </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
+          </li>
+          <li class="active">
+            <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
+          </li>
+          <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
+          <li id="logout-button"><span>➡️</span> Logout</li>
+        </ul>
+      </nav>
+    </div>
 
-      <div class="main-content">
-        <h1
-          class="text-2xl font-bold text-gray-800 mb-6 w-full max-w-2xl text-left"
-        >
-          Informasi Toko
-        </h1>
+    <div class="main-content">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6 w-full max-w-2xl text-left">
+        Informasi Toko
+      </h1>
 
-        <form id="edit-store-form" class="w-full max-w-2xl">
-          <div class="card mb-6">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-xl font-semibold text-gray-800">
-                Informasi Toko
-              </h2>
-              <button
-                type="button"
-                id="edit-button"
-                class="text-gray-500 hover:text-gray-700"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Foto Profil Toko</label
-              >
-              <div class="flex items-end gap-4">
-                <div
-                  class="profile-photo-placeholder"
-                  id="store-image-placeholder"
-                >
-                  <span class="text-center">Gambar Profil Toko</span>
-                </div>
-                <img
-                  id="store-profile-image-preview"
-                  src=""
-                  alt="Store Profile Image"
-                  class="hidden"
-                />
-                <div class="flex-1 hidden" id="profileImageUrlInputContainer">
-                  <input
-                    type="url"
-                    id="edit-profileImageUrl"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-pink-500 focus:border-pink-500"
-                    placeholder="Url Gambar baru"
-                    readonly
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div class="input-group">
-                <label for="edit-namaToko">Nama Toko:</label>
-                <input
-                  type="text"
-                  id="edit-namaToko"
-                  required
-                  class="w-full"
-                  readonly
-                />
-              </div>
-              <div class="input-group">
-                <label for="edit-negaraToko">Negara:</label>
-                <input
-                  type="text"
-                  id="edit-negaraToko"
-                  class="w-full"
-                  readonly
-                />
-              </div>
-            </div>
-
-            <div class="input-group mb-4">
-              <label for="edit-fee">Fee:</label>
-              <input type="number" id="edit-fee" class="w-full" readonly />
-            </div>
-
-            <div class="input-group mb-4">
-              <label for="edit-deskripsiToko">Deskripsi Toko:</label>
-              <textarea
-                id="edit-deskripsiToko"
-                rows="4"
-                class="w-full"
-                readonly
-              ></textarea>
-            </div>
-
-            <div class="input-group mb-4">
-              <label for="edit-alamatToko">Alamat Toko:</label>
-              <textarea
-                id="edit-alamatToko"
-                rows="2"
-                class="w-full"
-                readonly
-              ></textarea>
-            </div>
-          </div>
-
-          <div
-            id="form-buttons"
-            class="flex justify-end mt-4 mb-4 hidden w-full max-w-2xl"
-          >
-            <button type="submit" class="btn-primary">Simpan</button>
-            <button
-              type="button"
-              class="btn-secondary ml-4"
-              id="cancel-edit-button"
-            >
-              Batal
+      <form id="edit-store-form" class="w-full max-w-2xl">
+        <div class="card mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">
+              Informasi Toko
+            </h2>
+            <button type="button" id="edit-button" class="text-gray-500 hover:text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
             </button>
           </div>
-        </form>
-      </div>
-    </div>
 
-    <div id="logout-modal" class="modal-overlay">
-      <div class="modal-content">
-        <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
-        <p class="text-gray-700">
-          Apakah Anda yakin ingin keluar dari akun ini?
-        </p>
-        <div class="modal-buttons">
-          <button id="cancel-logout" class="btn-cancel">Batal</button>
-          <button id="confirm-logout" class="btn-confirm">Logout</button>
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Foto Profil Toko</label>
+            <div class="flex items-end gap-4">
+              <div class="profile-photo-placeholder" id="store-image-placeholder">
+                <span class="text-center">Gambar Profil Toko</span>
+              </div>
+              <img id="store-profile-image-preview" src="" alt="Store Profile Image" class="hidden" />
+              <div class="flex-1 hidden" id="profileImageUrlInputContainer">
+                <input type="url" id="edit-profileImageUrl"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-pink-500 focus:border-pink-500"
+                  placeholder="Url Gambar baru" readonly />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="input-group">
+              <label for="edit-namaToko">Nama Toko:</label>
+              <input type="text" id="edit-namaToko" required class="w-full" readonly />
+            </div>
+            <div class="input-group">
+              <label for="edit-negaraToko">Negara:</label>
+              <input type="text" id="edit-negaraToko" class="w-full" readonly />
+            </div>
+          </div>
+
+          <div class="input-group mb-4">
+            <label for="edit-fee">Fee:</label>
+            <input type="number" id="edit-fee" class="w-full" readonly />
+          </div>
+
+          <div class="input-group mb-4">
+            <label for="edit-deskripsiToko">Deskripsi Toko:</label>
+            <textarea id="edit-deskripsiToko" rows="4" class="w-full" readonly></textarea>
+          </div>
+
+          <div class="input-group mb-4">
+            <label for="edit-alamatToko">Alamat Toko:</label>
+            <textarea id="edit-alamatToko" rows="2" class="w-full" readonly></textarea>
+          </div>
         </div>
+
+        <div id="form-buttons" class="flex justify-end mt-4 mb-4 hidden w-full max-w-2xl">
+          <button type="submit" class="btn-primary">Simpan</button>
+          <button type="button" class="btn-secondary ml-4" id="cancel-edit-button">
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="logout-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+      <p class="text-gray-700">
+        Apakah Anda yakin ingin keluar dari akun ini?
+      </p>
+      <div class="modal-buttons">
+        <button id="cancel-logout" class="btn-cancel">Batal</button>
+        <button id="confirm-logout" class="btn-confirm">Logout</button>
       </div>
     </div>
+  </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script>
-      // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
-      let currentJastiperId = localStorage.getItem("jastiperId");
-      if (!currentJastiperId) {
-        console.warn(
-          "Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing."
-        );
-        const tempJastiperId = "contoh_jastiper_id_untuk_testing"; // Ganti ini dengan ID jastiper yang valid dari Firestore Anda untuk pengujian
-        localStorage.setItem("jastiperId", tempJastiperId); // Simpan untuk sesi demo
-        currentJastiperId = tempJastiperId;
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
+    let currentJastiperId = localStorage.getItem("jastiperId");
+    if (!currentJastiperId) {
+      console.warn(
+        "Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing."
+      );
+      const tempJastiperId = "contoh_jastiper_id_untuk_testing"; // Ganti ini dengan ID jastiper yang valid dari Firestore Anda untuk pengujian
+      localStorage.setItem("jastiperId", tempJastiperId); // Simpan untuk sesi demo
+      currentJastiperId = tempJastiperId;
+    } else {
+      console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+    }
+
+    // DOM Elements for Store Information
+    const form = document.getElementById("edit-store-form");
+    const namaTokoInput = document.getElementById("edit-namaToko");
+    const negaraTokoInput = document.getElementById("edit-negaraToko");
+    const deskripsiTokoInput = document.getElementById("edit-deskripsiToko");
+    const alamatTokoInput = document.getElementById("edit-alamatToko");
+    const feeInput = document.getElementById("edit-fee"); // Fee input
+    const profileImageUrlInput = document.getElementById(
+      "edit-profileImageUrl"
+    );
+    const storeProfileImagePreview = document.getElementById(
+      "store-profile-image-preview"
+    );
+    const storeImagePlaceholder = document.getElementById(
+      "store-image-placeholder"
+    );
+    const profileImageUrlInputContainer = document.getElementById(
+      "profileImageUrlInputContainer"
+    );
+
+    const editButton = document.getElementById("edit-button");
+    const formButtons = document.getElementById("form-buttons");
+    const cancelEditButton = document.getElementById("cancel-edit-button");
+
+    let originalStoreData = null; // To store data when edit mode starts, for cancel functionality
+
+    // Function to toggle form fields read-only/disabled state
+    function setFormEditability(isEditable) {
+      const fields = [
+        namaTokoInput,
+        negaraTokoInput,
+        deskripsiTokoInput,
+        alamatTokoInput,
+        profileImageUrlInput,
+        feeInput,
+      ]; // Added feeInput here
+
+      fields.forEach((field) => {
+        field.readOnly = !isEditable;
+        // Add/remove disabled class for visual cue
+        if (isEditable) {
+          field.classList.remove("bg-gray-100", "cursor-not-allowed");
+        } else {
+          field.classList.add("bg-gray-100", "cursor-not-allowed");
+        }
+      });
+
+      // Toggle image URL input container visibility
+      if (isEditable) {
+        profileImageUrlInputContainer.classList.remove("hidden");
       } else {
-        console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+        profileImageUrlInputContainer.classList.add("hidden");
       }
 
-      // DOM Elements for Store Information
-      const form = document.getElementById("edit-store-form");
-      const namaTokoInput = document.getElementById("edit-namaToko");
-      const negaraTokoInput = document.getElementById("edit-negaraToko");
-      const deskripsiTokoInput = document.getElementById("edit-deskripsiToko");
-      const alamatTokoInput = document.getElementById("edit-alamatToko");
-      const feeInput = document.getElementById("edit-fee"); // Fee input
-      const profileImageUrlInput = document.getElementById(
-        "edit-profileImageUrl"
-      );
-      const storeProfileImagePreview = document.getElementById(
-        "store-profile-image-preview"
-      );
-      const storeImagePlaceholder = document.getElementById(
-        "store-image-placeholder"
-      );
-      const profileImageUrlInputContainer = document.getElementById(
-        "profileImageUrlInputContainer"
-      );
+      // Toggle buttons visibility (Simpan, Batal)
+      if (isEditable) {
+        formButtons.classList.remove("hidden");
+      } else {
+        formButtons.classList.add("hidden");
+      }
+    }
 
-      const editButton = document.getElementById("edit-button");
-      const formButtons = document.getElementById("form-buttons");
-      const cancelEditButton = document.getElementById("cancel-edit-button");
-
-      let originalStoreData = null; // To store data when edit mode starts, for cancel functionality
-
-      // Function to toggle form fields read-only/disabled state
-      function setFormEditability(isEditable) {
-        const fields = [
-          namaTokoInput,
-          negaraTokoInput,
-          deskripsiTokoInput,
-          alamatTokoInput,
-          profileImageUrlInput,
-          feeInput,
-        ]; // Added feeInput here
-
-        fields.forEach((field) => {
-          field.readOnly = !isEditable;
-          // Add/remove disabled class for visual cue
-          if (isEditable) {
-            field.classList.remove("bg-gray-100", "cursor-not-allowed");
-          } else {
-            field.classList.add("bg-gray-100", "cursor-not-allowed");
-          }
-        });
-
-        // Toggle image URL input container visibility
-        if (isEditable) {
-          profileImageUrlInputContainer.classList.remove("hidden");
-        } else {
-          profileImageUrlInputContainer.classList.add("hidden");
-        }
-
-        // Toggle buttons visibility (Simpan, Batal)
-        if (isEditable) {
-          formButtons.classList.remove("hidden");
-        } else {
-          formButtons.classList.add("hidden");
-        }
+    async function loadStoreData(jastiperId) {
+      if (!jastiperId) {
+        console.error("Jastiper ID not found.");
+        alert("Jastiper ID tidak ditemukan. Kembali ke halaman login.");
+        window.location.href = "halaman_login_anda.html";
+        return;
       }
 
-      async function loadStoreData(jastiperId) {
-        if (!jastiperId) {
-          console.error("Jastiper ID not found.");
-          alert("Jastiper ID tidak ditemukan. Kembali ke halaman login.");
-          window.location.href = "halaman_login_anda.html";
+      try {
+        console.log(
+          "Simulating loading store data for Jastiper ID:",
+          jastiperId
+        );
+        // Simulate fetching store data (replace with actual Firestore fetch later)
+        const store = {
+          namaToko: "OTAKU PICK",
+          negaraToko: "Indonesia",
+          deskripsiToko:
+            "OtakuPick adalah layanan jastip (jasa titip) khusus barang-barang original dan eksklusif bertema anime langsung dari Jepang! Kami baru kamu mendapatkan merchandise impian dari official store, event terbatas, atau rilisan khusus yang sulit ditemukan di Indonesia.",
+          alamatToko:
+            "Jl. Melati No. 12, RT 05 RW 03, Kelurahan Sukajaya, Kecamatan Cibuninying Kaler, Kota Bandung, Jawa Barat, 40123 - Indonesia",
+          fee: 15000, // Example fee
+          profileImageUrl: "https://i.ibb.co/L5r001B/profile-placeholder.png", // Example profile image
+          ownerId: jastiperId, // Ensure the store belongs to this jastiper
+        };
+
+        // In a real application, you'd verify ownerId with currentJastiperId here
+        if (store.ownerId !== jastiperId) {
+          alert("Anda tidak memiliki izin untuk melihat/mengedit toko ini.");
+          window.location.href = "jastiper_dashboard.html"; // Or relevant page
           return;
         }
 
-        try {
-          console.log(
-            "Simulating loading store data for Jastiper ID:",
-            jastiperId
-          );
-          // Simulate fetching store data (replace with actual Firestore fetch later)
-          const store = {
-            namaToko: "OTAKU PICK",
-            negaraToko: "Indonesia",
-            deskripsiToko:
-              "OtakuPick adalah layanan jastip (jasa titip) khusus barang-barang original dan eksklusif bertema anime langsung dari Jepang! Kami baru kamu mendapatkan merchandise impian dari official store, event terbatas, atau rilisan khusus yang sulit ditemukan di Indonesia.",
-            alamatToko:
-              "Jl. Melati No. 12, RT 05 RW 03, Kelurahan Sukajaya, Kecamatan Cibuninying Kaler, Kota Bandung, Jawa Barat, 40123 - Indonesia",
-            fee: 15000, // Example fee
-            profileImageUrl: "https://i.ibb.co/L5r001B/profile-placeholder.png", // Example profile image
-            ownerId: jastiperId, // Ensure the store belongs to this jastiper
-          };
-
-          // In a real application, you'd verify ownerId with currentJastiperId here
-          if (store.ownerId !== jastiperId) {
-            alert("Anda tidak memiliki izin untuk melihat/mengedit toko ini.");
-            window.location.href = "jastiper_dashboard.html"; // Or relevant page
-            return;
-          }
-
-          originalStoreData = { ...store }; // Store original data for cancel
-          populateStoreForm(store);
-          setFormEditability(false); // Initially read-only
-        } catch (error) {
-          console.error("Error loading store data:", error);
-          alert("Terjadi kesalahan saat memuat informasi toko.");
-          window.location.href = "jastiper_dashboard.html"; // Or relevant page
-        }
+        originalStoreData = { ...store }; // Store original data for cancel
+        populateStoreForm(store);
+        setFormEditability(false); // Initially read-only
+      } catch (error) {
+        console.error("Error loading store data:", error);
+        alert("Terjadi kesalahan saat memuat informasi toko.");
+        window.location.href = "jastiper_dashboard.html"; // Or relevant page
       }
+    }
 
-      function populateStoreForm(store) {
-        namaTokoInput.value = store.namaToko || "";
-        negaraTokoInput.value = store.negaraToko || "";
-        deskripsiTokoInput.value = store.deskripsiToko || "";
-        alamatTokoInput.value = store.alamatToko || "";
-        // Display fee as number in the input, not formatted
-        feeInput.value = store.fee || 0;
-        profileImageUrlInput.value = store.profileImageUrl || "";
+    function populateStoreForm(store) {
+      namaTokoInput.value = store.namaToko || "";
+      negaraTokoInput.value = store.negaraToko || "";
+      deskripsiTokoInput.value = store.deskripsiToko || "";
+      alamatTokoInput.value = store.alamatToko || "";
+      // Display fee as number in the input, not formatted
+      feeInput.value = store.fee || 0;
+      profileImageUrlInput.value = store.profileImageUrl || "";
 
-        if (store.profileImageUrl) {
-          storeProfileImagePreview.src = profileImageUrlInput.value;
-          storeProfileImagePreview.classList.remove("hidden");
-          storeImagePlaceholder.classList.add("hidden"); // Hide placeholder if image exists
-        } else {
-          storeProfileImagePreview.classList.add("hidden");
-          storeImagePlaceholder.classList.remove("hidden"); // Show placeholder if no image
-        }
+      if (store.profileImageUrl) {
+        storeProfileImagePreview.src = profileImageUrlInput.value;
+        storeProfileImagePreview.classList.remove("hidden");
+        storeImagePlaceholder.classList.add("hidden"); // Hide placeholder if image exists
+      } else {
+        storeProfileImagePreview.classList.add("hidden");
+        storeImagePlaceholder.classList.remove("hidden"); // Show placeholder if no image
       }
+    }
 
-      // Event listeners for store page
-      editButton.addEventListener("click", () => {
-        setFormEditability(true);
-      });
+    // Event listeners for store page
+    editButton.addEventListener("click", () => {
+      setFormEditability(true);
+    });
 
-      cancelEditButton.addEventListener("click", () => {
-        if (originalStoreData) {
-          populateStoreForm(originalStoreData); // Revert to original data
-        }
-        setFormEditability(false); // Go back to read-only mode
-      });
+    cancelEditButton.addEventListener("click", () => {
+      if (originalStoreData) {
+        populateStoreForm(originalStoreData); // Revert to original data
+      }
+      setFormEditability(false); // Go back to read-only mode
+    });
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-        const updatedData = {
-          namaToko: namaTokoInput.value,
-          namaTokoLowerCase: namaTokoInput.value.toLowerCase(), // For searching
-          negaraToko: negaraTokoInput.value,
-          deskripsiToko: deskripsiTokoInput.value,
-          alamatToko: alamatTokoInput.value,
-          fee: parseFloat(feeInput.value) || 0, // Parse fee as a number
-          profileImageUrl: profileImageUrlInput.value,
-        };
+      const updatedData = {
+        namaToko: namaTokoInput.value,
+        namaTokoLowerCase: namaTokoInput.value.toLowerCase(), // For searching
+        negaraToko: negaraTokoInput.value,
+        deskripsiToko: deskripsiTokoInput.value,
+        alamatToko: alamatTokoInput.value,
+        fee: parseFloat(feeInput.value) || 0, // Parse fee as a number
+        profileImageUrl: profileImageUrlInput.value,
+      };
 
-        try {
-          console.log(
-            "Simulating store update for Jastiper ID:",
-            currentJastiperId,
-            updatedData
-          );
-          alert("Informasi toko berhasil diperbarui! (Simulasi)");
-          // After successful save, update originalStoreData and revert to view mode
-          originalStoreData = { ...updatedData }; // Update original data with new fee
-          setFormEditability(false);
-        } catch (error) {
-          console.error("Error updating store:", error);
-          alert("Gagal memperbarui informasi toko: " + error.message);
-        }
-      });
+      try {
+        console.log(
+          "Simulating store update for Jastiper ID:",
+          currentJastiperId,
+          updatedData
+        );
+        alert("Informasi toko berhasil diperbarui! (Simulasi)");
+        // After successful save, update originalStoreData and revert to view mode
+        originalStoreData = { ...updatedData }; // Update original data with new fee
+        setFormEditability(false);
+      } catch (error) {
+        console.error("Error updating store:", error);
+        alert("Gagal memperbarui informasi toko: " + error.message);
+      }
+    });
 
-      // Event listener for profile image URL input
-      profileImageUrlInput.addEventListener("input", () => {
-        if (profileImageUrlInput.value) {
-          storeProfileImagePreview.src = profileImageUrlInput.value;
-          storeProfileImagePreview.classList.remove("hidden");
-          storeImagePlaceholder.classList.add("hidden"); // Hide placeholder
-        } else {
-          storeProfileImagePreview.classList.add("hidden");
-          storeImagePlaceholder.classList.remove("hidden"); // Show placeholder
-        }
-      });
+    // Event listener for profile image URL input
+    profileImageUrlInput.addEventListener("input", () => {
+      if (profileImageUrlInput.value) {
+        storeProfileImagePreview.src = profileImageUrlInput.value;
+        storeProfileImagePreview.classList.remove("hidden");
+        storeImagePlaceholder.classList.add("hidden"); // Hide placeholder
+      } else {
+        storeProfileImagePreview.classList.add("hidden");
+        storeImagePlaceholder.classList.remove("hidden"); // Show placeholder
+      }
+    });
 
-      // Initial load for store data
-      document.addEventListener("DOMContentLoaded", () => {
-        if (currentJastiperId) {
-          loadStoreData(currentJastiperId);
-        } else {
-          alert("Anda harus login untuk melihat informasi toko.");
-          window.location.href = "halaman_login_anda.html"; // Redirect to your login page
-        }
-      });
+    // Initial load for store data
+    document.addEventListener("DOMContentLoaded", () => {
+      if (currentJastiperId) {
+        loadStoreData(currentJastiperId);
+      } else {
+        alert("Anda harus login untuk melihat informasi toko.");
+        window.location.href = "jastiper_daftar_toko.html";
+      }
+    });
 
-      // Logout functionality
-      const logoutButton = document.getElementById("logout-button");
-      const logoutModal = document.getElementById("logout-modal");
-      const cancelLogoutButton = document.getElementById("cancel-logout");
-      const confirmLogoutButton = document.getElementById("confirm-logout");
+    // Logout functionality
+    const logoutButton = document.getElementById("logout-button");
+    const logoutModal = document.getElementById("logout-modal");
+    const cancelLogoutButton = document.getElementById("cancel-logout");
+    const confirmLogoutButton = document.getElementById("confirm-logout");
 
-      logoutButton.addEventListener("click", () => {
-        logoutModal.classList.add("show");
-      });
-      cancelLogoutButton.addEventListener("click", () => {
-        logoutModal.classList.remove("show");
-      });
-      confirmLogoutButton.addEventListener("click", () => {
-        localStorage.removeItem("jastiperId");
-        alert("Anda telah logout.");
-        window.location.href = "halaman_login_anda.html"; // Redirect to your login page
-      });
-    </script>
-  </body>
+    logoutButton.addEventListener("click", () => {
+      logoutModal.classList.add("show");
+    });
+    cancelLogoutButton.addEventListener("click", () => {
+      logoutModal.classList.remove("show");
+    });
+    confirmLogoutButton.addEventListener("click", () => {
+      localStorage.removeItem("jastiperId");
+      alert("Anda telah logout.");
+      window.location.href = "pembeli_dashboard.html";
+    });
+  </script>
+</body>
+
 </html>

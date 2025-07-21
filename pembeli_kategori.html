@@ -2,424 +2,579 @@
 <html lang="id">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Kategori - TitipGo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f5f7fa;
-    }
+    <meta charset="UTF-8">
+    <title>Kategori - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            padding-top: 80px; /* Tambahkan padding-top agar konten tidak tertutup header fixed */
+        }
 
-    .header-search {
-      font-size: 1rem;
-      height: 36px;
-      padding-left: 2.2rem;
-      padding-right: 1rem;
-      border-radius: 9999px;
-      width: 180px;
-      font-weight: 600;
-    }
+        .header-search {
+            font-size: 1rem;
+            height: 36px;
+            padding-left: 2.2rem;
+            padding-right: 1rem;
+            border-radius: 9999px;
+            width: 180px;
+            font-weight: 600;
+        }
 
-    @media (min-width: 1024px) {
-      .header-search {
-        width: 220px;
-      }
-    }
+        @media (min-width: 1024px) {
+            .header-search {
+                width: 220px;
+            }
+        }
 
-    .header-search::placeholder {
-      color: #a0aec0;
-      opacity: 1;
-      font-size: 1rem;
-      font-weight: 600;
-    }
+        .header-search::placeholder {
+            color: #a0aec0;
+            opacity: 1;
+            font-size: 1rem;
+            font-weight: 600;
+        }
 
-    .icon-nav,
-    nav svg {
-      width: 20px !important;
-      height: 20px !important;
-      min-width: 20px;
-      min-height: 20px;
-    }
+        .icon-nav,
+        nav svg {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px;
+            min-height: 20px;
+        }
 
-    .icon-nav:hover {
-      filter: brightness(0.7);
-    }
+        .icon-nav:hover {
+            filter: brightness(0.7);
+        }
 
-    .nav-center {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-    }
+        /* Navigasi tengah di header */
+        .main-nav-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            /* Menyesuaikan jarak antar item */
+        }
 
-    .nav-center a,
-    .nav-center .dropdown-kategori>a {
-      padding: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
+        .main-nav-center a,
+        .main-nav-center .dropdown-kategori>a {
+            padding: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
 
-    .dropdown-kategori .dropdown-content,
-    #userDropdown {
-      min-width: 160px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
-      background: #fff;
-      padding: 0;
-      margin-top: 4px;
-    }
+        /* Gaya untuk dropdown */
+        .dropdown-kategori .dropdown-content,
+        #userDropdown {
+            min-width: 160px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+            background: #fff;
+            padding: 0;
+            margin-top: 4px;
+            /* Sedikit jarak dari item nav */
+        }
 
-    .dropdown-kategori .dropdown-content a,
-    #userDropdown a {
-      display: block;
-      padding: 10px 18px;
-      color: #222;
-      text-decoration: none;
-      font-size: 15px;
-      border-bottom: 1px solid #f0f0f0;
-      transition: background 0.15s, color 0.15s;
-    }
+        .dropdown-kategori .dropdown-content a,
+        #userDropdown a {
+            display: block;
+            padding: 10px 18px;
+            color: #222;
+            text-decoration: none;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.15s, color 0.15s;
+        }
 
-    .dropdown-kategori .dropdown-content a:last-child,
-    #userDropdown a:last-child {
-      border-bottom: none;
-    }
+        .dropdown-kategori .dropdown-content a:last-child,
+        #userDropdown a:last-child {
+            border-bottom: none;
+        }
 
-    .dropdown-kategori .dropdown-content a:hover,
-    #userDropdown a:hover {
-      background: #f5f7fa;
-      color: #1976d2;
-    }
+        .dropdown-kategori .dropdown-content a:hover,
+        #userDropdown a:hover {
+            background: #f5f7fa;
+            color: #1976d2;
+        }
 
-    .logo-titipgo {
-      width: 80px !important;
-      min-width: 80px;
-      max-width: 90px;
-    }
+        .logo-titipgo {
+            width: 80px !important;
+            min-width: 80px;
+            max-width: 90px;
+        }
 
-    @media (max-width: 900px) {
+        @media (max-width: 900px) {
 
-      .icon-nav,
-      nav svg {
-        width: 16px !important;
-        height: 16px !important;
-      }
+            .icon-nav,
+            nav svg {
+                width: 16px !important;
+                height: 16px !important;
+            }
 
-      .logo-titipgo {
-        width: 60px !important;
-      }
+            .logo-titipgo {
+                width: 60px !important;
+            }
 
-      .header-search {
-        font-size: 0.9rem;
-        height: 28px;
-        width: 120px;
-      }
+            .header-search {
+                font-size: 0.9rem;
+                height: 28px;
+                width: 120px;
+            }
 
-      .header-search::placeholder {
-        font-size: 0.9rem;
-      }
+            .header-search::placeholder {
+                font-size: 0.9rem;
+            }
 
-      .nav-center a,
-      .nav-center .dropdown-kategori>a {
-        font-size: 0.9rem;
-      }
-    }
+            .main-nav-center a,
+            .main-nav-center .dropdown-kategori>a {
+                font-size: 0.9rem;
+            }
+        }
 
-    .kategori-section {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin: 36px 0 0 0;
-    }
+        /* Gaya untuk bagian kategori */
+        .kategori-section {
+            display: flex; /* Menggunakan flexbox */
+            flex-wrap: wrap; /* Memungkinkan item untuk wrap ke baris berikutnya */
+            justify-content: center;
+            gap: 40px; /* Jarak antar item */
+            margin: 0 auto;
+            padding-top: 20px;
+            max-width: 1200px; /* Lebar maksimum container kategori agar sesuai 5 kolom */
+            /* Pastikan lebar ini cukup untuk 5 kolom + gap */
+        }
 
-    .kategori-col {
-      text-align: center;
-      min-width: 170px;
-    }
+        .kategori-col {
+            text-align: center;
+            /* Atur lebar kolom agar 5 kolom muat. */
+            /* Setiap kolom diperkirakan sekitar 170px lebar, 5 * 170 = 850px. */
+            /* Total gap: 4 * 40px = 160px. Jadi sekitar 850 + 160 = 1010px. */
+            /* Kita gunakan calc untuk presisi */
+            flex-basis: calc((100% - (4 * 40px)) / 5); /* 5 kolom dengan gap 40px */
+            min-width: 170px; /* Pastikan kolom tidak terlalu kecil */
+            flex-grow: 1; /* Memungkinkan kolom tumbuh jika ada ruang ekstra */
+            flex-shrink: 1; /* Memungkinkan kolom menyusut jika perlu, tapi tidak di bawah min-width */
+            box-sizing: border-box; /* Pastikan padding dan border termasuk dalam lebar */
+        }
 
-    .kategori-label {
-      background: #ff0080;
-      color: #fff;
-      font-weight: bold;
-      padding: 7px 22px;
-      border-radius: 16px;
-      display: inline-block;
-      margin-bottom: 12px;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-    }
+        /* Media query untuk memastikan 5 kolom pada layar besar */
+        @media (min-width: 1100px) { /* Sesuaikan breakpoint ini agar 5 kolom terlihat optimal */
+            .kategori-section {
+                justify-content: center; /* Tetap center, atau space-evenly jika ingin merata */
+            }
+            .kategori-col {
+                max-width: 170px; /* Atur lebar maksimum agar semua kolom memiliki lebar yang seragam */
+                /* Ini akan membuat semua kolom berukuran sama jika ada cukup ruang */
+            }
+        }
 
-    .kategori-box {
-      background: #ededed;
-      padding: 14px 24px;
-      border-radius: 8px;
-      text-align: left;
-      min-width: 150px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    }
+        /* Media query untuk 3 kolom di layar sedang */
+        @media (max-width: 1099px) and (min-width: 768px) {
+            .kategori-col {
+                flex-basis: calc((100% - (2 * 40px)) / 3); /* 3 kolom dengan gap 40px */
+                max-width: calc((100% - (2 * 40px)) / 3);
+            }
+        }
 
-    .kategori-box a {
-      display: block;
-      padding: 5px 0;
-      font-size: 15px;
-      color: #222;
-      text-decoration: none;
-      border-bottom: 1px solid #e0e0e0;
-      transition: color 0.2s;
-    }
+        @media (max-width: 767px) { /* Untuk layar yang lebih kecil (mobile) */
+            .kategori-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 24px;
+                padding-top: 15px;
+            }
 
-    .kategori-box a:last-child {
-      border-bottom: none;
-    }
+            .kategori-col {
+                min-width: 0;
+                width: 90vw; /* Mengambil 90% lebar viewport */
+                flex-basis: auto; /* Kembali ke lebar otomatis untuk mobile */
+                max-width: none; /* Hapus batasan max-width */
+            }
 
-    .kategori-box a:hover {
-      color: #ff0080;
-    }
+            .kategori-box {
+                min-width: 0;
+                width: 100%;
+            }
+        }
 
-    @media (max-width: 900px) {
-      .kategori-section {
-        flex-direction: column;
-        align-items: center;
-        gap: 24px;
-      }
+        .kategori-label {
+            background: #ff0080;
+            color: #fff;
+            font-weight: bold;
+            padding: 7px 22px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
 
-      .kategori-col {
-        min-width: 0;
-        width: 90vw;
-      }
+        .kategori-box {
+            background: #ededed;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-align: left;
+            min-width: 150px; /* Minimum width for the box content */
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
 
-      .kategori-box {
-        min-width: 0;
-        width: 100%;
-      }
-    }
-  </style>
+        .kategori-box a {
+            display: block;
+            padding: 5px 0;
+            font-size: 15px;
+            color: #222;
+            text-decoration: none;
+            border-bottom: 1px solid #e0e0e0;
+            transition: color 0.2s;
+        }
+
+        .kategori-box a:last-child {
+            border-bottom: none;
+        }
+
+        .kategori-box a:hover {
+            color: #ff0080;
+        }
+
+        /* Gaya untuk daftar produk dari Firestore */
+        #products-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* Responsive grid */
+            gap: 24px;
+            /* Jarak antar produk */
+            max-width: 1200px;
+            /* Lebar maksimal container produk */
+            margin: 36px auto;
+            /* Tengah dan jarak atas */
+            padding: 0 16px;
+            /* Padding samping */
+        }
+
+        #products-list .product-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        #products-list .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        #products-list .product-card img {
+            width: 150px;
+            /* Ukuran gambar produk */
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        #products-list .product-card .product-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #ff0080;
+            margin-bottom: 8px;
+        }
+
+        #products-list .product-card .product-price {
+            font-size: 1rem;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+
+        #products-list .product-card .product-description {
+            font-size: 0.9rem;
+            color: #666666;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* Batasi deskripsi hanya 2 baris */
+            -webkit-box-orient: vertical;
+        }
+
+        #products-list .product-card .product-variants {
+            font-size: 0.85rem;
+            color: #888888;
+        }
+
+        #products-list .empty-message {
+            grid-column: 1 / -1;
+            /* Rentang seluruh kolom di grid */
+            text-align: center;
+            padding: 40px;
+            font-size: 1.1rem;
+            color: #777;
+        }
+    </style>
 </head>
 
 <body class="font-sans bg-gray-100 m-0">
-  <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-    <div class="flex items-center space-x-3">
-      <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="w-20 sm:w-20 logo-titipgo">
-      <div class="relative hidden md:block">
-        <input type="text" placeholder="Cari Barang..."
-          class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
-        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-          viewBox="0 0 20 20">
-          <path d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-        </svg>
-      </div>
-    </div>
-    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-      <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-      <a href="pembeli_kategori.html"
-        class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
-      <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
-    </nav>
-    <nav class="flex items-center space-x-4 sm:space-x-6">
-      <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-          </path>
-        </svg>
-      </a>
-      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
-        onclick="alert('Belum ada notifikasi!');return false;">
-        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-          </path>
-        </svg>
-      </a>
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon"
-        style="cursor:pointer;">
-      <div id="userDropdown"
-        class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-        <a href="pembeli_akun.html"
-          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-        <a href="pembeli_pesanan_saya.html"
-          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-        <a href="#" onclick="openChatCS();return false;"
-          class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
-        <a href="#" onclick="logoutUser();return false;"
-          class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-      </div>
-    </nav>
-  </header>
-  <h1 class="page-title"
-    style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KATEGORI</h1>
-  <!-- Kategori Section -->
-  <div class="kategori-section flex flex-wrap justify-center gap-8 md:gap-12 mt-36">
-    <!-- Fashion & Aksesoris -->
-    <div class="kategori-col flex flex-col items-center">
-      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Fashion &
-        Aksesoris</div>
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
-      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-        <a href="pembeli_kategori_fashion.html" class="block py-1 border-b border-gray-200 last:border-b-0">Pakaian</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sepatu</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sandal</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Tas</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Dompet</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Jam Tangan</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Topi</a>
-        <a href="#" class="block py-1">Aksesoris</a>
-      </div>
-    </div>
-    <!-- Kosmetik & Skincare -->
-    <div class="kategori-col flex flex-col items-center">
-      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Kosmetik &
-        Skincare</div>
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
-      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Skincare</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makeup</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Perawatan Rambut</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Body Care</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Masker Wajah</a>
-        <a href="#" class="block py-1">Produk Khusus</a>
-      </div>
-    </div>
-    <!-- Elektronik & Gadget -->
-    <div class="kategori-col flex flex-col items-center">
-      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Elektronik &
-        Gadget</div>
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
-      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartphone</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Aksesoris Gadget</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Kamera</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartwatch</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Alat Elektronik</a>
-        <a href="#" class="block py-1">Gaming</a>
-      </div>
-    </div>
-    <!-- Makanan & Minuman -->
-    <div class="kategori-col flex flex-col items-center">
-      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Makanan &
-        Minuman</div>
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
-      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Snack</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Minuman</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Bumbu</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makanan</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Cokelat & permen</a>
-        <a href="#" class="block py-1">Oleh-oleh musiman</a>
-      </div>
-    </div>
-    <!-- Mainan & Hobi -->
-    <div class="kategori-col flex flex-col items-center">
-      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Mainan & Hobi
-      </div>
-      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
-      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Mainan anak</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Action figure</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Puzzle & board game</a>
-        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Model kit</a>
-        <a href="#" class="block py-1">Alat gambar</a>
-      </div>
-    </div>
-  </div>
-  <!-- ====== DAFTAR PRODUK DARI FIRESTORE ====== -->
-  <div id="products-list" class="mt-6"></div>
-  <footer class="bg-gray-200 text-gray-700 py-8 text-sm mt-12">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
-      <div class="mb-6 md:mb-0 text-left">
-        <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
-        <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
-        <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
-        <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
-      </div>
-      <div class="text-center mb-6 md:mb-0 flex flex-col items-center justify-center">
-        <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="mx-auto w-9" style="height:32px;margin-bottom:0;">
-        <div class="font-bold text-pink-600 text-xs leading-tight mt-1">TitipGo</div>
-        <p class="text-[10px] text-gray-600 leading-tight">AMAN DAN AMANAH</p>
-      </div>
-      <div class="md:text-right">
-        <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
-        <a href="#" class="flex items-center hover:text-pink-600 mb-1"><span class="icon mr-2">📘</span> Facebook</a>
-        <a href="#" class="flex items-center hover:text-pink-600 mb-1"><span class="icon mr-2">📺</span> Youtube</a>
-        <a href="#" class="flex items-center hover:text-pink-600"><span class="icon mr-2">📷</span> Instagram</a>
-      </div>
-    </div>
-  </footer>
-  <script>
-    // Dropdown Kategori
-    const kategoriMenu = document.getElementById('kategoriMenu');
-    const dropdownKategori = document.getElementById('dropdownKategori');
-    if (kategoriMenu && dropdownKategori) {
-      kategoriMenu.addEventListener('click', function (e) {
-        e.preventDefault();
-        dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-      });
-      document.addEventListener('click', function (e) {
-        if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-          dropdownKategori.style.display = 'none';
-        }
-      });
-    }
-    // Dropdown User
-    const userIcon = document.getElementById('userIcon');
-    const userDropdown = document.getElementById('userDropdown');
-    if (userIcon && userDropdown) {
-      userIcon.onclick = function (e) {
-        e.stopPropagation();
-        userDropdown.classList.toggle('hidden');
-      };
-      document.addEventListener('click', function (e) {
-        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-          userDropdown.classList.add('hidden');
-        }
-      });
-    }
-    function logoutUser() {
-      alert('Berhasil logout!');
-      if (userDropdown) userDropdown.classList.add('hidden');
-    }
-    function openChatCS() {
-      alert('Fitur chat CS akan segera hadir!');
-      if (userDropdown) userDropdown.classList.add('hidden');
-    }
-  </script>
-  <!-- Integrasi Firebase Firestore -->
-  <script type="module">
-    import { db, auth } from './js/firebase-config.js';
-    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="#" id="kategoriMenu"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+                    id="dropdownKategori" style="display:none;">
+                    <a href="pembeli_produk_gucci.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
+                    <a href="pembeli_kategori.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+                        Produk</a>
+                </div>
+            </div>
 
-    async function loadProductsFromFirestore() {
-      const querySnapshot = await getDocs(collection(db, "products"));
-      const products = [];
-      querySnapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
-      });
-      // Render ke HTML
-      const container = document.getElementById('products-list');
-      if (!products.length) {
-        container.innerHTML = '<div class="text-gray-500 text-center py-8">Belum ada produk.</div>';
-        return;
-      }
-      container.innerHTML = products.map(product => `
-    <div class="border p-4 rounded mb-4 bg-white shadow flex flex-col items-center">
-      <img src="${product.gambar}" class="w-24 h-24 object-cover mb-2 rounded" />
-      <div class="font-bold text-lg mb-1 text-pink-600">${product.nama}</div>
-      <div class="mb-1">Rp. ${product.harga.toLocaleString('id-ID')}</div>
-      <div class="mb-1 text-gray-600 text-sm">${product.deskripsi}</div>
-      <div class="text-xs text-gray-500">Varian: ${product.varian.join(', ')}</div>
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+                onclick="alert('Belum ada notifikasi!');return false;">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+    <h1 class="page-title"
+        style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KATEGORI
+    </h1>
+    <div class="kategori-section flex flex-wrap justify-center gap-8 md:gap-12">
+        <div class="kategori-col flex flex-col items-center">
+            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Fashion &
+                Aksesoris</div>
+            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                <a href="pembeli_kategori_fashion.html"
+                    class="block py-1 border-b border-gray-200 last:border-b-0">Pakaian</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sepatu</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sandal</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Tas</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Dompet</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Jam Tangan</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Topi</a>
+                <a href="#" class="block py-1">Aksesoris</a>
+            </div>
+        </div>
+        <div class="kategori-col flex flex-col items-center">
+            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Kosmetik &
+                Skincare</div>
+            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Skincare</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makeup</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Perawatan Rambut</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Body Care</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Masker Wajah</a>
+                <a href="#" class="block py-1">Produk Khusus</a>
+            </div>
+        </div>
+        <div class="kategori-col flex flex-col items-center">
+            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Elektronik &
+                Gadget</div>
+            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartphone</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Aksesoris Gadget</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Kamera</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartwatch</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Alat Elektronik</a>
+                <a href="#" class="block py-1">Gaming</a>
+            </div>
+        </div>
+        <div class="kategori-col flex flex-col items-center">
+            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Makanan &
+                Minuman</div>
+            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Snack</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Minuman</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Bumbu</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makanan</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Cokelat & permen</a>
+                <a href="#" class="block py-1">Oleh-oleh musiman</a>
+            </div>
+        </div>
+        <div class="kategori-col flex flex-col items-center">
+            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Makanan &
+                Minuman</div>
+            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Mainan anak</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Action figure</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Puzzle & board game</a>
+                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Model kit</a>
+                <a href="#" class="block py-1">Alat gambar</a>
+            </div>
+        </div>
     </div>
-  `).join('');
-    }
-    window.addEventListener('DOMContentLoaded', loadProductsFromFirestore);
-  </script>
+    <div id="products-list" class="mt-6"></div>
+
+    <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div class="mb-6 md:mb-0 text-left">
+                <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
+                <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
+                <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
+                <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
+            </div>
+            <div class="text-center mb-6 md:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
+                    class="mx-auto w-32 mb-2 footer-logo">
+            </div>
+            <div class="text-left md:text-right">
+                <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+                    </svg>
+                    Facebook
+                </a>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
+                    </svg>
+                    Youtube
+                </a>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979 4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+                    </svg>
+                    Instagram
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Dropdown Kategori
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+        if (kategoriMenu && dropdownKategori) {
+            kategoriMenu.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
+                    dropdownKategori.style.display = 'none';
+                }
+            });
+        }
+        // Dropdown User
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+        if (userIcon && userDropdown) {
+            userIcon.onclick = function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            };
+            document.addEventListener('click', function (e) {
+                if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        function logoutUser() {
+            alert('Berhasil logout!');
+            // Implementasi logout Firebase akan ditambahkan di sini jika diperlukan
+            if (userDropdown) userDropdown.classList.add('hidden');
+            // Redirect ke halaman login setelah logout, contoh:
+            // window.location.href = 'pembeli_login.html';
+        }
+
+        function openChatCS() {
+            alert('Fitur chat CS akan segera hadir!');
+            if (userDropdown) userDropdown.classList.add('hidden');
+        }
+    </script>
+    <script type="module">
+        import { db } from './js/firebase-config.js'; // Mengimpor db dari firebase-config.js
+        import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+        async function loadProductsFromFirestore() {
+            const productsListContainer = document.getElementById('products-list');
+            // Menghapus pesan loading awal
+            productsListContainer.innerHTML = ''; 
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                const products = [];
+                querySnapshot.forEach((doc) => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (!products.length) {
+                    productsListContainer.innerHTML = '<div class="empty-message">Belum ada produk yang tersedia.</div>';
+                    return;
+                }
+
+                productsListContainer.innerHTML = products.map(product => `
+                    <div class="product-card">
+                        <img src="${product.gambar || 'asset/images/placeholder.jpg'}" alt="${product.nama}" />
+                        <div class="product-name">${product.nama}</div>
+                        <div class="product-price">Rp. ${product.harga ? product.harga.toLocaleString('id-ID') : 'N/A'}</div>
+                        <div class="product-description">${product.deskripsi || 'Tidak ada deskripsi.'}</div>
+                        <div class="product-variants">Varian: ${product.varian && Array.isArray(product.varian) && product.varian.length > 0 ? product.varian.join(', ') : 'Tidak ada varian'}</div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error("Error fetching products: ", error);
+            }
+        }
+
+        // Panggil fungsi saat DOM sudah dimuat
+        window.addEventListener('DOMContentLoaded', loadProductsFromFirestore);
+    </script>
 </body>
 
 </html>

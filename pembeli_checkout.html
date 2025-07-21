@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Checkout - TitipGo</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* Custom CSS untuk header identik dengan produk-gucci.html */
@@ -427,31 +426,39 @@
       }
     }
   </style>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body class="font-sans bg-gray-100 m-0">
   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
     <div class="flex items-center space-x-3">
-      <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="w-20 sm:w-20 logo-titipgo">
+      <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
       <div class="relative hidden md:block">
         <input type="text" placeholder="Cari Barang..."
-          class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
+          class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
         <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
           viewBox="0 0 20 20">
-          <path d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+          <path
+            d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
         </svg>
       </div>
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-      <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-      <a href="pembeli_kategori.html"
-        class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
-      <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
+      <a href="pembeli_dashboard.html"
+        class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+      <div class="dropdown-kategori relative inline-block hidden md:block">
+        <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
+        <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+          id="dropdownKategori" style="display:none;">
+          <a href="pembeli_produk_gucci.html"
+            class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
+          <a href="pembeli_kategori.html"
+            class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+            Produk</a>
+        </div>
+      </div>
+
       <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
         <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">
@@ -469,8 +476,8 @@
           </path>
         </svg>
       </a>
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon"
-        style="cursor:pointer;">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+        id="userIcon" style="cursor:pointer;">
       <div id="userDropdown"
         class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
         <a href="pembeli_akun.html"
@@ -478,7 +485,10 @@
         <a href="pembeli_pesanan_saya.html"
           class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
         <a href="#" onclick="openChatCS();return false;"
-          class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+          CS</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
         <a href="#" onclick="logoutUser();return false;"
           class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
       </div>
@@ -508,8 +518,7 @@
           <span class="checkout-produk-total">Total Harga</span>
         </div>
         <div class="checkout-produk-box" id="checkoutProdukBox">
-          <!-- Products will be loaded here dynamically -->
-        </div>
+          </div>
       </div>
       <div class="checkout-section checkout-pesan">
         <span>Pesan</span>
@@ -643,23 +652,22 @@
 
         container.innerHTML = Object.keys(stores).map(storeName => {
           const storeProducts = stores[storeName];
-          const storeTotal = storeProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
 
           return `
-          <div class="checkout-produk-toko">${storeName}</div>
-          ${storeProducts.map(product => `
-            <div class="checkout-produk-item">
-              <img src="asset/images/ootd (1).jpg" alt="${product.name}" class="checkout-produk-img" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
-              <div class="checkout-produk-info">
-                <div class="checkout-produk-nama">${product.name}</div>
-                <div class="checkout-produk-varian">${product.color}, ${product.size}</div>
+            <div class="checkout-produk-toko">${storeName}</div>
+            ${storeProducts.map(product => `
+              <div class="checkout-produk-item">
+                <img src="asset/images/ootd (1).jpg" alt="${product.name}" class="checkout-produk-img" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+                <div class="checkout-produk-info">
+                  <div class="checkout-produk-nama">${product.name}</div>
+                  <div class="checkout-produk-varian">${product.color}, ${product.size}</div>
+                </div>
+                <div class="checkout-produk-harga">Rp. ${(product.price / 1000000).toFixed(1)}.000.000</div>
+                <div class="checkout-produk-jumlah">${product.quantity}</div>
+                <div class="checkout-produk-total">Rp. ${((product.price * product.quantity) / 1000000).toFixed(1)}.000.000</div>
               </div>
-              <div class="checkout-produk-harga">Rp. ${(product.price / 1000000).toFixed(1)}.000.000</div>
-              <div class="checkout-produk-jumlah">${product.quantity}</div>
-              <div class="checkout-produk-total">Rp. ${((product.price * product.quantity) / 1000000).toFixed(1)}.000.000</div>
-            </div>
-          `).join('')}
-        `;
+            `).join('')}
+          `;
         }).join('');
       }
 
@@ -672,13 +680,16 @@
 
         // Update display
         document.getElementById('subtotalPesanan').textContent = `Rp. ${(checkoutData.subtotal / 1000000).toFixed(1)}.000.000`;
+        document.getElementById('subtotalPengiriman').textContent = `Rp. ${(checkoutData.shipping / 1000).toLocaleString('id-ID')}`;
+        document.getElementById('biayaLayanan').textContent = `Rp. ${(checkoutData.service / 1000).toLocaleString('id-ID')}`;
+        document.getElementById('feeJastiper').textContent = `Rp. ${(checkoutData.jastiper / 1000).toLocaleString('id-ID')}`;
         document.getElementById('totalHarga').textContent = `Rp. ${(checkoutData.total / 1000000).toFixed(1)}.000.000`;
       }
 
       function ubahAlamat() {
-        const nama = prompt('Masukkan nama penerima:', 'Resty');
-        const telepon = prompt('Masukkan nomor telepon:', '08673732739729');
-        const alamat = prompt('Masukkan alamat lengkap:', 'Jl.Menuju Kesuksesan No.15 Perumahan Maritza, Teras, Boyolali (C10)');
+        const nama = prompt('Masukkan nama penerima:', document.getElementById('namaPenerima').textContent.split(' ')[0]);
+        const telepon = prompt('Masukkan nomor telepon:', document.getElementById('namaPenerima').textContent.match(/\(([^)]+)\)/)?.[1]);
+        const alamat = prompt('Masukkan alamat lengkap:', document.getElementById('alamatLengkap').textContent);
 
         if (nama && telepon && alamat) {
           document.getElementById('namaPenerima').textContent = `${nama} (${telepon})`;
@@ -688,33 +699,6 @@
 
       function pilihVoucher() {
         alert('Fitur voucher akan segera hadir!');
-      }
-
-      function prosesCheckout() {
-        const pesan = document.getElementById('pesanInput').value;
-
-        if (!pesan.trim()) {
-          alert('Silakan tulis pesan untuk penjual!');
-          return;
-        }
-
-        // Simpan data checkout untuk halaman pembayaran
-        const paymentData = {
-          ...checkoutData,
-          pesan: pesan,
-          alamat: {
-            nama: document.getElementById('namaPenerima').textContent,
-            alamat: document.getElementById('alamatLengkap').textContent
-          },
-          metodePembayaran: document.getElementById('metodeBank').textContent
-        };
-
-        localStorage.setItem('paymentData', JSON.stringify(paymentData));
-        window.location.href = 'pembeli_pembayaran.html';
-      }
-
-      function showNotifications() {
-        alert('Anda memiliki 3 notifikasi baru!');
       }
 
       // Modal pembayaran
@@ -796,67 +780,159 @@
       // Load data when page loads
       window.onload = function () {
         loadCheckoutData();
+        // Event listener for user dropdown
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (userIcon && userDropdown) {
+          userIcon.addEventListener('click', function () {
+            userDropdown.classList.toggle('hidden');
+          });
+
+          // Close dropdown if clicked outside
+          document.addEventListener('click', function (event) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+              userDropdown.classList.add('hidden');
+            }
+          });
+        }
+
+        // Event listener for kategori dropdown
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+
+        if (kategoriMenu && dropdownKategori) {
+          kategoriMenu.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+          });
+
+          // Close dropdown if clicked outside
+          document.addEventListener('click', function (event) {
+            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+              dropdownKategori.style.display = 'none';
+            }
+          });
+        }
       };
+
 
       // --- Dropdown User Icon Akun ---
       function logoutUser() {
         alert('Berhasil logout!');
+        const userDropdown = document.getElementById('userDropdown'); // Ensure userDropdown is defined
         if (userDropdown) userDropdown.classList.add('hidden');
+        // You might want to add Firebase logout here
+        // auth.signOut().then(() => {
+        //   console.log("User signed out");
+        //   localStorage.removeItem('userId'); // Clear userId on logout
+        //   window.location.href = 'login.html'; // Redirect to login page
+        // }).catch((error) => {
+        //   console.error("Error signing out: ", error);
+        // });
       }
       function openChatCS() {
         alert('Fitur chat CS akan segera hadir!');
+        const userDropdown = document.getElementById('userDropdown'); // Ensure userDropdown is defined
         if (userDropdown) userDropdown.classList.add('hidden');
       }
     </script>
-    <!-- Integrasi Firebase Firestore -->
     <script type="module">
-      import { db, auth } from './js/firebase-config.js';
-      import { collection, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
+      import { db, auth } from './js/firebase-config.js'; // Ensure this path is correct
+      import { collection, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js'; // Use consistent version
 
+      // Optional: Debugging Firebase connection and data
       async function debugFirestore() {
+        console.log("Attempting to debug Firestore...");
         const collections = ['users', 'products', 'orders', 'ratings', 'chats'];
         for (const col of collections) {
           try {
             const snap = await getDocs(collection(db, col));
             console.log(`Data koleksi ${col}:`);
-            snap.forEach(doc => console.log(doc.id, doc.data()));
+            if (snap.empty) {
+              console.log(`  Koleksi '${col}' kosong.`);
+            } else {
+              snap.forEach(doc => console.log(`  ID: ${doc.id}, Data:`, doc.data()));
+            }
           } catch (e) {
             console.error(`Gagal ambil data koleksi ${col}:`, e);
           }
         }
       }
-      debugFirestore();
+      // Call debugFirestore on page load for verification (can be removed in production)
+      // debugFirestore();
+
 
       window.prosesCheckout = async function () {
-        // Ambil data user login
+        const pesan = document.getElementById('pesanInput').value;
+
+        if (!pesan.trim()) {
+          alert('Silakan tulis pesan untuk penjual!');
+          return;
+        }
+
         const userId = localStorage.getItem('userId');
-        // Ambil produk dari localStorage (atau bisa dari Firestore jika sudah diimplementasikan)
-        const products = JSON.parse(localStorage.getItem('checkoutCart') || '[]');
-        // Ambil alamat dan metode bayar
-        const alamat = document.getElementById('alamatLengkap').textContent;
-        const metodeBayar = document.querySelector('input[name=bank]:checked')?.value || 'Transfer Bank (BCA)';
-        // Hitung total
-        const subtotal = parseInt(document.getElementById('subtotalPesanan').textContent.replace(/\D/g, ''));
-        const shipping = 100000;
-        const service = 100000;
-        const jastiper = 100000;
+        if (!userId) {
+          alert("Anda harus login untuk melakukan checkout.");
+          window.location.href = "login.html"; // Redirect to login page
+          return;
+        }
+
+        const products = JSON.parse(localStorage.getItem('checkoutCart') || localStorage.getItem('checkoutProduct') || '[]');
+        if (products.length === 0) {
+          alert("Tidak ada produk di keranjang atau untuk checkout.");
+          return;
+        }
+
+        const alamatFull = document.getElementById('alamatLengkap').textContent;
+        const namaPenerimaFull = document.getElementById('namaPenerima').textContent;
+        const metodeBayar = document.querySelector('input[name="bank"]:checked')?.value || 'Transfer Bank (BCA)';
+
+        const subtotal = parseFloat(document.getElementById('subtotalPesanan').textContent.replace('Rp. ', '').replace(/\./g, '').replace(',', '.') || '0') * 1000; // Convert "X.000.000" to actual number
+        const shipping = parseFloat(document.getElementById('subtotalPengiriman').textContent.replace('Rp. ', '').replace(/\./g, '').replace(',', '.') || '0');
+        const service = parseFloat(document.getElementById('biayaLayanan').textContent.replace('Rp. ', '').replace(/\./g, '').replace(',', '.') || '0');
+        const jastiper = parseFloat(document.getElementById('feeJastiper').textContent.replace('Rp. ', '').replace(/\./g, '').replace(',', '.') || '0');
         const total = subtotal + shipping + service + jastiper;
 
-        await addDoc(collection(db, "orders"), {
-          userId,
-          products,
-          total,
-          status: "Belum Dibayar",
-          alamat,
-          metodeBayar,
-          createdAt: Timestamp.now()
-        });
-        alert("Pesanan berhasil dibuat!");
-        window.location.href = "pembeli_pembayaran.html";
-      }
+
+        try {
+          const docRef = await addDoc(collection(db, "orders"), {
+            userId: userId,
+            products: products.map(p => ({
+              name: p.name,
+              color: p.color,
+              size: p.size,
+              quantity: p.quantity,
+              price: p.price,
+              store: p.store
+            })),
+            totalPrice: total, // Use totalPrice for clarity
+            status: "Belum Dibayar",
+            deliveryAddress: {
+              receiverName: namaPenerimaFull.split('(')[0].trim(),
+              phoneNumber: namaPenerimaFull.match(/\(([^)]+)\)/)?.[1] || '',
+              fullAddress: alamatFull
+            },
+            paymentMethod: metodeBayar,
+            messageToSeller: pesan,
+            shippingCost: shipping,
+            serviceFee: service,
+            jastiperFee: jastiper,
+            createdAt: Timestamp.now()
+          });
+
+          console.log("Order document written with ID: ", docRef.id);
+          alert("Pesanan berhasil dibuat!");
+          localStorage.removeItem('checkoutCart'); // Clear cart after checkout
+          localStorage.removeItem('checkoutProduct'); // Clear direct product after checkout
+          window.location.href = "pembeli_pembayaran.html?orderId=" + docRef.id; // Pass order ID to payment page
+        } catch (e) {
+          console.error("Error adding document: ", e);
+          alert("Terjadi kesalahan saat membuat pesanan. Silakan coba lagi.");
+        }
+      };
     </script>
 
-    <!-- Footer -->
     <footer class="bg-gray-200 text-gray-700 py-8 text-sm mt-12">
       <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
         <div class="mb-6 md:mb-0 text-left">
@@ -866,7 +942,8 @@
           <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
         </div>
         <div class="text-center mb-6 md:mb-0 flex flex-col items-center justify-center">
-          <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="mx-auto w-9" style="height:32px;margin-bottom:0;">
+          <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="mx-auto w-9"
+            style="height:32px;margin-bottom:0;">
           <div class="font-bold text-pink-600 text-xs leading-tight mt-1">TitipGo</div>
           <p class="text-[10px] text-gray-600 leading-tight">AMAN DAN AMANAH</p>
         </div>
