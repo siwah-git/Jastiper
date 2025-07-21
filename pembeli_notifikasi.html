@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifikasi - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom CSS untuk overriding atau menambahkan style Tailwind */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7fafc; /* Warna background sedikit abu-abu untuk konten */
+            color: #2d3748; /* Warna teks dasar */
+        }
+
+        /* Styles dari dashboard.html yang mungkin masih relevan */
+        .header-search::placeholder {
+            color: #a0aec0;
+            opacity: 1;
+        }
+
+        .footer-logo {
+            filter: brightness(0.6);
+        }
+
+        .header-icon {
+            color: #4a5568;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .header-icon:hover {
+            color: #e53e3e;
+        }
+
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-center a {
+            padding: 0;
+        }
+
+        /* Specific styles for Notification page */
+        .notification-card {
+            background-color: #e0f7fa; /* Light cyan/blue background - Warna biru muda */
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-left: 5px solid #f43f5e; /* Pink/Red border */
+        }
+
+        .notification-card h3 {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .notification-card p {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .notification-card .timestamp {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 0.75rem;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-white text-gray-800">
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html" id="kategoriMenu"
+                    class="text-gray-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
+                <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+                    id="dropdownKategori" style="display:none;">
+                    <a href="pembeli_produk_gucci.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
+                    <a href="pembeli_kategori.html"
+                        class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+                        Produk</a>
+                </div>
+            </div>
+
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="pembeli_toko_saya.html"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-20 pb-10 min-h-screen bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Notifikasi</h1>
+
+            <div id="notificationList" class="space-y-4">
+                <div class="notification-card" data-id="1">
+                    <h3>Pembayaran Pesanan #67890 Berhasil Dikonfirmasi</h3>
+                    <p>Pembayaran untuk pesanan Anda #67890 telah berhasil kami terima. Pesanan Anda sedang diproses.</p>
+                    <div class="timestamp">Kemarin, 14:30</div>
+                </div>
+
+                <div class="notification-card" data-id="2">
+                    <h3>Penawaran Spesial: Diskon 15% untuk Produk Fashion</h3>
+                    <p>Dapatkan diskon 15% untuk semua produk fashion dari Italia. Berlaku hingga 31 Juli!</p>
+                    <div class="timestamp">3 hari yang lalu</div>
+                </div>
+
+                <div class="notification-card" data-id="3">
+                    <h3>Selamat Datang di TitipGo!</h3>
+                    <p>Terima kasih telah bergabung dengan TitipGo. Jelajahi berbagai produk unik dari seluruh dunia.</p>
+                    <div class="timestamp">1 minggu yang lalu</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div class="mb-6 md:mb-0 text-left">
+                <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
+                <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
+                <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
+                <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
+            </div>
+            <div class="text-center mb-6 md:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
+                    class="mx-auto w-32 mb-2 footer-logo">
+                <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
+            </div>
+            <div class="text-left md:text-right">
+                <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+                    </svg>
+                    Facebook
+                </a>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
+                    </svg>
+                    Youtube
+                </a>
+                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979-4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+                    </svg>
+                    Instagram
+                </a>
+            </div>
+        </div>
+    </footer>
+    <div id="chatCSModal"
+        style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;max-width:400px;width:90vw;padding:0 0 16px 0;box-shadow:0 4px 24px rgba(0,0,0,0.12);margin:auto;">
+            <div
+                style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px 20px;border-bottom:1px solid #eee;">
+                <span style="font-weight:bold;font-size:17px;">Chat dengan CS</span>
+                <button onclick="document.getElementById('chatCSModal').style.display='none'"
+                    style="background:none;border:none;font-size:22px;cursor:pointer;">&times;</button>
+            </div>
+            <div style="padding:18px 20px 0 20px;min-height:80px;">
+                <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;padding:10px 20px 0 20px;gap:8px;">
+                <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+                    style="flex:1;padding:8px 12px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
+                <button onclick="sendCSMessage()"
+                    style="background:#1976d2;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Kirim</button>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        // Import objek auth dan db dari firebase-config.js
+        import { auth, db } from './js/firebase-config.js';
+
+        // --- FUNGSI DROPDOWN MENU PROFIL ---
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userIcon.addEventListener('click', function (event) {
+            event.preventDefault();
+            userDropdown.classList.toggle('hidden');
+            dropdownKategori.style.display = 'none'; // Tutup dropdown kategori
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+
+        // --- FUNGSI DROPDOWN MENU KATEGORI ---
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+
+        kategoriMenu.addEventListener('click', function (event) {
+            event.preventDefault();
+            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+            userDropdown.classList.add('hidden'); // Tutup dropdown user
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+                dropdownKategori.style.display = 'none';
+            }
+        });
+
+        // Fungsi Logout
+        window.logoutUser = function () {
+            auth.signOut().then(() => {
+                alert("Anda telah logout!");
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error logging out: ", error);
+                alert("Gagal logout. Silakan coba lagi.");
+            });
+            if (userDropdown) userDropdown.classList.add('hidden');
+        };
+
+        // Fungsi untuk membuka modal chat CS
+        window.openChatCS = function () {
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?";
+            document.getElementById('chatCSInput').value = '';
+            if (userDropdown) userDropdown.classList.add('hidden');
+        };
+
+        // Fungsi untuk mengirim pesan ke CS
+        window.sendCSMessage = function () {
+            const chatInput = document.getElementById('chatCSInput');
+            const chatMessages = document.getElementById('chatCSMessages');
+            const message = chatInput.value.trim();
+
+            if (message !== '') {
+                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
+                chatInput.value = '';
+
+                setTimeout(() => {
+                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        };
+    </script>
+</body>
+
+</html>
