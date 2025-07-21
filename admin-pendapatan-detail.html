@@ -128,7 +128,7 @@
             <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
           </a>
           <a
-            href="admin-about-us.html"
+            href="admin-tentang.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
@@ -153,7 +153,8 @@
               <i class="fas fa-arrow-left text-2xl"></i>
             </a>
             <h1 class="text-2xl font-bold">
-              Detail Pendapatan: <span id="income-invoice-id">#INV202507001</span>
+              Detail Pendapatan:
+              <span id="income-invoice-id">#INV202507001</span>
             </h1>
           </div>
           <div class="text-right flex gap-3">
@@ -188,7 +189,12 @@
               >
               <i class="fas fa-chevron-right mx-2 text-xs"></i>
             </li>
-            <li class="flex items-center text-gray-500" id="breadcrumb-income-id">#INV202507001</li>
+            <li
+              class="flex items-center text-gray-500"
+              id="breadcrumb-income-id"
+            >
+              #INV202507001
+            </li>
           </ol>
         </nav>
 
@@ -203,23 +209,33 @@
             <div
               class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
             >
-              <p><strong>ID Transaksi:</strong> <span id="transaction-id"></span></p>
-              <p><strong>Tanggal Transaksi:</strong> <span id="transaction-date"></span></p>
-              <p><strong>Jenis Pendapatan:</strong> <span id="income-type">Fee Platform</span></p>
+              <p>
+                <strong>ID Transaksi:</strong> <span id="transaction-id"></span>
+              </p>
+              <p>
+                <strong>Tanggal Transaksi:</strong>
+                <span id="transaction-date"></span>
+              </p>
+              <p>
+                <strong>Jenis Pendapatan:</strong>
+                <span id="income-type">Fee Platform</span>
+              </p>
               <p>
                 <strong>Jumlah Pendapatan:</strong>
-                <span class="text-green-600 font-bold" id="income-amount"></span>
+                <span
+                  class="text-green-600 font-bold"
+                  id="income-amount"
+                ></span>
               </p>
               <p>
                 <strong>Status Pembayaran:</strong>
-                <span
-                  id="income-status-badge"
-                  class="status-badge"
+                <span id="income-status-badge" class="status-badge"
                   >Memuat...</span
                 >
               </p>
               <p>
-                <strong>Metode Pembayaran (Pelanggan):</strong> <span id="customer-payment-method"></span>
+                <strong>Metode Pembayaran (Pelanggan):</strong>
+                <span id="customer-payment-method"></span>
               </p>
             </div>
           </div>
@@ -240,18 +256,20 @@
                   href="#"
                   class="text-blue-600 hover:underline"
                   id="order-link"
-                  ><span id="order-id"></span></a
-                >
+                  ><span id="order-id"></span
+                ></a>
               </p>
-              <p><strong>Total Pesanan:</strong> <span id="order-total"></span></p>
+              <p>
+                <strong>Total Pesanan:</strong> <span id="order-total"></span>
+              </p>
               <p>
                 <strong>Nama Pelanggan:</strong>
                 <a
                   href="#"
                   class="text-blue-600 hover:underline"
                   id="customer-link"
-                  ><span id="customer-name"></span></a
-                >
+                  ><span id="customer-name"></span
+                ></a>
               </p>
               <p>
                 <strong>Item Terkait:</strong> <span id="related-items"></span>
@@ -259,7 +277,8 @@
             </div>
             <div class="mt-4 border-t pt-4">
               <p class="text-gray-700 text-sm">
-                Pendapatan ini berasal dari fee platform 8% dari total nilai pesanan <span id="commission-order-id"></span>.
+                Pendapatan ini berasal dari fee platform 8% dari total nilai
+                pesanan <span id="commission-order-id"></span>.
               </p>
             </div>
           </div>
@@ -279,10 +298,15 @@
                 id="jastiper-photo"
               />
               <div>
-                <p class="text-lg font-semibold text-gray-800" id="jastiper-name">
+                <p
+                  class="text-lg font-semibold text-gray-800"
+                  id="jastiper-name"
+                >
                   Memuat...
                 </p>
-                <p class="text-sm text-gray-600">ID Jastiper: <span id="jastiper-id"></span></p>
+                <p class="text-sm text-gray-600">
+                  ID Jastiper: <span id="jastiper-id"></span>
+                </p>
               </div>
             </div>
             <ul class="text-gray-700 space-y-2 text-sm">
@@ -296,8 +320,8 @@
                   href="#"
                   class="text-blue-600 hover:underline"
                   id="jastiper-email-link"
-                  ><span id="jastiper-email"></span></a
-                >
+                  ><span id="jastiper-email"></span
+                ></a>
               </li>
               <li>
                 <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
@@ -305,8 +329,8 @@
                   href="#"
                   class="text-blue-600 hover:underline"
                   id="jastiper-phone-link"
-                  ><span id="jastiper-phone"></span></a
-                >
+                  ><span id="jastiper-phone"></span
+                ></a>
               </li>
               <li class="mt-3">
                 <a
@@ -334,7 +358,8 @@
                 <div>
                   <strong class="block">Memuat Riwayat...</strong>
                   <p class="text-xs text-gray-600">
-                    Data riwayat akan muncul di sini setelah dimuat dari Firebase.
+                    Data riwayat akan muncul di sini setelah dimuat dari
+                    Firebase.
                   </p>
                 </div>
               </li>
@@ -349,13 +374,19 @@
       // Pastikan Anda sudah menambahkan Firebase SDK ke proyek Anda.
       // Anda bisa menambahkannya via CDN di <head> atau npm.
       // Contoh CDN (untuk versi terbaru, cek dokumentasi Firebase):
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-         import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-       </script>
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-      
-     const firebaseConfig = {
+      const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         authDomain: "YOUR_AUTH_DOMAIN",
         projectId: "YOUR_PROJECT_ID",
@@ -430,15 +461,19 @@
         if (!incomeId) {
           console.error("ID Pendapatan tidak ditemukan di URL.");
           // Anda bisa mengarahkan pengguna kembali atau menampilkan pesan kesalahan
-          document.querySelector('.content-wrapper').innerHTML = '<div class="text-center py-10 text-red-600">ID Pendapatan tidak ditemukan.</div>';
+          document.querySelector(".content-wrapper").innerHTML =
+            '<div class="text-center py-10 text-red-600">ID Pendapatan tidak ditemukan.</div>';
           return;
         }
 
         // Perbarui ID di header dan breadcrumb
-        document.getElementById('income-invoice-id').textContent = `#${incomeId}`;
-        document.getElementById('breadcrumb-income-id').textContent = `#${incomeId}`;
-        document.getElementById('transaction-id').textContent = `#${incomeId}`;
-
+        document.getElementById(
+          "income-invoice-id"
+        ).textContent = `#${incomeId}`;
+        document.getElementById(
+          "breadcrumb-income-id"
+        ).textContent = `#${incomeId}`;
+        document.getElementById("transaction-id").textContent = `#${incomeId}`;
 
         // --- Implementasi Pengambilan Data dari Firebase ---
         // Anda harus menghapus komentar dan mengisi logika Firebase Anda di sini.
@@ -460,25 +495,45 @@
 
             // --- Data dummy untuk pengujian (hapus ini saat menggunakan Firebase) ---
             const incomeData = {
-                orderId: "ORD12345",
-                amount: 60000, // Ini harusnya hasil 8% dari total pesanan
-                status: "paid",
-                transactionDate: new Date("2025-07-20T16:00:00Z"), // Firebase Timestamp object
-                paymentId: "PAY98765", // Asumsi ada link ke pembayaran
-                jastiperId: "JSTP001",
-                history: [
-                    { event: "Pendapatan Dikonfirmasi", timestamp: new Date("2025-07-20T16:00:00Z"), description: "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.", icon: "fa-check-circle" },
-                    { event: "Perhitungan Fee Platform", timestamp: new Date("2025-07-20T15:50:00Z"), description: "Sistem menghitung fee platform 8% dari total pesanan.", icon: "fa-calculator" }
-                ]
+              orderId: "ORD12345",
+              amount: 60000, // Ini harusnya hasil 8% dari total pesanan
+              status: "paid",
+              transactionDate: new Date("2025-07-20T16:00:00Z"), // Firebase Timestamp object
+              paymentId: "PAY98765", // Asumsi ada link ke pembayaran
+              jastiperId: "JSTP001",
+              history: [
+                {
+                  event: "Pendapatan Dikonfirmasi",
+                  timestamp: new Date("2025-07-20T16:00:00Z"),
+                  description:
+                    "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.",
+                  icon: "fa-check-circle",
+                },
+                {
+                  event: "Perhitungan Fee Platform",
+                  timestamp: new Date("2025-07-20T15:50:00Z"),
+                  description:
+                    "Sistem menghitung fee platform 8% dari total pesanan.",
+                  icon: "fa-calculator",
+                },
+              ],
             };
             // --- Akhir data dummy ---
 
-
             // 2. Isi Ringkasan Pendapatan
-            document.getElementById('transaction-date').textContent = incomeData.transactionDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-            document.getElementById('income-amount').textContent = `Rp ${incomeData.amount.toLocaleString('id-ID')}`;
+            document.getElementById("transaction-date").textContent =
+              incomeData.transactionDate.toLocaleDateString("id-ID", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+            document.getElementById(
+              "income-amount"
+            ).textContent = `Rp ${incomeData.amount.toLocaleString("id-ID")}`;
 
-            const incomeStatusBadge = document.getElementById("income-status-badge");
+            const incomeStatusBadge = document.getElementById(
+              "income-status-badge"
+            );
             incomeStatusBadge.className = "status-badge"; // Reset classes
             switch (incomeData.status) {
               case "paid":
@@ -510,9 +565,9 @@
             // }
 
             // --- Data dummy untuk pengujian pembayaran ---
-            document.getElementById('customer-payment-method').textContent = 'Transfer Bank';
+            document.getElementById("customer-payment-method").textContent =
+              "Transfer Bank";
             // --- Akhir data dummy ---
-
 
             // 4. Ambil data Pesanan (asumsikan ada koleksi 'orders')
             // const orderDocRef = doc(db, "orders", incomeData.orderId);
@@ -569,16 +624,31 @@
             const totalOrderAmountDummy = 750000;
             const platformFeeDummy = totalOrderAmountDummy * 0.08; // 8% dari Rp 750.000 = Rp 60.000
 
-            document.getElementById('income-amount').textContent = `Rp ${platformFeeDummy.toLocaleString('id-ID')}`; // Perbarui dengan perhitungan 8%
-            document.getElementById('order-id').textContent = `#${incomeData.orderId}`;
-            document.getElementById('order-link').href = `admin-pesanan-detail.html?id=${incomeData.orderId}`;
-            document.getElementById('order-total').textContent = `Rp ${totalOrderAmountDummy.toLocaleString('id-ID')}`;
-            document.getElementById('commission-order-id').textContent = `#${incomeData.orderId}`;
-            document.getElementById('customer-name').textContent = 'Budi Santoso';
-            document.getElementById('customer-link').href = `admin-pengguna-detail.html?id=U-00123`;
-            document.getElementById('related-items').textContent = 'Baju Batik Pria Modern, Sneakers Casual Pria';
+            document.getElementById(
+              "income-amount"
+            ).textContent = `Rp ${platformFeeDummy.toLocaleString("id-ID")}`; // Perbarui dengan perhitungan 8%
+            document.getElementById(
+              "order-id"
+            ).textContent = `#${incomeData.orderId}`;
+            document.getElementById(
+              "order-link"
+            ).href = `admin-pesanan-detail.html?id=${incomeData.orderId}`;
+            document.getElementById(
+              "order-total"
+            ).textContent = `Rp ${totalOrderAmountDummy.toLocaleString(
+              "id-ID"
+            )}`;
+            document.getElementById(
+              "commission-order-id"
+            ).textContent = `#${incomeData.orderId}`;
+            document.getElementById("customer-name").textContent =
+              "Budi Santoso";
+            document.getElementById(
+              "customer-link"
+            ).href = `admin-pengguna-detail.html?id=U-00123`;
+            document.getElementById("related-items").textContent =
+              "Baju Batik Pria Modern, Sneakers Casual Pria";
             // --- Akhir data dummy ---
-
 
             // 7. Ambil data Jastiper (dari koleksi 'users', dengan asumsi ada role 'jastiper')
             // const jastiperDocRef = doc(db, "users", incomeData.jastiperId); // Asumsi 'jastiperId' di incomeData atau orderData
@@ -616,21 +686,31 @@
             // }
 
             // --- Data dummy untuk pengujian jastiper ---
-            document.getElementById('jastiper-name').textContent = 'Jastiper Dhea Anindita';
-            document.getElementById('jastiper-id').textContent = 'JSTP001';
-            document.getElementById('jastiper-location').textContent = 'Singapura';
-            document.getElementById('jastiper-email').textContent = 'dhea.anindita@example.com';
-            document.getElementById('jastiper-email-link').href = `mailto:dhea.anindita@example.com`;
-            document.getElementById('jastiper-phone').textContent = '+62 812 1122 3344';
-            document.getElementById('jastiper-phone-link').href = `tel:+6281211223344`;
-            document.getElementById('jastiper-profile-link').href = `admin-pengguna-detail.html?id=JSTP001`;
-            document.getElementById('jastiper-photo').src = "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
+            document.getElementById("jastiper-name").textContent =
+              "Jastiper Dhea Anindita";
+            document.getElementById("jastiper-id").textContent = "JSTP001";
+            document.getElementById("jastiper-location").textContent =
+              "Singapura";
+            document.getElementById("jastiper-email").textContent =
+              "dhea.anindita@example.com";
+            document.getElementById(
+              "jastiper-email-link"
+            ).href = `mailto:dhea.anindita@example.com`;
+            document.getElementById("jastiper-phone").textContent =
+              "+62 812 1122 3344";
+            document.getElementById(
+              "jastiper-phone-link"
+            ).href = `tel:+6281211223344`;
+            document.getElementById(
+              "jastiper-profile-link"
+            ).href = `admin-pengguna-detail.html?id=JSTP001`;
+            document.getElementById("jastiper-photo").src =
+              "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
             // --- Akhir data dummy ---
 
-
             // 8. Isi Riwayat & Catatan
-            const historyLog = document.getElementById('history-log');
-            historyLog.innerHTML = ''; // Bersihkan placeholder
+            const historyLog = document.getElementById("history-log");
+            historyLog.innerHTML = ""; // Bersihkan placeholder
 
             // if (incomeData.history && incomeData.history.length > 0) {
             //   incomeData.history.forEach(entry => {
@@ -662,29 +742,59 @@
 
             // --- Data dummy untuk pengujian riwayat ---
             const dummyHistory = [
-                { event: "Pendapatan Dikonfirmasi", timestamp: new Date("2025-07-20T16:00:00Z"), description: "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.", icon: "fa-check-circle" },
-                { event: "Perhitungan Fee Platform", timestamp: new Date("2025-07-20T15:50:00Z"), description: "Sistem menghitung fee platform 8% dari total pesanan: Rp 750.000 x 8% = Rp 60.000.", icon: "fa-calculator" }
+              {
+                event: "Pendapatan Dikonfirmasi",
+                timestamp: new Date("2025-07-20T16:00:00Z"),
+                description:
+                  "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.",
+                icon: "fa-check-circle",
+              },
+              {
+                event: "Perhitungan Fee Platform",
+                timestamp: new Date("2025-07-20T15:50:00Z"),
+                description:
+                  "Sistem menghitung fee platform 8% dari total pesanan: Rp 750.000 x 8% = Rp 60.000.",
+                icon: "fa-calculator",
+              },
             ];
 
-            dummyHistory.forEach(entry => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('flex', 'items-start', 'text-gray-700', 'text-sm');
-                listItem.innerHTML = `
-                  <i class="fas ${entry.icon || 'fa-info-circle'} mr-3 mt-1"></i>
+            dummyHistory.forEach((entry) => {
+              const listItem = document.createElement("li");
+              listItem.classList.add(
+                "flex",
+                "items-start",
+                "text-gray-700",
+                "text-sm"
+              );
+              listItem.innerHTML = `
+                  <i class="fas ${
+                    entry.icon || "fa-info-circle"
+                  } mr-3 mt-1"></i>
                   <div>
                     <strong class="block">${entry.event}</strong>
-                    <span class="text-xs text-gray-500">${entry.timestamp.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB</span>
+                    <span class="text-xs text-gray-500">${entry.timestamp.toLocaleDateString(
+                      "id-ID",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )} WIB</span>
                     <p class="text-xs text-gray-600">${entry.description}</p>
                   </div>
                 `;
-                historyLog.appendChild(listItem);
+              historyLog.appendChild(listItem);
             });
             // --- Akhir data dummy ---
-
-
           } catch (error) {
-            console.error("Terjadi kesalahan saat memuat detail pendapatan:", error);
-            document.querySelector('.content-wrapper').innerHTML = '<div class="text-center py-10 text-red-600">Gagal memuat detail pendapatan. Silakan coba lagi.</div>';
+            console.error(
+              "Terjadi kesalahan saat memuat detail pendapatan:",
+              error
+            );
+            document.querySelector(".content-wrapper").innerHTML =
+              '<div class="text-center py-10 text-red-600">Gagal memuat detail pendapatan. Silakan coba lagi.</div>';
           }
         }
 

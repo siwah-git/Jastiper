@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Detail Pesanan - #ORD12345 - TitipGo Admin</title>
+    <title>Detail Pesanan - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -24,7 +24,6 @@
       }
 
       /* Definisi lebar sidebar yang konsisten */
-      /* Ini harus sama dengan lebar sidebar Anda di semua halaman admin */
       :root {
         --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda (w-67) */
       }
@@ -59,6 +58,7 @@
         display: inline-block;
       }
 
+      /* Classes for different statuses (match with your Firebase data values) */
       .status-pending {
         background-color: #fefcbf; /* yellow-100 */
         color: #92400e; /* yellow-800 */
@@ -82,6 +82,10 @@
       .status-completed {
         background-color: #d1fae5; /* green-100 */
         color: #065f46; /* green-800 */
+      }
+      .status-refunded {
+        background-color: #e0f2fe; /* light blue for refunded */
+        color: #075985;
       }
     </style>
   </head>
@@ -110,7 +114,7 @@
             <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
           </a>
           <a
-            href="pengguna.html"
+            href="admin-pengguna.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
@@ -122,31 +126,31 @@
             <i class="fas fa-store mr-3"></i> Manajemen Toko
           </a>
           <a
-            href="pesanan.html"
+            href="admin-pesanan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
           </a>
           <a
-            href="aduan.html"
+            href="admin-aduan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
           </a>
           <a
-            href="laporan.html"
+            href="admin-laporan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
           </a>
           <a
-            href="pendapatan.html"
+            href="admin-pendapatan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
           </a>
           <a
-            href="profil.html"
+            href="admin-profil.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
@@ -170,19 +174,26 @@
           class="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between mb-8 rounded-lg shadow-lg"
         >
           <div class="flex items-center mb-4 md:mb-0">
-            <a href="pesanan.html" class="text-white hover:text-teal-100 mr-4">
+            <a
+              href="admin-pesanan.html"
+              class="text-white hover:text-teal-100 mr-4"
+            >
               <i class="fas fa-arrow-left text-2xl"></i>
             </a>
-            <h1 class="text-2xl font-bold">Detail Pesanan: #ORD12345</h1>
+            <h1 class="text-2xl font-bold" id="order-detail-title">
+              Detail Pesanan: #ORD12345
+            </h1>
           </div>
           <div class="text-right flex gap-3">
             <button
               class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+              id="update-status-button"
             >
               <i class="fas fa-tasks mr-2"></i> Update Status
             </button>
             <button
               class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+              id="delete-order-button"
             >
               <i class="fas fa-trash-alt mr-2"></i> Hapus Pesanan
             </button>
@@ -205,12 +216,19 @@
               <i class="fas fa-chevron-right mx-2 text-xs"></i>
             </li>
             <li class="flex items-center">
-              <a href="pesanan.html" class="text-blue-600 hover:text-blue-800"
+              <a
+                href="admin-pesanan.html"
+                class="text-blue-600 hover:text-blue-800"
                 >Manajemen Pesanan</a
               >
               <i class="fas fa-chevron-right mx-2 text-xs"></i>
             </li>
-            <li class="flex items-center text-gray-500">#ORD12345</li>
+            <li
+              class="flex items-center text-gray-500"
+              id="breadcrumb-order-id"
+            >
+              #ORD12345
+            </li>
           </ol>
         </nav>
 
@@ -225,28 +243,35 @@
             <div
               class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
             >
-              <p><strong>ID Pesanan:</strong> #ORD12345</p>
-              <p><strong>Tanggal Pesan:</strong> 20 Juli 2025</p>
+              <p><strong>ID Pesanan:</strong> <span id="order-id"></span></p>
+              <p>
+                <strong>Tanggal Pesan:</strong> <span id="order-date"></span>
+              </p>
               <p>
                 <strong>Status Pesanan:</strong>
-                <span
-                  id="admin-order-status-badge"
-                  class="status-badge status-processing"
-                  >Sedang Diproses</span
+                <span id="admin-order-status-badge" class="status-badge"
+                  >Memuat...</span
                 >
               </p>
-              <p><strong>Total Pembayaran:</strong> Rp 750.000</p>
-              <p><strong>Metode Pembayaran:</strong> Transfer Bank</p>
+              <p>
+                <strong>Total Pembayaran:</strong>
+                <span id="total-payment"></span>
+              </p>
+              <p>
+                <strong>Metode Pembayaran:</strong>
+                <span id="payment-method"></span>
+              </p>
               <p>
                 <strong>Status Pembayaran:</strong>
-                <span class="text-green-600 font-semibold">Lunas</span>
+                <span class="font-semibold" id="payment-status"></span>
               </p>
               <p>
                 <strong>Nama Pelanggan:</strong>
                 <a
-                  href="pengguna-detail.html?id=U-00123"
+                  href="#"
+                  id="customer-name-link"
                   class="text-blue-600 hover:underline"
-                  >Budi Santoso</a
+                  >Memuat...</a
                 >
               </p>
             </div>
@@ -258,49 +283,15 @@
             >
               <i class="fas fa-box-open text-orange-500 mr-2"></i> Item Pesanan
             </h3>
-            <div class="space-y-4">
-              <div class="flex items-center border-b pb-4">
-                <img
-                  src="https://via.placeholder.com/80x80/FF69B4/FFFFFF?text=Batik"
-                  alt="Baju Batik Pria Modern"
-                  class="w-20 h-20 object-cover rounded-md mr-4"
-                />
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-800">
-                    <a
-                      href="admin-katalog-detail.html?id=PROD001"
-                      class="text-blue-600 hover:underline"
-                      >Baju Batik Pria Modern</a
-                    >
-                  </h4>
-                  <p class="text-sm text-gray-600">Varian: Size L</p>
-                  <p class="text-sm text-gray-600">Jumlah: 1</p>
-                  <p class="text-md font-bold text-green-600">Rp 250.000</p>
-                </div>
-              </div>
-              <div class="flex items-center border-b pb-4">
-                <img
-                  src="https://via.placeholder.com/80x80/87CEEB/FFFFFF?text=Sneakers"
-                  alt="Sneakers Casual Pria"
-                  class="w-20 h-20 object-cover rounded-md mr-4"
-                />
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-800">
-                    <a
-                      href="admin-katalog-detail.html?id=PROD002"
-                      class="text-blue-600 hover:underline"
-                      >Sneakers Casual Pria</a
-                    >
-                  </h4>
-                  <p class="text-sm text-gray-600">Varian: Size 42</p>
-                  <p class="text-sm text-gray-600">Jumlah: 1</p>
-                  <p class="text-md font-bold text-green-600">Rp 500.000</p>
-                </div>
-              </div>
+            <div class="space-y-4" id="order-items-container">
+              <p class="text-gray-500">Memuat item pesanan...</p>
             </div>
             <div class="flex justify-end items-center mt-6 pt-4 border-t">
               <p class="text-lg font-bold text-gray-800">Subtotal Item:</p>
-              <p class="text-lg font-bold text-green-600 ml-2">Rp 750.000</p>
+              <p
+                class="text-lg font-bold text-green-600 ml-2"
+                id="items-subtotal"
+              ></p>
             </div>
           </div>
 
@@ -314,26 +305,49 @@
             <div
               class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
             >
-              <p><strong>Nama Penerima:</strong> Budi Santoso</p>
-              <p><strong>Telepon Penerima:</strong> +62 812 3456 7890</p>
-              <p class="sm:col-span-2">
-                <strong>Alamat:</strong> Jl. Merdeka No. 45 RT 001/RW 002, Kel.
-                Sukamaju, Kec. Jatiasih, Kota Bekasi, Jawa Barat 17423
+              <p>
+                <strong>Nama Penerima:</strong> <span id="receiver-name"></span>
               </p>
-              <p><strong>Metode Pengiriman:</strong> JNE Reguler</p>
-              <p><strong>Estimasi Tiba:</strong> 25 - 27 Juli 2025</p>
+              <p>
+                <strong>Telepon Penerima:</strong>
+                <span id="receiver-phone"></span>
+              </p>
+              <p class="sm:col-span-2">
+                <strong>Alamat:</strong> <span id="shipping-address"></span>
+              </p>
+              <p>
+                <strong>Metode Pengiriman:</strong>
+                <span id="shipping-method"></span>
+              </p>
+              <p>
+                <strong>Estimasi Tiba:</strong>
+                <span id="delivery-estimate"></span>
+              </p>
               <p>
                 <strong>Nomor Resi:</strong>
-                <span class="font-semibold text-blue-600">JNE000123456789</span>
-                <a href="#" class="text-blue-500 hover:underline text-xs ml-2"
+                <span
+                  class="font-semibold text-blue-600"
+                  id="tracking-number"
+                ></span
+                ><a
+                  href="#"
+                  id="tracking-link"
+                  class="text-blue-500 hover:underline text-xs ml-2"
+                  target="_blank"
                   >(Lacak)</a
                 >
               </p>
-              <p><strong>Biaya Pengiriman:</strong> Rp 15.000</p>
+              <p>
+                <strong>Biaya Pengiriman:</strong>
+                <span id="shipping-cost"></span>
+              </p>
             </div>
             <div class="flex justify-end items-center mt-6 pt-4 border-t">
               <p class="text-lg font-bold text-gray-800">Total Akhir:</p>
-              <p class="text-lg font-bold text-green-600 ml-2">Rp 765.000</p>
+              <p
+                class="text-lg font-bold text-green-600 ml-2"
+                id="final-total"
+              ></p>
             </div>
           </div>
 
@@ -349,38 +363,48 @@
                 src="https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper"
                 alt="Foto Jastiper"
                 class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-purple-400"
+                id="jastiper-photo"
               />
               <div>
-                <p class="text-lg font-semibold text-gray-800">
-                  Jastiper Dhea Anindita
+                <p
+                  class="text-lg font-semibold text-gray-800"
+                  id="jastiper-name"
+                >
+                  Memuat...
                 </p>
-                <p class="text-sm text-gray-600">ID Jastiper: JSTP001</p>
+                <p class="text-sm text-gray-600">
+                  ID Jastiper: <span id="jastiper-id"></span>
+                </p>
               </div>
             </div>
             <ul class="text-gray-700 space-y-2 text-sm">
               <li>
                 <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi
-                Asal: Singapura
+                Asal:
+                <span id="jastiper-origin-country"></span>
               </li>
               <li>
                 <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
                 <a
-                  href="mailto:dhea.anindita@example.com"
+                  href="#"
+                  id="jastiper-email"
                   class="text-blue-600 hover:underline"
-                  >dhea.anindita@example.com</a
+                  >Memuat...</a
                 >
               </li>
               <li>
                 <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
                 <a
-                  href="tel:+6281211223344"
+                  href="#"
+                  id="jastiper-phone"
                   class="text-blue-600 hover:underline"
-                  >+62 812 1122 3344</a
+                  >Memuat...</a
                 >
               </li>
               <li class="mt-3">
                 <a
-                  href="pengguna-detail.html?id=JSTP001"
+                  href="#"
+                  id="view-jastiper-profile-link"
                   class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
                 >
                   Lihat Profil Jastiper
@@ -397,77 +421,50 @@
               <i class="fas fa-clipboard-list text-green-500 mr-2"></i> Riwayat
               Status Pesanan
             </h3>
-            <ul class="space-y-3">
-              <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Pesanan Selesai</strong>
-                  <span class="text-xs text-gray-500"
-                    >27 Juli 2025, 14:00 WIB</span
-                  >
-                  <p class="text-xs text-gray-600">
-                    Pesanan telah diterima oleh pelanggan.
-                  </p>
-                </div>
-              </li>
-              <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-truck text-blue-500 mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Dikirim</strong>
-                  <span class="text-xs text-gray-500"
-                    >25 Juli 2025, 10:00 WIB</span
-                  >
-                  <p class="text-xs text-gray-600">
-                    Pesanan dalam perjalanan menuju alamat tujuan. Resi:
-                    JNE000123456789
-                  </p>
-                </div>
-              </li>
-              <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-box text-orange-500 mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Sedang Diproses</strong>
-                  <span class="text-xs text-gray-500"
-                    >21 Juli 2025, 09:00 WIB</span
-                  >
-                  <p class="text-xs text-gray-600">
-                    Pesanan sedang disiapkan oleh jastiper.
-                  </p>
-                </div>
-              </li>
-              <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-calendar-check text-gray-500 mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Pesanan Dibuat</strong>
-                  <span class="text-xs text-gray-500"
-                    >20 Juli 2025, 15:30 WIB</span
-                  >
-                  <p class="text-xs text-gray-600">
-                    Menunggu konfirmasi pembayaran.
-                  </p>
-                </div>
-              </li>
+            <ul class="space-y-3" id="order-history-list">
+              <p class="text-gray-500">Memuat riwayat...</p>
             </ul>
           </div>
         </div>
       </div>
     </main>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Skrip untuk menyorot navigasi sidebar
-        const currentPath = window.location.pathname.split("/").pop();
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
+    <script>
+      // Your Firebase configuration (same as your dashboard)
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const currentPath = window.location.pathname.split("/").pop();
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get("id"); // Get order ID from URL
+
+        // --- Sidebar Active State Logic ---
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
         sidebarLinks.forEach((link) => {
           const linkHref = link.getAttribute("href");
           const linkFileName = linkHref.split("/").pop();
 
           let isLinkActive = false;
 
-          // Special handling for detail pages: highlight parent menu
+          // Highlight "Manajemen Pesanan" if on this detail page
           if (
-            linkFileName === "pesanan.html" &&
+            linkFileName === "admin-pesanan.html" &&
             currentPath.startsWith("admin-pesanan-detail")
           ) {
             isLinkActive = true;
@@ -503,44 +500,442 @@
           }
         });
 
-        // Contoh JavaScript untuk mengubah badge status (bisa diintegrasikan dengan data backend)
-        const orderStatus = "processing"; // Ganti dengan "pending", "shipped", "delivered", "cancelled", "completed"
-        const adminStatusBadge = document.getElementById(
-          "admin-order-status-badge"
-        );
+        // --- Firebase Data Fetching and Display ---
 
-        if (adminStatusBadge) {
-          adminStatusBadge.className = "status-badge"; // Reset classes
-          switch (orderStatus) {
-            case "pending":
-              adminStatusBadge.classList.add("status-pending");
-              adminStatusBadge.textContent = "Status: Menunggu Pembayaran";
-              break;
-            case "processing":
-              adminStatusBadge.classList.add("status-processing");
-              adminStatusBadge.textContent = "Status: Sedang Diproses";
-              break;
-            case "shipped":
-              adminStatusBadge.classList.add("status-shipped");
-              adminStatusBadge.textContent = "Status: Dalam Pengiriman";
-              break;
-            case "delivered":
-              adminStatusBadge.classList.add("status-delivered");
-              adminStatusBadge.textContent = "Status: Telah Diterima";
-              break;
-            case "cancelled":
-              adminStatusBadge.classList.add("status-cancelled");
-              adminStatusBadge.textContent = "Status: Dibatalkan";
-              break;
-            case "completed":
-              adminStatusBadge.classList.add("status-completed");
-              adminStatusBadge.textContent = "Status: Selesai";
-              break;
-            default:
-              adminStatusBadge.classList.add("bg-gray-200", "text-gray-800");
-              adminStatusBadge.textContent = "Status: Tidak Diketahui";
-              break;
+        if (!orderId) {
+          console.error("Order ID not found in URL.");
+          document.getElementById("order-detail-title").textContent =
+            "Detail Pesanan : Tidak Ditemukan";
+          document.getElementById("breadcrumb-order-id").textContent =
+            "Tidak Ditemukan";
+          document.querySelector(".content-wrapper").innerHTML =
+            '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">ID Pesanan tidak ditemukan.</div>';
+          return;
+        }
+
+        // Helper function to format currency
+        const formatCurrency = (amount) => {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          }).format(amount);
+        };
+
+        // Helper function to format date/timestamp
+        const formatDate = (timestamp) => {
+          if (!timestamp) return "N/A";
+          let date;
+          if (timestamp.toDate) {
+            date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
+          } else if (
+            typeof timestamp === "string" ||
+            typeof timestamp === "number"
+          ) {
+            date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
+          } else {
+            return "Invalid Date";
           }
+
+          return new Intl.DateTimeFormat("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }).format(date);
+        };
+
+        // Helper function for status badge styling
+        const getStatusClass = (status) => {
+          switch (status) {
+            case "pending":
+              return "status-pending";
+            case "processing":
+              return "status-processing";
+            case "shipped":
+              return "status-shipped";
+            case "delivered":
+              return "status-delivered";
+            case "cancelled":
+              return "status-cancelled";
+            case "completed":
+              return "status-completed";
+            case "refunded":
+              return "status-refunded";
+            default:
+              return "bg-gray-200 text-gray-800"; // Default styling
+          }
+        };
+
+        try {
+          // 1. Fetch Order Data
+          const orderDoc = await db.collection("pemesanan").doc(orderId).get();
+
+          if (orderDoc.exists) {
+            const orderData = orderDoc.data();
+
+            document.title = `Detail Pesanan - #${orderId} - TitipGo Admin`;
+            document.getElementById(
+              "order-detail-title"
+            ).textContent = `Detail Pesanan: #${orderId}`;
+            document.getElementById(
+              "breadcrumb-order-id"
+            ).textContent = `#${orderId}`;
+
+            document.getElementById("order-id").textContent = `#${orderId}`;
+            document.getElementById("order-date").textContent = formatDate(
+              orderData.orderDate
+            );
+
+            const orderStatusBadge = document.getElementById(
+              "admin-order-status-badge"
+            );
+            orderStatusBadge.textContent = orderData.status || "N/A";
+            orderStatusBadge.className = `status-badge ${getStatusClass(
+              orderData.status
+            )}`;
+
+            document.getElementById("total-payment").textContent =
+              formatCurrency(orderData.totalAmount || 0);
+            document.getElementById("payment-method").textContent =
+              orderData.paymentMethod || "N/A";
+
+            const paymentStatusElement =
+              document.getElementById("payment-status");
+            if (orderData.paymentStatus === "paid") {
+              paymentStatusElement.textContent = "Lunas";
+              paymentStatusElement.classList.add("text-green-600");
+            } else if (orderData.paymentStatus === "unpaid") {
+              paymentStatusElement.textContent = "Belum Lunas";
+              paymentStatusElement.classList.add("text-red-600");
+            } else {
+              paymentStatusElement.textContent =
+                orderData.paymentStatus || "N/A";
+            }
+
+            // 2. Fetch Customer Data
+            const customerId = orderData.userId; // Assuming userId is customer's ID
+            if (customerId) {
+              const customerDoc = await db
+                .collection("users")
+                .doc(customerId)
+                .get();
+              const customerNameLink =
+                document.getElementById("customer-name-link");
+              if (customerDoc.exists) {
+                const customerData = customerDoc.data();
+                customerNameLink.textContent = customerData.fullName || "N/A";
+                customerNameLink.href = `admin-pengguna-detail.html?id=${customerId}`;
+              } else {
+                customerNameLink.textContent = "Pengguna Tidak Ditemukan";
+                customerNameLink.href = "#";
+              }
+            } else {
+              document.getElementById("customer-name-link").textContent = "N/A";
+              document.getElementById("customer-name-link").href = "#";
+            }
+
+            // 3. Populate Order Items
+            const orderItemsContainer = document.getElementById(
+              "order-items-container"
+            );
+            orderItemsContainer.innerHTML = ""; // Clear loading text
+            let itemsSubtotal = 0;
+
+            if (orderData.items && orderData.items.length > 0) {
+              for (const item of orderData.items) {
+                const itemTotal =
+                  (item.quantity || 0) * (item.pricePerUnit || 0);
+                itemsSubtotal += itemTotal;
+
+                // Fetch catalog details for image and correct product name
+                let catalogName =
+                  item.productName || "Nama Produk Tidak Ditemukan";
+                let catalogImage =
+                  item.imageUrl ||
+                  "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Image";
+                if (item.catalogId) {
+                  try {
+                    const catalogDoc = await db
+                      .collection("catalogs")
+                      .doc(item.catalogId)
+                      .get();
+                    if (catalogDoc.exists) {
+                      const catalog = catalogDoc.data();
+                      catalogName = catalog.productName || catalogName;
+                      catalogImage =
+                        catalog.imageUrls && catalog.imageUrls[0]
+                          ? catalog.imageUrls[0]
+                          : catalogImage;
+                    }
+                  } catch (error) {
+                    console.error(
+                      "Error fetching catalog for item:",
+                      item.catalogId,
+                      error
+                    );
+                  }
+                }
+
+                const itemHtml = `
+                        <div class="flex items-center border-b pb-4">
+                            <img
+                                src="${catalogImage}"
+                                alt="${catalogName}"
+                                class="w-20 h-20 object-cover rounded-md mr-4"
+                            />
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">
+                                    <a
+                                        href="admin-katalog-detail.html?id=${
+                                          item.catalogId || "#"
+                                        }"
+                                        class="text-blue-600 hover:underline"
+                                        >${catalogName}</a
+                                    >
+                                </h4>
+                                ${
+                                  item.variant
+                                    ? `<p class="text-sm text-gray-600">Varian: ${item.variant}</p>`
+                                    : ""
+                                }
+                                <p class="text-sm text-gray-600">Jumlah: ${
+                                  item.quantity || 0
+                                }</p>
+                                <p class="text-md font-bold text-green-600">${formatCurrency(
+                                  item.pricePerUnit || 0
+                                )}</p>
+                            </div>
+                        </div>
+                    `;
+                orderItemsContainer.insertAdjacentHTML("beforeend", itemHtml);
+              }
+            } else {
+              orderItemsContainer.innerHTML =
+                '<p class="text-gray-500">Tidak ada item dalam pesanan ini.</p>';
+            }
+            document.getElementById("items-subtotal").textContent =
+              formatCurrency(itemsSubtotal);
+
+            // 4. Populate Shipping Information
+            document.getElementById("receiver-name").textContent =
+              orderData.shippingAddress?.receiverName || "N/A";
+            document.getElementById("receiver-phone").textContent =
+              orderData.shippingAddress?.receiverPhone || "N/A";
+            document.getElementById("shipping-address").textContent =
+              orderData.shippingAddress?.fullAddress || "N/A";
+            document.getElementById("shipping-method").textContent =
+              orderData.shippingMethod || "N/A";
+            document.getElementById("delivery-estimate").textContent =
+              orderData.deliveryEstimate || "N/A";
+            document.getElementById("tracking-number").textContent =
+              orderData.trackingNumber || "N/A";
+
+            const trackingLink = document.getElementById("tracking-link");
+            if (orderData.trackingNumber && orderData.shippingMethod) {
+              // You might need a more sophisticated mapping for tracking URLs
+              // This is a placeholder
+              trackingLink.href = `https://cekresi.com/?no=${orderData.trackingNumber}`;
+              trackingLink.classList.remove("hidden");
+            } else {
+              trackingLink.classList.add("hidden");
+            }
+            document.getElementById("shipping-cost").textContent =
+              formatCurrency(orderData.shippingCost || 0);
+            document.getElementById("final-total").textContent = formatCurrency(
+              orderData.totalAmount || 0
+            );
+
+            // 5. Populate Jastiper Information (Assuming one jastiper per order for simplicity,
+            // or fetch the jastiper of the first item if multiple jastipers are allowed in one order)
+            // If an order can have items from multiple jastipers, this section needs to be an array/list.
+            const firstItemJastiperId =
+              orderData.items && orderData.items.length > 0
+                ? orderData.items[0].jastiperId
+                : null;
+            if (firstItemJastiperId) {
+              const jastiperDoc = await db
+                .collection("users")
+                .doc(firstItemJastiperId)
+                .get();
+              if (jastiperDoc.exists) {
+                const jastiperData = jastiperDoc.data();
+                document.getElementById("jastiper-photo").src =
+                  jastiperData.profilePictureUrl ||
+                  "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
+                document.getElementById("jastiper-name").textContent =
+                  jastiperData.fullName || "N/A";
+                document.getElementById("jastiper-id").textContent =
+                  firstItemJastiperId;
+                document.getElementById("jastiper-origin-country").textContent =
+                  jastiperData.originCountry || "N/A";
+
+                const jastiperEmailLink =
+                  document.getElementById("jastiper-email");
+                jastiperEmailLink.textContent = jastiperData.email || "N/A";
+                jastiperEmailLink.href = `mailto:${jastiperData.email}`;
+
+                const jastiperPhoneLink =
+                  document.getElementById("jastiper-phone");
+                jastiperPhoneLink.textContent =
+                  jastiperData.phoneNumber || "N/A";
+                jastiperPhoneLink.href = `tel:${jastiperData.phoneNumber}`;
+
+                document.getElementById(
+                  "view-jastiper-profile-link"
+                ).href = `admin-pengguna-detail.html?id=${firstItemJastiperId}`;
+              } else {
+                document.getElementById("jastiper-name").textContent =
+                  "Jastiper Tidak Ditemukan";
+                document.getElementById("jastiper-id").textContent = "N/A";
+                document.getElementById("jastiper-origin-country").textContent =
+                  "N/A";
+                document.getElementById("jastiper-email").textContent = "N/A";
+                document.getElementById("jastiper-phone").textContent = "N/A";
+                document
+                  .getElementById("view-jastiper-profile-link")
+                  .classList.add("hidden");
+              }
+            } else {
+              document.getElementById("jastiper-name").textContent =
+                "Tidak Ada Jastiper Terkait";
+              document.getElementById("jastiper-id").textContent = "N/A";
+              document.getElementById("jastiper-origin-country").textContent =
+                "N/A";
+              document.getElementById("jastiper-email").textContent = "N/A";
+              document.getElementById("jastiper-phone").textContent = "N/A";
+              document.getElementById("jastiper-photo").src =
+                "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
+              document
+                .getElementById("view-jastiper-profile-link")
+                .classList.add("hidden");
+            }
+
+            // 6. Populate Order History
+            const orderHistoryList =
+              document.getElementById("order-history-list");
+            orderHistoryList.innerHTML = ""; // Clear loading text
+
+            if (orderData.statusHistory && orderData.statusHistory.length > 0) {
+              // Sort history by date in descending order (newest first)
+              orderData.statusHistory.sort(
+                (a, b) => b.timestamp.toDate() - a.timestamp.toDate()
+              );
+
+              orderData.statusHistory.forEach((history) => {
+                let iconClass = "fas fa-info-circle text-gray-500"; // Default
+                switch (history.status) {
+                  case "pending":
+                    iconClass = "fas fa-clock text-yellow-500";
+                    break;
+                  case "processing":
+                    iconClass = "fas fa-cogs text-orange-500";
+                    break;
+                  case "shipped":
+                    iconClass = "fas fa-truck text-blue-500";
+                    break;
+                  case "delivered":
+                    iconClass = "fas fa-check-circle text-green-500";
+                    break;
+                  case "completed":
+                    iconClass = "fas fa-clipboard-check text-green-600";
+                    break;
+                  case "cancelled":
+                    iconClass = "fas fa-times-circle text-red-500";
+                    break;
+                  case "refunded":
+                    iconClass = "fas fa-wallet text-indigo-500";
+                    break;
+                }
+
+                const historyHtml = `
+                        <li class="flex items-start text-gray-700 text-sm">
+                            <i class="${iconClass} mr-3 mt-1"></i>
+                            <div>
+                                <strong class="block">Status: ${
+                                  history.status
+                                }</strong>
+                                <span class="text-xs text-gray-500">${formatDate(
+                                  history.timestamp
+                                )}</span>
+                                <p class="text-xs text-gray-600">${
+                                  history.notes || ""
+                                }</p>
+                            </div>
+                        </li>
+                    `;
+                orderHistoryList.insertAdjacentHTML("beforeend", historyHtml);
+              });
+            } else {
+              orderHistoryList.innerHTML =
+                '<p class="text-gray-500">Tidak ada riwayat status pesanan.</p>';
+            }
+
+            // --- Action Buttons Functionality ---
+            document
+              .getElementById("update-status-button")
+              .addEventListener("click", async () => {
+                const newStatus = prompt(
+                  `Masukkan status baru untuk pesanan #${orderId} (contoh: processing, shipped, delivered, cancelled, completed):`
+                );
+                if (newStatus) {
+                  try {
+                    await db
+                      .collection("pemesanan")
+                      .doc(orderId)
+                      .update({
+                        status: newStatus.toLowerCase(),
+                        statusHistory: firebase.firestore.FieldValue.arrayUnion(
+                          {
+                            status: newStatus.toLowerCase(),
+                            timestamp: firebase.firestore.Timestamp.now(),
+                            notes: `Status diperbarui oleh Admin ke '${newStatus}'.`,
+                          }
+                        ),
+                      });
+                    alert("Status pesanan berhasil diperbarui!");
+                    location.reload(); // Reload page to show updated data
+                  } catch (error) {
+                    console.error("Error updating order status:", error);
+                    alert("Gagal memperbarui status pesanan. Coba lagi.");
+                  }
+                }
+              });
+
+            document
+              .getElementById("delete-order-button")
+              .addEventListener("click", async () => {
+                if (
+                  confirm(
+                    `Apakah Anda yakin ingin menghapus pesanan #${orderId} secara permanen? Aksi ini tidak bisa dibatalkan!`
+                  )
+                ) {
+                  try {
+                    await db.collection("pemesanan").doc(orderId).delete();
+                    alert("Pesanan berhasil dihapus.");
+                    window.location.href = "admin-pesanan.html"; // Redirect back to orders list
+                  } catch (error) {
+                    console.error("Error deleting order:", error);
+                    alert("Gagal menghapus pesanan. Coba lagi.");
+                  }
+                }
+              });
+          } else {
+            console.error("Order document does not exist!");
+            document.getElementById("order-detail-title").textContent =
+              "Detail Pesanan : Tidak Ditemukan";
+            document.getElementById("breadcrumb-order-id").textContent =
+              "Tidak Ditemukan";
+            document.querySelector(".content-wrapper").innerHTML =
+              '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">Pesanan tidak ditemukan.</div>';
+          }
+        } catch (error) {
+          console.error("Error fetching order data:", error);
+          document.getElementById("order-detail-title").textContent =
+            "Detail Pesanan : Error";
+          document.getElementById("breadcrumb-order-id").textContent = "Error";
+          document.querySelector(".content-wrapper").innerHTML =
+            '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">Terjadi kesalahan saat memuat data pesanan.</div>';
         }
       });
     </script>

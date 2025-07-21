@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Detail Produk - [Nama Produk] - TitipGo Admin</title>
+    <title>Detail Katalog - [Nama Produk] - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -73,7 +73,7 @@
             <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
           </a>
           <a
-            href="admin-toko.html" 
+            href="admin-toko.html"
             class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
             <i class="fas fa-store mr-3"></i> Manajemen Toko
@@ -122,23 +122,38 @@
     </aside>
 
     <main class="main-content p-8 overflow-y-auto">
-      <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
-          <a
-            href="admin-pengguna.html"
-            class="text-white hover:text-pink-100 mr-4"
-          >
-          </a>
-          <p class="text-2xl font-bold">Detail Pengguna : Rahul</p>
-            <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
-        </div>
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <a
+          href="admin-katalog.html"
+          class="text-white hover:text-pink-100 mr-4"
+        >
+          <i class="fas fa-arrow-left text-xl"></i>
+        </a>
+        <p class="text-2xl font-bold" id="catalog-detail-title">
+          Detail Katalog :
+        </p>
+        <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+      </div>
 
-          <button
-            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-          >
-            <i class="fas fa-ban mr-2"></i> Blokir Pengguna
-          </button>
-        </div>
+      <div class="flex gap-3 mb-6">
+        <button
+          class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          id="approve-catalog-button"
+        >
+          <i class="fas fa-check-circle mr-2"></i> Setujui Katalog
+        </button>
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          id="reject-catalog-button"
+        >
+          <i class="fas fa-times-circle mr-2"></i> Tolak Katalog
+        </button>
+        <button
+          class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          id="toggle-visibility-button"
+        >
+          <i class="fas fa-eye-slash mr-2"></i> Sembunyikan Katalog
+        </button>
       </div>
 
       <nav class="text-sm text-gray-600 mb-6">
@@ -153,140 +168,61 @@
           </li>
           <li class="flex items-center">
             <a
-              href="admin-pengguna.html"
+              href="admin-katalog.html"
               class="text-blue-600 hover:text-blue-800"
-              >Manajemen Pengguna</a
+              >Manajemen Katalog</a
             >
             <i class="fas fa-chevron-right mx-2 text-xs"></i>
           </li>
-          <li class="flex items-center text-gray-500">Budi Santoso</li>
+          <li
+            class="flex items-center text-gray-500"
+            id="breadcrumb-product-name"
+          >
+            Nama Produk
+          </li>
         </ol>
       </nav>
 
       <div class="flex flex-col space-y-6">
-        <div
-          class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center"
-        >
-          <img
-            src="https://via.placeholder.com/150/007BFF/FFFFFF?text=Budi"
-            alt="Foto Profil Budi Santoso"
-            class="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg mb-4"
-          />
-          <h2 class="text-2xl font-bold text-gray-800">Budi Santoso</h2>
-          <p class="text-md text-gray-600 mb-2">ID : U-00123</p>
-          <span
-            class="bg-green-100 text-green-700 text-sm font-semibold px-3 py-1 rounded-full"
-            >Aktif</span
-          >
-          <span
-            class="bg-blue-100 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full mt-2"
-            >Pembeli</span
-          >
-        </div>
-
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h3
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-user text-blue-500 mr-2"></i> Informasi Dasar
+            <i class="fas fa-info-circle text-blue-500 mr-2"></i> Informasi
+            Produk
           </h3>
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm mb-6"
+            class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
           >
-            <p><strong>Nama Lengkap:</strong> Budi Santoso</p>
-            <p><strong>Email:</strong> budi.santoso@example.com</p>
-            <p><strong>Telepon:</strong> +62 812 3456 7890</p>
-            <p><strong>Tanggal Registrasi:</strong> 10 Januari 2024</p>
-            <p><strong>Jenis Kelamin:</strong> Pria</p>
-            <p><strong>Tanggal Lahir:</strong> 15 Mei 1990</p>
+            <p><strong>Nama Produk:</strong> <span id="product-name"></span></p>
+            <p><strong>ID Katalog:</strong> <span id="catalog-id"></span></p>
+            <p><strong>Harga:</strong> <span id="product-price"></span></p>
+            <p>
+              <strong>Kategori:</strong> <span id="product-category"></span>
+            </p>
+            <p>
+              <strong>Kondisi Barang:</strong>
+              <span id="product-condition"></span>
+            </p>
+            <p>
+              <strong>Negara Asal:</strong>
+              <span id="product-origin-country"></span>
+            </p>
+            <p><strong>Waktu Upload:</strong> <span id="upload-date"></span></p>
+            <p>
+              <strong>Status:</strong>
+              <span
+                class="py-1 px-3 rounded-full text-xs"
+                id="catalog-status"
+              ></span>
+            </p>
           </div>
-
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-map-marker-alt text-green-500 mr-2"></i> Alamat
-            Pengiriman Utama
-          </h3>
-          <p class="text-gray-700 text-sm mb-6 leading-relaxed">
-            Jl. Merdeka No. 45 RT 001/RW 002, Kel. Sukamaju, Kec. Jatiasih, Kota
-            Bekasi, Jawa Barat 17423
-          </p>
-
-          <div id="jastiper-specific-info" class="border-t pt-6 mt-6">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-id-card text-teal-600 mr-2"></i> Informasi
-              Jastiper
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm mb-6"
-            >
-              <p>
-                <strong>Nama Jastiper:</strong> TitipGo Jastip (Nama Brand
-                Jastiper)
-              </p>
-              <p><strong>Negara Asal Jastip:</strong> Singapura</p>
-              <p>
-                <strong>Status Verifikasi:</strong>
-                <span
-                  class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
-                  >Terverifikasi</span
-                >
-              </p>
-              <p>
-                <strong>Nomor KTP/Identitas:</strong> 3275xxxxxxxxxxxx (Hidden)
-              </p>
-            </div>
-            <div class="mb-4">
-              <p class="font-semibold text-gray-800 mb-2">
-                Dokumen Verifikasi:
-              </p>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <p class="text-gray-600 text-sm mb-1">Foto KTP Depan:</p>
-                  <img
-                    src="https://via.placeholder.com/200x120/ADD8E6/FFFFFF?text=KTP+Depan"
-                    alt="Foto KTP Depan"
-                    class="w-full h-auto object-cover rounded-md border border-gray-300 shadow-sm"
-                  />
-                  <a
-                    href="path/to/ktp_depan_budi.jpg"
-                    target="_blank"
-                    class="text-blue-600 text-xs hover:underline mt-1 block"
-                    >Lihat Gambar Penuh</a
-                  >
-                </div>
-                <div>
-                  <p class="text-gray-600 text-sm mb-1">
-                    Foto KTP Dengan Wajah:
-                  </p>
-                  <img
-                    src="https://via.placeholder.com/200x120/ADD8E6/FFFFFF?text=KTP+Wajah"
-                    alt="Foto KTP dengan Wajah"
-                    class="w-full h-auto object-cover rounded-md border border-gray-300 shadow-sm"
-                  />
-                  <a
-                    href="path/to/ktp_wajah_budi.jpg"
-                    target="_blank"
-                    class="text-blue-600 text-xs hover:underline mt-1 block"
-                    >Lihat Gambar Penuh</a
-                  >
-                </div>
-              </div>
-              <div class="mt-4 flex gap-3">
-                <button
-                  class="bg-green-500 hover:bg-green-600 text-white text-sm py-2 px-4 rounded-md flex items-center"
-                >
-                  <i class="fas fa-check-circle mr-2"></i> Setujui Verifikasi
-                </button>
-                <button
-                  class="bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-4 rounded-md flex items-center"
-                >
-                  <i class="fas fa-times-circle mr-2"></i> Tolak Verifikasi
-                </button>
-              </div>
-            </div>
+          <div class="mt-4">
+            <p class="font-semibold text-gray-800 mb-2">Deskripsi Produk:</p>
+            <p
+              class="text-gray-700 text-sm truncate-text"
+              id="product-description"
+            ></p>
           </div>
         </div>
 
@@ -294,29 +230,58 @@
           <h3
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-chart-pie text-purple-500 mr-2"></i> Statistik
-            Pengguna
+            <i class="fas fa-image text-purple-500 mr-2"></i> Gambar Produk
           </h3>
-          <ul class="text-gray-700 space-y-2 text-sm">
-            <li><strong>Total Pesanan:</strong> 150</li>
-            <li><strong>Total Belanja:</strong> Rp 15.000.000</li>
-            <li>
-              <strong>Jumlah Katalog Diunggah:</strong> 25
-              <span class="text-xs text-gray-500">(Jika Jastiper)</span>
-            </li>
-            <li>
-              <strong>Aduan Diterima:</strong> 2
-              <span class="text-red-500">(Perlu Ditinjau)</span>
-            </li>
-          </ul>
+          <div
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+            id="product-images-container"
+          ></div>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md">
           <h3
             class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
           >
-            <i class="fas fa-history text-orange-500 mr-2"></i> Riwayat Pesanan
-            Terbaru
+            <i class="fas fa-store text-orange-500 mr-2"></i> Informasi Jastiper
+          </h3>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
+          >
+            <p>
+              <strong>Nama Jastiper:</strong> <span id="jastiper-name"></span>
+            </p>
+            <p><strong>ID Jastiper:</strong> <span id="jastiper-id"></span></p>
+            <p>
+              <strong>Email Jastiper:</strong> <span id="jastiper-email"></span>
+            </p>
+            <p>
+              <strong>Status Jastiper:</strong>
+              <span id="jastiper-status"></span>
+            </p>
+            <p>
+              <strong>Status Verifikasi Toko:</strong>
+              <span
+                class="py-1 px-3 rounded-full text-xs"
+                id="jastiper-verification-status"
+              ></span>
+            </p>
+          </div>
+          <div class="text-center mt-4">
+            <a
+              href="admin-pengguna-detail.html?id="
+              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              id="view-jastiper-detail-link"
+              >Lihat Detail Jastiper <i class="fas fa-angle-right ml-1"></i
+            ></a>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3
+            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+          >
+            <i class="fas fa-shopping-cart text-green-500 mr-2"></i> Riwayat
+            Pesanan Produk Ini
           </h3>
           <div class="overflow-x-auto">
             <table class="min-w-full bg-white rounded-lg">
@@ -325,158 +290,70 @@
                   class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
                 >
                   <th class="py-3 px-4 text-left">ID Pesanan</th>
-                  <th class="py-3 px-4 text-left">Total</th>
-                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-4 text-left">Pembeli</th>
+                  <th class="py-3 px-4 text-left">Jumlah</th>
+                  <th class="py-3 px-4 text-left">Total Pembayaran</th>
+                  <th class="py-3 px-4 text-center">Status Pesanan</th>
                 </tr>
               </thead>
-              <tbody class="text-gray-700 text-sm">
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="pesanan-detail.html?id=ORD001"
-                      class="text-blue-600 hover:underline"
-                      >ORD001</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 500.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-xs"
-                      >Selesai</span
-                    >
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="pesanan-detail.html?id=ORD002"
-                      class="text-blue-600 hover:underline"
-                      >ORD002</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 2.100.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-yellow-200 text-yellow-800 py-1 px-2 rounded-full text-xs"
-                      >Diproses</span
-                    >
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="pesanan-detail.html?id=ORD003"
-                      class="text-blue-600 hover:underline"
-                      >ORD003</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 150.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-red-200 text-red-800 py-1 px-2 rounded-full text-xs"
-                      >Dibatalkan</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
+              <tbody
+                class="text-gray-700 text-sm"
+                id="latest-orders-for-catalog-table-body"
+              ></tbody>
             </table>
           </div>
           <div class="text-center mt-4">
             <a
-              href="pesanan.html?user_id=U-00123"
+              href="admin-pesanan.html?catalog_id="
               class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >Lihat Semua Pesanan <i class="fas fa-angle-right ml-1"></i
-            ></a>
-          </div>
-        </div>
-
-        <div
-          id="jastiper-catalog-list"
-          class="bg-white p-6 rounded-lg shadow-md"
-        >
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-boxes text-purple-500 mr-2"></i> Katalog Terbaru
-            Diunggah
-          </h3>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-white rounded-lg">
-              <thead>
-                <tr
-                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
-                >
-                  <th class="py-3 px-4 text-left">Nama Barang</th>
-                  <th class="py-3 px-4 text-left">Harga</th>
-                  <th class="py-3 px-4 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-700 text-sm">
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="admin-katalog-detail.html?id=PROD001"
-                      class="text-blue-600 hover:underline"
-                      >Kemeja Batik Modern</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 250.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-xs"
-                      >Disetujui</span
-                    >
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="admin-katalog-detail.html?id=PROD002"
-                      class="text-blue-600 hover:underline"
-                      >Sneaker Vintage</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 750.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-yellow-200 text-yellow-800 py-1 px-2 rounded-full text-xs"
-                      >Pending</span
-                    >
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="py-3 px-4 whitespace-nowrap">
-                    <a
-                      href="admin-katalog-detail.html?id=PROD003"
-                      class="text-blue-600 hover:underline"
-                      >Tas Kulit Import</a
-                    >
-                  </td>
-                  <td class="py-3 px-4">Rp 1.200.000</td>
-                  <td class="py-3 px-4 text-center">
-                    <span
-                      class="bg-red-200 text-red-800 py-1 px-2 rounded-full text-xs"
-                      >Ditolak</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="text-center mt-4">
-            <a
-              href="admin-katalog.html?jastiper_id=U-00123"
-              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >Lihat Semua Katalog <i class="fas fa-angle-right ml-1"></i
+              id="view-all-orders-for-catalog-link"
+              >Lihat Semua Pesanan Produk Ini
+              <i class="fas fa-angle-right ml-1"></i
             ></a>
           </div>
         </div>
       </div>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+      // Your Firebase configuration
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const storage = firebase.storage();
+
+      document.addEventListener("DOMContentLoaded", async function () {
         const currentPath = window.location.pathname.split("/").pop();
+        const urlParams = new URLSearchParams(window.location.search);
+        const catalogId = urlParams.get("id"); // Get catalog ID from URL, e.g., admin-katalog-detail.html?id=CATALOG_ID
+
+        if (!catalogId) {
+          console.error("Catalog ID not found in URL.");
+          document.getElementById("catalog-detail-title").textContent =
+            "Detail Katalog : Tidak Ditemukan";
+          document.getElementById("breadcrumb-product-name").textContent =
+            "Tidak Ditemukan";
+          // Hide main content or show an error
+          document.querySelector(".main-content > .flex.flex-col").innerHTML =
+            '<div class="text-center text-red-500 text-xl mt-10">Katalog tidak ditemukan.</div>';
+          return;
+        }
+
+        // --- Sidebar Active State Logic (Existing) ---
         const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
         sidebarLinks.forEach((link) => {
@@ -485,7 +362,6 @@
 
           let isLinkActive = false;
 
-          // Special handling for detail pages: highlight parent menu
           if (
             linkFileName === "admin-katalog.html" &&
             currentPath.startsWith("admin-katalog-detail")
@@ -522,6 +398,404 @@
             );
           }
         });
+
+        // --- Firebase Data Fetching and Display ---
+
+        // Function to format currency
+        const formatCurrency = (amount) => {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          }).format(amount);
+        };
+
+        // Function to format date
+        const formatDate = (timestamp) => {
+          if (!timestamp) return "N/A";
+          const date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
+          return new Intl.DateTimeFormat("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }).format(date);
+        };
+
+        // Helper function for catalog status styling
+        function getCatalogStatusClass(status) {
+          switch (status) {
+            case "approved":
+              return "bg-green-200 text-green-800";
+            case "pending":
+              return "bg-yellow-200 text-yellow-800";
+            case "rejected":
+              return "bg-red-200 text-red-800";
+            case "hidden":
+              return "bg-gray-200 text-gray-800";
+            default:
+              return "bg-gray-200 text-gray-800";
+          }
+        }
+
+        // Helper function for order status styling
+        function getOrderStatusClass(status) {
+          switch (status) {
+            case "completed":
+              return "bg-green-200 text-green-800";
+            case "processing":
+              return "bg-yellow-200 text-yellow-800";
+            case "cancelled":
+              return "bg-red-200 text-red-800";
+            default:
+              return "bg-gray-200 text-gray-800";
+          }
+        }
+
+        try {
+          // 1. Fetch Catalog Data
+          const catalogDoc = await db
+            .collection("catalogs")
+            .doc(catalogId)
+            .get();
+
+          if (catalogDoc.exists) {
+            const catalogData = catalogDoc.data();
+
+            document.getElementById(
+              "catalog-detail-title"
+            ).textContent = `Detail Katalog : ${
+              catalogData.productName || "N/A"
+            }`;
+            document.getElementById("breadcrumb-product-name").textContent =
+              catalogData.productName || "N/A";
+
+            document.getElementById("product-name").textContent =
+              catalogData.productName || "N/A";
+            document.getElementById("catalog-id").textContent = catalogId;
+            document.getElementById("product-price").textContent =
+              formatCurrency(catalogData.price || 0);
+            document.getElementById("product-category").textContent =
+              catalogData.category || "N/A";
+            document.getElementById("product-condition").textContent =
+              catalogData.condition || "N/A";
+            document.getElementById("product-origin-country").textContent =
+              catalogData.originCountry || "N/A";
+            document.getElementById("upload-date").textContent = formatDate(
+              catalogData.uploadDate
+            );
+            document.getElementById("product-description").textContent =
+              catalogData.description || "N/A";
+
+            const catalogStatusElement =
+              document.getElementById("catalog-status");
+            catalogStatusElement.textContent = catalogData.status || "N/A";
+            catalogStatusElement.className = `py-1 px-3 rounded-full text-xs ${getCatalogStatusClass(
+              catalogData.status
+            )}`;
+
+            // Control action buttons based on status
+            const approveButton = document.getElementById(
+              "approve-catalog-button"
+            );
+            const rejectButton = document.getElementById(
+              "reject-catalog-button"
+            );
+            const toggleVisibilityButton = document.getElementById(
+              "toggle-visibility-button"
+            );
+
+            if (catalogData.status === "approved") {
+              approveButton.classList.add("hidden");
+              rejectButton.classList.remove("hidden");
+              toggleVisibilityButton.classList.remove("hidden");
+              toggleVisibilityButton.innerHTML =
+                '<i class="fas fa-eye-slash mr-2"></i> Sembunyikan Katalog';
+              toggleVisibilityButton.classList.remove(
+                "bg-green-600",
+                "hover:bg-green-700"
+              );
+              toggleVisibilityButton.classList.add(
+                "bg-gray-600",
+                "hover:bg-gray-700"
+              );
+            } else if (catalogData.status === "pending") {
+              approveButton.classList.remove("hidden");
+              rejectButton.classList.remove("hidden");
+              toggleVisibilityButton.classList.add("hidden"); // Cannot hide if not approved
+            } else if (catalogData.status === "rejected") {
+              approveButton.classList.remove("hidden"); // Can re-approve
+              rejectButton.classList.add("hidden");
+              toggleVisibilityButton.classList.add("hidden");
+            } else if (catalogData.status === "hidden") {
+              approveButton.classList.add("hidden"); // If hidden, it implies it was approved before
+              rejectButton.classList.remove("hidden"); // Can still reject even if hidden
+              toggleVisibilityButton.classList.remove("hidden");
+              toggleVisibilityButton.innerHTML =
+                '<i class="fas fa-eye mr-2"></i> Tampilkan Katalog';
+              toggleVisibilityButton.classList.remove(
+                "bg-gray-600",
+                "hover:bg-gray-700"
+              );
+              toggleVisibilityButton.classList.add(
+                "bg-green-600",
+                "hover:bg-green-700"
+              );
+            }
+
+            // Event listeners for action buttons
+            approveButton.onclick = async () => {
+              if (confirm("Apakah Anda yakin ingin MENYETUJUI katalog ini?")) {
+                await db
+                  .collection("catalogs")
+                  .doc(catalogId)
+                  .update({ status: "approved" });
+                alert("Katalog disetujui!");
+                location.reload();
+              }
+            };
+
+            rejectButton.onclick = async () => {
+              if (confirm("Apakah Anda yakin ingin MENOLAK katalog ini?")) {
+                await db
+                  .collection("catalogs")
+                  .doc(catalogId)
+                  .update({ status: "rejected" });
+                alert("Katalog ditolak!");
+                location.reload();
+              }
+            };
+
+            toggleVisibilityButton.onclick = async () => {
+              const newStatus =
+                catalogData.status === "hidden" ? "approved" : "hidden"; // Toggle between approved and hidden
+              const actionText =
+                newStatus === "hidden" ? "menyembunyikan" : "menampilkan";
+              if (
+                confirm(`Apakah Anda yakin ingin ${actionText} katalog ini?`)
+              ) {
+                await db
+                  .collection("catalogs")
+                  .doc(catalogId)
+                  .update({ status: newStatus });
+                alert(`Katalog berhasil di${actionText}.`);
+                location.reload();
+              }
+            };
+
+            // 2. Display Product Images
+            const productImagesContainer = document.getElementById(
+              "product-images-container"
+            );
+            productImagesContainer.innerHTML = ""; // Clear existing images
+            if (catalogData.imageUrls && catalogData.imageUrls.length > 0) {
+              catalogData.imageUrls.forEach((url) => {
+                const imgHtml = `
+                  <div class="relative w-full h-32 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center border border-gray-300 shadow-sm">
+                    <img src="${url}" alt="Product Image" class="object-cover w-full h-full">
+                    <a href="${url}" target="_blank" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white opacity-0 hover:opacity-100 transition-opacity">
+                      <i class="fas fa-search-plus text-2xl"></i>
+                    </a>
+                  </div>
+                `;
+                productImagesContainer.insertAdjacentHTML("beforeend", imgHtml);
+              });
+            } else {
+              productImagesContainer.innerHTML =
+                '<p class="text-gray-500 col-span-full text-center">Tidak ada gambar produk.</p>';
+            }
+
+            // 3. Fetch Jastiper Information
+            const jastiperId = catalogData.jastiperId;
+            if (jastiperId) {
+              const jastiperDoc = await db
+                .collection("users")
+                .doc(jastiperId)
+                .get();
+              if (jastiperDoc.exists) {
+                const jastiperData = jastiperDoc.data();
+                document.getElementById("jastiper-name").textContent =
+                  jastiperData.fullName || "N/A";
+                document.getElementById("jastiper-id").textContent = jastiperId;
+                document.getElementById("jastiper-email").textContent =
+                  jastiperData.email || "N/A";
+
+                const jastiperStatusElement =
+                  document.getElementById("jastiper-status");
+                if (jastiperData.status === "active") {
+                  jastiperStatusElement.textContent = "Aktif";
+                  jastiperStatusElement.classList.add(
+                    "bg-green-100",
+                    "text-green-700"
+                  );
+                } else if (jastiperData.status === "blocked") {
+                  jastiperStatusElement.textContent = "Diblokir";
+                  jastiperStatusElement.classList.add(
+                    "bg-red-100",
+                    "text-red-700"
+                  );
+                } else {
+                  jastiperStatusElement.textContent = "N/A";
+                  jastiperStatusElement.classList.add(
+                    "bg-gray-100",
+                    "text-gray-700"
+                  );
+                }
+
+                // Fetch store verification status
+                const storeDoc = await db
+                  .collection("stores")
+                  .doc(jastiperId)
+                  .get();
+                const jastiperVerificationStatusElement =
+                  document.getElementById("jastiper-verification-status");
+                if (storeDoc.exists && storeDoc.data().verificationStatus) {
+                  const verificationStatus = storeDoc.data().verificationStatus;
+                  jastiperVerificationStatusElement.textContent =
+                    verificationStatus;
+                  if (verificationStatus === "verified") {
+                    jastiperVerificationStatusElement.className =
+                      "py-1 px-3 rounded-full text-xs bg-green-200 text-green-800";
+                  } else if (verificationStatus === "pending") {
+                    jastiperVerificationStatusElement.className =
+                      "py-1 px-3 rounded-full text-xs bg-yellow-200 text-yellow-800";
+                  } else if (verificationStatus === "rejected") {
+                    jastiperVerificationStatusElement.className =
+                      "py-1 px-3 rounded-full text-xs bg-red-200 text-red-800";
+                  } else {
+                    jastiperVerificationStatusElement.className =
+                      "py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-800";
+                  }
+                } else {
+                  jastiperVerificationStatusElement.textContent =
+                    "Belum Ada Data";
+                  jastiperVerificationStatusElement.className =
+                    "py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-800";
+                }
+
+                document.getElementById(
+                  "view-jastiper-detail-link"
+                ).href = `admin-pengguna-detail.html?id=${jastiperId}`;
+              } else {
+                document.getElementById("jastiper-name").textContent =
+                  "Jastiper Tidak Ditemukan";
+                document.getElementById("jastiper-id").textContent = "N/A";
+                document.getElementById("jastiper-email").textContent = "N/A";
+                document.getElementById("jastiper-status").textContent = "N/A";
+                document.getElementById(
+                  "jastiper-verification-status"
+                ).textContent = "N/A";
+                document
+                  .getElementById("view-jastiper-detail-link")
+                  .classList.add("hidden");
+              }
+            } else {
+              document.getElementById("jastiper-name").textContent =
+                "Jastiper Tidak Tersedia";
+              document.getElementById("jastiper-id").textContent = "N/A";
+              document.getElementById("jastiper-email").textContent = "N/A";
+              document.getElementById("jastiper-status").textContent = "N/A";
+              document.getElementById(
+                "jastiper-verification-status"
+              ).textContent = "N/A";
+              document
+                .getElementById("view-jastiper-detail-link")
+                .classList.add("hidden");
+            }
+
+            // 4. Populate Latest Orders for this Catalog
+            const latestOrdersTableBody = document.getElementById(
+              "latest-orders-for-catalog-table-body"
+            );
+            latestOrdersTableBody.innerHTML = ""; // Clear existing rows
+            // Assuming 'orders' collection has a 'catalogId' field within its items/products array
+            // This query is more complex as you need to check inside an array field.
+            // For simplicity, let's assume 'orders' documents have a 'products' array
+            // where each product object has 'catalogId' and 'quantity'.
+            // A more efficient way might involve a sub-collection or separate index if performance is critical.
+
+            const ordersSnapshot = await db
+              .collection("orders")
+              .where("items", "array-contains-any", [{ catalogId: catalogId }]) // This exact query might not work if 'items' is a complex object array
+              .orderBy("orderDate", "desc")
+              .limit(5)
+              .get();
+
+            if (ordersSnapshot.empty) {
+              latestOrdersTableBody.innerHTML =
+                '<tr><td colspan="5" class="py-3 px-4 text-center text-gray-500">Belum ada pesanan untuk produk ini.</td></tr>';
+            } else {
+              for (const doc of ordersSnapshot.docs) {
+                const order = doc.data();
+                let orderQuantity = 0;
+                let orderItemTotal = 0;
+
+                // Find the specific item in the order's items array
+                const relevantItem = order.items.find(
+                  (item) => item.catalogId === catalogId
+                );
+                if (relevantItem) {
+                  orderQuantity = relevantItem.quantity || 0;
+                  orderItemTotal =
+                    (relevantItem.quantity || 0) *
+                    (relevantItem.pricePerUnit || 0); // Assuming pricePerUnit in order item
+                }
+
+                const buyerDoc = await db
+                  .collection("users")
+                  .doc(order.userId)
+                  .get();
+                const buyerName = buyerDoc.exists
+                  ? buyerDoc.data().fullName
+                  : "Pengguna Tidak Ditemukan";
+
+                const row = `
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                <a href="admin-pesanan-detail.html?id=${
+                                  doc.id
+                                }" class="text-blue-600 hover:underline">${
+                  doc.id
+                }</a>
+                            </td>
+                            <td class="py-3 px-4">${buyerName}</td>
+                            <td class="py-3 px-4">${orderQuantity}</td>
+                            <td class="py-3 px-4">${formatCurrency(
+                              orderItemTotal
+                            )}</td>
+                            <td class="py-3 px-4 text-center">
+                                <span class="${getOrderStatusClass(
+                                  order.status
+                                )} py-1 px-2 rounded-full text-xs">${
+                  order.status || "N/A"
+                }</span>
+                            </td>
+                        </tr>
+                    `;
+                latestOrdersTableBody.insertAdjacentHTML("beforeend", row);
+              }
+            }
+            document.getElementById(
+              "view-all-orders-for-catalog-link"
+            ).href = `admin-pesanan.html?catalog_id=${catalogId}`;
+          } else {
+            console.error("Catalog document does not exist!");
+            document.getElementById("catalog-detail-title").textContent =
+              "Detail Katalog : Tidak Ditemukan";
+            document.getElementById("breadcrumb-product-name").textContent =
+              "Tidak Ditemukan";
+            document.querySelector(".main-content > .flex.flex-col").innerHTML =
+              '<div class="text-center text-red-500 text-xl mt-10">Katalog tidak ditemukan.</div>';
+          }
+        } catch (error) {
+          console.error("Error fetching catalog data:", error);
+          document.getElementById("catalog-detail-title").textContent =
+            "Detail Katalog : Error";
+          document.getElementById("breadcrumb-product-name").textContent =
+            "Error";
+          document.querySelector(".main-content > .flex.flex-col").innerHTML =
+            '<div class="text-center text-red-500 text-xl mt-10">Terjadi kesalahan saat memuat data katalog.</div>';
+        }
       });
     </script>
   </body>
