@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>akun saya</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
@@ -296,7 +295,6 @@
 </head>
 
 <body>
-  <!-- Header -->
   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
     <div class="flex items-center space-x-3">
       <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="w-20 sm:w-20 logo-titipgo">
@@ -311,7 +309,6 @@
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
       <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-      <!-- UBAH: Hapus dropdown pada menu kategori, jadikan menu kategori langsung link ke pembeli_kategori.html -->
       <a href="pembeli_kategori.html"
         class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
       <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
@@ -343,16 +340,14 @@
         <a href="pembeli_pesanan_saya.html"
           class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
         <a href="#" onclick="openChatCS();return false;"
-          class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
         <a href="#" onclick="logoutUser();return false;"
           class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
       </div>
     </nav>
   </header>
 
-  <!-- Main Content -->
   <div class="akun-main">
-    <!-- Left Sidebar -->
     <div class="akun-sidebar bg-white rounded-xl shadow-md p-6 flex flex-col gap-6 min-h-[400px]">
       <div class="akun-user-info flex flex-col items-center gap-2 border-b pb-4">
         <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User"
@@ -375,7 +370,6 @@
       </nav>
     </div>
 
-    <!-- Right Content -->
     <div class="akun-content">
       <h1 class="akun-title">Profil Saya</h1>
 
@@ -500,7 +494,6 @@
     });
   </script>
 
-  <!-- Integrasi Firebase Firestore -->
   <script type="module">
     import { db } from './js/firebase-config.js';
     import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
@@ -520,7 +513,6 @@
     debugFirestore();
   </script>
 
-  <!-- Footer -->
   <footer class="bg-gray-200 text-gray-700 py-8 text-sm mt-12">
     <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
       <div class="mb-6 md:mb-0 text-left">
