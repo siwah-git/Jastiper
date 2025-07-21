@@ -27,7 +27,17 @@
             background-position: center;
             /* Ganti URL di bawah ini dengan path/URL gambar yang Anda lampirkan */
             background-image: url('asset/images/beranda.jpeg');
+            /* Mengatur tinggi dinamis agar mengisi sisa ruang setelah header */
+            min-height: calc(100vh - 64px); /* Assuming header height is roughly 64px (py-1 + some height) */
+            /* You might need to adjust 64px based on your actual header height */
         }
+        
+        /* If you want the hero section to always be exactly 80vh of the *remaining* viewport,
+           you might combine with the existing h-[80vh] like this:
+           height: 80vh; /* This sets its height relative to viewport height */
+           /* But if you want it to fill the remaining space after header, min-height: calc() is better.
+              For fixed header and content starting right after, you typically make the first section
+              take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
 
         /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
@@ -212,12 +222,13 @@
             </div>
         </div>
         <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
             <a href="pembeli_dashboard.html"
-                class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-            <div class="dropdown-kategori relative inline-block">
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
                 <a href="#" id="kategoriMenu"
-                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori
-                    &#9662;</a>
+                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
                 <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
                     id="dropdownKategori" style="display:none;">
                     <a href="pembeli_produk_gucci.html"
@@ -227,9 +238,7 @@
                         Produk</a>
                 </div>
             </div>
-            <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
-        </nav>
-        <nav class="flex items-center space-x-4 sm:space-x-6">
+
             <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
                 <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -256,16 +265,16 @@
                 <a href="pembeli_pesanan_saya.html"
                     class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
                 <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
                     CS</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
                 <a href="#" onclick="logoutUser();return false;"
                     class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
             </div>
         </nav>
     </header>
-
-    <main class="pt-20">
-        <section id="hero-section"
+    <main class=""> <section id="hero-section"
             class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
             <div class="relative z-10 text-white p-4">
@@ -304,7 +313,7 @@
 
         <section id="produk-best-seller-section" class="relative py-12 text-center">
             <div class="relative z-10 p-4">
-                <h2 class="text-3xl font-bold mb-10">Produk Best-Seller</h2>
+                <h2 class="text-3xl font-bold mb-10">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
                     <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
@@ -364,7 +373,7 @@
         </section>
 
         <section id="negara-terpopuler-section" class="py-10 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara Terpopuler</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
             <div id="negara-terpopuler"
                 class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
                 <div class="country-card">
@@ -476,9 +485,6 @@
         </div>
     </div>
     <script type="module">
-        // Pastikan Anda telah menghapus baris ini jika sudah ada di firebase-config.js
-        // import { db, auth } from './js/firebase-config.js'; 
-
         // --- KONFIGURASI FIREBASE ANDA ---
         const firebaseConfig = {
             apiKey: "AIzaSyCAEVRX88dod-9BWHPCQ_RTIIHWtws-29RQ", // Ini API Key dari gambar image_9696fc.jpg
@@ -511,27 +517,39 @@
         }
 
         // Panggil fungsi untuk mengubah gambar setiap beberapa detik (misalnya 5 detik)
-        // setInterval(changeHeroImage, 5000); // Aktifkan jika Anda ingin slider gambar otomatis
-
-        // Tambahkan event listener untuk tombol atau indikator slider jika ada
-        // Contoh: document.getElementById('next-button').addEventListener('click', changeHeroImage);
-
+        setInterval(changeHeroImage, 5000); // Aktifkan slider gambar otomatis
 
         // --- FUNGSI DROPDOWN MENU ---
-        const userProfileIcon = document.getElementById('userProfileIcon');
+        const userIcon = document.getElementById('userIcon'); 
         const userDropdown = document.getElementById('userDropdown');
 
-        userProfileIcon.addEventListener('click', function (event) {
+        userIcon.addEventListener('click', function (event) {
             event.preventDefault(); // Mencegah link default action
             userDropdown.classList.toggle('hidden');
         });
 
         // Tutup dropdown jika klik di luar area dropdown
         document.addEventListener('click', function (event) {
-            if (!userProfileIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
         });
+
+        // Dropdown Kategori
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+
+        kategoriMenu.addEventListener('click', function(event) {
+            event.preventDefault();
+            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+                dropdownKategori.style.display = 'none';
+            }
+        });
+
 
         // Fungsi Logout (contoh sederhana, perlu implementasi Firebase Auth)
         function logoutUser() {
