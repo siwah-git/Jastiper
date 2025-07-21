@@ -2,303 +2,213 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akun Saya</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beranda - TitipGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
+
     <style>
-        /* Gaya kustom yang sudah ada */
-        .header-akun {
-            background: #fff;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* Custom CSS untuk overriding atau menambahkan style Tailwind */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            /* Warna background putih */
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .hero-section {
+            transition: background-image 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            /* Ganti URL di bawah ini dengan path/URL gambar yang Anda lampirkan */
+            background-image: url('asset/images/beranda.jpeg');
+            /* Mengatur tinggi dinamis agar mengisi sisa ruang setelah header */
+            min-height: calc(100vh - 64px);
+            /* Assuming header height is roughly 64px (py-1 + some height) */
+            /* You might need to adjust 64px based on your actual header height */
         }
 
-        .logo {
-            width: 40px;
-            height: 40px;
-        }
+        /* If you want the hero section to always be exactly 80vh of the remaining viewport,
+            you might combine with the existing h-[80vh] like this:
+            height: 80vh; /* This sets its height relative to viewport height */
+        /* But if you want it to fill the remaining space after header, min-height: calc() is better.
+             For fixed header and content starting right after, you typically make the first section
+             take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .logo-subtitle {
-            font-size: 12px;
-            color: #666;
-            margin-top: -2px;
-        }
-
-        .header-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            max-width: 500px;
-            margin: 0 24px;
-        }
-
-        .search-container {
-            display: flex;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+        /* Untuk card produk dan negara agar terlihat lebih baik */
+        .product-card,
+        .country-card {
+            background-color: #ffffff;
+            /* Card background putih */
+            border-radius: 0.5rem;
+            /* rounded-lg */
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* shadow-md */
+            transition: transform 0.2s ease-in-out;
         }
 
-        .search-input {
-            flex: 1;
-            padding: 10px 16px;
-            border: 1px solid #ddd;
-            /* Add border for visibility */
-            border-radius: 4px;
-            /* Add border-radius for styling */
-            font-size: 14px;
-            background: #fff;
+        .product-card:hover,
+        .country-card:hover {
+            transform: translateY(-5px);
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #1976d2;
+        .product-card img,
+        .country-card img {
+            width: 100%;
+            height: 128px;
+            /* h-32 */
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+            /* Sedikit pemisah visual */
         }
 
-        .search-btn {
-            background: #1976d2;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
+        /* Mengubah warna teks placeholder pada input */
+        .header-search::placeholder {
+            color: #a0aec0;
+            /* Tailwind gray-400 */
+            opacity: 1;
+            /* override default opacity */
+        }
+
+        .footer-logo {
+            filter: brightness(0.6);
+            /* Menggelapkan logo footer agar terlihat di bg abu-abu */
+        }
+
+        /* Style untuk ikon di header */
+        .header-icon {
+            color: #4a5568;
+            /* Tailwind gray-700 */
+            transition: color 0.2s ease-in-out;
+        }
+
+        .header-icon:hover {
+            color: #e53e3e;
+            /* Tailwind red-600, mendekati pink */
+        }
+
+        /* Overlay untuk hero section */
+        .hero-section .overlay-dark {
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparan gelap */
+        }
+
+        /* Overlay untuk section produk best-seller */
+        #produk-best-seller-section {
+            background-color: #E0F2F7;
+            /* Warna biru muda yang sesuai gambar */
+            padding: 3rem 0;
+        }
+
+        #produk-best-seller-section h2 {
+            color: #2C3E50;
+            /* Warna teks gelap */
+        }
+
+        /* Overlay untuk section negara terpopuler */
+        #negara-terpopuler-section {
+            background-color: #F7FAFC;
+            /* Warna putih keabu-abuan */
+            padding: 3rem 0;
+        }
+
+        #negara-terpopuler-section h2 {
+            color: #1A202C;
+            /* Warna teks sangat gelap */
+        }
+
+        /* Penyesuaian untuk teks "Apa itu TitipGo?" */
+        .titipgo-description-section {
+            background-color: #ffffff;
+            /* Ubah ke putih */
+            color: #4a5568;
+            /* Teks abu-abu gelap */
+            padding: 2rem 1rem;
+            text-align: center;
+            /* Pastikan judul di tengah */
+        }
+
+        .titipgo-description-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #1A202C;
+            /* Warna teks judul */
         }
 
-        .search-icon {
-            width: 18px;
-            height: 18px;
-            filter: brightness(0) invert(1);
+        .titipgo-description-section p {
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            /* Lebih banyak spasi baris */
+            font-size: 1rem;
+            text-align: justify;
+            /* Rata kiri kanan untuk kerapihan */
         }
 
-        .header-right {
+        .titipgo-description-section img.logo-in-text {
+            height: 2rem;
+            margin: 0 0.5rem;
+        }
+
+        /* Kelas untuk menengahkan navigasi dan menambahkan jarak */
+        .nav-center {
+            flex-grow: 1;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 16px;
+            /* Menambahkan jarak antar item navigasi */
+            gap: 2rem;
+            /* Menggunakan gap untuk jarak antar elemen flexbox */
         }
 
-        .icon-nav {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: opacity 0.2s;
+        .nav-center a {
+            padding: 0;
+            /* Menghilangkan padding yang sudah ada jika menggunakan gap */
         }
 
-        .icon-nav:hover {
-            opacity: 0.7;
+        .country-card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .akun-main {
-            background: #f5f7fa;
-            min-height: calc(100vh - 80px);
-            /* Sesuaikan tinggi ini jika header Anda lebih tinggi/pendek */
-            display: flex;
-            padding-top: 64px;
-            /* Tambahkan padding-top untuk mengimbangi fixed header */
-        }
-
-        .akun-sidebar {
-            width: 280px;
-            background: #fff;
-            padding: 24px 0;
-            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .akun-user-info {
-            padding: 0 24px 24px 24px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 24px;
-        }
-
-        .akun-user-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 12px;
-        }
-
-        .akun-username {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 4px;
-        }
-
-        .akun-edit-link {
-            font-size: 14px;
-            color: #1976d2;
-            text-decoration: none;
-        }
-
-        .akun-edit-link:hover {
-            text-decoration: underline;
-        }
-
-        .akun-menu {
-            padding: 0 16px;
-        }
-
-        .akun-menu-item {
+        .country-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
             display: block;
-            padding: 12px 16px;
-            margin-bottom: 4px;
-            text-decoration: none;
-            color: #333;
-            border-radius: 6px;
-            transition: background 0.2s;
-            font-size: 14px;
         }
 
-        .akun-menu-item:hover {
-            background: #f5f5f5;
-        }
-
-        .akun-menu-item.active {
-            background: #e91e63;
-            /* Warna pink sesuai desain */
+        .country-card .country-name-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black overlay */
             color: white;
-        }
-
-        .akun-content {
-            flex: 1;
-            padding: 32px;
-        }
-
-        .akun-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 32px;
-        }
-
-        .akun-profile-container {
-            display: flex;
-            gap: 48px;
-            align-items: flex-start;
-        }
-
-        .akun-form-section {
-            flex: 1;
-            background: #fff;
-            padding: 32px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .akun-form-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .akun-label {
-            width: 140px;
-            font-weight: 500;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .akun-input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            background: #fff;
-        }
-
-        .akun-input:focus {
-            outline: none;
-            border-color: #1976d2;
-        }
-
-        .akun-input[readonly] {
-            background: #f9f9f9;
-            color: #666;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .akun-main {
-                flex-direction: column;
-                padding-top: 64px;
-                /* Pertahankan padding-top untuk mobile */
-            }
-
-            .akun-sidebar {
-                width: 100%;
-                padding: 16px;
-                box-shadow: none;
-                /* Hilangkan shadow di mobile sidebar */
-            }
-
-            .akun-user-info {
-                align-items: flex-start;
-                /* Sejajarkan ke kiri di mobile */
-                text-align: left;
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .akun-content {
-                padding: 16px;
-            }
-
-            .akun-profile-container {
-                flex-direction: column;
-                gap: 24px;
-            }
-
-            .header-center {
-                display: none;
-                /* Sembunyikan search bar di mobile header */
-            }
-
-            .header-left {
-                width: 100%;
-                justify-content: center;
-                /* Tengahkan logo di mobile */
-            }
-
-            /* Tambahkan tampilan Beranda dan Kategori di mobile */
-            .header-right .md\:hidden {
-                display: flex !important;
-                /* Force display on mobile */
-            }
+            padding: 0.5rem 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 
-<body>
+<body class="font-sans bg-white text-gray-800">
     <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
         <div class="flex items-center space-x-3">
             <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
@@ -318,7 +228,7 @@
             <a href="pembeli_dashboard.html"
                 class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
             <div class="dropdown-kategori relative inline-block hidden md:block">
-                <a href="#" id="kategoriMenu"
+                <a href="pembeli_kategori.html" id="kategoriMenu"
                     class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
                 <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
                     id="dropdownKategori" style="display:none;">
@@ -338,7 +248,7 @@
                     </path>
                 </svg>
             </a>
-            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"
                 onclick="alert('Belum ada notifikasi!');return false;">
                 <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -365,169 +275,158 @@
             </div>
         </nav>
     </header>
-
-    <div class="akun-main">
-        <div class="akun-sidebar bg-white rounded-xl shadow-md p-6 flex flex-col gap-6 min-h-[400px]">
-            <div class="akun-user-info flex flex-col items-center gap-2 border-b pb-4">
-                <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User"
-                    class="akun-user-icon w-16 h-16 rounded-full object-cover mb-2">
-                <div class="akun-username font-bold text-lg text-gray-800">dwirestykartika</div>
-                <a href="#" class="akun-edit-link text-blue-600 text-sm hover:underline">Ubah Profil</a>
+    <main class="">
+        <section id="hero-section"
+            class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
+            <div class="absolute inset-0 overlay-dark z-0"></div>
+            <div class="relative z-10 text-white p-4">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Travel Anywhere, Shop Everywhere</h1>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto">Solusi mudah untuk kamu yang mau belanja dari luar
+                    negeri
+                    dengan mudah dan aman</p>
             </div>
-            <nav class="akun-menu flex flex-col gap-2 mt-2">
-                <a href="pembeli_akun.html"
-                    class="akun-menu-item active bg-pink-600 text-white font-semibold rounded-lg px-4 py-2">Akun Saya</a>
-                <a href="pembeli_pesanan_saya.html" class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Pesanan
-                    Saya</a>
-                <a href="#" class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Notifikasi</a>
-                <a href="#" class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Voucher Saya</a>
-            </nav>
-        </div>
+        </section>
 
-        <div class="akun-content">
-            <h1 class="akun-title">Profil Saya</h1>
+        <section class="titipgo-description-section text-center">
+            <h2>
+                Apa itu
+                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="logo-in-text">
+                Itu?
+            </h2>
+            <p class="text-base">
+                Aplikasi TitipGo membantu kamu menemukan produk luar negeri yang kamu mau, tanpa ribet dan bisa langsung
+                diantar oleh Jastiper terpercaya. Gabung dan nikmati pengalaman belanja dari berbagai negara hanya dalam
+                satu aplikasi. Platform digital terbaik untuk mendukung bisnis untuk menemukan penemuan baru dari
+                barang-barang produk unggulan. Kami siap mengantarkan Anda kemana pun Anda inginkan! TitipGo adalah
+                aplikasi revolusioner yang dirancang untuk mengubah cara Anda berbelanja dari luar negeri. Dengan
+                TitipGo,
+                Anda dapat menemukan dan membeli produk-produk unik dari berbagai negara dengan mudah dan aman. Apakah
+                Anda
+                mencari fashion terbaru dari Paris, gadget inovatif dari Tokyo, atau kerajinan tangan otentik dari Bali,
+                TitipGo memiliki semuanya. Kami menghubungkan Anda dengan jastiper terpercaya yang siap membantu Anda
+                mendapatkan barang impian Anda tanpa kerumitan. Dengan TitipGo, belanja internasional jadi lebih mudah,
+                terjangkau, dan bertanggung jawab. Kami percaya bahwa setiap orang berhak memiliki akses ke
+                produk-produk
+                berkualitas dari seluruh dunia, dan kami hadir untuk mewujudkannya. Titip Barang Jadi Mudah, Cari
+                Jastiper
+                Bawa Oleh-Oleh.
+            </p>
+        </section>
 
-            <div class="akun-profile-container">
-                <div class="akun-form-section">
-                    <div class="akun-form-row">
-                        <label class="akun-label">Username</label>
-                        <input type="text" value="dwirestykartika" class="akun-input">
+        <section id="produk-best-seller-section" class="relative py-12 text-center">
+            <div class="relative z-10 p-4">
+                <h2 class="text-3xl font-bold mb-10">Produk</h2>
+                <div id="produk-best-seller"
+                    class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk1.jpeg" alt="Produk Gucci"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">Gucci Dionysus Bag</p>
+                        <span class="text-sm text-gray-500">Italy</span>
                     </div>
-
-                    <div class="akun-form-row">
-                        <label class="akun-label">Nama</label>
-                        <input type="text" value="Dwi Resty kartika" class="akun-input">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk2.jpeg" alt="Produk LV Capucines"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">LV Capucines BB</p>
+                        <span class="text-sm text-gray-500">France</span>
                     </div>
-
-                    <div class="akun-form-row">
-                        <label class="akun-label">Email</label>
-                        <input type="email" value="dwirestykartika@gmail.com" class="akun-input">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk3.jpeg" alt="Produk Nike Air Force"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">Nike Air Force 1 '07</p>
+                        <span class="text-sm text-gray-500">USA</span>
                     </div>
-
-                    <div class="akun-form-row">
-                        <label class="akun-label">Nomor Telepon</label>
-                        <input type="tel" value="0876736363636" class="akun-input">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk4.jpeg" alt="Produk iPhone 15 Pro Max"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">iPhone 15 Pro Max</p>
+                        <span class="text-sm text-gray-500">USA</span>
                     </div>
-
-                    <div class="akun-form-row">
-                        <label class="akun-label">Jenis Kelamin</label>
-                        <input type="text" value="Perempuan" class="akun-input">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk5.jpeg" alt="Produk Dior Saddle Bag"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">Dior Saddle Bag</p>
+                        <span class="text-sm text-gray-500">France</span>
                     </div>
-
-                    <div class="akun-form-row">
-                        <label class="akun-label">Tanggal Lahir</label>
-                        <input type="text" value="11 Januari 2003" class="akun-input">
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk6.jpeg" alt="Produk Prada Re-Edition"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">Prada Re-Edition</p>
+                        <span class="text-sm text-gray-500">Italy</span>
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk7.jpeg" alt="Produk Adidas Samba OG"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">Adidas Samba OG</p>
+                        <span class="text-sm text-gray-500">Germany</span>
+                    </div>
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                        <img src="asset/images/produk8.jpeg" alt="Produk iPad Air 5"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">iPad Air 5</p>
+                        <span class="text-sm text-gray-500">USA</span>
                     </div>
                 </div>
-
+                <button
+                    class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
+                    Lihat Semua
+                </button>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <script>
-        // Edit Profile Button (fungsi ini mungkin tidak lagi relevan jika tombolnya dihapus, tapi saya biarkan di sini jika ada kebutuhan lain)
-        function editProfil() {
-            alert('Fitur Edit Profil akan segera hadir!');
-        }
+        <section id="negara-terpopuler-section" class="py-10 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
+            <div id="negara-terpopuler"
+                class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
+                <div class="country-card">
+                    <img src="asset/images/negara1.jpeg" alt="Japan">
+                    <div class="country-name-overlay">Japan</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara2.jpeg" alt="France">
+                    <div class="country-name-overlay">France</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara3.jpeg" alt="South Korea">
+                    <div class="country-name-overlay">South Korea</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara4.jpeg" alt="USA">
+                    <div class="country-name-overlay">USA</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara5.jpeg" alt="Malaysia">
+                    <div class="country-name-overlay">Malaysia</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara6.jpeg" alt="UK">
+                    <div class="country-name-overlay">UK</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara7.jpeg" alt="Australia">
+                    <div class="country-name-overlay">Australia</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara8.jpeg" alt="Singapore">
+                    <div class="country-name-overlay">Singapore</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara9.jpeg" alt="Thailand">
+                    <div class="country-name-overlay">Thailand</div>
+                </div>
+                <div class="country-card">
+                    <img src="asset/images/negara10.jpeg" alt="Germany">
+                    <div class="country-name-overlay">Germany</div>
+                </div>
+            </div>
+            <button
+                class="mt-10 bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md">
+                Lihat Semua
+            </button>
+        </section>
+    </main>
 
-        // Menu Navigation
-        document.querySelectorAll('.akun-menu-item').forEach(function (item) {
-            item.addEventListener('click', function (e) {
-                // e.preventDefault(); // Tidak perlu preventDefault jika Anda ingin link berfungsi
-                // Hapus kelas 'active' dari semua item
-                document.querySelectorAll('.akun-menu-item').forEach(i => i.classList.remove('active'));
-                // Tambahkan kelas 'active' ke item yang diklik
-                this.classList.add('active');
-            });
-        });
-
-        // Search functionality
-        document.querySelector('.header-search').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                if (searchTerm.trim()) {
-                    alert('Mencari: ' + searchTerm);
-                }
-            }
-        });
-
-        // Search button click (jika ada search icon yang terpisah dari input)
-        // Jika hanya input dengan enter, bagian ini mungkin tidak perlu.
-        // Asumsi SVG di dalam div `.relative.hidden.md\:block` adalah search icon.
-        const searchIconInHeader = document.querySelector('.relative.hidden.md\\:block svg');
-        if (searchIconInHeader) {
-            searchIconInHeader.addEventListener('click', function () {
-                const searchTerm = this.previousElementSibling.value;
-                if (searchTerm.trim()) {
-                    alert('Mencari: ' + searchTerm);
-                }
-            });
-        }
-
-        function showNotifications() {
-            alert('Anda memiliki 3 notifikasi baru!');
-        }
-    </script>
-
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            // Dropdown Kategori
-            const kategoriMenu = document.getElementById('kategoriMenu');
-            const dropdownKategori = document.getElementById('dropdownKategori');
-
-            if (kategoriMenu && dropdownKategori) {
-                kategoriMenu.onclick = function (e) {
-                    e.preventDefault(); // Mencegah navigasi default jika hanya untuk dropdown
-                    e.stopPropagation(); // Mencegah event mencapai document click
-                    dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-                };
-
-                document.addEventListener('click', function (e) {
-                    if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-                        dropdownKategori.style.display = 'none';
-                    }
-                });
-            }
-
-            // Dropdown User
-            const userIcon = document.getElementById('userIcon');
-            const userDropdown = document.getElementById('userDropdown');
-
-            if (userIcon && userDropdown) {
-                userIcon.onclick = function (e) {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('hidden');
-                };
-                document.addEventListener('click', function (e) {
-                    if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-                        userDropdown.classList.add('hidden');
-                    }
-                });
-            }
-
-            // These functions now rely on `auth` which is defined in firebase-config.js
-            window.logoutUser = function () {
-                auth.signOut().then(() => {
-                    alert("Anda telah logout!");
-                    window.location.href = "login.html"; // Redirect ke halaman login setelah logout
-                }).catch((error) => {
-                    console.error("Error logging out: ", error);
-                    alert("Gagal logout. Silakan coba lagi.");
-                });
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
-
-            window.openChatCS = function () {
-                // Implementasi modal chat CS yang lebih baik, mirip dengan di pembeli_dashboard.html
-                // Untuk demo, kita pakai alert dulu.
-                alert('Fitur chat CS akan segera hadir!');
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
-        });
-    </script>
-
-
-    <footer class="bg-gray-200 text-gray-700 py-8 text-sm mt-12">
+    <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
         <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
             <div class="mb-6 md:mb-0 text-left">
                 <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
@@ -535,11 +434,12 @@
                 <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
                 <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
             </div>
-            <div class="text-center mb-6 md:mb-0 flex flex-col items-center justify-center">
+            <div class="text-center mb-6 md:mb-0">
                 <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
-                    class="mx-auto w-32 mb-2 footer-logo" style="height:auto; margin-bottom: 0;">
+                    class="mx-auto w-32 mb-2 footer-logo">
+                <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
             </div>
-            <div class="md:text-right">
+            <div class="text-left md:text-right">
                 <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
                 <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -565,6 +465,137 @@
             </div>
         </div>
     </footer>
+    <div id="chatCSModal"
+        style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;max-width:400px;width:90vw;padding:0 0 16px 0;box-shadow:0 4px 24px rgba(0,0,0,0.12);margin:auto;">
+            <div
+                style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px 20px;border-bottom:1px solid #eee;">
+                <span style="font-weight:bold;font-size:17px;">Chat dengan CS</span>
+                <button onclick="document.getElementById('chatCSModal').style.display='none'"
+                    style="background:none;border:none;font-size:22px;cursor:pointer;">&times;</button>
+            </div>
+            <div style="padding:18px 20px 0 20px;min-height:80px;">
+                <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;"></div>
+            </div>
+            <div style="display:flex;align-items:center;padding:10px 20px 0 20px;gap:8px;">
+                <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+                    style="flex:1;padding:8px 12px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
+                <button onclick="sendCSMessage()"
+                    style="background:#1976d2;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Kirim</button>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        // --- KONFIGURASI FIREBASE ANDA ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAEVRX88dod-9BWHPCQ_RTIIHWtws-29RQ", // Ini API Key dari gambar image_9696fc.jpg
+            authDomain: "tittpgo-28f84.firebaseapp.com",
+            projectId: "tittpgo-28f84",
+            storageBucket: "tittpgo-28f84.appspot.com",
+            messagingSenderId: "816687553591",
+            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
+        };
+
+        // Inisialisasi Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(); // Dapatkan instance Firestore
+        const auth = firebase.auth(); // Dapatkan instance Auth
+
+        // --- PENGATURAN SLIDER HERO SECTION ---
+        const heroImages = [
+            'asset/images/beranda.jpeg',
+            'asset/images/Bg_beranda2.jpeg'
+            // Tambahkan gambar lain jika ada
+        ];
+
+        let currentHeroImageIndex = 0;
+        const heroSection = document.getElementById('hero-section');
+
+        function changeHeroImage() {
+            currentHeroImageIndex = (currentHeroImageIndex + 1) % heroImages.length;
+            const nextImageUrl = heroImages[currentHeroImageIndex];
+            heroSection.style.backgroundImage = `url('${nextImageUrl}')`;
+        }
+
+        // Panggil fungsi untuk mengubah gambar setiap beberapa detik (misalnya 5 detik)
+        setInterval(changeHeroImage, 5000); // Aktifkan slider gambar otomatis
+
+        // --- FUNGSI DROPDOWN MENU ---
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userIcon.addEventListener('click', function (event) {
+            event.preventDefault(); // Mencegah link default action
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Tutup dropdown jika klik di luar area dropdown
+        document.addEventListener('click', function (event) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+
+        // Dropdown Kategori
+        const kategoriMenu = document.getElementById('kategoriMenu');
+        const dropdownKategori = document.getElementById('dropdownKategori');
+
+        kategoriMenu.addEventListener('click', function (event) {
+            event.preventDefault();
+            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+                dropdownKategori.style.display = 'none';
+            }
+        });
+
+
+        // Fungsi Logout (contoh sederhana, perlu implementasi Firebase Auth)
+        function logoutUser() {
+            // Implementasi logout Firebase Authentication
+            auth.signOut().then(() => {
+                alert("Anda telah logout!");
+                window.location.href = "index.html"; // Redirect ke halaman login setelah logout
+            }).catch((error) => {
+                console.error("Error logging out: ", error);
+                alert("Gagal logout. Silakan coba lagi.");
+            });
+        }
+
+        // Fungsi untuk membuka modal chat CS
+        function openChatCS() {
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?"; // Pesan awal
+            document.getElementById('chatCSInput').value = ''; // Kosongkan input
+        }
+
+        // Fungsi untuk mengirim pesan ke CS (contoh sederhana, tidak terhubung ke backend)
+        function sendCSMessage() {
+            const chatInput = document.getElementById('chatCSInput');
+            const chatMessages = document.getElementById('chatCSMessages');
+            const message = chatInput.value.trim();
+
+            if (message !== '') {
+                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
+                chatInput.value = '';
+
+                // Contoh balasan otomatis (bukan dari CS sungguhan)
+                setTimeout(() => {
+                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // Gulir ke bawah
+                }, 1000);
+            }
+        }
+
+        // Expose functions to global scope for onclick attributes
+        window.logoutUser = logoutUser;
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+
+    </script>
 </body>
 
 </html>

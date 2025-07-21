@@ -32,7 +32,7 @@
             /* You might need to adjust 64px based on your actual header height */
         }
         
-        /* If you want the hero section to always be exactly 80vh of the *remaining* viewport,
+        /* If you want the hero section to always be exactly 80vh of the remaining viewport,
            you might combine with the existing h-[80vh] like this:
            height: 80vh; /* This sets its height relative to viewport height */
            /* But if you want it to fill the remaining space after header, min-height: calc() is better.
@@ -227,8 +227,8 @@
             <a href="pembeli_dashboard.html"
                 class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
             <div class="dropdown-kategori relative inline-block hidden md:block">
-                <a href="#" id="kategoriMenu"
-                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
+                <a href="pembeli_kategori.html" id="kategoriMenu"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
                 <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
                     id="dropdownKategori" style="display:none;">
                     <a href="pembeli_produk_gucci.html"
@@ -247,7 +247,7 @@
                     </path>
                 </svg>
             </a>
-            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"
                 onclick="alert('Belum ada notifikasi!');return false;">
                 <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -513,7 +513,7 @@
         function changeHeroImage() {
             currentHeroImageIndex = (currentHeroImageIndex + 1) % heroImages.length;
             const nextImageUrl = heroImages[currentHeroImageIndex];
-            heroSection.style.backgroundImage = `url('${nextImageUrl}')`;
+            heroSection.style.backgroundImage = url('${nextImageUrl}');
         }
 
         // Panggil fungsi untuk mengubah gambar setiap beberapa detik (misalnya 5 detik)
@@ -556,7 +556,7 @@
             // Implementasi logout Firebase Authentication
             auth.signOut().then(() => {
                 alert("Anda telah logout!");
-                window.location.href = "login.html"; // Redirect ke halaman login setelah logout
+                window.location.href = "index.html"; // Redirect ke halaman login setelah logout
             }).catch((error) => {
                 console.error("Error logging out: ", error);
                 alert("Gagal logout. Silakan coba lagi.");
@@ -577,12 +577,12 @@
             const message = chatInput.value.trim();
 
             if (message !== '') {
-                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
+                chatMessages.innerHTML += <p><strong>Anda:</strong> ${message}</p>;
                 chatInput.value = '';
 
                 // Contoh balasan otomatis (bukan dari CS sungguhan)
                 setTimeout(() => {
-                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
+                    chatMessages.innerHTML += <p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>;
                     chatMessages.scrollTop = chatMessages.scrollHeight; // Gulir ke bawah
                 }, 1000);
             }
