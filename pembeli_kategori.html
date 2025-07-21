@@ -1,247 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <title>Keranjang - TitipGo</title>
+  <title>Kategori - TitipGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    .keranjang-kosong {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      text-align: center;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
     }
-    .empty-cart-icon {
-      width: 80px;
-      height: 80px;
-      opacity: 0.3;
-      margin-bottom: 20px;
-    }
-    .keranjang-kosong h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 12px;
-    }
-    .keranjang-kosong p {
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 24px;
-    }
-    .btn-belanja {
-      background: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 24px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-belanja:hover {
-      background: #1256a3;
-    }
-    .btn-hapus-semua {
-      background: #f44336;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-hapus-semua:hover {
-      background: #d32f2f;
-    }
-    .keranjang-summary {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .keranjang-main {
-      background: #fff;
-      margin: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-      overflow: hidden;
-    }
-    .keranjang-content {
-      padding: 20px;
-    }
-    .keranjang-store-section {
-      margin-bottom: 20px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .keranjang-store-header {
-      background: #f8f9fa;
-      padding: 12px 16px;
-      border-bottom: 1px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-    }
-    .keranjang-store-header input[type="checkbox"] {
-      margin-right: 12px;
-      width: 18px;
-      height: 18px;
-      accent-color: #1976d2;
-    }
-    .keranjang-store-name {
-      font-weight: 600;
-      font-size: 16px;
-      color: #333;
-    }
-    .keranjang-item {
-      display: flex;
-      align-items: center;
-      padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
-      background: #fff;
-    }
-    .keranjang-item:last-child {
-      border-bottom: none;
-    }
-    .keranjang-item-checkbox {
-      margin-right: 16px;
-    }
-    .keranjang-item-checkbox input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #1976d2;
-    }
-    .keranjang-item-image {
-      margin-right: 16px;
-    }
-    .keranjang-item-image img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid #e0e0e0;
-    }
-    .keranjang-item-info {
-      flex: 1;
-      margin-right: 16px;
-    }
-    .keranjang-item-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 4px;
-    }
-    .keranjang-item-variant {
-      font-size: 12px;
-      color: #666;
-    }
-    .keranjang-item-price {
-      font-weight: 600;
-      font-size: 14px;
-      color: #d32f2f;
-      margin-right: 16px;
-      min-width: 120px;
-      text-align: right;
-    }
-    .keranjang-item-quantity {
-      display: flex;
-      align-items: center;
-      margin-right: 16px;
-      min-width: 100px;
-      justify-content: center;
-    }
-    .keranjang-item-quantity button {
-      width: 28px;
-      height: 28px;
-      border: 1px solid #ddd;
-      background: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .keranjang-item-quantity button:hover {
-      background: #f5f5f5;
-    }
-    .keranjang-item-quantity span {
-      margin: 0 12px;
-      font-weight: 600;
-      min-width: 20px;
-      text-align: center;
-    }
-    .keranjang-item-total {
-      font-weight: 600;
-      font-size: 14px;
-      color: #d32f2f;
-      margin-right: 16px;
-      min-width: 120px;
-      text-align: right;
-    }
-    .keranjang-item-actions {
-      min-width: 80px;
-    }
-    .keranjang-footer {
-      background: #f8f9fa;
-      padding: 16px 20px;
-      border-top: 1px solid #e0e0e0;
-    }
-    .keranjang-select-all {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .keranjang-select-all input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #1976d2;
-    }
-    .keranjang-select-all label {
-      font-size: 15px;
-      color: #333;
-      font-weight: 500;
-    }
-    .keranjang-total {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      color: #333;
-      font-weight: 500;
-    }
-    .keranjang-total span:first-child {
-      font-weight: 500;
-      color: #333;
-    }
-    .keranjang-total span:last-child {
-      font-weight: bold;
-      color: #d32f2f;
-      font-size: 16px;
-    }
-    .btn-checkout {
-      background: #22c100;
-      color: #fff;
-      border: none;
-      border-radius: 18px;
-      padding: 7px 24px;
-      font-size: 15px;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.10);
-      cursor: pointer;
-      transition: background 0.2s;
-      width: 100%;
-      margin-top: 6px;
-    }
-    .btn-checkout:hover {
-      background: #1a9e00;
-    }
+
     .header-search {
       font-size: 1rem;
       height: 36px;
@@ -251,400 +23,315 @@
       width: 180px;
       font-weight: 600;
     }
+
     @media (min-width: 1024px) {
-      .header-search { width: 220px; }
+      .header-search {
+        width: 220px;
+      }
     }
+
     .header-search::placeholder {
       color: #a0aec0;
       opacity: 1;
       font-size: 1rem;
       font-weight: 600;
     }
+
+    .icon-nav,
+    nav svg {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px;
+      min-height: 20px;
+    }
+
+    .icon-nav:hover {
+      filter: brightness(0.7);
+    }
+
+    .nav-center {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-center a,
+    .nav-center .dropdown-kategori>a {
+      padding: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .dropdown-kategori .dropdown-content,
+    #userDropdown {
+      min-width: 160px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      background: #fff;
+      padding: 0;
+      margin-top: 4px;
+    }
+
+    .dropdown-kategori .dropdown-content a,
+    #userDropdown a {
+      display: block;
+      padding: 10px 18px;
+      color: #222;
+      text-decoration: none;
+      font-size: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .dropdown-kategori .dropdown-content a:last-child,
+    #userDropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-kategori .dropdown-content a:hover,
+    #userDropdown a:hover {
+      background: #f5f7fa;
+      color: #1976d2;
+    }
+
+    .logo-titipgo {
+      width: 80px !important;
+      min-width: 80px;
+      max-width: 90px;
+    }
+
+    @media (max-width: 900px) {
+
+      .icon-nav,
+      nav svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .logo-titipgo {
+        width: 60px !important;
+      }
+
+      .header-search {
+        font-size: 0.9rem;
+        height: 28px;
+        width: 120px;
+      }
+
+      .header-search::placeholder {
+        font-size: 0.9rem;
+      }
+
+      .nav-center a,
+      .nav-center .dropdown-kategori>a {
+        font-size: 0.9rem;
+      }
+    }
+
+    .kategori-section {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 36px 0 0 0;
+    }
+
+    .kategori-col {
+      text-align: center;
+      min-width: 170px;
+    }
+
+    .kategori-label {
+      background: #ff0080;
+      color: #fff;
+      font-weight: bold;
+      padding: 7px 22px;
+      border-radius: 16px;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .kategori-box {
+      background: #ededed;
+      padding: 14px 24px;
+      border-radius: 8px;
+      text-align: left;
+      min-width: 150px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .kategori-box a {
+      display: block;
+      padding: 5px 0;
+      font-size: 15px;
+      color: #222;
+      text-decoration: none;
+      border-bottom: 1px solid #e0e0e0;
+      transition: color 0.2s;
+    }
+
+    .kategori-box a:last-child {
+      border-bottom: none;
+    }
+
+    .kategori-box a:hover {
+      color: #ff0080;
+    }
+
+    @media (max-width: 900px) {
+      .kategori-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .kategori-col {
+        min-width: 0;
+        width: 90vw;
+      }
+
+      .kategori-box {
+        min-width: 0;
+        width: 100%;
+      }
+    }
   </style>
 </head>
+
 <body class="font-sans bg-gray-100 m-0">
   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
     <div class="flex items-center space-x-3">
       <img src="asset/images/logo.jpg" alt="Logo TitipGo" class="w-20 sm:w-20 logo-titipgo">
       <div class="relative hidden md:block">
-        <input type="text" placeholder="Cari Barang..." class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
-        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor" viewBox="0 0 20 20">
+        <input type="text" placeholder="Cari Barang..."
+          class="header-search font-sans border-2 border-gray-400 focus:outline-blue-500" />
+        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+          viewBox="0 0 20 20">
           <path d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
         </svg>
       </div>
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
       <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-      <div class="dropdown-kategori relative inline-block">
-        <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori &#9662;</a>
-        <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200" id="dropdownKategori" style="display:none;">
-          <a href="pembeli_produk_gucci.html" class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
-          <a href="pembeli_kategori.html" class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih Produk</a>
-        </div>
-      </div>
+      <a href="pembeli_kategori.html"
+        class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
       <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
       <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+          </path>
         </svg>
       </a>
-      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600" onclick="alert('Belum ada notifikasi!');return false;">
-        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+        onclick="alert('Belum ada notifikasi!');return false;">
+        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
         </svg>
       </a>
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon" style="cursor:pointer;">
-      <div id="userDropdown" class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-        <a href="pembeli_akun.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-        <a href="pembeli_pesanan_saya.html" class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-        <a href="#" onclick="openChatCS();return false;" class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
-        <a href="#" onclick="logoutUser();return false;" class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-    </div>
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon"
+        style="cursor:pointer;">
+      <div id="userDropdown"
+        class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+        <a href="pembeli_akun.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+        <a href="pembeli_pesanan_saya.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-blue-700 no-underline text-sm border-b border-gray-100">Chat dengan CS</a>
+        <a href="#" onclick="logoutUser();return false;"
+          class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+      </div>
     </nav>
   </header>
-  <main class="pt-32">
-  <h1 class="page-title" style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KERANJANG</h1>
-  <div class="pink-bar"></div>
-  
-  <div class="keranjang-main">
-    <div class="keranjang-content" id="keranjangContent">
-      <!-- Store sections will be loaded here dynamically -->
-    </div>
-    
-    <div class="keranjang-footer" id="keranjangFooter">
-      <div class="keranjang-summary">
-        <div class="keranjang-select-all">
-          <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
-          <label for="selectAll">Pilih Semua (2)</label>
-          <button class="btn-hapus" onclick="hapusSelected()">Hapus</button>
-        </div>
-        <div class="keranjang-total">
-          <span>Total (1 Produk):</span>
-          <span id="totalPrice">Rp. 6.000.000</span>
-        </div>
+  <h1 class="page-title"
+    style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KATEGORI</h1>
+  <!-- Kategori Section -->
+  <div class="kategori-section flex flex-wrap justify-center gap-8 md:gap-12 mt-36">
+    <!-- Fashion & Aksesoris -->
+    <div class="kategori-col flex flex-col items-center">
+      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Fashion &
+        Aksesoris</div>
+      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
+      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+        <a href="pembeli_kategori_fashion.html" class="block py-1 border-b border-gray-200 last:border-b-0">Pakaian</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sepatu</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sandal</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Tas</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Dompet</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Jam Tangan</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Topi</a>
+        <a href="#" class="block py-1">Aksesoris</a>
       </div>
-      <button class="btn-checkout" onclick="lanjutkanCheckout()">Checkout</button>
     </div>
-    
-    <div class="keranjang-kosong" id="keranjangKosong" style="display: none;">
-      <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="Empty Cart" class="empty-cart-icon">
-      <h2>Keranjang Belanja Kosong</h2>
-      <p>Belum ada produk di keranjang belanja Anda.</p>
-      <button class="btn-belanja" onclick="window.location.href='pembeli_produk_gucci.html'">Mulai Belanja</button>
+    <!-- Kosmetik & Skincare -->
+    <div class="kategori-col flex flex-col items-center">
+      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Kosmetik &
+        Skincare</div>
+      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
+      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Skincare</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makeup</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Perawatan Rambut</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Body Care</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Masker Wajah</a>
+        <a href="#" class="block py-1">Produk Khusus</a>
+      </div>
+    </div>
+    <!-- Elektronik & Gadget -->
+    <div class="kategori-col flex flex-col items-center">
+      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Elektronik &
+        Gadget</div>
+      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
+      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartphone</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Aksesoris Gadget</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Kamera</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartwatch</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Alat Elektronik</a>
+        <a href="#" class="block py-1">Gaming</a>
+      </div>
+    </div>
+    <!-- Makanan & Minuman -->
+    <div class="kategori-col flex flex-col items-center">
+      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Makanan &
+        Minuman</div>
+      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
+      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Snack</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Minuman</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Bumbu</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makanan</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Cokelat & permen</a>
+        <a href="#" class="block py-1">Oleh-oleh musiman</a>
+      </div>
+    </div>
+    <!-- Mainan & Hobi -->
+    <div class="kategori-col flex flex-col items-center">
+      <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Mainan & Hobi
+      </div>
+      <img src="asset/images/ootd (1).jpg" alt="OOTD" class="w-24 h-28 object-cover rounded-lg mb-2">
+      <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Mainan anak</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Action figure</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Puzzle & board game</a>
+        <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Model kit</a>
+        <a href="#" class="block py-1">Alat gambar</a>
+      </div>
     </div>
   </div>
-  </main>
-
-  <script>
-    let cartData = {
-      stores: [
-        {
-          name: "Rifal Store",
-          selected: true,
-          products: [
-            {
-              name: "Baju Gucci G6000 Man Limited Edition",
-              variant: "Hitam, M",
-              price: 3000000,
-              quantity: 2,
-              selected: true
-            }
-          ]
-        },
-        {
-          name: "Doni Amerika",
-          selected: false,
-          products: [
-            {
-              name: "Baju Gucci G6000 Man Limited Edition",
-              variant: "",
-              price: 3600000,
-              quantity: 1,
-              selected: false
-            }
-          ]
-        }
-      ]
-    };
-
-    function loadCart() {
-      const savedCart = localStorage.getItem('cartData');
-      if (savedCart) {
-        cartData = JSON.parse(savedCart);
-      }
-      displayCart();
-    }
-
-    function displayCart() {
-      const content = document.getElementById('keranjangContent');
-      const footer = document.getElementById('keranjangFooter');
-      const empty = document.getElementById('keranjangKosong');
-      
-      if (cartData.stores.length === 0) {
-        content.innerHTML = '';
-        footer.style.display = 'none';
-        empty.style.display = 'flex';
-        return;
-      }
-      
-      empty.style.display = 'none';
-      footer.style.display = 'block';
-      
-      content.innerHTML = cartData.stores.map((store, storeIndex) => `
-        <div class="keranjang-store-section">
-          <div class="keranjang-store-header">
-            <input type="checkbox" ${store.selected ? 'checked' : ''} onchange="toggleStore(${storeIndex})">
-            <span class="keranjang-store-name">${store.name}</span>
-          </div>
-          ${store.products.map((product, productIndex) => `
-            <div class="keranjang-item">
-              <div class="keranjang-item-checkbox">
-                <input type="checkbox" ${product.selected ? 'checked' : ''} onchange="toggleProduct(${storeIndex}, ${productIndex})">
-              </div>
-              <div class="keranjang-item-image">
-                <img src="asset/images/ootd (1).jpg" alt="${product.name}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
-              </div>
-              <div class="keranjang-item-info">
-                <div class="keranjang-item-name">${product.name}</div>
-                ${product.variant ? `<div class="keranjang-item-variant">${product.variant}</div>` : ''}
-              </div>
-              <div class="keranjang-item-price">Rp. ${(product.price / 1000000).toFixed(1)}.000.000</div>
-              <div class="keranjang-item-quantity">
-                <button onclick="decreaseQuantity(${storeIndex}, ${productIndex})">-</button>
-                <span>${product.quantity}</span>
-                <button onclick="increaseQuantity(${storeIndex}, ${productIndex})">+</button>
-              </div>
-              <div class="keranjang-item-total">Rp. ${((product.price * product.quantity) / 1000000).toFixed(1)}.000.000</div>
-              <div class="keranjang-item-actions">
-                <button class="btn-hapus" onclick="hapusItem(${storeIndex}, ${productIndex})">Hapus</button>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `).join('');
-      
-      updateTotal();
-      updateSelectAll();
-    }
-
-    function toggleStore(storeIndex) {
-      cartData.stores[storeIndex].selected = !cartData.stores[storeIndex].selected;
-      cartData.stores[storeIndex].products.forEach(product => {
-        product.selected = cartData.stores[storeIndex].selected;
-      });
-      saveCart();
-      displayCart();
-    }
-
-    function toggleProduct(storeIndex, productIndex) {
-      cartData.stores[storeIndex].products[productIndex].selected = !cartData.stores[storeIndex].products[productIndex].selected;
-      
-      // Update store selection based on products
-      const allProductsSelected = cartData.stores[storeIndex].products.every(p => p.selected);
-      const anyProductSelected = cartData.stores[storeIndex].products.some(p => p.selected);
-      cartData.stores[storeIndex].selected = allProductsSelected;
-      
-      saveCart();
-      displayCart();
-    }
-
-    function toggleSelectAll() {
-      const selectAll = document.getElementById('selectAll');
-      const allSelected = selectAll.checked;
-      
-      cartData.stores.forEach(store => {
-        store.selected = allSelected;
-        store.products.forEach(product => {
-          product.selected = allSelected;
-        });
-      });
-      
-      saveCart();
-      displayCart();
-    }
-
-    function updateSelectAll() {
-      const selectAll = document.getElementById('selectAll');
-      const totalProducts = cartData.stores.reduce((sum, store) => sum + store.products.length, 0);
-      const selectedProducts = cartData.stores.reduce((sum, store) => 
-        sum + store.products.filter(p => p.selected).length, 0);
-      
-      selectAll.checked = selectedProducts === totalProducts && totalProducts > 0;
-      selectAll.indeterminate = selectedProducts > 0 && selectedProducts < totalProducts;
-      
-      // Update "Pilih Semua (2)" text
-      const selectAllLabel = document.querySelector('.keranjang-select-all label');
-      selectAllLabel.textContent = `Pilih Semua (${totalProducts})`;
-    }
-
-    function increaseQuantity(storeIndex, productIndex) {
-      if (cartData.stores[storeIndex].products[productIndex].quantity < 10) {
-        cartData.stores[storeIndex].products[productIndex].quantity++;
-        saveCart();
-        displayCart();
-      }
-    }
-
-    function decreaseQuantity(storeIndex, productIndex) {
-      if (cartData.stores[storeIndex].products[productIndex].quantity > 1) {
-        cartData.stores[storeIndex].products[productIndex].quantity--;
-        saveCart();
-        displayCart();
-      }
-    }
-
-    function hapusItem(storeIndex, productIndex) {
-      if (confirm('Apakah Anda yakin ingin menghapus item ini?')) {
-        cartData.stores[storeIndex].products.splice(productIndex, 1);
-        
-        // Remove store if no products left
-        if (cartData.stores[storeIndex].products.length === 0) {
-          cartData.stores.splice(storeIndex, 1);
-        }
-        
-        saveCart();
-        displayCart();
-      }
-    }
-
-    function hapusSelected() {
-      const selectedItems = [];
-      cartData.stores.forEach((store, storeIndex) => {
-        store.products.forEach((product, productIndex) => {
-          if (product.selected) {
-            selectedItems.push({storeIndex, productIndex});
-          }
-        });
-      });
-      
-      if (selectedItems.length === 0) {
-        alert('Tidak ada item yang dipilih untuk dihapus!');
-        return;
-      }
-      
-      if (confirm(`Apakah Anda yakin ingin menghapus ${selectedItems.length} item yang dipilih?`)) {
-        // Remove items in reverse order to maintain indices
-        selectedItems.reverse().forEach(({storeIndex, productIndex}) => {
-          cartData.stores[storeIndex].products.splice(productIndex, 1);
-        });
-        
-        // Remove empty stores
-        cartData.stores = cartData.stores.filter(store => store.products.length > 0);
-        
-        saveCart();
-        displayCart();
-      }
-    }
-
-    function updateTotal() {
-      let totalPrice = 0;
-      let selectedCount = 0;
-      
-      cartData.stores.forEach(store => {
-        store.products.forEach(product => {
-          if (product.selected) {
-            totalPrice += product.price * product.quantity;
-            selectedCount++;
-          }
-        });
-      });
-      
-      document.getElementById('totalPrice').textContent = `Rp. ${(totalPrice / 1000000).toFixed(1)}.000.000`;
-      
-      // Update total text
-      const totalText = document.querySelector('.keranjang-total span:first-child');
-      totalText.textContent = `Total (${selectedCount} Produk):`;
-    }
-
-    function saveCart() {
-      localStorage.setItem('cartData', JSON.stringify(cartData));
-    }
-
-    function lanjutkanCheckout() {
-      const selectedItems = [];
-      cartData.stores.forEach(store => {
-        store.products.forEach(product => {
-          if (product.selected) {
-            selectedItems.push({
-              ...product,
-              store: store.name
-            });
-          }
-        });
-      });
-      
-      if (selectedItems.length === 0) {
-        alert('Pilih minimal satu produk untuk checkout!');
-        return;
-      }
-      
-      // Simpan data keranjang untuk halaman checkout
-      localStorage.setItem('checkoutCart', JSON.stringify(selectedItems));
-      window.location.href = 'pembeli_checkout.html';
-    }
-
-    function showNotifications() {
-      alert('Anda memiliki 3 notifikasi baru!');
-    }
-
-    // Load cart when page loads
-    window.onload = function() {
-      loadCart();
-    };
-
-    // --- Dropdown User Icon Akun ---
-    function logoutUser() {
-      alert('Berhasil logout!');
-      if (userDropdown) userDropdown.classList.add('hidden');
-    }
-    function openChatCS() {
-      alert('Fitur chat CS akan segera hadir!');
-      if (userDropdown) userDropdown.classList.add('hidden');
-    }
-  </script>
-
-  <script>
-    // Dropdown Kategori
-    const kategoriMenu = document.getElementById('kategoriMenu');
-    const dropdownKategori = document.getElementById('dropdownKategori');
-    if (kategoriMenu && dropdownKategori) {
-      kategoriMenu.addEventListener('click', function(e) {
-        e.preventDefault();
-        dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-      });
-      document.addEventListener('click', function(e) {
-        if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-          dropdownKategori.style.display = 'none';
-        }
-      });
-    }
-    // Dropdown User
-    const userIcon = document.getElementById('userIcon');
-    const userDropdown = document.getElementById('userDropdown');
-    if (userIcon && userDropdown) {
-      userIcon.onclick = function(e) {
-        e.stopPropagation();
-        userDropdown.classList.toggle('hidden');
-      };
-      document.addEventListener('click', function(e) {
-        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-          userDropdown.classList.add('hidden');
-        }
-      });
-    }
-  </script>
-
-  <!-- Integrasi Firebase Firestore -->
-  <script type="module">
-    import { db, auth } from './js/firebase-config.js';
-    // Contoh: Ambil data keranjang
-    // import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
-    // const carts = await getDocs(collection(db, "carts"));
-  </script>
-
-  <!-- Footer -->
+  <!-- ====== DAFTAR PRODUK DARI FIRESTORE ====== -->
+  <div id="products-list" class="mt-6"></div>
   <footer class="bg-gray-200 text-gray-700 py-8 text-sm mt-12">
     <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
       <div class="mb-6 md:mb-0 text-left">
@@ -666,5 +353,73 @@
       </div>
     </div>
   </footer>
+  <script>
+    // Dropdown Kategori
+    const kategoriMenu = document.getElementById('kategoriMenu');
+    const dropdownKategori = document.getElementById('dropdownKategori');
+    if (kategoriMenu && dropdownKategori) {
+      kategoriMenu.addEventListener('click', function (e) {
+        e.preventDefault();
+        dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+      });
+      document.addEventListener('click', function (e) {
+        if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
+          dropdownKategori.style.display = 'none';
+        }
+      });
+    }
+    // Dropdown User
+    const userIcon = document.getElementById('userIcon');
+    const userDropdown = document.getElementById('userDropdown');
+    if (userIcon && userDropdown) {
+      userIcon.onclick = function (e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('hidden');
+      };
+      document.addEventListener('click', function (e) {
+        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+          userDropdown.classList.add('hidden');
+        }
+      });
+    }
+    function logoutUser() {
+      alert('Berhasil logout!');
+      if (userDropdown) userDropdown.classList.add('hidden');
+    }
+    function openChatCS() {
+      alert('Fitur chat CS akan segera hadir!');
+      if (userDropdown) userDropdown.classList.add('hidden');
+    }
+  </script>
+  <!-- Integrasi Firebase Firestore -->
+  <script type="module">
+    import { db, auth } from './js/firebase-config.js';
+    import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+    async function loadProductsFromFirestore() {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const products = [];
+      querySnapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      // Render ke HTML
+      const container = document.getElementById('products-list');
+      if (!products.length) {
+        container.innerHTML = '<div class="text-gray-500 text-center py-8">Belum ada produk.</div>';
+        return;
+      }
+      container.innerHTML = products.map(product => `
+    <div class="border p-4 rounded mb-4 bg-white shadow flex flex-col items-center">
+      <img src="${product.gambar}" class="w-24 h-24 object-cover mb-2 rounded" />
+      <div class="font-bold text-lg mb-1 text-pink-600">${product.nama}</div>
+      <div class="mb-1">Rp. ${product.harga.toLocaleString('id-ID')}</div>
+      <div class="mb-1 text-gray-600 text-sm">${product.deskripsi}</div>
+      <div class="text-xs text-gray-500">Varian: ${product.varian.join(', ')}</div>
+    </div>
+  `).join('');
+    }
+    window.addEventListener('DOMContentLoaded', loadProductsFromFirestore);
+  </script>
 </body>
-</html> 
+
+</html>
