@@ -323,19 +323,8 @@
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
       <a href="pembeli_produk_gucci.html" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-      <div class="dropdown-kategori relative inline-block">
-        <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori
-          &#9662;</a>
-        <div
-          class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
-          id="dropdownKategori" style="display:none;">
-          <a href="pembeli_produk_gucci.html"
-            class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
-          <a href="pembeli_kategori.html"
-            class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
-            Produk</a>
-        </div>
-      </div>
+      <a href="pembeli_kategori.html"
+        class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
       <a href="#" class="text-gray-700 hover:text-pink-600 font-semibold text-base">Hubungi kami</a>
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
@@ -619,7 +608,7 @@
         });
       });
 
-      document.getElementById('totalPrice').textContent = `Rp. ${(totalPrice / 1000000).toFixed(1)}.000.000`;
+      document.getElementById('totalPrice').textContent = `Rp. ${totalPrice.toLocaleString('id-ID')}`;
 
       // Update total text
       const totalText = document.querySelector('.keranjang-total span:first-child');
