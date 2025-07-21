@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Detail Pendapatan - #INV202507001 - TitipGo Admin</title>
+    <title>Detail Pendapatan - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -92,6 +92,12 @@
             <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
           </a>
           <a
+            href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+          >
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a
             href="admin-pesanan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
@@ -146,7 +152,9 @@
             >
               <i class="fas fa-arrow-left text-2xl"></i>
             </a>
-            <h1 class="text-2xl font-bold">Detail Pendapatan: #INV202507001</h1>
+            <h1 class="text-2xl font-bold">
+              Detail Pendapatan: <span id="income-invoice-id">#INV202507001</span>
+            </h1>
           </div>
           <div class="text-right flex gap-3">
             <button
@@ -174,13 +182,13 @@
             </li>
             <li class="flex items-center">
               <a
-                href="pendapatan.html"
+                href="admin-pendapatan.html"
                 class="text-blue-600 hover:text-blue-800"
                 >Pendapatan</a
               >
               <i class="fas fa-chevron-right mx-2 text-xs"></i>
             </li>
-            <li class="flex items-center text-gray-500">#INV202507001</li>
+            <li class="flex items-center text-gray-500" id="breadcrumb-income-id">#INV202507001</li>
           </ol>
         </nav>
 
@@ -195,26 +203,23 @@
             <div
               class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
             >
-              <p><strong>ID Transaksi:</strong> #INV202507001</p>
-              <p><strong>Tanggal Transaksi:</strong> 20 Juli 2025</p>
-              <p><strong>Jenis Pendapatan:</strong> Komisi Penjualan</p>
+              <p><strong>ID Transaksi:</strong> <span id="transaction-id"></span></p>
+              <p><strong>Tanggal Transaksi:</strong> <span id="transaction-date"></span></p>
+              <p><strong>Jenis Pendapatan:</strong> <span id="income-type">Fee Platform</span></p>
               <p>
                 <strong>Jumlah Pendapatan:</strong>
-                <span class="text-green-600 font-bold">Rp 75.000</span>
+                <span class="text-green-600 font-bold" id="income-amount"></span>
               </p>
               <p>
                 <strong>Status Pembayaran:</strong>
                 <span
-                  id="pendapatan-status-badge"
-                  class="status-badge status-paid"
-                  >Sudah Dibayar</span
+                  id="income-status-badge"
+                  class="status-badge"
+                  >Memuat...</span
                 >
               </p>
               <p>
-                <strong>Metode Pembayaran (Pelanggan):</strong> Transfer Bank
-              </p>
-              <p>
-                <strong>Biaya Jasa Pengiriman (Platform):</strong> Rp 15.000
+                <strong>Metode Pembayaran (Pelanggan):</strong> <span id="customer-payment-method"></span>
               </p>
             </div>
           </div>
@@ -232,29 +237,29 @@
               <p>
                 <strong>Dari Pesanan:</strong>
                 <a
-                  href="admin-pesanan-detail.html?id=ORD12345"
+                  href="#"
                   class="text-blue-600 hover:underline"
-                  >#ORD12345</a
+                  id="order-link"
+                  ><span id="order-id"></span></a
                 >
               </p>
-              <p><strong>Total Pesanan:</strong> Rp 765.000</p>
+              <p><strong>Total Pesanan:</strong> <span id="order-total"></span></p>
               <p>
                 <strong>Nama Pelanggan:</strong>
                 <a
-                  href="pengguna-detail.html?id=U-00123"
+                  href="#"
                   class="text-blue-600 hover:underline"
-                  >Budi Santoso</a
+                  id="customer-link"
+                  ><span id="customer-name"></span></a
                 >
               </p>
               <p>
-                <strong>Item Terkait:</strong> Baju Batik Pria Modern, Sneakers
-                Casual Pria
+                <strong>Item Terkait:</strong> <span id="related-items"></span>
               </p>
             </div>
             <div class="mt-4 border-t pt-4">
               <p class="text-gray-700 text-sm">
-                Pendapatan ini berasal dari komisi 10% dari total nilai item
-                pesanan #ORD12345.
+                Pendapatan ini berasal dari fee platform 8% dari total nilai pesanan <span id="commission-order-id"></span>.
               </p>
             </div>
           </div>
@@ -271,39 +276,43 @@
                 src="https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper"
                 alt="Foto Jastiper"
                 class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-purple-400"
+                id="jastiper-photo"
               />
               <div>
-                <p class="text-lg font-semibold text-gray-800">
-                  Jastiper Dhea Anindita
+                <p class="text-lg font-semibold text-gray-800" id="jastiper-name">
+                  Memuat...
                 </p>
-                <p class="text-sm text-gray-600">ID Jastiper: JSTP001</p>
+                <p class="text-sm text-gray-600">ID Jastiper: <span id="jastiper-id"></span></p>
               </div>
             </div>
             <ul class="text-gray-700 space-y-2 text-sm">
               <li>
                 <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi
-                Asal: Singapura
+                Asal: <span id="jastiper-location"></span>
               </li>
               <li>
                 <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
                 <a
-                  href="mailto:dhea.anindita@example.com"
+                  href="#"
                   class="text-blue-600 hover:underline"
-                  >dhea.anindita@example.com</a
+                  id="jastiper-email-link"
+                  ><span id="jastiper-email"></span></a
                 >
               </li>
               <li>
                 <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
                 <a
-                  href="tel:+6281211223344"
+                  href="#"
                   class="text-blue-600 hover:underline"
-                  >+62 812 1122 3344</a
+                  id="jastiper-phone-link"
+                  ><span id="jastiper-phone"></span></a
                 >
               </li>
               <li class="mt-3">
                 <a
-                  href="pengguna-detail.html?id=JSTP001"
+                  href="#"
                   class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                  id="jastiper-profile-link"
                 >
                   Lihat Profil Jastiper
                   <i class="fas fa-arrow-right ml-2 text-xs"></i>
@@ -319,30 +328,13 @@
               <i class="fas fa-history text-gray-500 mr-2"></i> Riwayat &
               Catatan
             </h3>
-            <ul class="space-y-3">
+            <ul class="space-y-3" id="history-log">
               <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                <i class="fas fa-spinner fa-spin text-gray-400 mr-3 mt-1"></i>
                 <div>
-                  <strong class="block">Pendapatan Dikonfirmasi</strong>
-                  <span class="text-xs text-gray-500"
-                    >20 Juli 2025, 16:00 WIB</span
-                  >
+                  <strong class="block">Memuat Riwayat...</strong>
                   <p class="text-xs text-gray-600">
-                    Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah
-                    pembayaran pelanggan dikonfirmasi.
-                  </p>
-                </div>
-              </li>
-              <li class="flex items-start text-gray-700 text-sm">
-                <i class="fas fa-calculator text-blue-500 mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Perhitungan Komisi</strong>
-                  <span class="text-xs text-gray-500"
-                    >20 Juli 2025, 15:50 WIB</span
-                  >
-                  <p class="text-xs text-gray-600">
-                    Sistem menghitung komisi 10% dari subtotal item: Rp 750.000
-                    x 10% = Rp 75.000.
+                    Data riwayat akan muncul di sini setelah dimuat dari Firebase.
                   </p>
                 </div>
               </li>
@@ -352,7 +344,31 @@
       </div>
     </main>
 
-    <script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      // Pastikan Anda sudah menambahkan Firebase SDK ke proyek Anda.
+      // Anda bisa menambahkannya via CDN di <head> atau npm.
+      // Contoh CDN (untuk versi terbaru, cek dokumentasi Firebase):
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+         import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+       </script>
+
+      
+     const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      // // Inisialisasi Firebase (hapus komentar jika sudah mengimport dari CDN atau npm)
+      // const app = initializeApp(firebaseConfig);
+      // const db = getFirestore(app);
+      // const storage = getStorage(app); // Opsional, jika Anda menyimpan gambar di Cloud Storage
+
       document.addEventListener("DOMContentLoaded", function () {
         // Skrip untuk menyorot navigasi sidebar
         const currentPath = window.location.pathname.split("/").pop();
@@ -364,9 +380,9 @@
 
           let isLinkActive = false;
 
-          // Special handling for detail pages: highlight parent menu
+          // Penanganan khusus untuk halaman detail: sorot menu induk
           if (
-            linkFileName === "pendapatan.html" &&
+            linkFileName === "admin-pendapatan.html" &&
             currentPath.startsWith("admin-pendapatan-detail")
           ) {
             isLinkActive = true;
@@ -402,31 +418,278 @@
           }
         });
 
-        // Contoh JavaScript untuk mengubah badge status pendapatan
-        const pendapatanStatus = "paid"; // Ganti dengan "paid", "pending", "cancelled"
-        const statusBadge = document.getElementById("pendapatan-status-badge");
+        // Fungsi untuk mengambil ID pendapatan dari URL
+        function getIncomeIdFromUrl() {
+          const params = new URLSearchParams(window.location.search);
+          return params.get("id"); // URL harus seperti: admin-pendapatan-detail.html?id=INV202507001
+        }
 
-        if (statusBadge) {
-          statusBadge.className = "status-badge"; // Reset classes
-          switch (pendapatanStatus) {
-            case "paid":
-              statusBadge.classList.add("status-paid");
-              statusBadge.textContent = "Status: Sudah Dibayar";
-              break;
-            case "pending":
-              statusBadge.classList.add("status-pending");
-              statusBadge.textContent = "Status: Menunggu Pembayaran";
-              break;
-            case "cancelled":
-              statusBadge.classList.add("status-cancelled");
-              statusBadge.textContent = "Status: Dibatalkan";
-              break;
-            default:
-              statusBadge.classList.add("bg-gray-200", "text-gray-800");
-              statusBadge.textContent = "Status: Tidak Diketahui";
-              break;
+        const incomeId = getIncomeIdFromUrl();
+
+        // Jika tidak ada ID di URL, mungkin arahkan atau tampilkan pesan error
+        if (!incomeId) {
+          console.error("ID Pendapatan tidak ditemukan di URL.");
+          // Anda bisa mengarahkan pengguna kembali atau menampilkan pesan kesalahan
+          document.querySelector('.content-wrapper').innerHTML = '<div class="text-center py-10 text-red-600">ID Pendapatan tidak ditemukan.</div>';
+          return;
+        }
+
+        // Perbarui ID di header dan breadcrumb
+        document.getElementById('income-invoice-id').textContent = `#${incomeId}`;
+        document.getElementById('breadcrumb-income-id').textContent = `#${incomeId}`;
+        document.getElementById('transaction-id').textContent = `#${incomeId}`;
+
+
+        // --- Implementasi Pengambilan Data dari Firebase ---
+        // Anda harus menghapus komentar dan mengisi logika Firebase Anda di sini.
+
+        async function fetchAndDisplayIncomeDetails(incomeId) {
+          try {
+            // 1. Ambil data Pendapatan (asumsikan ada koleksi 'incomes')
+            // Income document mungkin berisi orderId, paymentId, jastiperId, amount, status, transactionDate
+            // const incomeDocRef = doc(db, "incomes", incomeId);
+            // const incomeSnap = await getDoc(incomeDocRef);
+
+            // if (!incomeSnap.exists()) {
+            //   console.error("Dokumen pendapatan tidak ditemukan:", incomeId);
+            //   document.querySelector('.content-wrapper').innerHTML = '<div class="text-center py-10 text-red-600">Detail pendapatan tidak ditemukan.</div>';
+            //   return;
+            // }
+
+            // const incomeData = incomeSnap.data();
+
+            // --- Data dummy untuk pengujian (hapus ini saat menggunakan Firebase) ---
+            const incomeData = {
+                orderId: "ORD12345",
+                amount: 60000, // Ini harusnya hasil 8% dari total pesanan
+                status: "paid",
+                transactionDate: new Date("2025-07-20T16:00:00Z"), // Firebase Timestamp object
+                paymentId: "PAY98765", // Asumsi ada link ke pembayaran
+                jastiperId: "JSTP001",
+                history: [
+                    { event: "Pendapatan Dikonfirmasi", timestamp: new Date("2025-07-20T16:00:00Z"), description: "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.", icon: "fa-check-circle" },
+                    { event: "Perhitungan Fee Platform", timestamp: new Date("2025-07-20T15:50:00Z"), description: "Sistem menghitung fee platform 8% dari total pesanan.", icon: "fa-calculator" }
+                ]
+            };
+            // --- Akhir data dummy ---
+
+
+            // 2. Isi Ringkasan Pendapatan
+            document.getElementById('transaction-date').textContent = incomeData.transactionDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('income-amount').textContent = `Rp ${incomeData.amount.toLocaleString('id-ID')}`;
+
+            const incomeStatusBadge = document.getElementById("income-status-badge");
+            incomeStatusBadge.className = "status-badge"; // Reset classes
+            switch (incomeData.status) {
+              case "paid":
+                incomeStatusBadge.classList.add("status-paid");
+                incomeStatusBadge.textContent = "Sudah Dibayar";
+                break;
+              case "pending":
+                incomeStatusBadge.classList.add("status-pending");
+                incomeStatusBadge.textContent = "Menunggu Pembayaran";
+                break;
+              case "cancelled":
+                incomeStatusBadge.classList.add("status-cancelled");
+                incomeStatusBadge.textContent = "Dibatalkan";
+                break;
+              default:
+                incomeStatusBadge.classList.add("bg-gray-200", "text-gray-800");
+                incomeStatusBadge.textContent = "Tidak Diketahui";
+                break;
+            }
+
+            // 3. Ambil data Pembayaran (asumsikan ada koleksi 'payments')
+            // const paymentDocRef = doc(db, "payments", incomeData.paymentId);
+            // const paymentSnap = await getDoc(paymentDocRef);
+            // if (paymentSnap.exists()) {
+            //   const paymentData = paymentSnap.data();
+            //   document.getElementById('customer-payment-method').textContent = paymentData.method || 'N/A';
+            // } else {
+            //   document.getElementById('customer-payment-method').textContent = 'Tidak diketahui';
+            // }
+
+            // --- Data dummy untuk pengujian pembayaran ---
+            document.getElementById('customer-payment-method').textContent = 'Transfer Bank';
+            // --- Akhir data dummy ---
+
+
+            // 4. Ambil data Pesanan (asumsikan ada koleksi 'orders')
+            // const orderDocRef = doc(db, "orders", incomeData.orderId);
+            // const orderSnap = await getDoc(orderDocRef);
+
+            // if (orderSnap.exists()) {
+            //   const orderData = orderSnap.data();
+            //   const totalOrderAmount = orderData.total_amount || 0; // Asumsi field 'total_amount' di order
+            //   const platformFee = totalOrderAmount * 0.08; // Hitung 8% fee
+
+            //   // Perbarui Jumlah Pendapatan jika belum diatur dari incomeData.amount
+            //   // if (incomeData.amount !== platformFee) {
+            //   //   document.getElementById('income-amount').textContent = `Rp ${platformFee.toLocaleString('id-ID')}`;
+            //   //   // Anda mungkin ingin memperbarui `incomeData.amount` di Firebase juga jika ada perbedaan
+            //   // }
+
+            //   document.getElementById('order-id').textContent = incomeData.orderId;
+            //   document.getElementById('order-link').href = `admin-pesanan-detail.html?id=${incomeData.orderId}`;
+            //   document.getElementById('order-total').textContent = `Rp ${totalOrderAmount.toLocaleString('id-ID')}`;
+            //   document.getElementById('commission-order-id').textContent = `#${incomeData.orderId}`; // Untuk deskripsi fee
+            //   document.querySelector('#related-items').textContent = 'Memuat item...'; // Placeholder
+
+            //   // 5. Ambil data Pelanggan (dari koleksi 'users')
+            //   const customerDocRef = doc(db, "users", orderData.customer_id); // Asumsi 'customer_id' di order
+            //   const customerSnap = await getDoc(customerDocRef);
+            //   if (customerSnap.exists()) {
+            //     const customerData = customerSnap.data();
+            //     document.getElementById('customer-name').textContent = customerData.name || 'Nama Pelanggan Tidak Ditemukan';
+            //     document.getElementById('customer-link').href = `admin-pengguna-detail.html?id=${orderData.customer_id}`;
+            //   }
+
+            //   // 6. Ambil data Produk yang terkait (dari koleksi 'products')
+            //   // Asumsi orderData.items adalah array of { product_id, quantity }
+            //   // const itemNames = [];
+            //   // for (const item of orderData.items) {
+            //   //   const productDocRef = doc(db, "products", item.product_id);
+            //   //   const productSnap = await getDoc(productDocRef);
+            //   //   if (productSnap.exists()) {
+            //   //     itemNames.push(productSnap.data().name); // Asumsi field 'name' di produk
+            //   //   }
+            //   // }
+            //   // document.getElementById('related-items').textContent = itemNames.length > 0 ? itemNames.join(', ') : 'Tidak ada item terkait';
+
+            // } else {
+            //   console.error("Dokumen pesanan tidak ditemukan:", incomeData.orderId);
+            //   document.getElementById('order-id').textContent = 'N/A';
+            //   document.getElementById('order-total').textContent = 'N/A';
+            //   document.getElementById('customer-name').textContent = 'N/A';
+            //   document.getElementById('related-items').textContent = 'N/A';
+            //   document.getElementById('commission-order-id').textContent = 'N/A';
+            // }
+
+            // --- Data dummy untuk pengujian pesanan dan pelanggan ---
+            const totalOrderAmountDummy = 750000;
+            const platformFeeDummy = totalOrderAmountDummy * 0.08; // 8% dari Rp 750.000 = Rp 60.000
+
+            document.getElementById('income-amount').textContent = `Rp ${platformFeeDummy.toLocaleString('id-ID')}`; // Perbarui dengan perhitungan 8%
+            document.getElementById('order-id').textContent = `#${incomeData.orderId}`;
+            document.getElementById('order-link').href = `admin-pesanan-detail.html?id=${incomeData.orderId}`;
+            document.getElementById('order-total').textContent = `Rp ${totalOrderAmountDummy.toLocaleString('id-ID')}`;
+            document.getElementById('commission-order-id').textContent = `#${incomeData.orderId}`;
+            document.getElementById('customer-name').textContent = 'Budi Santoso';
+            document.getElementById('customer-link').href = `admin-pengguna-detail.html?id=U-00123`;
+            document.getElementById('related-items').textContent = 'Baju Batik Pria Modern, Sneakers Casual Pria';
+            // --- Akhir data dummy ---
+
+
+            // 7. Ambil data Jastiper (dari koleksi 'users', dengan asumsi ada role 'jastiper')
+            // const jastiperDocRef = doc(db, "users", incomeData.jastiperId); // Asumsi 'jastiperId' di incomeData atau orderData
+            // const jastiperSnap = await getDoc(jastiperDocRef);
+            // if (jastiperSnap.exists()) {
+            //   const jastiperData = jastiperSnap.data();
+            //   document.getElementById('jastiper-name').textContent = `Jastiper ${jastiperData.name || 'Nama Tidak Ditemukan'}`;
+            //   document.getElementById('jastiper-id').textContent = incomeData.jastiperId;
+            //   document.getElementById('jastiper-location').textContent = jastiperData.location || 'N/A';
+            //   document.getElementById('jastiper-email').textContent = jastiperData.email || 'N/A';
+            //   document.getElementById('jastiper-email-link').href = `mailto:${jastiperData.email}`;
+            //   document.getElementById('jastiper-phone').textContent = jastiperData.phone || 'N/A';
+            //   document.getElementById('jastiper-phone-link').href = `tel:${jastiperData.phone}`;
+            //   document.getElementById('jastiper-profile-link').href = `admin-pengguna-detail.html?id=${incomeData.jastiperId}`;
+
+            //   // Jika ada foto profil jastiper di Cloud Storage
+            //   // if (jastiperData.profilePictureUrl) { // Asumsi URL langsung di dokumen
+            //   //   document.getElementById('jastiper-photo').src = jastiperData.profilePictureUrl;
+            //   // } else if (jastiperData.profilePicturePath) { // Asumsi path di storage
+            //   //   const photoRef = ref(storage, jastiperData.profilePicturePath);
+            //   //   const photoURL = await getDownloadURL(photoRef);
+            //   //   document.getElementById('jastiper-photo').src = photoURL;
+            //   // } else {
+            //   //   document.getElementById('jastiper-photo').src = "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
+            //   // }
+            // } else {
+            //   console.warn("Dokumen jastiper tidak ditemukan:", incomeData.jastiperId);
+            //   document.getElementById('jastiper-name').textContent = 'Jastiper Tidak Ditemukan';
+            //   document.getElementById('jastiper-id').textContent = 'N/A';
+            //   document.getElementById('jastiper-location').textContent = 'N/A';
+            //   document.getElementById('jastiper-email').textContent = 'N/A';
+            //   document.getElementById('jastiper-phone').textContent = 'N/A';
+            //   document.getElementById('jastiper-photo').src = "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=Anonim";
+            //   document.getElementById('jastiper-profile-link').style.display = 'none'; // Sembunyikan link jika jastiper tidak ditemukan
+            // }
+
+            // --- Data dummy untuk pengujian jastiper ---
+            document.getElementById('jastiper-name').textContent = 'Jastiper Dhea Anindita';
+            document.getElementById('jastiper-id').textContent = 'JSTP001';
+            document.getElementById('jastiper-location').textContent = 'Singapura';
+            document.getElementById('jastiper-email').textContent = 'dhea.anindita@example.com';
+            document.getElementById('jastiper-email-link').href = `mailto:dhea.anindita@example.com`;
+            document.getElementById('jastiper-phone').textContent = '+62 812 1122 3344';
+            document.getElementById('jastiper-phone-link').href = `tel:+6281211223344`;
+            document.getElementById('jastiper-profile-link').href = `admin-pengguna-detail.html?id=JSTP001`;
+            document.getElementById('jastiper-photo').src = "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
+            // --- Akhir data dummy ---
+
+
+            // 8. Isi Riwayat & Catatan
+            const historyLog = document.getElementById('history-log');
+            historyLog.innerHTML = ''; // Bersihkan placeholder
+
+            // if (incomeData.history && incomeData.history.length > 0) {
+            //   incomeData.history.forEach(entry => {
+            //     const listItem = document.createElement('li');
+            //     listItem.classList.add('flex', 'items-start', 'text-gray-700', 'text-sm');
+            //     listItem.innerHTML = `
+            //       <i class="fas ${entry.icon || 'fa-info-circle'} mr-3 mt-1"></i>
+            //       <div>
+            //         <strong class="block">${entry.event}</strong>
+            //         <span class="text-xs text-gray-500">${entry.timestamp.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB</span>
+            //         <p class="text-xs text-gray-600">${entry.description}</p>
+            //       </div>
+            //     `;
+            //     historyLog.appendChild(listItem);
+            //   });
+            // } else {
+            //   historyLog.innerHTML = `
+            //     <li class="flex items-start text-gray-700 text-sm">
+            //       <i class="fas fa-info-circle text-gray-400 mr-3 mt-1"></i>
+            //       <div>
+            //         <strong class="block">Tidak ada riwayat.</strong>
+            //         <p class="text-xs text-gray-600">
+            //           Belum ada catatan riwayat untuk pendapatan ini.
+            //         </p>
+            //       </div>
+            //     </li>
+            //   `;
+            // }
+
+            // --- Data dummy untuk pengujian riwayat ---
+            const dummyHistory = [
+                { event: "Pendapatan Dikonfirmasi", timestamp: new Date("2025-07-20T16:00:00Z"), description: "Pendapatan dari pesanan #ORD12345 berhasil dicatat setelah pembayaran pelanggan dikonfirmasi.", icon: "fa-check-circle" },
+                { event: "Perhitungan Fee Platform", timestamp: new Date("2025-07-20T15:50:00Z"), description: "Sistem menghitung fee platform 8% dari total pesanan: Rp 750.000 x 8% = Rp 60.000.", icon: "fa-calculator" }
+            ];
+
+            dummyHistory.forEach(entry => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('flex', 'items-start', 'text-gray-700', 'text-sm');
+                listItem.innerHTML = `
+                  <i class="fas ${entry.icon || 'fa-info-circle'} mr-3 mt-1"></i>
+                  <div>
+                    <strong class="block">${entry.event}</strong>
+                    <span class="text-xs text-gray-500">${entry.timestamp.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB</span>
+                    <p class="text-xs text-gray-600">${entry.description}</p>
+                  </div>
+                `;
+                historyLog.appendChild(listItem);
+            });
+            // --- Akhir data dummy ---
+
+
+          } catch (error) {
+            console.error("Terjadi kesalahan saat memuat detail pendapatan:", error);
+            document.querySelector('.content-wrapper').innerHTML = '<div class="text-center py-10 text-red-600">Gagal memuat detail pendapatan. Silakan coba lagi.</div>';
           }
         }
+
+        // Panggil fungsi utama untuk memuat data
+        fetchAndDisplayIncomeDetails(incomeId);
       });
     </script>
   </body>

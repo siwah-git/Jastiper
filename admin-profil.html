@@ -2,23 +2,82 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dashboard - TitipGo Admin</title>
+    <title>Profil - TitipGo Admin</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Main content background with transparency */
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            /* Overlay putih transparan */ rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Style untuk membuat background kartu statistik dan tabel sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      /* Optional: Overlay tambahan jika diperlukan */
+      /* #mainContent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 0;
+        border-radius: inherit;
+      } */
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Adjusting header transparency if desired, or use a specific Tailwind color */
+      .header-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      /* Untuk header blue, jika ingin transparan: */
+      .blue-header-transparent {
+        background-color: rgba(
+          37,
+          99,
+          235,
+          0.8
+        ); /* blue-600 dengan opasitas 80% */
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
         class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
@@ -32,7 +91,7 @@
 
             <a
               href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-home mr-3"></i> Dashboard
             </a>
@@ -55,6 +114,12 @@
               <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
             </a>
             <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
+            </a>
+            <a
               href="admin-aduan.html"
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
@@ -74,7 +139,7 @@
             </a>
             <a
               href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
             >
               <i class="fas fa-user-circle mr-3"></i> Profil
             </a>
@@ -82,7 +147,7 @@
               href="admin-tentang.html"
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
-              <i class="fas fa-user-circle mr-3"></i> Tentang Kami
+              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
             </a>
           </nav>
         </div>
@@ -91,129 +156,176 @@
         </footer>
       </aside>
 
-      <!-- Konten utama -->
-      <main class="ml-64 w-full p-6 overflow-y-auto">
-        <!-- Header -->
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        "
+      >
         <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
+          class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md"
         >
-          <p class="text-lg font-semibold">
-            Profil Admin
-          </p>
-          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+          <p class="text-lg font-semibold">Pendapatan Platform</p>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
         </div>
 
-        <div class="max-w-3xl mx-auto bg-white p-6 rounded-md shadow-md">
+        <div
+          class="max-w-3xl mx-auto card-bg-transparent p-6 rounded-md shadow-md"
+        >
+          <div class="flex flex-col items-center mb-8">
+            <img
+              src="asset/images/siwah.jpg"
+              alt="Foto Profil"
+              class="w-20 h-20 rounded-full object-cover shadow-md border-2 border-white"
+            />
+            <button
+              class="mt-3 text-sm text-pink-600 hover:underline focus:outline-none"
+            >
+              Ganti Foto Profil
+            </button>
+          </div>
 
-    <!-- Foto Profil -->
-    <div class="flex flex-col items-center mb-8">
-        <img src="asset/images/siwah.jpg" alt="Foto Profil" class="w-20 h-20 rounded-full object-cover shadow-md border-2 border-white">
-        <button class="mt-3 text-sm text-pink-600 hover:underline focus:outline-none">Ganti Foto Profil</button>
-    </div>
+          <form action="#" method="POST" class="space-y-5">
+            <div>
+              <label
+                for="name"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Nama</label
+              >
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value="Siwah"
+                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+              />
+            </div>
 
-    <!-- Form Profil -->
-    <form action="#" method="POST" class="space-y-5">
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Email</label
+              >
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="admin@titipgo.com"
+                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+              />
+            </div>
 
-        <!-- Nama -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-            <input type="text" name="name" id="name" value="Siwah"
-                   class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-        </div>
-
-        <!-- Email -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" name="email" id="email" value="admin@titipgo.com"
-                   class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-        </div>
-
-        <!-- Ubah Password -->
-          <p class="text-pink-600 font-semibold mt-6 mb-2 text-sm">
-                <i class="fas fa-lock mr-6 text-pink-500"></i> Ubah Password
-            </h3>
+            <p class="text-pink-600 font-semibold mt-6 mb-2 text-sm">
+              <i class="fas fa-lock mr-6 text-pink-500"></i> Ubah Password
+            </p>
 
             <div class="space-y-4">
-                <div>
-                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Password Saat Ini</label>
-                    <input type="password" name="current_password" id="current_password"
-                           class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                </div>
+              <div>
+                <label
+                  for="current_password"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Password Saat Ini</label
+                >
+                <input
+                  type="password"
+                  name="current_password"
+                  id="current_password"
+                  class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                />
+              </div>
 
-                <div>
-                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
-                    <input type="password" name="new_password" id="new_password"
-                           class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                </div>
+              <div>
+                <label
+                  for="new_password"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Password Baru</label
+                >
+                <input
+                  type="password"
+                  name="new_password"
+                  id="new_password"
+                  class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                />
+              </div>
 
-                <div>
-                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru</label>
-                    <input type="password" name="confirm_password" id="confirm_password"
-                           class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm">
-                </div>
+              <div>
+                <label
+                  for="confirm_password"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Konfirmasi Password Baru</label
+                >
+                <input
+                  type="password"
+                  name="confirm_password"
+                  id="confirm_password"
+                  class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                />
+              </div>
             </div>
-        </div>
 
-        <!-- Tombol Simpan -->
-        <div class="pt-6 text-center">
-            <button class="bg-pink-600 text-white py-2 px-6 rounded w-full md:w-[400px] mb-2" >
+            <div class="pt-6 text-center">
+              <button
+                class="bg-pink-600 text-white py-2 px-6 rounded w-full md:w-[400px] mb-2"
+              >
                 <i class="fas fa-save mr-2"></i> Simpan Perubahan
-            </button>
+              </button>
+            </div>
+          </form>
         </div>
-    </form>
-</div>
+      </main>
+    </div>
 
-
-         <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
         // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
+        const currentPath = window.location.pathname.split("/").pop(); // Mengambil hanya nama file
 
         // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href"); // Dapatkan href dari setiap tautan
 
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
+          // Logic to determine active link
+          // The current `admin-profil.html` should match `admin-profil.html` href
+          if (linkHref === currentPath) {
+            // Remove default and hover classes
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
 
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
+            // Add active highlight classes
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            // Remove active highlight classes
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
 
-
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
-
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
+            // Add back default and hover classes
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
         });
-    });
-</script>
+      });
+    </script>
   </body>
 </html>

@@ -4,21 +4,64 @@
     <meta charset="UTF-8" />
     <title>Dashboard - TitipGo Admin</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module" src="./js/firebase-config.js"></script>
+
+    <style>
+      /* Kustom CSS untuk background image dan overlay pada main content */
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Optional: Overlay tambahan jika diperlukan */
+      /* #mainContent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1); 
+        z-index: 0;
+        border-radius: inherit;
+      } */
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Style untuk membuat background kartu statistik sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
         class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
@@ -47,6 +90,12 @@
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+            </a>
+            <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
             </a>
             <a
               href="admin-pesanan.html"
@@ -91,128 +140,325 @@
         </footer>
       </aside>
 
-      <!-- Konten utama -->
-      <main class="ml-64 w-full p-6 overflow-y-auto">
-        <!-- Header -->
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        "
+      >
         <div
           class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
         >
           <p class="text-lg font-semibold">
             Selamat datang di Dashboard Admin!
           </p>
-          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
         </div>
 
-        <!-- Kartu statistik -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div class="bg-white p-4 rounded shadow text-center">
+          <div class="card-bg-transparent p-4 rounded shadow text-center">
             <p class="text-sm text-gray-500">Pesanan Aktif</p>
-            <p class="text-2xl text-pink-600 font-bold">22</p>
+            <p class="text-2xl text-pink-600 font-bold" id="activeOrders">0</p>
           </div>
-          <div class="bg-white p-4 rounded shadow text-center">
+          <div class="card-bg-transparent p-4 rounded shadow text-center">
             <p class="text-sm text-gray-500">Pesanan Selesai</p>
-            <p class="text-2xl text-pink-600 font-bold">110</p>
+            <p class="text-2xl text-pink-600 font-bold" id="completedOrders">
+              0
+            </p>
           </div>
-          <div class="bg-white p-4 rounded shadow text-center">
+          <div class="card-bg-transparent p-4 rounded shadow text-center">
             <p class="text-sm text-gray-500">Katalog Pending</p>
-            <p class="text-2xl text-pink-600 font-bold">50</p>
+            <p class="text-2xl text-pink-600 font-bold" id="pendingCatalogs">
+              0
+            </p>
           </div>
-          <div class="bg-white p-4 rounded shadow text-center">
+          <div class="card-bg-transparent p-4 rounded shadow text-center">
             <p class="text-sm text-gray-500">Jastiper Aktif</p>
-            <p class="text-2xl text-pink-600 font-bold">120</p>
+            <p class="text-2xl text-pink-600 font-bold" id="activeJastipers">
+              0
+            </p>
           </div>
         </div>
 
-        <!-- Grafik Pendapatan -->
-        <div class="bg-white p-6 rounded shadow">
+        <div class="card-bg-transparent p-6 rounded shadow">
           <h2 class="text-lg font-semibold mb-4">Grafik Pendapatan Bulanan</h2>
           <div style="height: 300px">
             <canvas id="feeChart"></canvas>
           </div>
+          <p id="noDataMessage" class="text-center text-gray-500 mt-4 hidden">
+            Belum ada data pendapatan. Grafik akan muncul setelah ada pesanan
+            yang diselesaikan.
+          </p>
         </div>
       </main>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const ctx = document.getElementById("feeChart").getContext("2d");
-        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, "rgba(59, 130, 246, 0.8)"); // biru
-        gradient.addColorStop(1, "rgba(236, 72, 153, 0.8)"); // pink
+    <script type="module">
+      import { db } from "./js/firebase-config.js";
+      import {
+        collection,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni"],
-            datasets: [
-              {
-                label: "Pendapatan Bulanan (Rp)",
-                data: [1200000, 950000, 1300000, 1100000, 1400000, 1000000],
-                backgroundColor: gradient,
-                borderColor: "rgba(236, 72, 153, 1)",
-                borderWidth: 1,
+      // Fungsi untuk menginisialisasi dan memperbarui grafik
+      let myChart = null; // Variabel untuk menyimpan instance Chart.js
+
+      async function updateFeeChart() {
+        const ctx = document.getElementById("feeChart").getContext("2d");
+        const noDataMessage = document.getElementById("noDataMessage");
+
+        const monthlyRevenue = {
+          Januari: 0,
+          Februari: 0,
+          Maret: 0,
+          April: 0,
+          Mei: 0,
+          Juni: 0,
+          Juli: 0,
+          Agustus: 0,
+          September: 0,
+          Oktober: 0,
+          November: 0,
+          Desember: 0,
+        };
+        const monthNames = Object.keys(monthlyRevenue);
+
+        try {
+          // Query pesanan yang statusnya 'selesai'
+          const q = query(
+            collection(db, "pemesanan"),
+            where("status_pesanan", "==", "selesai")
+          );
+          const querySnapshot = await getDocs(q);
+
+          let hasData = false;
+          querySnapshot.forEach((doc) => {
+            const order = doc.data();
+            const totalHarga = order.total_harga || 0;
+            const pendapatanAdmin = totalHarga * 0.1; // 10% dari total harga
+
+            // Asumsi: order.tanggal_pesanan adalah Timestamp Firebase
+            if (order.tanggal_pesanan && order.tanggal_pesanan.toDate) {
+              const orderDate = order.tanggal_pesanan.toDate();
+              const month = orderDate.getMonth(); // 0 = Januari, 1 = Februari, dst.
+              const year = orderDate.getFullYear();
+
+              // Hanya ambil data untuk tahun berjalan (opsional, bisa disesuaikan)
+              const currentYear = new Date().getFullYear();
+              if (year === currentYear) {
+                monthlyRevenue[monthNames[month]] += pendapatanAdmin;
+                hasData = true;
+              }
+            }
+          });
+
+          // Hapus grafik yang sudah ada jika ada
+          if (myChart) {
+            myChart.destroy();
+          }
+
+          if (hasData) {
+            noDataMessage.classList.add("hidden"); // Sembunyikan pesan "tidak ada data"
+            const dataValues = monthNames.map((month) => monthlyRevenue[month]);
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, "rgba(59, 130, 246, 0.8)"); // biru
+            gradient.addColorStop(1, "rgba(236, 72, 153, 0.8)"); // pink
+
+            myChart = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: monthNames,
+                datasets: [
+                  {
+                    label: "Pendapatan Bulanan (Rp)",
+                    data: dataValues,
+                    backgroundColor: gradient,
+                    borderColor: "rgba(236, 72, 153, 1)",
+                    borderWidth: 1,
+                  },
+                ],
               },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-          },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: "Pendapatan (Rp)",
+                      color: "#4A5568", // gray-700
+                    },
+                    ticks: {
+                      callback: function (value, index, values) {
+                        return "Rp" + value.toLocaleString("id-ID");
+                      },
+                    },
+                  },
+                  x: {
+                    title: {
+                      display: true,
+                      text: "Bulan",
+                      color: "#4A5568", // gray-700
+                    },
+                  },
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function (context) {
+                        let label = context.dataset.label || "";
+                        if (label) {
+                          label += ": ";
+                        }
+                        if (context.parsed.y !== null) {
+                          label +=
+                            "Rp" + context.parsed.y.toLocaleString("id-ID");
+                        }
+                        return label;
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          } else {
+            noDataMessage.classList.remove("hidden"); // Tampilkan pesan "tidak ada data"
+          }
+        } catch (error) {
+          console.error("Error fetching revenue data:", error);
+          noDataMessage.classList.remove("hidden");
+          noDataMessage.textContent =
+            "Gagal memuat data pendapatan: " + error.message;
+        }
+      }
+
+      // Fungsi untuk mengupdate kartu statistik
+      async function updateStatsCards() {
+        try {
+          // Pesanan Aktif (misal: status 'pending' atau 'diproses')
+          const qActiveOrders = query(
+            collection(db, "pemesanan"),
+            where("status_pesanan", "in", ["pending", "diproses"])
+          );
+          const activeOrdersSnap = await getDocs(qActiveOrders);
+          document.getElementById("activeOrders").textContent =
+            activeOrdersSnap.size;
+
+          // Pesanan Selesai
+          const qCompletedOrders = query(
+            collection(db, "pemesanan"),
+            where("status_pesanan", "==", "selesai")
+          );
+          const completedOrdersSnap = await getDocs(qCompletedOrders);
+          document.getElementById("completedOrders").textContent =
+            completedOrdersSnap.size;
+
+          // Katalog Pending (Asumsi: di koleksi 'users' dengan sub-koleksi 'catalog', status 'pending' di item katalog)
+          // Ini butuh query yang lebih kompleks karena nested. Untuk sementara, kita bisa hitung total item katalog.
+          // Atau, jika Anda memiliki field status di setiap item katalog.
+          // Contoh sederhana: hitung semua item di semua katalog jastiper
+          let pendingCatalogCount = 0;
+          const jastipersRef = collection(db, "users");
+          const qJastipers = query(
+            jastipersRef,
+            where("role", "==", "jastiper")
+          );
+          const jastipersSnap = await getDocs(qJastipers);
+
+          for (const jastiperDoc of jastipersSnap.docs) {
+            const catalogRef = collection(
+              db,
+              `users/${jastiperDoc.id}/catalog`
+            );
+            // Jika Anda memiliki field 'status' di setiap item katalog:
+            const qPendingCatalogItems = query(
+              catalogRef,
+              where("status", "==", "pending")
+            );
+            const pendingCatalogSnap = await getDocs(qPendingCatalogItems);
+            pendingCatalogCount += pendingCatalogSnap.size;
+            // Jika tidak ada status, Anda bisa menampilkan total item katalog yang perlu review
+            // Atau, Anda bisa membuat koleksi terpisah 'catalog_items_for_review' jika lebih mudah dikelola
+          }
+          document.getElementById("pendingCatalogs").textContent =
+            pendingCatalogCount;
+
+          // Jastiper Aktif (misal: role 'jastiper' dan status 'aktif')
+          const qActiveJastipers = query(
+            collection(db, "users"),
+            where("role", "==", "jastiper")
+            // where("status", "==", "aktif") // Tambahkan ini jika ada field status jastiper
+          );
+          const activeJastipersSnap = await getDocs(qActiveJastipers);
+          document.getElementById("activeJastipers").textContent =
+            activeJastipersSnap.size;
+        } catch (error) {
+          console.error("Error updating stats cards:", error);
+        }
+      }
+
+      // Panggil fungsi saat DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", function () {
+        updateFeeChart(); // Panggil fungsi grafik
+        updateStatsCards(); // Panggil fungsi statistik
+      });
+
+      // --- Skrip untuk highlight sidebar item (dari kode Anda sebelumnya) ---
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.split("/").pop(); // Ambil nama file dari URL
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop(); // Ambil nama file dari href
+
+          let isLinkActive = false;
+
+          if (currentPath === linkFileName) {
+            isLinkActive = true;
+          } else if (
+            currentPath === "" &&
+            linkFileName === "admin-dashboard.html"
+          ) {
+            // Menangani kasus jika URL adalah root domain/localhost/ tanpa nama file, dan dashboard adalah default
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
         });
       });
-    </script>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
-
-        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
-
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
-
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
-
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
-
-
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
-
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
-        });
-    });
-</script>
     </script>
   </body>
 </html>

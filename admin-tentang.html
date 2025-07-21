@@ -14,14 +14,36 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-      /* Custom CSS if needed, though Tailwind should cover most.
-         Example for Poppins if you use it globally: */
-      /* body { font-family: 'Poppins', sans-serif; } */
+      /* Style untuk membuat background kartu statistik dan tabel sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+
+      /* Untuk header blue, jika ingin transparan: */
+      .blue-header-transparent {
+        background-color: rgba(
+          37,
+          99,
+          235,
+          0.8
+        ); /* blue-600 dengan opasitas 80% */
+      }
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      /* Ini penting jika Anda menggunakan overlay di mainContent */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
     </style>
   </head>
-   <body class="bg-gray-100 font-sans antialiased">
+  <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
         class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
@@ -35,7 +57,7 @@
 
             <a
               href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-home mr-3"></i> Dashboard
             </a>
@@ -56,6 +78,12 @@
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+            </a>
+            <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
             </a>
             <a
               href="admin-aduan.html"
@@ -83,7 +111,7 @@
             </a>
             <a
               href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
             >
               <i class="fas fa-info-circle mr-3"></i> Tentang Kami
             </a>
@@ -94,281 +122,284 @@
         </footer>
       </aside>
 
-    <main class="ml-64 flex-1 p-8 overflow-y-auto">
-      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
-        <p class="text-lg font-semibold">Tentang Kami</p>
-        <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+        "
+      >
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+          class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md"
         >
-          <div class="flex items-center mb-4">
-            <i class="fas fa-cube text-blue-500 text-2xl mr-3"></i>
-            <h3 class="text-xl font-semibold text-gray-800">
-              Informasi Aplikasi
-            </h3>
+          <p class="text-lg font-semibold">Tentang Kami</p>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
           </div>
-          <ul class="text-gray-700 space-y-2 text-sm">
-            <li><strong>Nama:</strong> TitipGo Admin Panel</li>
-            <li><strong>Versi:</strong> 1.0.0 Alpha</li>
-            <li><strong>Tanggal Rilis:</strong> 20 Juli 2025</li>
-            <li><strong>Platform:</strong> Web Application</li>
-          </ul>
         </div>
 
-        <div
-          class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div
+            class="card-bg-transparent p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+          >
+            <div class="flex items-center mb-4">
+              <i class="fas fa-cube text-blue-500 text-2xl mr-3"></i>
+              <h3 class="text-xl font-semibold text-gray-800">
+                Informasi Aplikasi
+              </h3>
+            </div>
+            <ul class="text-gray-700 space-y-2 text-sm">
+              <li><strong>Nama:</strong> TitipGo Admin Panel</li>
+              <li><strong>Versi:</strong> 1.0.0 Alpha</li>
+              <li><strong>Tanggal Rilis:</strong> 20 Juli 2025</li>
+              <li><strong>Platform:</strong> Web Application</li>
+            </ul>
+          </div>
+
+          <div
+            class="card-bg-transparent p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+          >
+            <div class="flex items-center mb-4">
+              <i class="fas fa-file-alt text-green-500 text-2xl mr-3"></i>
+              <h3 class="text-xl font-semibold text-gray-800">
+                Deskripsi Singkat
+              </h3>
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed">
+              Panel administrasi ini adalah pusat kontrol untuk mengelola
+              seluruh operasional platform TitipGo, mulai dari katalog produk,
+              data pengguna, status pesanan, aduan, hingga pelaporan keuangan
+              dan analisis pendapatan.
+            </p>
+          </div>
+
+          <div
+            class="card-bg-transparent p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+          >
+            <div class="flex items-center mb-4">
+              <i class="fas fa-headset text-purple-500 text-2xl mr-3"></i>
+              <h3 class="text-xl font-semibold text-gray-800">
+                Kontak & Dukungan
+              </h3>
+            </div>
+            <ul class="text-gray-700 space-y-2 text-sm">
+              <li>
+                Email:
+                <a
+                  href="mailto:support@titipgo.com"
+                  class="text-blue-600 hover:underline"
+                  >support@titipgo.com</a
+                >
+              </li>
+              <li>
+                Telepon:
+                <a
+                  href="tel:+6281234567890"
+                  class="text-blue-600 hover:underline"
+                  >+62 812 3456 7890</a
+                >
+              </li>
+              <li>
+                Situs Web:
+                <a
+                  href="https://www.titipgo.com"
+                  target="_blank"
+                  class="text-blue-600 hover:underline"
+                  >titipgo.com</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-bg-transparent p-8 rounded-lg shadow-lg mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+            Tim Pengembang
+          </h2>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+          >
+            <div
+              class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
+            >
+              <img
+                src="asset/images/siwah.jpg"
+                alt="Foto Developer 1"
+                class="w-32 h-32 rounded-full object-cover border-4 border-pink-500 shadow-lg mb-4"
+              />
+              <h4 class="text-lg font-semibold text-gray-800">Siti Wahyuni</h4>
+              <p class="text-sm text-pink-600">Lead Developer</p>
+              <p class="text-xs text-gray-500 mt-1">
+                Backend & Database Specialist
+              </p>
+              <div class="flex mt-3 space-x-2">
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-blue-600 transition"
+                  title="LinkedIn"
+                  ><i class="fab fa-linkedin text-xl"></i
+                ></a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-gray-800 transition"
+                  title="GitHub"
+                  ><i class="fab fa-github text-xl"></i
+                ></a>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
+            >
+              <img
+                src="asset/images/sinta.jpg"
+                alt="Foto Developer 2"
+                class="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg mb-4"
+              />
+              <h4 class="text-lg font-semibold text-gray-800">
+                Sinta Febriyanti
+              </h4>
+              <p class="text-sm text-blue-600">Frontend Developer</p>
+              <p class="text-xs text-gray-500 mt-1">UI/UX Implementation</p>
+              <div class="flex mt-3 space-x-2">
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-blue-600 transition"
+                  title="LinkedIn"
+                  ><i class="fab fa-linkedin text-xl"></i
+                ></a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-gray-800 transition"
+                  title="GitHub"
+                  ><i class="fab fa-github text-xl"></i
+                ></a>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
+            >
+              <img
+                src="https://via.placeholder.com/150/90EE90/FFFFFF?text=Dev3"
+                alt="Foto Developer 3"
+                class="w-32 h-32 rounded-full object-cover border-4 border-green-500 shadow-lg mb-4"
+              />
+              <h4 class="text-lg font-semibold text-gray-800">
+                Dwi Resty Kartika
+              </h4>
+              <p class="text-sm text-green-600">QA Engineer</p>
+              <p class="text-xs text-gray-500 mt-1">
+                Testing & Quality Assurance
+              </p>
+              <div class="flex mt-3 space-x-2">
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-blue-600 transition"
+                  title="LinkedIn"
+                  ><i class="fab fa-linkedin text-xl"></i
+                ></a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-gray-800 transition"
+                  title="GitHub"
+                  ><i class="fab fa-github text-xl"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-bg-transparent p-6 rounded-lg shadow-md mb-8">
           <div class="flex items-center mb-4">
-            <i class="fas fa-file-alt text-green-500 text-2xl mr-3"></i>
+            <i class="fas fa-copyright text-gray-500 text-2xl mr-3"></i>
             <h3 class="text-xl font-semibold text-gray-800">
-              Deskripsi Singkat
+              Lisensi & Hak Cipta
             </h3>
           </div>
           <p class="text-gray-700 text-sm leading-relaxed">
-            Panel administrasi ini adalah pusat kontrol untuk mengelola seluruh
-            operasional platform TitipGo, mulai dari katalog produk, data
-            pengguna, status pesanan, aduan, hingga pelaporan keuangan dan
-            analisis pendapatan.
+            Software ini dilindungi oleh hak cipta dan dilisensikan di bawah
+            Lisensi Propietari TitipGo. Segala bentuk penggunaan, reproduksi,
+            atau distribusi yang tidak sah tanpa izin tertulis dari TitipGo
+            sangat dilarang. <br /><br />&copy; 2025 TitipGo. All rights
+            reserved.
           </p>
         </div>
 
         <div
-          class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+          class="card-bg-transparent text-center text-gray-600 text-lg mt-10 p-4 border-t-2 border-pink-200 rounded-lg shadow-md"
         >
-          <div class="flex items-center mb-4">
-            <i class="fas fa-headset text-purple-500 text-2xl mr-3"></i>
-            <h3 class="text-xl font-semibold text-gray-800">
-              Kontak & Dukungan
-            </h3>
-          </div>
-          <ul class="text-gray-700 space-y-2 text-sm">
-            <li>
-              Email:
-              <a
-                href="mailto:support@titipgo.com"
-                class="text-blue-600 hover:underline"
-                >support@titipgo.com</a
-              >
-            </li>
-            <li>
-              Telepon:
-              <a href="tel:+6281234567890" class="text-blue-600 hover:underline"
-                >+62 812 3456 7890</a
-              >
-            </li>
-            <li>
-              Situs Web:
-              <a
-                href="https://www.titipgo.com"
-                target="_blank"
-                class="text-blue-600 hover:underline"
-                >titipgo.com</a
-              >
-            </li>
-          </ul>
+          <p>
+            Terima kasih atas dedikasi tim dan kepercayaan Anda pada platform
+            TitipGo.
+          </p>
+          <p class="text-sm mt-2 text-gray-500">
+            Dibuat dengan <i class="fas fa-heart text-red-500"></i> untuk
+            manajemen yang lebih baik.
+          </p>
         </div>
-      </div>
+      </main>
 
-      <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Tim Pengembang
-        </h2>
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-        >
-          <div
-            class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
-          >
-            <img
-              src="asset/images/siwah.jpg"
-              alt="Foto Developer 1"
-              class="w-32 h-32 rounded-full object-cover border-4 border-pink-500 shadow-lg mb-4"
-            />
-            <h4 class="text-lg font-semibold text-gray-800">Siti Wahyuni</h4>
-            <p class="text-sm text-pink-600">Lead Developer</p>
-            <p class="text-xs text-gray-500 mt-1">
-              Backend & Database Specialist
-            </p>
-            <div class="flex mt-3 space-x-2">
-              <a
-                href="#"
-                class="text-gray-400 hover:text-blue-600 transition"
-                title="LinkedIn"
-                ><i class="fab fa-linkedin text-xl"></i
-              ></a>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-gray-800 transition"
-                title="GitHub"
-                ><i class="fab fa-github text-xl"></i
-              ></a>
-            </div>
-          </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const currentPath = window.location.pathname.split("/").pop();
+          const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
-          <div
-            class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
-          >
-            <img
-              src="https://via.placeholder.com/150/87CEEB/FFFFFF?text=Dev2"
-              alt="Foto Developer 2"
-              class="w-32 h-32 rounded-full object-cover border-4 border-blue-500 shadow-lg mb-4"
-            />
-            <h4 class="text-lg font-semibold text-gray-800">Sinta Febriyanti</h4>
-            <p class="text-sm text-blue-600">Frontend Developer</p>
-            <p class="text-xs text-gray-500 mt-1">UI/UX Implementation</p>
-            <div class="flex mt-3 space-x-2">
-              <a
-                href="#"
-                class="text-gray-400 hover:text-blue-600 transition"
-                title="LinkedIn"
-                ><i class="fab fa-linkedin text-xl"></i
-              ></a>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-gray-800 transition"
-                title="GitHub"
-                ><i class="fab fa-github text-xl"></i
-              ></a>
-            </div>
-          </div>
+          sidebarLinks.forEach((link) => {
+            const linkHref = link.getAttribute("href");
+            const linkFileName = linkHref.split("/").pop();
 
-          <div
-            class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
-          >
-            <img
-              src="https://via.placeholder.com/150/90EE90/FFFFFF?text=Dev3"
-              alt="Foto Developer 3"
-              class="w-32 h-32 rounded-full object-cover border-4 border-green-500 shadow-lg mb-4"
-            />
-            <h4 class="text-lg font-semibold text-gray-800">Citra Lestari</h4>
-            <p class="text-sm text-green-600">QA Engineer</p>
-            <p class="text-xs text-gray-500 mt-1">
-              Testing & Quality Assurance
-            </p>
-            <div class="flex mt-3 space-x-2">
-              <a
-                href="#"
-                class="text-gray-400 hover:text-blue-600 transition"
-                title="LinkedIn"
-                ><i class="fab fa-linkedin text-xl"></i
-              ></a>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-gray-800 transition"
-                title="GitHub"
-                ><i class="fab fa-github text-xl"></i
-              ></a>
-            </div>
-          </div>
+            let isLinkActive = false;
 
-          <div
-            class="flex flex-col items-center text-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition duration-300 ease-in-out"
-          >
-            <img
-              src="https://via.placeholder.com/150/FFD700/FFFFFF?text=Dev4"
-              alt="Foto Developer 4"
-              class="w-32 h-32 rounded-full object-cover border-4 border-yellow-500 shadow-lg mb-4"
-            />
-            <h4 class="text-lg font-semibold text-gray-800">Dion Cahyo</h4>
-            <p class="text-sm text-yellow-600">DevOps Engineer</p>
-            <p class="text-xs text-gray-500 mt-1">
-              Deployment & Infrastructure
-            </p>
-            <div class="flex mt-3 space-x-2">
-              <a
-                href="#"
-                class="text-gray-400 hover:text-blue-600 transition"
-                title="LinkedIn"
-                ><i class="fab fa-linkedin text-xl"></i
-              ></a>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-gray-800 transition"
-                title="GitHub"
-                ><i class="fab fa-github text-xl"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-      </div>
+            if (linkFileName === currentPath) {
+              isLinkActive = true;
+            } else if (
+              (currentPath === "" || currentPath === "index.html") &&
+              linkFileName === "admin-dashboard.html"
+            ) {
+              isLinkActive = true;
+            }
 
-      <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <div class="flex items-center mb-4">
-          <i class="fas fa-copyright text-gray-500 text-2xl mr-3"></i>
-          <h3 class="text-xl font-semibold text-gray-800">
-            Lisensi & Hak Cipta
-          </h3>
-        </div>
-        <p class="text-gray-700 text-sm leading-relaxed">
-          Software ini dilindungi oleh hak cipta dan dilisensikan di bawah
-          Lisensi Propietari TitipGo. Segala bentuk penggunaan, reproduksi, atau
-          distribusi yang tidak sah tanpa izin tertulis dari TitipGo sangat
-          dilarang.
-          <br /><br />
-          &copy; 2025 TitipGo. All rights reserved.
-        </p>
-      </div>
-
-      <div
-        class="text-center text-gray-600 text-lg mt-10 p-4 border-t-2 border-pink-200"
-      >
-        <p>
-          Terima kasih atas dedikasi tim dan kepercayaan Anda pada platform
-          TitipGo.
-        </p>
-        <p class="text-sm mt-2 text-gray-500">
-          Dibuat dengan <i class="fas fa-heart text-red-500"></i> untuk
-          manajemen yang lebih baik.
-        </p>
-      </div>
-    </main>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const currentPath = window.location.pathname.split("/").pop();
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
-
-          let isLinkActive = false;
-
-          if (linkFileName === currentPath) {
-            isLinkActive = true;
-          } else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition", // Hapus transisi jika Anda ingin langsung ganti warna
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-          }
+            if (isLinkActive) {
+              link.classList.remove(
+                "text-gray-700",
+                "hover:bg-pink-100",
+                "hover:text-pink-600",
+                "transition", // Hapus transisi jika Anda ingin langsung ganti warna
+                "duration-200",
+                "ease-in-out"
+              );
+              link.classList.add("bg-pink-600", "text-white", "font-semibold");
+            } else {
+              link.classList.remove(
+                "bg-pink-600",
+                "text-white",
+                "font-semibold"
+              );
+              link.classList.add(
+                "text-gray-700",
+                "hover:bg-pink-100",
+                "hover:text-pink-600",
+                "transition",
+                "duration-200",
+                "ease-in-out"
+              );
+            }
+          });
         });
-      });
-    </script>
+      </script>
+    </div>
   </body>
 </html>

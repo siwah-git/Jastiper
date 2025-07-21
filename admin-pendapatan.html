@@ -2,23 +2,82 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dashboard - TitipGo Admin</title>
+    <title>Pendapatan - TitipGo Admin</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Main content background with transparency */
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            /* Overlay putih transparan */ rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Style untuk membuat background kartu statistik dan tabel sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      /* Optional: Overlay tambahan jika diperlukan */
+      /* #mainContent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 0;
+        border-radius: inherit;
+      } */
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Adjusting header transparency if desired, or use a specific Tailwind color */
+      .header-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      /* Untuk header blue, jika ingin transparan: */
+      .blue-header-transparent {
+        background-color: rgba(
+          37,
+          99,
+          235,
+          0.8
+        ); /* blue-600 dengan opasitas 80% */
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
         class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
@@ -32,7 +91,7 @@
 
             <a
               href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-home mr-3"></i> Dashboard
             </a>
@@ -55,6 +114,12 @@
               <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
             </a>
             <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
+            </a>
+            <a
               href="admin-aduan.html"
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
@@ -68,7 +133,7 @@
             </a>
             <a
               href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
             >
               <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
             </a>
@@ -82,7 +147,7 @@
               href="admin-tentang.html"
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
-              <i class="fas fa-user-circle mr-3"></i> Tentang Kami
+              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
             </a>
           </nav>
         </div>
@@ -91,215 +156,558 @@
         </footer>
       </aside>
 
-      <!-- Konten utama -->
-      <main class="ml-64 w-full p-6 overflow-y-auto">
-        <!-- Header -->
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        "
+      >
         <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
+          class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md"
         >
-          <p class="text-lg font-semibold">
-            Pendapatan Platform
-          </p>
-          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+          <p class="text-lg font-semibold">Pendapatan Platform</p>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
         </div>
 
-        <div class="bg-white p-6 rounded-md shadow-md mb-8">
-    <div class="flex flex-wrap gap-4 items-center justify-between">
-        <div class="flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow">
-                <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
+        <div class="card-bg-transparent p-6 rounded-md shadow-md mb-8">
+          <div class="flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex flex-wrap gap-4 items-center">
+              <div
+                class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent"
+              >
+                <i
+                  class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"
+                ></i>
                 <p class="text-gray-600 text-sm">Total Pendapatan</p>
-                <p class="text-xl font-bold text-gray-800">Rp. 110.000.000,-</p>
-            </div>
-            <div class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow">
+                <p id="totalPendapatan" class="text-xl font-bold text-gray-800">
+                  Rp. 0,-
+                </p>
+              </div>
+              <div
+                class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent"
+              >
                 <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
                 <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
-                <p class="text-xl font-bold text-gray-800">1.000</p>
+                <p id="jumlahPesanan" class="text-xl font-bold text-gray-800">
+                  0
+                </p>
+              </div>
             </div>
 
-            <div class="col-span-full md:col-span-2 lg:col-span-2 xl:col-span-2 flex justify-end items-center space-x-4 ml-auto">
-                <select id="monthYear" class="p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                    <option value="">Bulan/Tahun</option>
-                    <option value="2024-01">Januari 2024</option>
-                    <option value="2024-02">Februari 2024</option>
-                    </select>
-                <button class="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
-                    <i class="fas fa-file-export mr-2"></i> Ekspor
-                </button>
+            <div class="flex justify-end items-center space-x-4 ml-auto">
+              <select
+                id="monthYearFilter"
+                class="p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 card-bg-transparent"
+              >
+                <option value="">Semua Bulan/Tahun</option>
+                <option value="2024-01">Januari 2024</option>
+                <option value="2024-02">Februari 2024</option>
+                <option value="2024-03">Maret 2024</option>
+                <option value="2024-04">April 2024</option>
+                <option value="2024-05">Mei 2024</option>
+                <option value="2024-06">Juni 2024</option>
+                <option value="2024-07">Juli 2024</option>
+                <option value="2024-08">Agustus 2024</option>
+                <option value="2024-09">September 2024</option>
+                <option value="2024-10">Oktober 2024</option>
+                <option value="2024-11">November 2024</option>
+                <option value="2024-12">Desember 2024</option>
+              </select>
+              <button
+                id="exportButton"
+                class="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200"
+              >
+                <i class="fas fa-file-export mr-2"></i> Ekspor
+              </button>
             </div>
+          </div>
         </div>
-    </div>
-</div>
 
-    <div class="bg-white p-6 rounded-md shadow-md">
-        <div class="overflow-x-auto rounded-md border border-gray-200">
+        <div class="card-bg-transparent p-6 rounded-md shadow-md">
+          <div class="overflow-x-auto rounded-md border border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-blue-500"> <tr>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No. Pesanan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Tanggal</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Customer</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Total Pesanan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Ongkir</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Fee Platform</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Biaya Layanan</th>
-                        <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
-                        <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">001</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">ORD111</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rosa</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
-                        <td class="py-3 px-4 text-sm">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                        </td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="admin-pendapatan-detail.html" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">002</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">ORD112</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Bella</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
-                        <td class="py-3 px-4 text-sm">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                        </td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">003</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">ORD113</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Angelina</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
-                        <td class="py-3 px-4 text-sm">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                        </td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">004</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">ORD114</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Brodi</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
-                        <td class="py-3 px-4 text-sm">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                        </td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td class="py-3 px-4 text-sm text-gray-700">005</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">ORD115</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">12 Juli 2024, 12:09</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Kalea</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 30.000</td>
-                        <td class="py-3 px-4 text-sm text-gray-700">Rp. 5.000</td>
-                        <td class="py-3 px-4 text-sm">
-                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Lunas</span>
-                        </td>
-                        <td class="py-3 px-4 text-sm text-center">
-                            <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        </td>
-                    </tr>
-                     
-                </tbody>
+              <thead class="bg-blue-600">
+                <tr>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    No
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    No. Pesanan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Tanggal
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Customer
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Total Pesanan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Ongkir
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Fee Platform
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Biaya Layanan
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
+                  >
+                    Aksi
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                id="dataTableBody"
+                class="bg-white divide-y divide-gray-200"
+              ></tbody>
             </table>
-        </div>
+          </div>
 
-        <div class="mt-6 flex justify-between items-center">
-            <div class="text-sm text-gray-700">
-                Menampilkan 1 sampai 9 dari 100 data
-            </div>
-            <div class="flex">
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">Previous</button>
-                <button class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300">1</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">Next</button>
-            </div>
+          <div class="mt-6 flex justify-between items-center">
+            <div id="paginationInfo" class="text-sm text-gray-700"></div>
+            <div id="paginationButtons" class="flex"></div>
+          </div>
         </div>
+      </main>
     </div>
-</div>
 
-        <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
+    <script type="module">
+      // Import fungsi-fungsi Firebase yang dibutuhkan
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        query,
+        orderBy,
+        where,
+        Timestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+      // KONFIGURASI FIREBASE ANDA - GANTI DENGAN DATA ASLI PROYEK ANDA
+      // Anda bisa mendapatkan ini dari Firebase Console -> Project settings -> General -> Your apps -> Web app -> Config
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY", // <-- GANTI INI
+        authDomain: "YOUR_AUTH_DOMAIN", // <-- GANTI INI
+        projectId: "YOUR_PROJECT_ID", // <-- GANTI INI
+        storageBucket: "YOUR_STORAGE_BUCKET", // <-- GANTI INI
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // <-- GANTI INI
+        appId: "YOUR_APP_ID", // <-- GANTI INI
+      };
 
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+      // Inisialisasi Firebase di sini (hanya sekali)
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
+      // Referensi elemen-elemen DOM
+      const dataTableBody = document.getElementById("dataTableBody");
+      const totalPendapatanElement = document.getElementById("totalPendapatan");
+      const jumlahPesananElement = document.getElementById("jumlahPesanan");
+      const monthYearFilter = document.getElementById("monthYearFilter");
+      const exportButton = document.getElementById("exportButton");
+      const paginationInfo = document.getElementById("paginationInfo");
+      const paginationButtons = document.getElementById("paginationButtons");
 
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
+      const itemsPerPage = 10; // Jumlah item per halaman
+      let currentPage = 1; // Halaman saat ini
+      let allOrders = []; // Menyimpan semua pesanan yang diambil dari Firebase
+      let filteredOrders = []; // Menyimpan pesanan setelah difilter (untuk paginasi)
 
+      // Fungsi untuk memformat angka menjadi format Rupiah
+      const formatRupiah = (amount) => {
+        if (typeof amount !== "number") {
+          return "Rp. 0"; // Handle non-numeric values gracefully
+        }
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(amount);
+      };
 
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
+      // Fungsi untuk memformat Timestamp Firebase menjadi string tanggal yang mudah dibaca
+      const formatDate = (timestamp) => {
+        if (timestamp && typeof timestamp.toDate === "function") {
+          const date = timestamp.toDate();
+          const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          };
+          return date.toLocaleDateString("id-ID", options);
+        } else if (typeof timestamp === "string") {
+          // Handle cases where date might already be a string
+          const date = new Date(timestamp);
+          if (!isNaN(date)) {
+            // Check if date parsing was successful
+            const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            };
+            return date.toLocaleDateString("id-ID", options);
+          }
+        }
+        return "-"; // Default if date is not valid
+      };
 
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
+      // Fungsi untuk merender data ke tabel
+      function renderTable(ordersToDisplay) {
+        dataTableBody.innerHTML = ""; // Hapus baris tabel yang ada
 
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
+        ordersToDisplay.forEach((order, index) => {
+          const row = dataTableBody.insertRow();
+          // Hitung nomor urut yang benar untuk halaman saat ini
+          const displayIndex = (currentPage - 1) * itemsPerPage + index + 1;
+
+          row.insertCell().textContent = displayIndex
+            .toString()
+            .padStart(3, "0"); // No.
+          row.insertCell().textContent = order.noPesanan || "-";
+          row.insertCell().textContent = formatDate(order.tanggal); // Format tanggal
+          row.insertCell().textContent = order.customerName || "-";
+          row.insertCell().textContent = formatRupiah(order.totalPesanan || 0);
+          row.insertCell().textContent = formatRupiah(order.ongkir || 0);
+          row.insertCell().textContent = formatRupiah(order.feePlatform || 0);
+          row.insertCell().textContent = formatRupiah(order.biayaLayanan || 0);
+
+          const statusCell = row.insertCell();
+          const statusSpan = document.createElement("span");
+          statusSpan.classList.add(
+            "px-2",
+            "py-1",
+            "inline-flex",
+            "text-xs",
+            "leading-5",
+            "font-semibold",
+            "rounded-full"
+          );
+
+          // Terapkan warna berdasarkan status
+          if (order.status === "Lunas") {
+            statusSpan.classList.add("bg-green-100", "text-green-800");
+          } else if (
+            order.status === "Pending" ||
+            order.status === "Menunggu Pembayaran"
+          ) {
+            statusSpan.classList.add("bg-yellow-100", "text-yellow-800");
+          } else if (order.status === "Dibatalkan") {
+            statusSpan.classList.add("bg-red-100", "text-red-800");
+          } else {
+            statusSpan.classList.add("bg-gray-100", "text-gray-800"); // Default
+          }
+          statusSpan.textContent = order.status || "-";
+          statusCell.appendChild(statusSpan);
+
+          const actionCell = row.insertCell();
+          actionCell.classList.add("py-3", "px-4", "text-sm", "text-center");
+          const detailLink = document.createElement("a");
+          detailLink.href = `admin-pendapatan-detail.html?orderId=${order.id}`; // Sertakan ID dokumen sebagai parameter URL
+          detailLink.classList.add("text-blue-600", "hover:text-blue-900");
+          detailLink.title = "Lihat Detail";
+          detailLink.innerHTML = '<i class="fas fa-search"></i>';
+          actionCell.appendChild(detailLink);
         });
-    });
-</script>
+      }
+
+      // Fungsi untuk memperbarui kontrol paginasi
+      function updatePaginationControls() {
+        const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+        paginationButtons.innerHTML = ""; // Hapus tombol paginasi yang ada
+
+        // Informasi "Menampilkan X sampai Y dari Z data"
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(
+          currentPage * itemsPerPage,
+          filteredOrders.length
+        );
+        paginationInfo.textContent = `Menampilkan ${
+          filteredOrders.length > 0 ? startIndex + 1 : 0
+        } sampai ${endIndex} dari ${filteredOrders.length} data`;
+
+        // Tombol "Previous"
+        const prevButton = document.createElement("button");
+        prevButton.classList.add(
+          "px-4",
+          "py-2",
+          "text-sm",
+          "font-medium",
+          "text-gray-700",
+          "bg-white",
+          "border",
+          "border-gray-300",
+          "rounded-l-md",
+          "hover:bg-gray-50"
+        );
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            applyFiltersAndPaginate();
+          }
+        });
+        paginationButtons.appendChild(prevButton);
+
+        // Tombol nomor halaman
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.classList.add(
+            "px-4",
+            "py-2",
+            "text-sm",
+            "font-medium",
+            "border",
+            "border-gray-300"
+          );
+          if (i === currentPage) {
+            pageButton.classList.add("text-pink-600", "bg-pink-100");
+          } else {
+            pageButton.classList.add(
+              "text-gray-700",
+              "bg-white",
+              "hover:bg-gray-50"
+            );
+          }
+          pageButton.textContent = i;
+          pageButton.addEventListener("click", () => {
+            currentPage = i;
+            applyFiltersAndPaginate();
+          });
+          paginationButtons.appendChild(pageButton);
+        }
+
+        // Tombol "Next"
+        const nextButton = document.createElement("button");
+        nextButton.classList.add(
+          "px-4",
+          "py-2",
+          "text-sm",
+          "font-medium",
+          "text-gray-700",
+          "bg-white",
+          "border",
+          "border-gray-300",
+          "rounded-r-md",
+          "hover:bg-gray-50"
+        );
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages || totalPages === 0;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            applyFiltersAndPaginate();
+          }
+        });
+        paginationButtons.appendChild(nextButton);
+      }
+
+      // Fungsi utama untuk mengambil data dari Firebase
+      async function fetchOrders() {
+        try {
+          const ordersCol = collection(db, "pemesanan");
+          // Mengambil semua dokumen dan mengurutkannya berdasarkan tanggal
+          const q = query(ordersCol, orderBy("tanggal", "desc"));
+          const querySnapshot = await getDocs(q);
+
+          allOrders = querySnapshot.docs.map((doc) => {
+            // Mendapatkan data dokumen dan ID-nya
+            const data = doc.data();
+            return {
+              id: doc.id,
+              noPesanan: data.noPesanan || null,
+              tanggal: data.tanggal || null, // Harus berupa Timestamp Firebase
+              customerName: data.customerName || null,
+              totalPesanan: data.totalPesanan || 0,
+              ongkir: data.ongkir || 0,
+              feePlatform: data.feePlatform || 0,
+              biayaLayanan: data.biayaLayanan || 0,
+              status: data.status || null,
+            };
+          });
+
+          applyFiltersAndPaginate(); // Terapkan filter dan paginasi awal
+        } catch (error) {
+          console.error("Error fetching orders: ", error);
+          alert(
+            "Gagal memuat data pesanan. Silakan periksa konsol untuk detailnya."
+          );
+        }
+      }
+
+      // Fungsi untuk menerapkan filter dan paginasi pada data
+      function applyFiltersAndPaginate() {
+        // Mulai dengan semua pesanan
+        filteredOrders = [...allOrders];
+
+        const selectedMonthYear = monthYearFilter.value;
+        if (selectedMonthYear) {
+          const [year, month] = selectedMonthYear.split("-"); // Misalnya "2024-07" -> ["2024", "07"]
+          filteredOrders = filteredOrders.filter((order) => {
+            if (!order.tanggal || typeof order.tanggal.toDate !== "function") {
+              // Jika tanggal bukan Timestamp, coba parse sebagai string
+              const date = new Date(order.tanggal);
+              if (!isNaN(date)) {
+                return (
+                  date.getFullYear() === parseInt(year) &&
+                  date.getMonth() + 1 === parseInt(month)
+                );
+              }
+              return false; // Lewati jika tanggal tidak valid
+            }
+            const orderDate = order.tanggal.toDate(); // Konversi Timestamp ke objek Date
+            return (
+              orderDate.getFullYear() === parseInt(year) &&
+              orderDate.getMonth() + 1 === parseInt(month)
+            ); // getMonth() adalah 0-indexed
+          });
+        }
+
+        // Hitung total pendapatan dan jumlah pesanan dari data yang sudah difilter
+        let currentTotalFeePlatform = 0;
+        filteredOrders.forEach((order) => {
+          currentTotalFeePlatform += order.feePlatform || 0;
+        });
+        totalPendapatanElement.textContent = formatRupiah(
+          currentTotalFeePlatform
+        );
+        jumlahPesananElement.textContent = filteredOrders.length;
+
+        // Terapkan paginasi
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+
+        renderTable(paginatedOrders); // Render hanya data halaman saat ini
+        updatePaginationControls(); // Perbarui kontrol paginasi
+      }
+
+      // Event listener untuk filter bulan/tahun
+      monthYearFilter.addEventListener("change", () => {
+        currentPage = 1; // Reset ke halaman pertama saat filter berubah
+        applyFiltersAndPaginate();
+      });
+
+      // Event listener untuk tombol Ekspor
+      exportButton.addEventListener("click", () => {
+        // Data yang diekspor adalah data yang sudah difilter (bukan hanya yang dipaginasi)
+        if (filteredOrders.length === 0) {
+          alert("Tidak ada data untuk diekspor.");
+          return;
+        }
+
+        // Header CSV
+        let csvContent =
+          "No,No. Pesanan,Tanggal,Customer,Total Pesanan,Ongkir,Fee Platform,Biaya Layanan,Status\n";
+
+        // Baris data CSV
+        filteredOrders.forEach((order, index) => {
+          const formattedDate = formatDate(order.tanggal);
+          csvContent += `${index + 1},"${
+            order.noPesanan || ""
+          }","${formattedDate}","${order.customerName || ""}",${
+            order.totalPesanan || 0
+          },${order.ongkir || 0},${order.feePlatform || 0},${
+            order.biayaLayanan || 0
+          },"${order.status || ""}"\n`;
+        });
+
+        // Buat blob dan link untuk download
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const link = document.createElement("a");
+        if (link.download !== undefined) {
+          const url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", "pendapatan_titipgo.csv");
+          link.style.visibility = "hidden"; // Sembunyikan link
+          document.body.appendChild(link);
+          link.click(); // Klik link secara otomatis
+          document.body.removeChild(link); // Hapus link setelah di-klik
+        }
+        alert("Data pendapatan berhasil diekspor sebagai CSV.");
+      });
+
+      // Logika untuk menandai item sidebar yang aktif
+      document.addEventListener("DOMContentLoaded", () => {
+        const currentPath = window.location.pathname.split("/").pop(); // Mendapatkan nama file HTML saja
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          if (linkHref === currentPath) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
+        });
+
+        // Panggil fungsi untuk mengambil data pesanan setelah DOM dimuat
+        fetchOrders();
+      });
+    </script>
   </body>
 </html>
-
-

@@ -13,6 +13,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
     <style>
       /* Custom styles */
       :root {
@@ -30,6 +34,11 @@
 
       body {
         min-height: 100vh;
+        background-image: url("asset/images/background.png"); /* Add your background image */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Make background fixed */
+        background-repeat: no-repeat;
       }
 
       /* Untuk membatasi lebar konten utama agar tidak terlalu lebar di layar besar */
@@ -94,6 +103,12 @@
             <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
           </a>
           <a
+            href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+          >
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a
             href="admin-pesanan.html"
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
@@ -137,38 +152,38 @@
     </aside>
 
     <main class="main-content p-8 overflow-y-auto">
-      <div class="content-wrapper">
-        <div
-          class="bg-gradient-to-r from-purple-600 to-indigo-700 p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between mb-8 rounded-lg shadow-lg"
-        >
-          <div class="flex items-center mb-4 md:mb-0">
-            <a
-              href="laporan.html"
-              class="text-white hover:text-purple-100 mr-4"
-            >
-              <i class="fas fa-arrow-left text-2xl"></i>
-            </a>
-            <h1 class="text-2xl font-bold">Laporan Penjualan Juli 2025</h1>
-          </div>
-          <div class="text-right flex gap-3">
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-file-pdf mr-2"></i> Ekspor PDF
-            </button>
-            <button
-              class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-file-excel mr-2"></i> Ekspor Excel
-            </button>
-            <a
-              href="#"
-              class="text-purple-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-purple-400 hover:bg-purple-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+      <header
+        class="flex items-center justify-between bg-blue-600 text-white p-4 rounded-lg shadow-md mb-8"
+      >
+        <div class="flex items-center">
+          <a
+            href="admin-dashboard.html"
+            class="text-white hover:text-blue-100 mr-4"
+          >
+            <i class="fas fa-arrow-left text-2xl"></i>
+          </a>
+          <h1 class="text-2xl font-bold">Detail Laporan</h1>
         </div>
-
+        <div class="flex items-center space-x-4">
+          <button
+            class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          >
+            <i class="fas fa-file-pdf mr-2"></i> Ekspor PDF
+          </button>
+          <button
+            class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+          >
+            <i class="fas fa-file-excel mr-2"></i> Ekspor Excel
+          </button>
+          <a
+            href="#"
+            class="text-white hover:text-blue-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-blue-400 hover:bg-blue-700 text-sm flex items-center"
+          >
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </a>
+        </div>
+      </header>
+      <div class="content-wrapper">
         <nav class="text-sm text-gray-600 mb-6">
           <ol class="list-none p-0 inline-flex">
             <li class="flex items-center">
@@ -203,18 +218,29 @@
               class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
             >
               <p>
-                <strong>Nama Laporan:</strong> Laporan Penjualan Bulan Juli 2025
+                <strong>Nama Laporan:</strong>
+                <span id="report-name">Memuat...</span>
               </p>
-              <p><strong>ID Laporan:</strong> LPJ-202507</p>
-              <p><strong>Periode:</strong> 1 Juli 2025 - 31 Juli 2025</p>
-              <p><strong>Tanggal Dibuat:</strong> 1 Agustus 2025, 10:30 WIB</p>
-              <p><strong>Dibuat Oleh:</strong> Admin TitipGo</p>
+              <p>
+                <strong>ID Laporan:</strong>
+                <span id="report-id">Memuat...</span>
+              </p>
+              <p>
+                <strong>Periode:</strong>
+                <span id="report-period">Memuat...</span>
+              </p>
+              <p>
+                <strong>Tanggal Dibuat:</strong>
+                <span id="report-created-date">Memuat...</span>
+              </p>
+              <p>
+                <strong>Dibuat Oleh:</strong>
+                <span id="report-author">Memuat...</span>
+              </p>
               <p>
                 <strong>Status:</strong>
-                <span
-                  id="laporan-status-badge"
-                  class="status-badge status-final"
-                  >Final</span
+                <span id="laporan-status-badge" class="status-badge"
+                  >Memuat...</span
                 >
               </p>
             </div>
@@ -232,40 +258,66 @@
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Total Penjualan</p>
-                <p class="text-2xl font-bold text-green-600 mt-1">
-                  Rp 150.000.000
+                <p
+                  class="text-2xl font-bold text-green-600 mt-1"
+                  id="total-sales"
+                >
+                  Memuat...
                 </p>
               </div>
               <div
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Jumlah Pesanan</p>
-                <p class="text-2xl font-bold text-blue-600 mt-1">350</p>
+                <p
+                  class="text-2xl font-bold text-blue-600 mt-1"
+                  id="total-orders"
+                >
+                  Memuat...
+                </p>
               </div>
               <div
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Jastiper Aktif</p>
-                <p class="text-2xl font-bold text-purple-600 mt-1">45</p>
+                <p
+                  class="text-2xl font-bold text-purple-600 mt-1"
+                  id="active-jastipers"
+                >
+                  Memuat...
+                </p>
               </div>
               <div
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Pelanggan Baru</p>
-                <p class="text-2xl font-bold text-indigo-600 mt-1">120</p>
+                <p
+                  class="text-2xl font-bold text-indigo-600 mt-1"
+                  id="new-customers"
+                >
+                  Memuat...
+                </p>
               </div>
               <div
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Produk Terjual</p>
-                <p class="text-2xl font-bold text-yellow-600 mt-1">520</p>
+                <p
+                  class="text-2xl font-bold text-yellow-600 mt-1"
+                  id="products-sold"
+                >
+                  Memuat...
+                </p>
               </div>
               <div
                 class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
               >
                 <p class="text-sm text-gray-600">Rata-rata Nilai Pesanan</p>
-                <p class="text-2xl font-bold text-orange-600 mt-1">
-                  Rp 428.571
+                <p
+                  class="text-2xl font-bold text-orange-600 mt-1"
+                  id="avg-order-value"
+                >
+                  Memuat...
                 </p>
               </div>
             </div>
@@ -336,54 +388,10 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    2025-07-28
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"
-                  >
-                    <a href="admin-pesanan-detail.html?id=ORD12345"
-                      >#ORD12345</a
-                    >
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Baju Batik, Sneakers
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"
-                  >
-                    <a href="pengguna-detail.html?id=JSTP001">Dhea A.</a>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Rp 765.000
-                  </td>
-                </tr>
-                <tr>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    2025-07-27
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"
-                  >
-                    <a href="admin-pesanan-detail.html?id=ORD12346"
-                      >#ORD12346</a
-                    >
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Tas Kulit
-                  </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"
-                  >
-                    <a href="pengguna-detail.html?id=JSTP002">Rizky S.</a>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    Rp 1.200.000
-                  </td>
-                </tr>
-              </tbody>
+              <tbody
+                class="bg-white divide-y divide-gray-200"
+                id="sales-detail-table-body"
+              ></tbody>
             </table>
             <div class="mt-4 text-right">
               <a href="#" class="text-blue-600 hover:underline text-sm"
@@ -399,14 +407,11 @@
               <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Analisis &
               Kesimpulan
             </h3>
-            <p class="text-gray-700 text-sm leading-relaxed">
-              Penjualan di bulan Juli menunjukkan pertumbuhan yang stabil,
-              terutama didorong oleh kategori fashion dan aksesoris. Jumlah
-              jastiper aktif juga mengalami peningkatan, berkontribusi pada
-              diversifikasi produk. Area yang perlu diperhatikan adalah tingkat
-              retur produk yang sedikit meningkat di akhir bulan. Disarankan
-              untuk menganalisis lebih lanjut penyebab retur dan kualitas produk
-              dari beberapa jastiper.
+            <p
+              class="text-gray-700 text-sm leading-relaxed"
+              id="report-analysis"
+            >
+              Memuat...
             </p>
           </div>
         </div>
@@ -414,6 +419,20 @@
     </main>
 
     <script>
+      // Your Firebase configuration
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
       document.addEventListener("DOMContentLoaded", function () {
         // Skrip untuk menyorot navigasi sidebar
         const currentPath = window.location.pathname.split("/").pop();
@@ -427,7 +446,7 @@
 
           // Special handling for detail pages: highlight parent menu
           if (
-            linkFileName === "laporan.html" &&
+            linkFileName === "admin-laporan.html" &&
             currentPath.startsWith("admin-laporan-detail")
           ) {
             isLinkActive = true;
@@ -463,148 +482,347 @@
           }
         });
 
-        // Contoh JavaScript untuk mengubah badge status laporan
-        const laporanStatus = "final"; // Ganti dengan "final", "draft", "archived"
-        const statusBadge = document.getElementById("laporan-status-badge");
-
-        if (statusBadge) {
-          statusBadge.className = "status-badge"; // Reset classes
-          switch (laporanStatus) {
-            case "final":
-              statusBadge.classList.add("status-final");
-              statusBadge.textContent = "Status: Final";
-              break;
-            case "draft":
-              statusBadge.classList.add("status-draft");
-              statusBadge.textContent = "Status: Draf";
-              break;
-            case "archived":
-              statusBadge.classList.add("status-archived");
-              statusBadge.textContent = "Status: Diarsipkan";
-              break;
-            default:
-              statusBadge.classList.add("bg-gray-200", "text-gray-800");
-              statusBadge.textContent = "Status: Tidak Diketahui";
-              break;
-          }
-        }
-
-        // --- Chart.js Initialization ---
-        // Data for Daily Sales Chart
-        const dailySalesData = {
-          labels: [
-            "1 Jul",
-            "5 Jul",
-            "10 Jul",
-            "15 Jul",
-            "20 Jul",
-            "25 Jul",
-            "30 Jul",
-          ],
-          datasets: [
-            {
-              label: "Penjualan (Rp)",
-              data: [
-                5000000, 7000000, 6000000, 9000000, 8000000, 10000000, 12000000,
-              ],
-              borderColor: "rgb(75, 192, 192)",
-              tension: 0.1,
-              fill: false,
-            },
-          ],
+        // Function to format currency
+        const formatCurrency = (amount) => {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(amount);
         };
 
-        const dailySalesConfig = {
-          type: "line",
-          data: dailySalesData,
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                display: true,
-                position: "top",
-              },
-              title: {
-                display: false, // Title moved to h4 tag
-              },
+        // Function to update report status badge
+        const updateStatusBadge = (status) => {
+          const statusBadge = document.getElementById("laporan-status-badge");
+          if (statusBadge) {
+            statusBadge.className = "status-badge"; // Reset classes
+            switch (status) {
+              case "final":
+                statusBadge.classList.add("status-final");
+                statusBadge.textContent = "Final";
+                break;
+              case "draft":
+                statusBadge.classList.add("status-draft");
+                statusBadge.textContent = "Draf";
+                break;
+              case "archived":
+                statusBadge.classList.add("status-archived");
+                statusBadge.textContent = "Diarsipkan";
+                break;
+              default:
+                statusBadge.classList.add("bg-gray-200", "text-gray-800");
+                statusBadge.textContent = "Tidak Diketahui";
+                break;
+            }
+          }
+        };
+
+        // --- Firebase Data Fetching ---
+
+        // Fetch Report Information
+        const fetchReportInfo = async () => {
+          try {
+            const reportId =
+              new URLSearchParams(window.location.search).get("id") ||
+              "LPJ-202507"; // Get report ID from URL or default
+            const docRef = db.collection("reports").doc(reportId);
+            const doc = await docRef.get();
+
+            if (doc.exists) {
+              const data = doc.data();
+              document.getElementById("report-name").textContent =
+                data.name || "N/A";
+              document.getElementById("report-id").textContent =
+                data.id || "N/A";
+              document.getElementById("report-period").textContent =
+                data.period || "N/A";
+              document.getElementById("report-created-date").textContent =
+                data.createdDate || "N/A";
+              document.getElementById("report-author").textContent =
+                data.author || "N/A";
+              updateStatusBadge(data.status);
+              document.getElementById("report-analysis").textContent =
+                data.analysis || "Tidak ada analisis tersedia.";
+            } else {
+              console.log("No such report document!");
+              document.getElementById("report-name").textContent =
+                "Data tidak ditemukan";
+              // Set other fields to N/A or appropriate message
+            }
+          } catch (error) {
+            console.error("Error fetching report information: ", error);
+            alert("Error loading report information: " + error.message);
+          }
+        };
+
+        // Fetch Summary Performance Data
+        const fetchSummaryPerformance = async () => {
+          try {
+            // This part would ideally aggregate data from your 'orders' collection
+            // For demonstration, let's assume a 'summary' document in 'reports' or a separate 'metrics' collection
+            const summaryRef = db
+              .collection("metrics")
+              .doc("july_2025_sales_summary"); // Example path
+            const doc = await summaryRef.get();
+
+            if (doc.exists) {
+              const data = doc.data();
+              document.getElementById("total-sales").textContent =
+                formatCurrency(data.totalSales || 0);
+              document.getElementById("total-orders").textContent = (
+                data.totalOrders || 0
+              ).toLocaleString("id-ID");
+              document.getElementById("active-jastipers").textContent = (
+                data.activeJastipers || 0
+              ).toLocaleString("id-ID");
+              document.getElementById("new-customers").textContent = (
+                data.newCustomers || 0
+              ).toLocaleString("id-ID");
+              document.getElementById("products-sold").textContent = (
+                data.productsSold || 0
+              ).toLocaleString("id-ID");
+              document.getElementById("avg-order-value").textContent =
+                formatCurrency(data.avgOrderValue || 0);
+            } else {
+              console.log("No summary performance data found!");
+              document.getElementById("total-sales").textContent = "N/A";
+              // Set other summary fields to N/A
+            }
+          } catch (error) {
+            console.error("Error fetching summary performance: ", error);
+            alert("Error loading summary performance: " + error.message);
+          }
+        };
+
+        // Fetch Detailed Sales Data for Table
+        const fetchDetailedSales = async () => {
+          try {
+            const salesTableBody = document.getElementById(
+              "sales-detail-table-body"
+            );
+            salesTableBody.innerHTML =
+              '<tr><td colspan="5" class="text-center py-4 text-gray-500">Memuat data...</td></tr>';
+
+            // Fetch orders for July 2025 (adjust query as per your data structure)
+            const ordersSnapshot = await db
+              .collection("orders")
+              .where("orderDate", ">=", "2025-07-01")
+              .where("orderDate", "<=", "2025-07-31")
+              .orderBy("orderDate", "desc")
+              .limit(10) // Limit for initial display
+              .get();
+
+            salesTableBody.innerHTML = ""; // Clear loading message
+
+            if (ordersSnapshot.empty) {
+              salesTableBody.innerHTML =
+                '<tr><td colspan="5" class="text-center py-4 text-gray-500">Tidak ada data penjualan untuk periode ini.</td></tr>';
+              return;
+            }
+
+            ordersSnapshot.forEach((doc) => {
+              const order = doc.data();
+              const row = `
+       <tr>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${
+          order.orderDate || "N/A"
+        }</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline">
+         <a href="admin-pesanan-detail.html?id=${doc.id}">#${doc.id}</a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${
+          order.products ? order.products.map((p) => p.name).join(", ") : "N/A"
+        }</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline">
+         <a href="pengguna-detail.html?id=${order.jastiperId}">${
+                order.jastiperName || "N/A"
+              }</a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(
+          order.totalAmount || 0
+        )}</td>
+       </tr>
+      `;
+              salesTableBody.innerHTML += row;
+            });
+          } catch (error) {
+            console.error("Error fetching detailed sales data: ", error);
+            document.getElementById(
+              "sales-detail-table-body"
+            ).innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Error memuat data penjualan: ${error.message}</td></tr>`;
+            alert("Error loading detailed sales data: " + error.message);
+          }
+        };
+
+        // Fetch Data for Daily Sales Chart
+        const fetchDailySalesData = async () => {
+          try {
+            // This data would typically come from an aggregation of orders or a dedicated sales metrics collection
+            // For this example, let's simulate fetching aggregated daily sales
+            const dailySalesDocs = await db
+              .collection("dailySales")
+              .where("date", ">=", "2025-07-01")
+              .where("date", "<=", "2025-07-31")
+              .orderBy("date", "asc")
+              .get();
+
+            const labels = [];
+            const data = [];
+            dailySalesDocs.forEach((doc) => {
+              labels.push(
+                new Date(doc.data().date).toLocaleDateString("id-ID", {
+                  day: "numeric",
+                  month: "short",
+                })
+              );
+              data.push(doc.data().totalSales);
+            });
+
+            if (dailySalesChart) {
+              dailySalesChart.data.labels = labels;
+              dailySalesChart.data.datasets[0].data = data;
+              dailySalesChart.update();
+            }
+          } catch (error) {
+            console.error("Error fetching daily sales data for chart: ", error);
+            // Optionally update chart to show error state
+          }
+        };
+
+        // Fetch Data for Category Sales Chart
+        const fetchCategorySalesData = async () => {
+          try {
+            // This data would typically come from an aggregation of product categories in orders
+            // For this example, let's simulate fetching aggregated category sales
+            const categorySalesDocs = await db
+              .collection("categorySales")
+              .where("month", "==", "July")
+              .where("year", "==", 2025)
+              .get();
+
+            const labels = [];
+            const data = [];
+            const backgroundColors = []; // Store colors from Firebase if available or define them here
+
+            if (!categorySalesDocs.empty) {
+              categorySalesDocs.forEach((doc) => {
+                labels.push(doc.data().categoryName);
+                data.push(doc.data().totalSalesPercentage); // Or totalSales and calculate percentage in JS
+                backgroundColors.push(doc.data().color || getRandomColor()); // Assume color field or generate
+              });
+            } else {
+              // Fallback or empty state if no data
+              labels.push("Tidak ada data");
+              data.push(100);
+              backgroundColors.push("rgb(200, 200, 200)");
+            }
+
+            if (categorySalesChart) {
+              categorySalesChart.data.labels = labels;
+              categorySalesChart.data.datasets[0].data = data;
+              categorySalesChart.data.datasets[0].backgroundColor =
+                backgroundColors;
+              categorySalesChart.update();
+            }
+          } catch (error) {
+            console.error(
+              "Error fetching category sales data for chart: ",
+              error
+            );
+            // Optionally update chart to show error state
+          }
+        };
+
+        // Helper to get a random color if not provided by Firebase
+        function getRandomColor() {
+          var letters = "0123456789ABCDEF";
+          var color = "#";
+          for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+
+        // Initialize Charts (empty data initially, will be populated by Firebase fetches)
+        var dailySalesChart = new Chart(
+          document.getElementById("dailySalesChart"),
+          {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Penjualan (Rp)",
+                  data: [],
+                  borderColor: "rgb(75, 192, 192)",
+                  tension: 0.1,
+                  fill: false,
+                },
+              ],
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: function (value, index, values) {
-                    if (parseInt(value) >= 1000000) {
-                      return (
-                        "Rp " +
-                        (value / 1000000).toLocaleString("id-ID") +
-                        " Jt"
-                      );
-                    }
-                    if (parseInt(value) >= 1000) {
-                      return (
-                        "Rp " + (value / 1000).toLocaleString("id-ID") + " Rb"
-                      );
-                    }
-                    return "Rp " + value.toLocaleString("id-ID");
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: true, position: "top" },
+                title: { display: false },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function (value, index, values) {
+                      if (parseInt(value) >= 1000000) {
+                        return (
+                          "Rp " +
+                          (value / 1000000).toLocaleString("id-ID") +
+                          " Jt"
+                        );
+                      }
+                      if (parseInt(value) >= 1000) {
+                        return (
+                          "Rp " + (value / 1000).toLocaleString("id-ID") + " Rb"
+                        );
+                      }
+                      return "Rp " + value.toLocaleString("id-ID");
+                    },
                   },
                 },
               },
             },
-          },
-        };
-
-        var dailySalesChart = new Chart(
-          document.getElementById("dailySalesChart"),
-          dailySalesConfig
+          }
         );
-
-        // Data for Category Sales Chart
-        const categorySalesData = {
-          labels: [
-            "Fashion",
-            "Elektronik",
-            "Kuliner",
-            "Perlengkapan Rumah",
-            "Kecantikan",
-            "Lain-lain",
-          ],
-          datasets: [
-            {
-              label: "Penjualan (%)",
-              data: [30, 20, 15, 10, 10, 15], // Example percentages
-              backgroundColor: [
-                "rgb(255, 99, 132)",
-                "rgb(54, 162, 235)",
-                "rgb(255, 205, 86)",
-                "rgb(75, 192, 192)",
-                "rgb(153, 102, 255)",
-                "rgb(255, 159, 64)",
-              ],
-              hoverOffset: 4,
-            },
-          ],
-        };
-
-        const categorySalesConfig = {
-          type: "pie",
-          data: categorySalesData,
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: "top",
-              },
-              title: {
-                display: false, // Title moved to h4 tag
-              },
-            },
-          },
-        };
 
         var categorySalesChart = new Chart(
           document.getElementById("categorySalesChart"),
-          categorySalesConfig
+          {
+            type: "pie",
+            data: {
+              labels: [],
+              datasets: [
+                {
+                  label: "Penjualan (%)",
+                  data: [],
+                  backgroundColor: [],
+                  hoverOffset: 4,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { position: "top" },
+                title: { display: false },
+              },
+            },
+          }
         );
+
+        // Call the functions to fetch data
+        fetchReportInfo();
+        fetchSummaryPerformance();
+        fetchDetailedSales();
+        fetchDailySalesData();
+        fetchCategorySalesData();
       });
     </script>
   </body>

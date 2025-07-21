@@ -12,8 +12,56 @@
     />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Optional: Overlay tambahan jika diperlukan */
+      /* #mainContent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1); 
+        z-index: 0;
+        border-radius: inherit;
+      } */
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Style untuk membuat background kartu statistik sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      /* Added for header transparency */
+      .header-bg-transparent {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
   </head>
-  <body class="flex"> <aside
+  <body class="flex">
+    <aside
       class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
     >
       <div>
@@ -26,7 +74,7 @@
 
           <a
             href="admin-dashboard.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
             <i class="fas fa-home mr-3"></i> Dashboard
           </a>
@@ -41,6 +89,12 @@
             class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
           >
             <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a
+            href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+          >
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
           </a>
           <a
             href="admin-pesanan.html"
@@ -73,335 +127,524 @@
             <i class="fas fa-user-circle mr-3"></i> Profil
           </a>
           <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Tentang Kami
-            </a>
+            href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+          >
+            <i class="fas fa-user-circle mr-3"></i> Tentang Kami
+          </a>
         </nav>
       </div>
       <footer class="text-sm text-gray-500 text-center p-4 border-t">
         &copy; 2025 TitipGo. All rights reserved.
       </footer>
     </aside>
-    <main class="ml-64 flex-1 p-6 overflow-y-auto">
-      <div
-        class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-      >
-        <p class="text-lg font-semibold">
-          Manajemen Katalog
-        </p>
-        <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+    <main
+      id="mainContent"
+      class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+      style="
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url('asset/images/background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+    >
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold">Manajemen Katalog</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a
+            href="#"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+            ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+          >
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div class="md:col-span-2">
+          <label for="search" class="sr-only">Cari barang</label>
+          <div class="relative">
+            <input
+              type="text"
+              id="search"
+              placeholder="Cari barang..."
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
+            />
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="status" class="sr-only">Status</label>
+          <select
+            id="status"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
+          >
+            <option value="">Semua Status</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Pending">Pending</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+        <div>
+          <label for="jastiper" class="sr-only">Nama Jastiper</label>
+          <select
+            id="jastiper"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
+          >
+            <option value="">Semua Jastiper</option>
+          </select>
+        </div>
+        <div>
+          <label for="category" class="sr-only">Kategori</label>
+          <select
+            id="category"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
+          >
+            <option value="">Semua Kategori</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Elektronik">Elektronik</option>
+            <option value="Buku">Buku</option>
+            <option value="Koleksi">Koleksi</option>
+            <option value="Alat peledak">Alat peledak</option>
+          </select>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div class="md:col-span-2"> <label for="search" class="sr-only">Cari barang</label>
-            <div class="relative">
-                <input type="text" id="search" placeholder="Cari barang..." class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
-                </div>
-            </div>
-        </div>
-        <div>
-            <label for="status" class="sr-only">Status</label>
-            <select id="status" class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <option value="">Status</option>
-                <option value="Disetujui">Disetujui</option>
-                <option value="Pending">Pending</option>
-                <option value="Ditolak">Ditolak</option>
-            </select>
-        </div>
-        <div>
-            <label for="jastiper" class="sr-only">Nama Jastiper</label>
-            <select id="jastiper" class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <option value="">Nama Jastiper</option>
-                <option value="Dhea">Dhea</option>
-                <option value="Corla">Corla</option>
-                <option value="Gabriel">Gabriel</option>
-                <option value="Rasyi">Rasyi</option>
-                <option value="Gopi">Gopi</option>
-                <option value="Rahul">Rahul</option>
-                <option value="Anjeli">Anjeli</option>
-                <option value="Shabrina">Shabrina</option>
-            </select>
-        </div>
-        <div>
-            <label for="category" class="sr-only">Kategori</label>
-            <select id="category" class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <option value="">Kategori</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Elektronik">Elektronik</option>
-                <option value="Buku">Buku</option>
-                <option value="Koleksi">Koleksi</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="overflow-x-auto rounded-md border border-gray-200">
+      <div
+        class="card-bg-transparent overflow-x-auto rounded-md border border-gray-200"
+      >
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Foto</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama Barang</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kategori</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jastiper</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Harga</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Negara</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fee</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                    <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">1</td>
-                    <td class="py-3 px-4">
-                        <img src="{{ asset('images/sepatu.jpg') }}" alt="Logo" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Sepatu</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Fashion</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Dhea</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 2.000.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Malaysia</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 50.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">2</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Kemeja" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Kemeja</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Fashion</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Corla</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 500.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Singapore</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 60.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="admin-katalog-detail.html" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">3</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto PS 5" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">PS 5</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Elektronik</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Gabriel</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 7.000.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Singapore</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 60.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">4</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Granat" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Granat</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Alat peledak</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Dena</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 10.000.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Thailand</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 40.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="katalog-detail.blade.php" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">5</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Celana" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Celana</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Fashion</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rasyi</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 400.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Singapore</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 60.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">6</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Sandal" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Sandal</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Fashion</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Gopi</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 185.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Jepang</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 70.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">7</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto The Phantom" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">The Phantom</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Buku</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rahul</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 253.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">London</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 1.000.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">8</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Robot" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Robot</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Koleksi</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Anjeli</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 2.000.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Korea</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 80.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">9</td>
-                    <td class="py-3 px-4">
-                        <img src="https://via.placeholder.com/40x40" alt="Foto Boneka" class="w-10 h-10 rounded-md object-cover">
-                    </td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Boneka</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Koleksi</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Shabrina</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 450.000</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Eropa</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rp. 150.000</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-            </tbody>
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                No
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Foto
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Nama Barang
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Kategori
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Jastiper
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Harga
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Negara
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Fee
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                scope="col"
+                class="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wider"
+              >
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody id="catalogTableBody" class="divide-y divide-gray-200">
+            <tr>
+              <td colspan="10" class="py-4 px-4 text-center text-gray-500">
+                Memuat data katalog...
+              </td>
+            </tr>
+          </tbody>
         </table>
-    </div>
-
-    <div class="mt-6 flex justify-between items-center">
-        <div class="text-sm text-gray-700">
-            Menampilkan 1 sampai 9 dari 100 data
+        <div
+          id="noDataMessage"
+          class="hidden py-4 px-4 text-center text-gray-500"
+        >
+          Tidak ada data katalog yang ditemukan.
         </div>
-        <div class="flex">
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">Previous</button>
-            <button class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300">1</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">Next</button>
-        </div>
-    </div>
+      </div>
 
-      <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
+      <div class="mt-6 flex justify-between items-center">
+        <div id="paginationInfo" class="text-sm text-gray-700"></div>
+        <div id="paginationButtons" class="flex"></div>
+      </div>
+    </main>
 
-        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
 
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+    <script>
+      // Pastikan Firebase diinisialisasi hanya sekali dan menggunakan API compat
+      if (!firebase.apps.length) {
+        const firebaseConfig = {
+          apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+          authDomain: "titipgo-28f84.firebaseapp.com",
+          projectId: "titipgo-28f84",
+          storageBucket: "titipgo-28f84.firebasestorage.app",
+          messagingSenderId: "816687535591",
+          appId: "1:816687535591:web:eaecf2fcc994636a319942",
+          measurementId: "G-CS3V405F3B",
+        };
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore(); // Inisialisasi db dengan sintaksis compat
+      // const auth = firebase.auth(); // Jika Anda butuh auth juga
 
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
+      // Hapus bagian ini karena sudah dipindahkan ke blok script utama di bawah
+      // const querySnapshot = await getDocs(collection(db, "katalog"));
+      // querySnapshot.forEach((doc) => {
+      //   console.log(doc.id, " => ", doc.data());
+      // });
+    </script>
 
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Sidebar active link logic
+        const currentPath = window.location.pathname.split("/").pop(); // Get just the filename
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
-
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
-
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          if (linkHref === currentPath) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
         });
-    });
-</script>
+
+        // Firebase Data Loading, Search, and Filter
+        const catalogTableBody = document.getElementById("catalogTableBody");
+        const noDataMessage = document.getElementById("noDataMessage");
+        const searchInput = document.getElementById("search");
+        const statusFilter = document.getElementById("status");
+        const jastiperFilter = document.getElementById("jastiper");
+        const categoryFilter = document.getElementById("category");
+
+        let allProducts = []; // To store all products fetched from Firebase
+        const itemsPerPage = 10;
+        let currentPage = 1;
+
+        // Function to format price to IDR
+        function formatRupiah(amount) {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(amount);
+        }
+
+        async function fetchCatalogData() {
+          catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-gray-500">Memuat data katalog...</td></tr>`;
+          noDataMessage.classList.add("hidden");
+          try {
+            // Periksa apakah 'db' telah diinisialisasi secara global dari script di atas
+            if (typeof db === "undefined" || !db) {
+              console.error(
+                "Firebase Firestore tidak diinisialisasi. Pastikan SDK Firebase dimuat dengan benar."
+              );
+              catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-red-500">Error: Firebase tidak terinisialisasi.</td></tr>`;
+              return;
+            }
+
+            // Menggunakan sintaksis lama (compat) untuk Firestore
+            const productsCol = db.collection("produk");
+            const productSnapshot = await productsCol.get(); // Menggunakan .get() untuk mengambil data
+
+            allProducts = []; // Clear previous data
+            const uniqueJastipers = new Set();
+            productSnapshot.forEach((doc) => {
+              const data = doc.data();
+              allProducts.push({ id: doc.id, ...data });
+              if (data.jastiper) {
+                uniqueJastipers.add(data.jastiper);
+              }
+            });
+
+            populateJastiperFilter(Array.from(uniqueJastipers)); // Populate jastiper filter
+            // Initial render with all data
+            renderTable();
+          } catch (error) {
+            console.error("Error fetching catalog data: ", error);
+            catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-red-500">Gagal memuat data. Error: ${error.message}</td></tr>`;
+          }
+        }
+
+        function populateJastiperFilter(jastipers) {
+          jastiperFilter.innerHTML = '<option value="">Semua Jastiper</option>'; // Keep "Semua Jastiper" option
+          jastipers.sort().forEach((jastiper) => {
+            const option = document.createElement("option");
+            option.value = jastiper;
+            option.textContent = jastiper;
+            jastiperFilter.appendChild(option);
+          });
+        }
+
+        function renderTable() {
+          catalogTableBody.innerHTML = ""; // Clear existing rows
+          const filteredProducts = applyFilters(allProducts);
+
+          if (filteredProducts.length === 0) {
+            noDataMessage.classList.remove("hidden");
+            document.getElementById("paginationInfo").textContent = "";
+            document.getElementById("paginationButtons").innerHTML = "";
+            return;
+          } else {
+            noDataMessage.classList.add("hidden");
+          }
+
+          // Apply pagination
+          const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = Math.min(
+            startIndex + itemsPerPage,
+            filteredProducts.length
+          );
+          const paginatedProducts = filteredProducts.slice(
+            startIndex,
+            endIndex
+          );
+
+          paginatedProducts.forEach((product, index) => {
+            const row = document.createElement("tr");
+            row.classList.add("bg-white", "bg-opacity-80"); // Apply transparent background to each row
+            const displayIndex = startIndex + index + 1; // Calculate actual display index
+
+            // Determine status styling
+            let statusText = product.status || "Tidak Diketahui";
+            let statusClass = "bg-gray-100 text-gray-800"; // Default
+            if (statusText === "Disetujui") {
+              statusClass = "bg-green-100 text-green-800";
+            } else if (statusText === "Pending") {
+              statusClass = "bg-yellow-100 text-yellow-800";
+            } else if (statusText === "Ditolak") {
+              statusClass = "bg-red-100 text-red-800";
+            }
+
+            row.innerHTML = `
+                      <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
+                      <td class="py-3 px-4">
+                          <img src="${
+                            product.imageUrl ||
+                            "https://via.placeholder.com/40x40"
+                          }" alt="Foto ${
+              product.namaBarang
+            }" class="w-10 h-10 rounded-md object-cover">
+                      </td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${
+                        product.namaBarang || "-"
+                      }</td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${
+                        product.kategori || "-"
+                      }</td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${
+                        product.jastiper || "-"
+                      }</td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
+                        product.harga || 0
+                      )}</td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${
+                        product.negara || "-"
+                      }</td>
+                      <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
+                        product.fee || 0
+                      )}</td>
+                      <td class="py-3 px-4 text-sm">
+                          <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${statusText}</span>
+                      </td>
+                      <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
+                          <a href="admin-katalog-detail.html?id=${
+                            product.id
+                          }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
+                          <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
+                          <a href="#" class="text-red-600 hover:text-red-900 delete-button" data-id="${
+                            product.id
+                          }" title="Hapus"><i class="fas fa-trash"></i></a>
+                      </td>
+                    `;
+            catalogTableBody.appendChild(row);
+          });
+
+          updatePaginationControls(filteredProducts.length, totalPages);
+        }
+
+        function applyFilters(products) {
+          let filtered = [...products]; // Create a shallow copy
+
+          const searchTerm = searchInput.value.toLowerCase();
+          const selectedStatus = statusFilter.value;
+          const selectedJastiper = jastiperFilter.value;
+          const selectedCategory = categoryFilter.value;
+
+          if (searchTerm) {
+            filtered = filtered.filter((product) =>
+              product.namaBarang.toLowerCase().includes(searchTerm)
+            );
+          }
+
+          if (selectedStatus) {
+            filtered = filtered.filter(
+              (product) => product.status === selectedStatus
+            );
+          }
+
+          if (selectedJastiper) {
+            filtered = filtered.filter(
+              (product) => product.jastiper === selectedJastiper
+            );
+          }
+
+          if (selectedCategory) {
+            filtered = filtered.filter(
+              (product) => product.kategori === selectedCategory
+            );
+          }
+          return filtered;
+        }
+
+        function updatePaginationControls(totalItems, totalPages) {
+          const paginationInfo = document.getElementById("paginationInfo");
+          const paginationButtons =
+            document.getElementById("paginationButtons");
+
+          const startIndex = (currentPage - 1) * itemsPerPage + 1;
+          const endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems);
+          paginationInfo.textContent = `Menampilkan ${startIndex} sampai ${endIndex} dari ${totalItems} data`;
+
+          paginationButtons.innerHTML = ""; // Clear existing buttons
+
+          // Previous button
+          const prevButton = document.createElement("button");
+          prevButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 ${
+            currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+          }`;
+          prevButton.textContent = "Previous";
+          prevButton.disabled = currentPage === 1;
+          prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+              currentPage--;
+              renderTable();
+            }
+          });
+          paginationButtons.appendChild(prevButton);
+
+          // Page number buttons
+          for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement("button");
+            // Only apply rounded-l-md to the first page button, and rounded-r-md to the last
+            let buttonClass = `px-4 py-2 text-sm font-medium ${
+              currentPage === i
+                ? "text-pink-600 bg-pink-100"
+                : "text-gray-700 bg-white"
+            } border border-gray-300 hover:bg-gray-50`;
+
+            if (i === 1 && totalPages === 1) {
+              // Only one page, apply both roundings
+              buttonClass += " rounded-l-md rounded-r-md";
+            } else if (i === 1) {
+              // First page
+              buttonClass += " -ml-px"; // Remove left border for subsequent buttons
+            } else if (i === totalPages) {
+              // Last page
+              buttonClass += " -ml-px rounded-r-md";
+            } else {
+              // Middle pages
+              buttonClass += " -ml-px";
+            }
+
+            pageButton.className = buttonClass;
+            pageButton.textContent = i;
+            pageButton.addEventListener("click", () => {
+              currentPage = i;
+              renderTable();
+            });
+            paginationButtons.appendChild(pageButton);
+          }
+
+          // Next button
+          const nextButton = document.createElement("button");
+          nextButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 -ml-px ${
+            currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+          }`;
+          nextButton.textContent = "Next";
+          nextButton.disabled = currentPage === totalPages;
+          nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+              currentPage++;
+              renderTable();
+            }
+          });
+          paginationButtons.appendChild(nextButton);
+        }
+
+        // Event Listeners for search and filters
+        searchInput.addEventListener("keyup", () => {
+          currentPage = 1; // Reset to first page on search
+          renderTable();
+        });
+        statusFilter.addEventListener("change", () => {
+          currentPage = 1; // Reset to first page on filter change
+          renderTable();
+        });
+        jastiperFilter.addEventListener("change", () => {
+          currentPage = 1; // Reset to first page on filter change
+          renderTable();
+        });
+        categoryFilter.addEventListener("change", () => {
+          currentPage = 1; // Reset to first page on filter change
+          renderTable();
+        });
+
+        // Initial fetch of data when the page loads
+        fetchCatalogData();
+      });
+    </script>
   </body>
 </html>

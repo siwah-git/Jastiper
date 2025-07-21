@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Detail Produk - [Nama Produk] - TitipGo Admin</title>
+    <title>Detail Produk - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -11,8 +11,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
     <style>
       /* Custom styles */
       .truncate-text {
@@ -35,10 +37,45 @@
       .main-content {
         margin-left: var(--sidebar-width);
         flex-grow: 1; /* Penting untuk flexbox layout */
+        /* Gaya background tetap */
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Ini membuat background tidak bergerak */
       }
 
       body {
         min-height: 100vh;
+      }
+
+      /* Style untuk membuat background kartu sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+
+      /* Optional: Overlay tambahan jika diperlukan */
+      .main-content > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .blue-header-transparent {
+        background-color: rgba(
+          37,
+          99,
+          235,
+          0.8
+        ); /* blue-600 dengan opasitas 80% */
       }
     </style>
   </head>
@@ -62,7 +99,7 @@
           </a>
           <a
             href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
+            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out bg-pink-600 text-white font-semibold"
           >
             <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
           </a>
@@ -71,6 +108,12 @@
             class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
           >
             <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+          </a>
+          <a
+            href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+          >
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
           </a>
           <a
             href="admin-pesanan.html"
@@ -115,28 +158,27 @@
       </footer>
     </aside>
 
-    <main class="main-content p-8 overflow-y-auto">
+    <main
+      id="mainContent"
+      class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+      style="
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url('asset/images/background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+    >
       <div
-        class="bg-gradient-to-r from-pink-600 to-red-600 p-6 text-white flex items-center justify-between mb-8 rounded-lg shadow-lg"
+        class="blue-header-transparent p-4 text-white flex items-center justify-between mb-6 rounded-lg shadow-md"
       >
-        <div class="flex items-center">
-          <a
-            href="admin-katalog.html"
-            class="text-white hover:text-pink-100 mr-4"
-          >
-            <i class="fas fa-arrow-left text-2xl"></i>
-          </a>
-          <h1 class="text-2xl font-bold">
-            Detail Produk: Baju Batik Pria Modern
-          </h1>
-        </div>
-
+        <p id="productDetailTitle" class="text-lg font-semibold">
+          Detail Produk
+        </p>
         <div class="flex gap-3">
-          <button
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-          >
-            <i class="fas fa-edit mr-2"></i> Edit
-          </button>
           <button
             class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
           >
@@ -144,6 +186,7 @@
           </button>
           <a
             href="#"
+            id="logoutButton"
             class="text-pink-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
             ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
           >
@@ -168,296 +211,502 @@
             >
             <i class="fas fa-chevron-right mx-2 text-xs"></i>
           </li>
-          <li class="flex items-center text-gray-500">
-            Baju Batik Pria Modern
+          <li
+            class="flex items-center text-gray-500"
+            id="breadcrumbProductName"
+          >
+            Nama Produk
           </li>
         </ol>
       </nav>
 
-      <div class="flex flex-col space-y-6">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center mb-6 border-b pb-4"
-          >
-            <img
-              src="https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Batik+Pria"
-              alt="Baju Batik Pria Modern"
-              class="w-full md:w-64 h-auto md:h-64 object-cover rounded-lg shadow-lg mb-4 md:mb-0 md:mr-6"
-            />
-            <div>
-              <span
-                class="text-sm font-semibold text-pink-600 bg-pink-100 px-3 py-1 rounded-full"
-                >Tersedia</span
-              >
-              <h2 class="text-3xl font-bold text-gray-800 mt-2 mb-2">
-                Baju Batik Pria Modern "Kencana"
-              </h2>
-              <p class="text-green-600 text-3xl font-bold mb-4">Rp 250.000</p>
-              <div class="flex items-center text-gray-600 text-sm mb-2">
-                <i class="fas fa-star text-yellow-500 mr-1"></i> 4.8 (120
-                Ulasan)
-              </div>
-              <p class="text-gray-700 text-md leading-relaxed">
-                Kemeja batik pria modern dengan motif Kencana yang elegan,
-                terbuat dari bahan katun berkualitas tinggi. Nyaman dipakai
-                untuk acara formal maupun semi-formal.
-              </p>
-            </div>
-          </div>
-
-          <div class="mb-6">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-            >
-              <i class="fas fa-info-circle text-blue-500 mr-2"></i> Detail
-              Produk
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm"
-            >
-              <p><strong>SKU:</strong> BBP-Kencana-001</p>
-              <p><strong>Kategori:</strong> Pakaian Pria, Batik</p>
-              <p><strong>Brand:</strong> Batik Nusantara</p>
-              <p><strong>Berat:</strong> 0.3 kg</p>
-              <p><strong>Dimensi:</strong> 60x40x2 cm</p>
-              <p><strong>Material:</strong> Katun Prima</p>
-              <p><strong>Kondisi:</strong> Baru</p>
-            </div>
-          </div>
-
-          <div class="mb-6">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-            >
-              <i class="fas fa-file-invoice text-green-500 mr-2"></i> Deskripsi
-              Lengkap
-            </h3>
-            <p class="text-gray-700 leading-relaxed text-sm">
-              Baju Batik Pria Modern "Kencana" adalah pilihan tepat bagi Anda
-              yang menginginkan gaya klasik dengan sentuhan modern. Motif
-              Kencana yang rumit dan detail memberikan kesan mewah dan
-              eksklusif. Terbuat dari 100% katun prima, kemeja ini sangat nyaman
-              di kulit, menyerap keringat, dan tidak mudah kusut. Desain
-              slim-fit modern memberikan siluet yang rapi dan kekinian. Cocok
-              untuk menghadiri pesta pernikahan, acara kantor, atau kegiatan
-              semi-formal lainnya.
-              <br /><br />
-              Tersedia dalam berbagai ukuran: M, L, XL, XXL.
-              <br />
-              Petunjuk Perawatan: Cuci terpisah, jangan gunakan pemutih, setrika
-              dengan suhu rendah.
-            </p>
-          </div>
-
-          <div class="mb-6">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-            >
-              <i class="fas fa-images text-purple-500 mr-2"></i> Galeri Gambar
-            </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <img
-                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+2"
-                alt="Batik Pria Tampak Depan"
-                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-              />
-              <img
-                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+3"
-                alt="Batik Pria Detail Motif"
-                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-              />
-              <img
-                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+4"
-                alt="Batik Pria Belakang"
-                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-              />
-              <img
-                src="https://via.placeholder.com/200x200/FF69B4/FFFFFF?text=Batik+Pria+5"
-                alt="Batik Pria Bahan"
-                class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-user-tie text-teal-600 mr-2"></i> Informasi
-            Jastiper
-          </h3>
-          <div class="flex items-center mb-4">
-            <img
-              src="https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper"
-              alt="Foto Jastiper"
-              class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-teal-400"
-            />
-            <div>
-              <p class="text-lg font-semibold text-gray-800">
-                Jastiper Dhea Anindita
-              </p>
-              <p class="text-sm text-gray-600">ID Jastiper: JSTP001</p>
-            </div>
-          </div>
-          <ul class="text-gray-700 space-y-2 text-sm">
-            <li>
-              <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi
-              Asal: Singapura
-            </li>
-            <li>
-              <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
-              <a
-                href="mailto:dhea.anindita@example.com"
-                class="text-blue-600 hover:underline"
-                >dhea.anindita@example.com</a
-              >
-            </li>
-            <li>
-              <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
-              <a href="tel:+6281211223344" class="text-blue-600 hover:underline"
-                >+62 812 1122 3344</a
-              >
-            </li>
-            <li class="mt-3">
-              <a
-                href="admin-pengguna-detail.html?id=JSTP001"
-                class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
-              >
-                Lihat Profil Jastiper
-                <i class="fas fa-arrow-right ml-2 text-xs"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-boxes text-orange-500 mr-2"></i> Stok & Varian
-          </h3>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-white rounded-lg">
-              <thead>
-                <tr
-                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
-                >
-                  <th class="py-3 px-6 text-left">Varian</th>
-                  <th class="py-3 px-6 text-center">Stok</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-700 text-sm">
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-6 text-left whitespace-nowrap">Size M</td>
-                  <td class="py-3 px-6 text-center">
-                    <span
-                      class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
-                      >Tersedia (50)</span
-                    >
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-6 text-left whitespace-nowrap">Size L</td>
-                  <td class="py-3 px-6 text-center">
-                    <span
-                      class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"
-                      >Tersedia (75)</span
-                    >
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                  <td class="py-3 px-6 text-left whitespace-nowrap">Size XL</td>
-                  <td class="py-3 px-6 text-center">
-                    <span
-                      class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full text-xs"
-                      >Stok Rendah (15)</span
-                    >
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="py-3 px-6 text-left whitespace-nowrap">
-                    Size XXL
-                  </td>
-                  <td class="py-3 px-6 text-center">
-                    <span
-                      class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs"
-                      >Habis (0)</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-history text-blue-500 mr-2"></i> Riwayat Aktivitas
-          </h3>
-          <ul class="text-gray-700 space-y-3 text-sm">
-            <li class="flex items-start">
-              <i class="fas fa-calendar-alt text-gray-400 mr-3 mt-1"></i>
-              <div>
-                <strong>Dibuat:</strong> 15 Januari 2025, 10:30 AM
-                <p class="text-xs text-gray-500">
-                  Oleh:
-                  <a
-                    href="admin-pengguna-detail.html?id=JSTP001"
-                    class="text-blue-600 hover:underline"
-                    >Jastiper Dhea Anindita</a
-                  >
-                </p>
-              </div>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-pencil-alt text-gray-400 mr-3 mt-1"></i>
-              <div>
-                <strong>Terakhir Diperbarui:</strong> 18 Juli 2025, 09:15 AM
-                <p class="text-xs text-gray-500">
-                  Oleh: Admin Editor (perbaikan deskripsi & harga)
-                </p>
-              </div>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-chart-line text-gray-400 mr-3 mt-1"></i>
-              <div>
-                <strong>Penjualan Terakhir:</strong> 19 Juli 2025 (2 Pcs)
-                <p class="text-xs text-gray-500">Total Terjual: 500 Pcs</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
-            <i class="fas fa-globe text-orange-500 mr-2"></i> SEO & Metadata
-          </h3>
-          <ul class="text-gray-700 space-y-2 text-sm">
-            <li>
-              <strong>Meta Judul:</strong> Baju Batik Modern Pria | TitipGo
-            </li>
-            <li>
-              <strong>Meta Deskripsi:</strong> Kemeja batik pria motif Kencana.
-              Katun premium, nyaman, elegan.
-            </li>
-            <li>
-              <strong>Keyword:</strong> batik pria, kemeja batik, batik modern,
-              baju batik, kencana
-            </li>
-            <li>
-              <strong>Slug URL:</strong> /produk/baju-batik-pria-modern-kencana
-            </li>
-          </ul>
+      <div id="productDetailContent" class="flex flex-col space-y-6">
+        <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+          <p class="text-center text-gray-500">Memuat detail produk...</p>
         </div>
       </div>
     </main>
 
     <script>
+      // PERHATIAN: GANTI DENGAN KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
+      // Anda bisa mendapatkan ini dari Firebase Console -> Project settings -> Your apps
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY", // <--- GANTI INI
+        authDomain: "YOUR_AUTH_DOMAIN", // <--- GANTI INI
+        projectId: "YOUR_PROJECT_ID", // <--- GANTI INI
+        storageBucket: "YOUR_STORAGE_BUCKET", // <--- GANTI INI
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // <--- GANTI INI
+        appId: "YOUR_APP_ID", // <--- GANTI INI
+        // measurementId: "YOUR_MEASUREMENT_ID", // Opsional, jika Anda menggunakan Analytics
+      };
+
+      // Inisialisasi Firebase
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+      const storage = firebase.storage(); // Jika Anda menggunakan Firebase Storage
+
+      // --- Fungsi untuk Mendapatkan Parameter URL (Product ID) ---
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        return results === null
+          ? ""
+          : decodeURIComponent(results[1].replace(/\+/g, " "));
+      }
+
+      // --- Fungsi untuk Memuat Detail Produk ---
+      async function loadProductDetail() {
+        const productId = getUrlParameter("id");
+        const productDetailContent = document.getElementById(
+          "productDetailContent"
+        );
+        // Pastikan elemen dengan ID 'productDetailTitle' ada di HTML Anda
+        const productDetailTitle =
+          document.getElementById("productDetailTitle");
+        const breadcrumbProductName = document.getElementById(
+          "breadcrumbProductName"
+        );
+
+        if (!productId) {
+          productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">ID Produk tidak ditemukan di URL.</div>`;
+          // Update title dan breadcrumb meskipun error
+          document.title = `Error - TitipGo Admin`;
+          if (productDetailTitle)
+            productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+          if (breadcrumbProductName)
+            breadcrumbProductName.textContent = `Tidak Ditemukan`;
+          return;
+        }
+
+        try {
+          // Asumsi struktur data Anda adalah "produk" (huruf kecil)
+          // Berdasarkan screenshot Firebase, koleksi Anda bernama "produk"
+          const productDoc = await db
+            .collection("produk") // <--- Pastikan nama koleksi sesuai (produk, bukan products)
+            .doc(productId)
+            .get();
+
+          if (productDoc.exists) {
+            const productData = productDoc.data();
+
+            // Ambil informasi jastiper/toko
+            let jastiperInfo = {
+              name: "Tidak Diketahui",
+              id: "",
+              location: "Tidak Diketahui",
+              email: "#",
+              phone: "#",
+              profileUrl: "#",
+              photoUrl: "", // Tambahkan placeholder untuk photoUrl
+            };
+
+            // Berdasarkan screenshot Firebase, koleksi user Anda bernama "users"
+            if (productData.jastiperId) {
+              const jastiperDoc = await db
+                .collection("user") // <--- Pastikan nama koleksi sesuai (users, bukan user)
+                .doc(productData.jastiperId)
+                .get();
+              if (jastiperDoc.exists) {
+                const jastiperData = jastiperDoc.data();
+                jastiperInfo = {
+                  name: jastiperData.name || "Nama Jastiper",
+                  id: productData.jastiperId,
+                  location: jastiperData.location || "Lokasi",
+                  email: jastiperData.email || "#",
+                  phone: jastiperData.phone || "#",
+                  profileUrl: `admin-pengguna-detail.html?id=${productData.jastiperId}`, // Asumsi link ke detail pengguna
+                  photoUrl:
+                    jastiperData.photoUrl ||
+                    "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper", // Ambil dari data jastiper
+                };
+              }
+            }
+
+            // Dapatkan URL gambar utama dari Firebase Storage jika disimpan di sana
+            let mainImageUrl =
+              productData.mainImage ||
+              "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Tidak+Ada+Gambar";
+            // Pastikan storage diinisialisasi sebelum digunakan
+            if (mainImageUrl.startsWith("gs://") && storage) {
+              try {
+                const imageRef = storage.refFromURL(mainImageUrl);
+                mainImageUrl = await imageRef.getDownloadURL();
+              } catch (storageError) {
+                console.warn(
+                  "Error fetching main image from storage:",
+                  storageError
+                );
+                mainImageUrl =
+                  "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Gagal+Muat+Gambar";
+              }
+            }
+
+            // Dapatkan URL galeri gambar
+            let galleryImagesHtml = "";
+            if (
+              productData.galleryImages &&
+              productData.galleryImages.length > 0
+            ) {
+              for (const imgUrl of productData.galleryImages) {
+                let downloadUrl = imgUrl;
+                if (imgUrl.startsWith("gs://") && storage) {
+                  try {
+                    const imageRef = storage.refFromURL(imgUrl);
+                    downloadUrl = await imageRef.getDownloadURL();
+                  } catch (storageError) {
+                    console.warn(
+                      "Error fetching gallery image from storage:",
+                      storageError
+                    );
+                    downloadUrl =
+                      "https://via.placeholder.com/100x100/CCCCCC/000000?text=Error";
+                  }
+                }
+                galleryImagesHtml += `
+                        <img
+                          src="${downloadUrl}"
+                          alt="Gambar Produk"
+                          class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
+                        />
+                    `;
+              }
+            } else {
+              galleryImagesHtml = `
+                    <p class="text-gray-500 text-sm italic">Tidak ada gambar galeri.</p>
+                `;
+            }
+
+            // Render konten produk
+            productDetailContent.innerHTML = `
+              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+                <div class="flex flex-col md:flex-row items-start md:items-center mb-6 border-b pb-4">
+                  <img
+                    src="${mainImageUrl}"
+                    alt="${productData.name || "Nama Produk"}"
+                    class="w-full md:w-64 h-auto md:h-64 object-cover rounded-lg shadow-lg mb-4 md:mb-0 md:mr-6"
+                  />
+                  <div>
+                    <span
+                      class="text-sm font-semibold ${
+                        productData.stock > 0
+                          ? "text-pink-600 bg-pink-100"
+                          : "text-red-600 bg-red-100"
+                      } px-3 py-1 rounded-full"
+                    >${productData.stock > 0 ? "Tersedia" : "Habis"}</span
+                    >
+                    <h2 class="text-3xl font-bold text-gray-800 mt-2 mb-2">
+                      ${productData.name || "Nama Produk"}
+                    </h2>
+                    <p class="text-green-600 text-3xl font-bold mb-4">Rp ${(
+                      productData.price || 0
+                    ).toLocaleString("id-ID")}</p>
+                    <div class="flex items-center text-gray-600 text-sm mb-2">
+                      <i class="fas fa-star text-yellow-500 mr-1"></i> ${
+                        productData.rating || "N/A"
+                      } (${productData.reviewsCount || 0} Ulasan)
+                    </div>
+                    <p class="text-gray-700 text-md leading-relaxed">
+                      ${
+                        productData.shortDescription ||
+                        "Tidak ada deskripsi singkat."
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mb-6">
+                  <h3
+                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+                  >
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i> Detail Produk
+                  </h3>
+                  <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm"
+                  >
+                    <p><strong>SKU:</strong> ${productData.sku || "N/A"}</p>
+                    <p><strong>Kategori:</strong> ${
+                      productData.category || "N/A"
+                    }</p>
+                    <p><strong>Brand:</strong> ${productData.brand || "N/A"}</p>
+                    <p><strong>Berat:</strong> ${
+                      productData.weight || "N/A"
+                    } kg</p>
+                    <p><strong>Dimensi:</strong> ${
+                      productData.dimensions || "N/A"
+                    } cm</p>
+                    <p><strong>Material:</strong> ${
+                      productData.material || "N/A"
+                    }</p>
+                    <p><strong>Kondisi:</strong> ${
+                      productData.condition || "N/A"
+                    }</p>
+                  </div>
+                </div>
+
+                <div class="mb-6">
+                  <h3
+                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+                  >
+                    <i class="fas fa-file-invoice text-green-500 mr-2"></i> Deskripsi Lengkap
+                  </h3>
+                  <p class="text-gray-700 leading-relaxed text-sm">
+                    ${
+                      productData.fullDescription ||
+                      "Tidak ada deskripsi lengkap."
+                    }
+                  </p>
+                </div>
+
+                <div class="mb-6">
+                  <h3
+                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
+                  >
+                    <i class="fas fa-images text-purple-500 mr-2"></i> Galeri Gambar
+                  </h3>
+                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    ${galleryImagesHtml}
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+                <h3
+                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <i class="fas fa-user-tie text-teal-600 mr-2"></i> Informasi Jastiper
+                </h3>
+                <div class="flex items-center mb-4">
+                  <img
+                    src="${jastiperInfo.photoUrl}"
+                    alt="Foto Jastiper"
+                    class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-teal-400"
+                  />
+                  <div>
+                    <p class="text-lg font-semibold text-gray-800">
+                      ${jastiperInfo.name}
+                    </p>
+                    <p class="text-sm text-gray-600">ID Jastiper: ${
+                      jastiperInfo.id || "N/A"
+                    }</p>
+                  </div>
+                </div>
+                <ul class="text-gray-700 space-y-2 text-sm">
+                  <li>
+                    <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi Asal: ${
+                      jastiperInfo.location
+                    }
+                  </li>
+                  <li>
+                    <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
+                    <a
+                      href="mailto:${jastiperInfo.email}"
+                      class="text-blue-600 hover:underline"
+                      >${jastiperInfo.email}</a
+                    >
+                  </li>
+                  <li>
+                    <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
+                    <a href="tel:${
+                      jastiperInfo.phone
+                    }" class="text-blue-600 hover:underline"
+                      >${jastiperInfo.phone}</a
+                    >
+                  </li>
+                  <li class="mt-3">
+                    <a
+                      href="${jastiperInfo.profileUrl}"
+                      class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                    >
+                      Lihat Profil Jastiper
+                      <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+                <h3
+                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <i class="fas fa-boxes text-orange-500 mr-2"></i> Stok & Varian
+                </h3>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-white rounded-lg">
+                    <thead>
+                      <tr
+                        class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
+                      >
+                        <th class="py-3 px-6 text-left">Varian</th>
+                        <th class="py-3 px-6 text-center">Stok</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-gray-700 text-sm">
+                      ${
+                        productData.variants && productData.variants.length > 0
+                          ? productData.variants
+                              .map(
+                                (variant) => `
+                              <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="py-3 px-6 text-left whitespace-nowrap">${
+                                  variant.name
+                                }</td>
+                                <td class="py-3 px-6 text-center">
+                                  <span
+                                    class="${
+                                      variant.stock > 10
+                                        ? "bg-green-200 text-green-800"
+                                        : variant.stock > 0
+                                        ? "bg-yellow-200 text-yellow-800"
+                                        : "bg-red-200 text-red-800"
+                                    } py-1 px-3 rounded-full text-xs"
+                                  >${
+                                    variant.stock > 0
+                                      ? `Tersedia (${variant.stock})`
+                                      : "Habis (0)"
+                                  }</span
+                                  >
+                                </td>
+                              </tr>
+                            `
+                              )
+                              .join("")
+                          : `<tr><td colspan="2" class="py-3 px-6 text-center text-gray-500">Tidak ada varian.</td></tr>`
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+                <h3
+                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <i class="fas fa-history text-blue-500 mr-2"></i> Riwayat Aktivitas
+                </h3>
+                <ul class="text-gray-700 space-y-3 text-sm">
+                  <li class="flex items-start">
+                    <i class="fas fa-calendar-alt text-gray-400 mr-3 mt-1"></i>
+                    <div>
+                      <strong>Dibuat:</strong> ${
+                        productData.createdAt
+                          ? new Date(
+                              productData.createdAt.toDate()
+                            ).toLocaleString()
+                          : "N/A"
+                      }
+                      <p class="text-xs text-gray-500">
+                        Oleh:
+                        <a
+                          href="${jastiperInfo.profileUrl}"
+                          class="text-blue-600 hover:underline"
+                          >${jastiperInfo.name}</a
+                        >
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-pencil-alt text-gray-400 mr-3 mt-1"></i>
+                    <div>
+                      <strong>Terakhir Diperbarui:</strong> ${
+                        productData.updatedAt
+                          ? new Date(
+                              productData.updatedAt.toDate()
+                            ).toLocaleString()
+                          : "N/A"
+                      }
+                      <p class="text-xs text-gray-500">
+                        Oleh: ${productData.lastUpdatedBy || "Sistem"} (${
+              productData.lastUpdateReason || "N/A"
+            })
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-chart-line text-gray-400 mr-3 mt-1"></i>
+                    <div>
+                      <strong>Penjualan Terakhir:</strong> ${
+                        productData.lastSoldDate
+                          ? new Date(
+                              productData.lastSoldDate.toDate()
+                            ).toLocaleDateString()
+                          : "N/A"
+                      } (${productData.lastSoldQuantity || 0} Pcs)
+                      <p class="text-xs text-gray-500">Total Terjual: ${
+                        productData.totalSold || 0
+                      } Pcs</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-md card-bg-transparent">
+                <h3
+                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <i class="fas fa-globe text-orange-500 mr-2"></i> SEO & Metadata
+                </h3>
+                <ul class="text-gray-700 space-y-2 text-sm">
+                  <li>
+                    <strong>Meta Judul:</strong> ${
+                      productData.metaTitle || productData.name || "N/A"
+                    } | TitipGo
+                  </li>
+                  <li>
+                    <strong>Meta Deskripsi:</strong> ${
+                      productData.metaDescription ||
+                      productData.shortDescription ||
+                      "N/A"
+                    }
+                  </li>
+                  <li>
+                    <strong>Keyword:</strong> ${
+                      (productData.keywords || []).join(", ") || "N/A"
+                    }
+                  </li>
+                  <li>
+                    <strong>Slug URL:</strong> /produk/${productDoc.id}
+                  </li>
+                </ul>
+              </div>
+            `;
+
+            // Update title dan breadcrumb
+            document.title = `Detail Produk - ${productData.name} - TitipGo Admin`;
+            if (productDetailTitle)
+              productDetailTitle.textContent = `Detail Produk: ${productData.name}`;
+            if (breadcrumbProductName)
+              breadcrumbProductName.textContent = productData.name;
+          } else {
+            productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">Produk tidak ditemukan.</div>`;
+            document.title = `Produk Tidak Ditemukan - TitipGo Admin`;
+            if (productDetailTitle)
+              productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+            if (breadcrumbProductName)
+              breadcrumbProductName.textContent = `Tidak Ditemukan`;
+          }
+        } catch (error) {
+          console.error("Error fetching product detail:", error);
+          let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
+          if (error.code === "unavailable") {
+            errorMessage =
+              "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
+          } else {
+            errorMessage = error.message;
+          }
+          productDetailContent.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">Terjadi kesalahan saat memuat detail produk: ${errorMessage}</div>`;
+          document.title = `Error - TitipGo Admin`;
+          if (productDetailTitle)
+            productDetailTitle.textContent = `Error Loading Product`;
+          if (breadcrumbProductName)
+            breadcrumbProductName.textContent = `Error`;
+        }
+      }
+
+      // --- Sidebar Active State & Initial Load ---
       document.addEventListener("DOMContentLoaded", function () {
         const currentPath = window.location.pathname.split("/").pop();
         const sidebarLinks = document.querySelectorAll(".sidebar-item");
@@ -471,7 +720,7 @@
           // Special handling for detail pages: highlight parent menu
           if (
             linkFileName === "admin-katalog.html" &&
-            currentPath.startsWith("admin-katalog-detail")
+            currentPath.startsWith("admin-katalog-detail") // Pastikan nama file detail sesuai
           ) {
             isLinkActive = true;
           } else if (linkFileName === currentPath) {
@@ -505,7 +754,25 @@
             );
           }
         });
+
+        // Load product detail when the page loads
+        loadProductDetail();
       });
+
+      // Contoh sederhana fungsi logout (pastikan ada di semua halaman)
+      document
+        .getElementById("logoutButton") // Menggunakan ID untuk button logout
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            await auth.signOut();
+            alert("Anda telah logout!");
+            window.location.href = "login.html"; // Arahkan ke halaman login
+          } catch (error) {
+            console.error("Error during logout:", error);
+            alert("Gagal logout: " + error.message);
+          }
+        });
     </script>
   </body>
 </html>

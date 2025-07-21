@@ -2,25 +2,88 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dashboard - TitipGo Admin</title>
+    <title>Manajemen Pengguna - TitipGo Admin</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <style>
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Pastikan konten di dalam mainContent berada di atas overlay */
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Style untuk membuat background kartu statistik sedikit transparan */
+      .card-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* Putih dengan opasitas 80% */
+      }
+      .bg-white-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.85
+        ); /* Slightly transparent white */
+      }
+      .bg-blue-600-transparent {
+        background-color: rgba(
+          37,
+          99,
+          235,
+          0.85
+        ); /* Slightly transparent blue */
+      }
+      .table-bg-transparent {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.7
+        ); /* More transparent for table body */
+      }
+      .header-bg-transparent {
+        background-color: rgba(
+          59,
+          130,
+          246,
+          0.85
+        ); /* Tailwind's blue-500 equivalent with transparency */
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 font-sans antialiased">
+  <body class="font-sans antialiased">
     <div class="flex min-h-screen">
-      <!-- Sidebar -->
       <aside
-        class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+        class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
       >
         <div>
           <nav class="space-y-2 p-4">
@@ -32,7 +95,7 @@
 
             <a
               href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-home mr-3"></i> Dashboard
             </a>
@@ -47,6 +110,12 @@
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
               <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+            </a>
+            <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
             </a>
             <a
               href="admin-pesanan.html"
@@ -83,7 +152,7 @@
               href="admin-tentang.html"
               class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
             >
-              <i class="fas fa-user-circle mr-3"></i> Tentang Kami
+              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
             </a>
           </nav>
         </div>
@@ -92,204 +161,395 @@
         </footer>
       </aside>
 
-      <!-- Konten utama -->
-      <main class="ml-64 w-full p-6 overflow-y-auto">
-        <!-- Header -->
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        "
+      >
         <div
           class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
         >
-          <p class="text-lg font-semibold">
-            Manajemen Pengguna
-          </p>
-          <a href="#" class="ml-auto text-red-300 hover:text-red-200">Logout</a>
+          <p class="text-lg font-semibold">Manajemen Pengguna</p>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              id="logoutButton"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-        <div class="md:col-span-2 lg:col-span-3"> <label for="search" class="sr-only">Cari</label>
+          <div class="md:col-span-2 lg:col-span-3">
+            <label for="search" class="sr-only">Cari</label>
             <div class="relative">
-                <input type="text" id="search" placeholder="Cari..." class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
-                </div>
+              <input
+                type="text"
+                id="search"
+                placeholder="Cari..."
+                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
+              />
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
             </div>
-        </div>
-        <div class="md:col-span-1 lg:col-span-1">
-            <label for="status" class="sr-only">Status</label>
-            <select id="status" class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
-                <option value="">Status</option>
-                <option value="Aktif">Aktif</option>
-                <option value="Nonaktif">Nonaktif</option>
+          </div>
+          <div class="md:col-span-1 lg:col-span-1">
+            <label for="statusFilter" class="sr-only">Status</label>
+            <select
+              id="statusFilter"
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
+            >
+              <option value="">Semua Status</option>
+              <option value="Aktif">Aktif</option>
+              <option value="Nonaktif">Nonaktif</option>
             </select>
+          </div>
         </div>
- 
-    </div>
 
-    <div class="overflow-x-auto rounded-md border border-gray-200">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-blue-500"> <tr>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Nama</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Email</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">No.Hp</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Kota</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Role</th>
-                    <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
-                    <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">Aksi</th>
-                </tr>
+        <div class="overflow-x-auto rounded-md border border-gray-200">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-600 text-white">
+              <tr>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  No
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Nama
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Email
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  No.Hp
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Kota
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Aksi
+                </th>
+              </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">1</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Dhea</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">dhea@gmail.com</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">081234567857</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Surabaya</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Pembeli</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="admin-pengguna-detail.html" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-times-circle"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">2</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Corla</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">corla@gmail.com</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">081234567857</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Surakarta</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Jastiper</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-times-circle"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">3</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Gabriel</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">gabriel@gmail.com</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">081234567857</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Magelang</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Pembeli</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-times-circle"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-                    </td>
-                </tr>
-                 <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">4</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Dena</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">dena@gmail.com</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">081234567857</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Malang</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Pembeli</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Nonaktif</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-times-circle"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-                    </td>
-                </tr>
-                 <tr>
-                    <td class="py-3 px-4 text-sm text-gray-700">5</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Rasyi</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">rasyi@gmail.com</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">081234567857</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">NTT</td>
-                    <td class="py-3 px-4 text-sm text-gray-700">Jastiper</td>
-                    <td class="py-3 px-4 text-sm">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                    </td>
-                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-                        <a href="#" class="text-red-600 hover:text-red-900" title="Hapus"><i class="fas fa-times-circle"></i></a>
-                        <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-                    </td>
-                </tr>
-                
-                 
-                
-            </tbody>
-        </table>
+            <tbody
+              id="userTableBody"
+              class="divide-y divide-gray-200 table-bg-transparent"
+            ></tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 flex justify-between items-center">
+          <div id="paginationInfo" class="text-sm text-gray-700"></div>
+          <div id="paginationControls" class="flex"></div>
+        </div>
+      </main>
     </div>
 
-    <div class="mt-6 flex justify-between items-center">
-        <div class="text-sm text-gray-700">
-            Menampilkan 1 sampai 9 dari 100 data
-        </div>
-        <div class="flex">
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">Previous</button>
-            <button class="px-4 py-2 text-sm font-medium text-pink-600 bg-pink-100 border border-gray-300">1</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">2</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">3</button>
-            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">Next</button>
-        </div>
-    </div>
-</div>
+    <script>
+      // Firebase configuration (replace with your actual config from Firebase project settings)
+      const firebaseConfig = {
+        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+        authDomain: "titipgo-28f84.firebaseapp.com",
+        projectId: "titipgo-28f84",
+        storageBucket: "titipgo-28f84.firebasestorage.app",
+        messagingSenderId: "816687535591",
+        appId: "1:816687535591:web:eaecf2fcc994636a319942",
+        measurementId: "G-CS3V405F3B",
+      };
 
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
 
-        <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mendapatkan path URL saat ini (misal: /dashboard, /katalog, /pengguna, dll.)
-        const currentPath = window.location.pathname;
+      const userTableBody = document.getElementById("userTableBody");
+      const searchInput = document.getElementById("search");
+      const statusFilter = document.getElementById("statusFilter");
+      // const roleFilter = document.getElementById("roleFilter"); // Dihapus
+      const paginationInfo = document.getElementById("paginationInfo");
+      const paginationControls = document.getElementById("paginationControls");
+      const logoutButton = document.getElementById("logoutButton");
 
-        // Mendapatkan semua tautan sidebar dengan kelas 'sidebar-item'
-        // Pastikan semua link sidebar Anda memiliki kelas `sidebar-item`
-        const sidebarLinks = document.querySelectorAll('.sidebar-item');
+      let allUsers = []; // To store all users fetched from Firebase
+      let filteredUsers = []; // To store users after search and filter
+      const itemsPerPage = 10;
+      let currentPage = 1;
 
-        sidebarLinks.forEach(link => {
-            const linkHref = link.getAttribute('href'); // Dapatkan href dari setiap tautan
+      // Function to fetch users from Firebase
+      async function fetchUsers() {
+        try {
+          const usersRef = db.collection("users");
+          const snapshot = await usersRef.get();
+          allUsers = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          applyFiltersAndSearch(); // Apply filters and search after fetching
+        } catch (error) {
+          console.error("Error fetching users: ", error);
+          alert("Gagal memuat data pengguna.");
+        }
+      }
 
-            // **LOGIKA PERBAIKAN DI SINI:**
-            // Kita akan membandingkan linkHref dengan currentPath secara langsung.
-            // Tambahan kondisi untuk menangani halaman root '/' jika '/dashboard' adalah default.
-            let isLinkActive = false;
+      // Function to render table rows
+      function renderTable(usersToDisplay) {
+        userTableBody.innerHTML = ""; // Clear existing rows
+        if (usersToDisplay.length === 0) {
+          userTableBody.innerHTML = `<tr><td colspan="7" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pengguna.</td></tr>`; // Ubah colspan menjadi 7
+          paginationInfo.textContent = "Menampilkan 0 dari 0 data";
+          paginationControls.innerHTML = "";
+          return;
+        }
 
-            // Jika linkHref sama persis dengan currentPath
-            if (currentPath.includes(linkHref)) { // Ganti === dengan includes() agar lebih fleksibel
-                isLinkActive = true;
-            } 
-            // KHUSUS UNTUK KASUS DASHBOARD:
-            // Jika Anda ingin '/dashboard' aktif saat URL adalah '/', tambahkan kondisi ini.
-            // Hapus baris ini jika halaman '/' bukan untuk Dashboard.
-            else if (currentPath === '/' && linkHref === 'admin-dashboard.html') { // Sesuaikan dengan nama file HTML Anda
-                isLinkActive = true;
-            }
-            // Anda bisa menambahkan kondisi `else if` lain jika ada URL yang lebih kompleks
-            // Misalnya: jika URL adalah `/katalog/edit/1` dan linkHref adalah `/katalog`,
-            // Anda ingin `Manajemen Katalog` aktif.
-            // else if (currentPath.startsWith(linkHref) && linkHref !== '/') {
-            //     isLinkActive = true;
-            // }
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedUsers = usersToDisplay.slice(startIndex, endIndex);
 
+        paginatedUsers.forEach((user, index) => {
+          const row = userTableBody.insertRow();
+          const displayIndex = startIndex + index + 1; // Correct index for display
 
-            if (isLinkActive) {
-                // Hapus kelas default dan hover
-                link.classList.remove('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
+          const statusClass =
+            user.status === "Aktif"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800";
 
-                // Tambahkan kelas untuk highlight aktif
-                link.classList.add('bg-pink-600', 'text-white', 'font-semibold'); // 'font-semibold' opsional
-            } else {
-                // Hapus kelas highlight aktif
-                link.classList.remove('bg-pink-600', 'text-white', 'font-semibold');
-
-                // Tambahkan kembali kelas default dan hover
-                link.classList.add('text-gray-700', 'hover:bg-pink-100', 'hover:text-pink-600');
-            }
+          row.innerHTML = `
+            <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${user.nama || "-"}</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${
+              user.email || "-"
+            }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${
+              user.nomorTelepon || "-"
+            }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${user.kota || "-"}</td>
+            <td class="py-3 px-4 text-sm">
+              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${
+            user.status || "Tidak Diketahui"
+          }</span>
+            </td>
+            <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
+              <a href="admin-pengguna-detail.html?id=${
+                user.id
+              }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+              <a href="#" class="text-red-600 hover:text-red-900 delete-user-btn" data-id="${
+                user.id
+              }" title="Hapus"><i class="fas fa-times-circle"></i></a>
+              <a href="#" class="text-yellow-600 hover:text-yellow-900 warn-user-btn" data-id="${
+                user.id
+              }" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
+            </td>
+          `;
         });
-    });
-</script>
+        updatePagination(usersToDisplay.length);
+      }
+
+      // Function to apply search and filter
+      function applyFiltersAndSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedStatus = statusFilter.value;
+        // const selectedRole = roleFilter.value; // Dihapus
+
+        filteredUsers = allUsers.filter((user) => {
+          const matchesSearch =
+            (user.nama && user.nama.toLowerCase().includes(searchTerm)) ||
+            (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+            (user.nomorTelepon &&
+              user.nomorTelepon.toLowerCase().includes(searchTerm)) ||
+            (user.kota && user.kota.toLowerCase().includes(searchTerm));
+          // (user.role && user.role.toLowerCase().includes(searchTerm)); // Dihapus
+
+          const matchesStatus =
+            selectedStatus === "" || user.status === selectedStatus;
+          // const matchesRole = selectedRole === "" || user.role === selectedRole; // Dihapus
+
+          return matchesSearch && matchesStatus; // Hanya cocokkan dengan status
+        });
+
+        currentPage = 1; // Reset to first page after filtering/searching
+        renderTable(filteredUsers);
+      }
+
+      // Pagination functions
+      function updatePagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        paginationInfo.textContent = `Menampilkan ${Math.min(
+          (currentPage - 1) * itemsPerPage + 1,
+          totalItems
+        )} sampai ${Math.min(
+          currentPage * itemsPerPage,
+          totalItems
+        )} dari ${totalItems} data`;
+
+        paginationControls.innerHTML = "";
+
+        const prevButton = document.createElement("button");
+        prevButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTable(filteredUsers);
+          }
+        });
+        paginationControls.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.className = `px-4 py-2 text-sm font-medium ${
+            i === currentPage
+              ? "text-pink-600 bg-pink-100"
+              : "text-gray-700 bg-white hover:bg-gray-50"
+          } border border-gray-300`;
+          pageButton.textContent = i;
+          pageButton.addEventListener("click", () => {
+            currentPage = i;
+            renderTable(filteredUsers);
+          });
+          paginationControls.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement("button");
+        nextButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages || totalPages === 0;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTable(filteredUsers);
+          }
+        });
+        paginationControls.appendChild(nextButton);
+      }
+
+      // Event listeners for search and filter
+      searchInput.addEventListener("keyup", applyFiltersAndSearch);
+      statusFilter.addEventListener("change", applyFiltersAndSearch);
+      // roleFilter.addEventListener("change", applyFiltersAndSearch); // Dihapus
+
+      // Delete User Functionality
+      userTableBody.addEventListener("click", async (event) => {
+        if (event.target.closest(".delete-user-btn")) {
+          event.preventDefault();
+          const userId = event.target.closest(".delete-user-btn").dataset.id;
+          if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
+            try {
+              await db.collection("users").doc(userId).delete();
+              alert("Pengguna berhasil dihapus!");
+              fetchUsers(); // Re-fetch data to update table
+            } catch (error) {
+              console.error("Error removing user: ", error);
+              alert("Gagal menghapus pengguna.");
+            }
+          }
+        }
+        // Implement warning functionality similarly if needed
+        if (event.target.closest(".warn-user-btn")) {
+          event.preventDefault();
+          const userId = event.target.closest(".warn-user-btn").dataset.id;
+          // You can add logic here to send a warning, change status, etc.
+          alert(`Memberikan peringatan kepada pengguna dengan ID: ${userId}`);
+        }
+      });
+
+      // Logout Functionality
+      logoutButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await auth.signOut();
+          window.location.href = "admin-login.html"; // Redirect to login page after logout
+        } catch (error) {
+          console.error("Error logging out: ", error);
+          alert("Gagal logout. Silakan coba lagi.");
+        }
+      });
+
+      // Initial fetch of users when the page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchUsers();
+
+        // Sidebar active link logic
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href"); // e.g., "admin-dashboard.html"
+          // Extract the filename from the currentPath
+          const currentFilename = currentPath.substring(
+            currentPath.lastIndexOf("/") + 1
+          ); // e.g., "admin-pengguna.html" from "/admin-pengguna.html"
+
+          let isLinkActive = false;
+
+          // Check if the link's href matches the current filename
+          if (linkHref === currentFilename) {
+            isLinkActive = true;
+          }
+          // Special case for dashboard if it's the root or index
+          else if (
+            currentFilename === "" &&
+            linkHref === "admin-dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
+        });
+      });
+    </script>
   </body>
 </html>

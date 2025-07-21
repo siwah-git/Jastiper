@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Detail Toko - TitipGo Admin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <style>
+      #mainContent {
+        background-image: linear-gradient(
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 255, 255, 0.3)
+          ),
+          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #mainContent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .bg-white-transparent {
+        background-color: rgba(255, 255, 255, 0.85);
+      }
+      .bg-blue-600-transparent {
+        background-color: rgba(37, 99, 235, 0.85);
+      }
+      .card-bg-transparent {
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
+  </head>
+  <body class="font-sans antialiased">
+    <div class="flex min-h-screen">
+      <aside
+        class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
+      >
+        <div>
+          <nav class="space-y-2 p-4">
+            <img
+              src="asset/images/logosiwah.png"
+              alt="Logo"
+              class="w-48 h-20 object-contain mb-4"
+            />
+
+            <a
+              href="admin-dashboard.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-home mr-3"></i> Dashboard
+            </a>
+            <a
+              href="admin-katalog.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-box mr-3"></i> Manajemen Katalog
+            </a>
+            <a
+              href="admin-pengguna.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+            </a>
+            <a
+              href="admin-toko.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-store mr-3"></i> Manajemen Toko
+            </a>
+            <a
+              href="admin-pesanan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+            </a>
+            <a
+              href="admin-aduan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-envelope mr-3"></i> Aduan
+            </a>
+            <a
+              href="admin-laporan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-chart-line mr-3"></i> Laporan
+            </a>
+            <a
+              href="admin-pendapatan.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+            </a>
+            <a
+              href="admin-profil.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-user-circle mr-3"></i> Profil
+            </a>
+
+            <a
+              href="admin-tentang.html"
+              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+            >
+              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+            </a>
+          </nav>
+        </div>
+        <footer class="text-sm text-gray-500 text-center p-4 border-t">
+          &copy; 2025 TitipGo. All rights reserved.
+        </footer>
+      </aside>
+
+      <main
+        id="mainContent"
+        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
+        style="
+          background-image: linear-gradient(
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0.3)
+            ),
+            url('asset/images/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        "
+      >
+        <div
+          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
+        >
+          <p class="text-lg font-semibold">Detail Toko</p>
+          <div class="flex gap-3 text-right ml-auto">
+            <a
+              href="#"
+              id="logoutButton"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+            >
+          </div>
+        </div>
+
+        <div
+          id="storeDetailContainer"
+          class="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div class="md:col-span-2">
+            <div class="bg-white-transparent shadow rounded-lg p-6 mb-6">
+              <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                Informasi Toko
+              </h2>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Nama Toko:</p>
+                  <p id="namaToko" class="mt-1 text-gray-900"></p>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Fee Toko:</p>
+                  <p id="feeToko" class="mt-1 text-gray-900"></p>
+                </div>
+                <div class="col-span-2">
+                  <p class="text-sm font-medium text-gray-500">Alamat:</p>
+                  <p id="alamatToko" class="mt-1 text-gray-900"></p>
+                </div>
+                <div class="col-span-2">
+                  <p class="text-sm font-medium text-gray-500">Deskripsi:</p>
+                  <p id="deskripsiToko" class="mt-1 text-gray-900"></p>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Status:</p>
+                  <span
+                    id="statusToko"
+                    class="mt-1 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:col-span-1">
+            <div class="bg-white-transparent shadow rounded-lg p-6 mb-6">
+              <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                Informasi Pemilik
+              </h2>
+              <div class="flex flex-col items-center">
+                <img
+                  id="fotoPemilik"
+                  src="https://via.placeholder.com/150"
+                  alt="Foto Pemilik"
+                  class="w-24 h-24 rounded-full object-cover mb-4 border-2 border-pink-500"
+                />
+                <p
+                  id="namaPemilik"
+                  class="text-lg font-medium text-gray-900 mb-2"
+                ></p>
+                <p id="emailPemilik" class="text-sm text-gray-600 mb-1"></p>
+                <p id="teleponPemilik" class="text-sm text-gray-600"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="loadingMessage"
+          class="text-center text-gray-600 text-lg mt-10"
+        >
+          Memuat detail toko...
+        </div>
+        <div
+          id="errorMessage"
+          class="text-center text-red-600 text-lg mt-10 hidden"
+        >
+          Toko tidak ditemukan atau terjadi kesalahan saat memuat data.
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Firebase configuration (replace with your actual config from Firebase project settings)
+      const firebaseConfig = {
+        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+        authDomain: "titipgo-28f84.firebaseapp.com",
+        projectId: "titipgo-28f84",
+        storageBucket: "titipgo-28f84.firebasestorage.app",
+        messagingSenderId: "816687535591",
+        appId: "1:816687535591:web:eaecf2fcc994636a319942",
+        measurementId: "G-CS3V405F3B",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+
+      const storeDetailContainer = document.getElementById(
+        "storeDetailContainer"
+      );
+      const loadingMessage = document.getElementById("loadingMessage");
+      const errorMessage = document.getElementById("errorMessage");
+      const logoutButton = document.getElementById("logoutButton");
+
+      // Elements for store information
+      const namaTokoElem = document.getElementById("namaToko");
+      const feeTokoElem = document.getElementById("feeToko");
+      const alamatTokoElem = document.getElementById("alamatToko");
+      const deskripsiTokoElem = document.getElementById("deskripsiToko");
+      const statusTokoElem = document.getElementById("statusToko");
+
+      // Elements for owner information
+      const fotoPemilikElem = document.getElementById("fotoPemilik");
+      const namaPemilikElem = document.getElementById("namaPemilik");
+      const emailPemilikElem = document.getElementById("emailPemilik");
+      const teleponPemilikElem = document.getElementById("teleponPemilik");
+
+      async function fetchStoreDetails() {
+        storeDetailContainer.classList.add("hidden");
+        loadingMessage.classList.remove("hidden");
+        errorMessage.classList.add("hidden");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const storeId = urlParams.get("id");
+
+        if (!storeId) {
+          loadingMessage.classList.add("hidden");
+          errorMessage.classList.remove("hidden");
+          errorMessage.textContent = "ID Toko tidak ditemukan di URL.";
+          return;
+        }
+
+        try {
+          // Fetch store data
+          const storeDoc = await db.collection("stores").doc(storeId).get();
+
+          if (!storeDoc.exists) {
+            loadingMessage.classList.add("hidden");
+            errorMessage.classList.remove("hidden");
+            errorMessage.textContent = "Data toko tidak ditemukan.";
+            return;
+          }
+
+          const storeData = storeDoc.data();
+
+          // Populate store information
+          namaTokoElem.textContent = storeData.namaToko || "N/A";
+          feeTokoElem.textContent =
+            storeData.feeToko !== undefined ? storeData.feeToko + "%" : "N/A";
+          alamatTokoElem.textContent = storeData.alamat || "N/A";
+          deskripsiTokoElem.textContent =
+            storeData.deskripsi || "Tidak ada deskripsi.";
+
+          const statusClass =
+            storeData.status === "Aktif"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800";
+          statusTokoElem.textContent = storeData.status || "Tidak Diketahui";
+          statusTokoElem.className = `mt-1 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}`;
+
+          // Fetch owner data (assuming ownerId exists and links to a user)
+          if (storeData.ownerId) {
+            const ownerDoc = await db
+              .collection("users")
+              .doc(storeData.ownerId)
+              .get();
+            if (ownerDoc.exists) {
+              const ownerData = ownerDoc.data();
+              namaPemilikElem.textContent = ownerData.nama || "N/A";
+              emailPemilikElem.textContent = ownerData.email || "N/A";
+              teleponPemilikElem.textContent = ownerData.nomorTelepon || "N/A";
+              if (ownerData.fotoProfil) {
+                fotoPemilikElem.src = ownerData.fotoProfil;
+              } else {
+                fotoPemilikElem.src = "https://via.placeholder.com/150"; // Default placeholder if no photo
+              }
+            } else {
+              namaPemilikElem.textContent = "Pemilik tidak ditemukan";
+              emailPemilikElem.textContent = "";
+              teleponPemilikElem.textContent = "";
+              fotoPemilikElem.src = "https://via.placeholder.com/150";
+            }
+          } else {
+            namaPemilikElem.textContent = "Tidak ada informasi pemilik";
+            emailPemilikElem.textContent = "";
+            teleponPemilikElem.textContent = "";
+            fotoPemilikElem.src = "https://via.placeholder.com/150";
+          }
+
+          loadingMessage.classList.add("hidden");
+          storeDetailContainer.classList.remove("hidden");
+        } catch (error) {
+          console.error("Error fetching store details: ", error);
+          loadingMessage.classList.add("hidden");
+          errorMessage.classList.remove("hidden");
+          errorMessage.textContent = "Terjadi kesalahan saat memuat data toko.";
+        }
+      }
+
+      // Logout Functionality
+      logoutButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await auth.signOut();
+          window.location.href = "admin-login.html"; // Redirect to login page after logout
+        } catch (error) {
+          console.error("Error logging out: ", error);
+          alert("Gagal logout. Silakan coba lagi.");
+        }
+      });
+
+      // Initial fetch of store details when the page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchStoreDetails();
+
+        // Sidebar active link logic (same as other admin pages)
+        const currentPath = window.location.pathname;
+        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const currentFilename = currentPath.substring(
+            currentPath.lastIndexOf("/") + 1
+          );
+
+          let isLinkActive = false;
+
+          if (linkHref === currentFilename) {
+            isLinkActive = true;
+          } else if (
+            currentFilename === "" &&
+            linkHref === "admin-dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          // Special handling for detail pages to keep parent link active
+          if (
+            currentFilename.includes("admin-toko-detail.html") &&
+            linkHref === "admin-toko.html"
+          ) {
+            isLinkActive = true;
+          }
+          if (
+            currentFilename.includes("admin-pengguna-detail.html") &&
+            linkHref === "admin-pengguna.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            link.classList.remove(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+          } else {
+            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+            link.classList.add(
+              "text-gray-700",
+              "hover:bg-pink-100",
+              "hover:text-pink-600"
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
