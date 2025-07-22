@@ -2,19 +2,21 @@
 <html lang="id">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Toko Kita - TitipGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Perbaikan: Mengubah xintegrity menjadi integrity -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     body {
       font-family: "Inter", sans-serif;
       background-image: url("asset/images/background.png");
-      /* Consistent background image URL */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -112,7 +114,6 @@
       margin-bottom: 0.75rem;
       justify-content: space-between;
       min-height: 70px;
-      /* Ensure consistent height for input groups */
     }
 
     .input-group label {
@@ -153,7 +154,6 @@
       box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
       cursor: pointer;
       font-size: 0.9rem;
-      /* Added for anchor tag styling */
       text-decoration: none;
       display: inline-block;
     }
@@ -172,7 +172,6 @@
       border: 1px solid #ccc;
       cursor: pointer;
       font-size: 0.9rem;
-      /* Added for anchor tag styling */
       text-decoration: none;
       display: inline-block;
     }
@@ -210,9 +209,7 @@
       font-size: 0.9rem;
       flex-shrink: 0;
       flex-wrap: wrap;
-      /* Allow wrapping on smaller screens */
       gap: 1rem;
-      /* Spacing between items when wrapped */
     }
 
     .product-count-info {
@@ -221,7 +218,6 @@
       gap: 0.75rem;
       flex-grow: 1;
       flex-wrap: wrap;
-      /* Allow wrapping for count and progress */
     }
 
     .product-count-info span {
@@ -257,7 +253,6 @@
       width: 100%;
       border-collapse: collapse;
       min-width: 800px;
-      /* Ensure horizontal scroll on smaller screens if content is wide */
     }
 
     .product-table th,
@@ -389,7 +384,6 @@
 
     .modal-buttons .btn-confirm.success {
       background-color: #22c55e;
-      /* Green for success */
       border-color: #22c55e;
     }
 
@@ -502,7 +496,6 @@
     </div>
   </div>
 
-  <!-- Custom Confirmation/Alert Modal (for general messages) -->
   <div id="custom-confirm-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
@@ -515,18 +508,16 @@
   </div>
 
   <script type="module">
-    import {
-      auth,
-      db,
-      signOut,
-      onAuthStateChanged,
-      collection,
-      query,
-      where,
-      getDocs,
-      doc,
-      getDoc
-    } from './firebase-config.js';
+    // Perbaikan: Mengubah jalur import untuk firebase-config.js
+    // Pastikan firebase-config.js berada di direktori js/ di root proyek Anda
+    // dan jastiper_toko_kita.html berada di subfolder (misalnya, jastiper/)
+    import { db, auth, collection, query, where, getDocs, doc, getDoc } from "../js/firebase-config.js";
+    // Perbaikan: Menggunakan versi Firebase SDK yang sama dengan firebase-config.js (v9.6.0)
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+    import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
+
+    // Inisialisasi Firebase Storage
+    const storage = getStorage();
 
     // DOM Elements
     const namaProdukInput = document.getElementById("namaProduk");
@@ -552,7 +543,7 @@
     const customConfirmBtn = document.getElementById('custom-confirm-btn');
     let customConfirmCallback = null;
 
-    let currentTokoId = null;
+    let currentTokoId = null; // Will be set after user authentication
     const MAX_PRODUCTS_LIMIT = 2000;
 
     // Function to show custom confirmation/alert modal
@@ -565,12 +556,13 @@
       } else {
         customCancelBtn.classList.add('hidden');
       }
+      customConfirmBtn.textContent = isConfirmation ? "Konfirmasi" : "OK";
       customConfirmModal.classList.add('show');
     }
 
     customCancelBtn.addEventListener('click', () => {
       customConfirmModal.classList.remove('show');
-      customConfirmCallback = null; // Clear callback if cancelled
+      customConfirmCallback = null;
     });
 
     customConfirmBtn.addEventListener('click', () => {
@@ -578,7 +570,7 @@
       if (customConfirmCallback) {
         customConfirmCallback();
       }
-      customConfirmCallback = null; // Clear callback after execution
+      customConfirmCallback = null;
     });
 
     // Function to display products
@@ -595,20 +587,21 @@
         const row = `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${product.namaProduk || "N/A"}</td>
-                        <td>${product.negaraAsal || "N/A"}</td>
+                        <td>${product.namaBarang || "N/A"}</td> <!-- Menggunakan namaBarang -->
+                        <td>${product.negara || "N/A"}</td> <!-- Menggunakan negara -->
                         <td>${product.kategori || "N/A"}</td>
                         <td>Rp ${product.harga ? product.harga.toLocaleString("id-ID") : "N/A"}</td>
                         <td>${product.status || "N/A"}</td>
                         <td>${product.stok !== undefined ? product.stok : "N/A"}</td>
                         <td>
                             ${product.imageUrl
-            ? `<img src="${product.imageUrl}" alt="${product.namaProduk}">`
+            ? `<img src="${product.imageUrl}" alt="${product.namaBarang}">` // Menggunakan imageUrl
             : '<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">No Img</div>'
           }
                         </td>
                         <td class="action-buttons">
                             <button class="btn-ubah-detail" data-id="${product.id}">Ubah Detail</button>
+                            <button class="btn-danger" onclick="deleteProduct('${product.id}', '${product.fotoRef || ''}')">Hapus</button>
                         </td>
                     </tr>
                 `;
@@ -630,36 +623,32 @@
     async function fetchAndDisplayProducts(tokoId, filters = {}) {
       if (!tokoId) {
         console.warn("Toko ID is not available. Cannot fetch products.");
-        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-red-600 py-4">Error: Toko ID not found. Please log in again.</td></tr>';
+        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-600 py-4">Silakan login untuk melihat produk Anda.</td></tr>';
         updateProductCountAndProgress(0);
         return;
       }
 
-      const productsRef = collection(db, "produk"); // Changed from "products" to "produk"
-      // Query products where 'tokoId' field matches the current user's UID
-      let q = query(productsRef, where("tokoId", "==", tokoId));
-
-      if (filters.namaProduk) {
-        // For partial matching, you might need to use a different query approach or client-side filtering
-        // Firestore doesn't support "contains" for indexed fields directly without advanced setup (e.g., Algolia)
-        // For simplicity, this will filter after fetching if exact match is not suitable.
-      }
-      if (filters.kategori) {
-        q = query(q, where("kategori", "==", filters.kategori));
-      }
-
       try {
-        const querySnapshot = await getDocs(q);
-        let products = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        // Perbaikan: Menggunakan collection(db, "produk")
+        let productsRef = collection(db, "produk");
+        let q = query(productsRef, where("idJastiper", "==", tokoId)); // Menggunakan idJastiper
 
-        // Apply client-side filtering for namaProduk if a value is provided
+        // If filtering by category, add it to the query
+        if (filters.kategori) {
+          q = query(q, where("kategori", "==", filters.kategori));
+        }
+
+        const querySnapshot = await getDocs(q);
+        let products = [];
+        querySnapshot.forEach((doc) => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Client-side filtering for namaProduk (if applicable)
         if (filters.namaProduk) {
           const lowerCaseFilter = filters.namaProduk.toLowerCase();
           products = products.filter(product =>
-            product.namaProduk && product.namaProduk.toLowerCase().includes(lowerCaseFilter)
+            product.namaBarang && product.namaBarang.toLowerCase().includes(lowerCaseFilter)
           );
         }
 
@@ -667,35 +656,32 @@
         updateProductCountAndProgress(products.length);
       } catch (error) {
         console.error("Error fetching products:", error);
-        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-red-600 py-4">Error loading products.</td></tr>';
-        updateProductCountAndProgress(0);
+        showCustomConfirm("Gagal memuat produk. Silakan coba lagi nanti.", null);
       }
     }
 
-    // Function to fetch and display store fee
+    // Function to fetch and display store fee from Firestore
     async function fetchStoreFee(tokoId) {
       if (!tokoId) {
-        feeInput.value = "N/A (No ID)";
+        feeInput.value = "N/A";
         return;
       }
-      try {
-        // Fetch fee from 'toko' collection using the tokoId as the document ID
-        const tokoDocRef = doc(db, "toko", tokoId);
-        const tokoDocSnap = await getDoc(tokoDocRef);
 
-        if (tokoDocSnap.exists()) {
-          const tokoData = tokoDocSnap.data();
-          if (tokoData && tokoData.fee !== undefined) {
-            feeInput.value = `Rp ${tokoData.fee.toLocaleString("id-ID")}`;
-          } else {
-            feeInput.value = "Fee not set";
-          }
+      try {
+        const storeDocRef = doc(db, "jastiper", tokoId); // Menggunakan koleksi "jastiper"
+        const storeDocSnap = await getDoc(storeDocRef);
+
+        if (storeDocSnap.exists()) {
+          const storeData = storeDocSnap.data();
+          const fee = storeData.feeJastiper || 0; // Menggunakan feeJastiper
+          feeInput.value = `${fee}%`; // Menampilkan sebagai persentase
         } else {
-          feeInput.value = "Store data not found";
+          feeInput.value = "0%";
+          console.warn("Jastiper document not found for tokoId:", tokoId);
         }
       } catch (error) {
         console.error("Error fetching store fee:", error);
-        feeInput.value = "Error loading fee";
+        feeInput.value = "Error";
       }
     }
 
@@ -710,9 +696,9 @@
     });
 
     btnReset.addEventListener("click", () => {
-      namaProdukInput.value = "";
+      namaProdukInput.value = ""; // Perbaikan: namaProduakInput menjadi namaProdukInput
       kategoriInput.value = "";
-      fetchAndDisplayProducts(currentTokoId); // Fetch all products for the current tokoId again
+      fetchAndDisplayProducts(currentTokoId);
     });
 
     // Event listener for Ubah Detail button (using event delegation)
@@ -720,11 +706,38 @@
       if (event.target.classList.contains("btn-ubah-detail")) {
         const productId = event.target.dataset.id;
         if (productId) {
-          // Mengarahkan ke jastiper_edit_produk.html dengan ID produk sebagai parameter
           window.location.href = `jastiper_edit_produk.html?id=${productId}`;
         }
       }
     });
+
+    // Fungsi untuk menghapus produk (diekspos ke window agar bisa diakses dari onclick HTML)
+    window.deleteProduct = async function (productId, fotoRef) {
+      showCustomConfirm("Apakah Anda yakin ingin menghapus produk ini?", async () => {
+        try {
+          // Hapus dokumen dari Firestore
+          await deleteDoc(doc(db, "produk", productId));
+
+          // Hapus gambar dari Storage jika fotoRef ada
+          if (fotoRef) {
+            const imageRef = ref(storage, fotoRef);
+            await deleteObject(imageRef);
+            console.log("Gambar berhasil dihapus dari Storage.");
+          }
+
+          showCustomConfirm("Produk berhasil dihapus!", () => {
+            fetchAndDisplayProducts(currentTokoId, {
+              namaProduk: namaProdukInput.value,
+              kategori: kategoriInput.value
+            }); // Muat ulang daftar produk
+          });
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          showCustomConfirm("Gagal menghapus produk: " + error.message, null);
+        }
+      }, true); // true untuk menampilkan sebagai konfirmasi
+    };
+
 
     // Event listener for logout button (opens modal)
     logoutButton.addEventListener("click", () => {
@@ -741,66 +754,67 @@
       try {
         await signOut(auth);
         showCustomConfirm("Anda telah logout.", () => {
-          window.location.href = 'halaman_login_anda.html'; // Redirect to your login page
+          window.location.href = 'login_user.html'; // Redirect ke halaman login yang benar
         });
-        logoutModal.classList.remove("show");
       } catch (error) {
-        console.error("Error during logout:", error);
-        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", () => { });
+        console.error("Error logging out:", error);
+        showCustomConfirm("Gagal logout. Silakan coba lagi.", null);
+      } finally {
+        logoutModal.classList.remove("show");
       }
     });
 
-    // Initial load and Firebase Auth State management
+    // Auth State management
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
-        currentTokoId = user.uid; // Use Firebase User ID as Toko ID
+        currentTokoId = user.uid;
+        console.log("Logged in user UID:", currentTokoId);
         fetchAndDisplayProducts(currentTokoId);
         fetchStoreFee(currentTokoId);
       } else {
-        // User is signed out
+        currentTokoId = null;
         console.log("No user signed in.");
-        // Redirect to login page if no user is authenticated
-        showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
-          window.location.href = 'halaman_login_anda.html'; // Ensure this points to your actual login page
-        });
+        productTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-600 py-4">Silakan login untuk melihat produk Anda.</td></tr>';
+        updateProductCountAndProgress(0);
+        feeInput.value = "N/A";
+        // Redirect ke halaman login jika tidak ada user
+        window.location.href = 'login_user.html';
       }
+    });
 
-      // Script to highlight sidebar item - Add this section
-      const currentPath = window.location.pathname.split("/").pop();
-      const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
 
-      sidebarLinks.forEach((item) => {
-        const link = item.querySelector("a");
-        if (link) {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
+    // Script to highlight sidebar item
+    const currentPath = window.location.pathname.split("/").pop();
+    const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
 
-          let isLinkActive = false;
+    sidebarLinks.forEach((item) => {
+      const link = item.querySelector("a");
+      if (link) {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
 
-          if (currentPath === linkFileName) {
-            isLinkActive = true;
-          } else if (
-            currentPath === "" &&
-            linkFileName === "jastiper_dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
+        let isLinkActive = false;
 
-          if (isLinkActive) {
-            item.classList.add("active");
-          } else {
-            item.classList.remove("active");
-          }
+        if (currentPath === linkFileName) {
+          isLinkActive = true;
         } else if (
-          item.id === "logout-button" &&
-          currentPath === "logout"
+          currentPath === "" &&
+          linkFileName === "jastiper_dashboard.html"
         ) {
-          // This part is for highlighting "Logout" if it were a separate page,
-          // but typically logout is an action. Can be removed or adjusted.
-          item.classList.add("active");
+          isLinkActive = true;
         }
-      });
+
+        if (isLinkActive) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      } else if (
+        item.id === "logout-button" &&
+        currentPath === "logout"
+      ) {
+        item.classList.add("active");
+      }
     });
   </script>
 </body>

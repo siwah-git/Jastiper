@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 
-
-
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,12 +8,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 
   <style>
     body {
       font-family: "Inter", sans-serif;
-      background-image: url("asset/images/background.png");
+      background-image: url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
+      /* Updated background image URL */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -305,6 +304,16 @@
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
+
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
   </style>
 </head>
 
@@ -319,11 +328,13 @@
           <li>
             <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
           </li>
-          <li class="active">
+          <li>
             <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
-          <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
-          <li id="logout-button"><span>➡️</span> Logout</li>
+          <li class="active">
+            <span>💬</span> <a href="jastiper_chat.html">Chat</a>
+          </li>
+          <li id="logout-button-sidebar"><span>➡️</span> Logout</li>
         </ul>
       </nav>
     </div>
@@ -336,36 +347,46 @@
       <div class="chat-container">
         <div class="chat-list">
           <div class="chat-list-item active">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" />
+            <img src="https://placehold.co/40x40/FF5733/FFFFFF?text=LN" alt="User Avatar" />
             <span>Liliana Nasution</span>
           </div>
           <div class="chat-list-item">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" />
+            <img src="https://placehold.co/40x40/33FF57/FFFFFF?text=AU" alt="User Avatar" />
             <span>Akunpengguna31</span>
           </div>
           <div class="chat-list-item">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" />
+            <img src="https://placehold.co/40x40/3357FF/FFFFFF?text=R4" alt="User Avatar" />
             <span>Ryan45</span>
           </div>
           <div class="chat-list-item">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" />
+            <img src="https://placehold.co/40x40/FF33E0/FFFFFF?text=R5" alt="User Avatar" />
             <span>Ryan5</span>
           </div>
         </div>
 
         <div class="chat-window">
           <div class="chat-header">
-            <img src="https://via.placeholder.com/40" alt="User Avatar" />
+            <img src="https://placehold.co/40x40/FF5733/FFFFFF?text=LN" alt="User Avatar" />
             <span class="font-semibold text-lg">Liliana Nasution</span>
           </div>
           <div class="chat-messages">
-            <div class="chat-message-placeholder" style="width: 60%"></div>
-            <div class="chat-message-placeholder" style="width: 80%"></div>
-            <div class="chat-message-placeholder" style="width: 50%"></div>
-            <div class="chat-message-placeholder" style="width: 75%"></div>
-            <div class="chat-message-placeholder" style="width: 65%"></div>
-            <div class="chat-message-placeholder" style="width: 70%"></div>
-            <div class="chat-message-placeholder" style="width: 40%"></div>
+            <!-- Example chat messages (placeholders) -->
+            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
+              Halo Liliana, ada yang bisa saya bantu?
+            </div>
+            <div class="p-3 rounded-lg mb-2 bg-pink-100 self-end max-w-[70%] ml-auto">
+              Hai! Saya ingin menanyakan tentang produk terbaru.
+            </div>
+            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
+              Tentu, produk apa yang Anda maksud?
+            </div>
+            <div class="p-3 rounded-lg mb-2 bg-pink-100 self-end max-w-[70%] ml-auto">
+              Yang kategori fashion, apakah ada tas baru?
+            </div>
+            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
+              Ya, kami baru saja menambahkan beberapa koleksi tas terbaru. Anda bisa melihatnya di bagian "Toko Kita".
+            </div>
+            <!-- More messages can be added here dynamically -->
           </div>
           <div class="chat-input-area">
             <button>
@@ -409,44 +430,81 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script>
-    // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN (TETAP SAMA UNTUK SIMULASI) ---
-    let currentJastiperId = localStorage.getItem("jastiperId");
-    if (!currentJastiperId) {
-      console.warn(
-        "Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing."
-      );
-      const tempJastiperId = "contoh_jastiper_id_untuk_testing";
-      localStorage.setItem("jastiperId", tempJastiperId);
-      currentJastiperId = tempJastiperId;
-    } else {
-      console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+  <!-- Custom Confirmation/Alert Modal (for general messages) -->
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase functions from firebase-config.js
+    import {
+      auth,
+      db,
+      signOut,
+      onAuthStateChanged,
+      collection,
+      query,
+      where,
+      getDocs,
+      getDoc,
+      doc
+    } from './firebase-config.js';
+
+    let currentTokoId = null;
+
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmModal.classList.add('show');
     }
 
-    // --- Logout functionality (Same as previous pages) ---
-    const logoutButton = document.getElementById("logout-button");
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null; // Clear callback if cancelled
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null; // Clear callback after execution
+    });
+
+
+    // DOM Elements
+    const logoutButtonSidebar = document.getElementById("logout-button-sidebar"); // Changed ID
     const logoutModal = document.getElementById("logout-modal");
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
-
-    logoutButton.addEventListener("click", () => {
-      logoutModal.classList.add("show");
-    });
-    cancelLogoutButton.addEventListener("click", () => {
-      logoutModal.classList.remove("show");
-    });
-    confirmLogoutButton.addEventListener("click", () => {
-      localStorage.removeItem("jastiperId");
-      alert("Anda telah logout.");
-      window.location.href = "halaman_login_anda.html"; // Redirect to your login page
-    });
 
     // Basic chat list interaction (for demo purposes)
     const chatListItems = document.querySelectorAll(".chat-list-item");
     const chatHeaderName = document.querySelector(".chat-header span");
     const chatHeaderAvatar = document.querySelector(".chat-header img");
+    const chatMessagesContainer = document.querySelector(".chat-messages");
 
     chatListItems.forEach((item) => {
       item.addEventListener("click", () => {
@@ -459,7 +517,9 @@
         const userName = item.querySelector("span").textContent;
         chatHeaderName.textContent = userName;
         // For a real app, you'd load the actual avatar based on the user
-        chatHeaderAvatar.src = "https://via.placeholder.com/40"; // Placeholder for now
+        chatHeaderAvatar.src = item.querySelector("img").src; // Use the image from the clicked list item
+        chatMessagesContainer.innerHTML = ''; // Clear messages when switching chat
+        // In a real app, you'd fetch messages for the selected user here
       });
     });
 
@@ -468,23 +528,14 @@
     const sendMessageButton = document.querySelector(
       ".chat-input-area button:last-child"
     );
-    const chatMessagesContainer = document.querySelector(".chat-messages");
 
     sendMessageButton.addEventListener("click", () => {
       const messageText = chatInput.value.trim();
       if (messageText) {
-        // Simulate sending a message by adding a new placeholder
-        const newMessage = document.createElement("div");
-        newMessage.classList.add("chat-message-placeholder");
-        newMessage.style.width = `${Math.min(
-          80,
-          messageText.length * 5 + 20
-        )}%`; // Dynamic width
-        newMessage.style.marginLeft = "auto"; // Align to right (sent message)
-        newMessage.style.backgroundColor = "#d1e7dd"; // Sent message color
-        newMessage.textContent = messageText; // For actual message, you'd display text
-
-        chatMessagesContainer.appendChild(newMessage);
+        const newMessageDiv = document.createElement('div');
+        newMessageDiv.classList.add('p-3', 'rounded-lg', 'mb-2', 'bg-pink-100', 'self-end', 'max-w-[70%]', 'ml-auto');
+        newMessageDiv.textContent = messageText;
+        chatMessagesContainer.appendChild(newMessageDiv);
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
         chatInput.value = ""; // Clear input
       }
@@ -493,6 +544,81 @@
     chatInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         sendMessageButton.click();
+      }
+    });
+
+    // --- Autentikasi dan Pemuatan Data Awal ---
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentTokoId = user.uid;
+        console.log("Jastiper ID:", currentTokoId);
+        // No specific data loading for chat page yet, but useful for authentication context
+      } else {
+        // User tidak login, arahkan ke halaman login
+        console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
+        showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
+          window.location.href = "halaman_login_anda.html";
+        });
+      }
+    });
+
+    // Script to highlight sidebar item
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentPath = window.location.pathname.split("/").pop();
+      const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
+
+      sidebarLinks.forEach((item) => {
+        const link = item.querySelector("a");
+        if (link) {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop();
+
+          let isLinkActive = false;
+
+          if (currentPath === linkFileName) {
+            isLinkActive = true;
+          } else if (
+            currentPath === "" &&
+            linkFileName === "jastiper_dashboard.html"
+          ) {
+            isLinkActive = true;
+          }
+
+          if (isLinkActive) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        } else if (
+          item.id === "logout-button-sidebar" &&
+          currentPath === "logout"
+        ) {
+          item.classList.add("active");
+        }
+      });
+    });
+
+    // Logout functionality
+    logoutButtonSidebar.addEventListener("click", () => {
+      logoutModal.classList.add("show");
+    });
+
+    cancelLogoutButton.addEventListener("click", () => {
+      logoutModal.classList.remove("show");
+    });
+
+    confirmLogoutButton.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        console.log("Berhasil logout dari Firebase.");
+        localStorage.removeItem("tokoId"); // Hapus tokoId dari local storage
+        showCustomConfirm("Anda telah logout.", () => {
+          window.location.href = "halaman_login_anda.html"; // Arahkan ke halaman login
+        });
+        logoutModal.classList.remove("show");
+      } catch (error) {
+        console.error("Error saat logout:", error);
+        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", () => { });
       }
     });
   </script>

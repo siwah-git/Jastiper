@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Beranda - TitipGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <!-- Firebase SDKs (Tidak perlu lagi memuat file compat secara terpisah di sini karena sudah diimpor modular dari firebase-config.js) -->
 
     <style>
         /* Custom CSS untuk overriding atau menambahkan style Tailwind */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #ffffff;
-            /* Warna background putih */
         }
 
         .hero-section {
@@ -27,30 +27,18 @@
             background-position: center;
             /* Ganti URL di bawah ini dengan path/URL gambar yang Anda lampirkan */
             background-image: url('asset/images/beranda.jpeg');
-            /* Mengatur tinggi dinamis agar mengisi sisa ruang setelah header */
             min-height: calc(100vh - 64px);
-            /* Assuming header height is roughly 64px (py-1 + some height) */
-            /* You might need to adjust 64px based on your actual header height */
         }
 
-        /* If you want the hero section to always be exactly 80vh of the remaining viewport,
-            you might combine with the existing h-[80vh] like this:
-            height: 80vh; /* This sets its height relative to viewport height */
-        /* But if you want it to fill the remaining space after header, min-height: calc() is better.
-             For fixed header and content starting right after, you typically make the first section
-             take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
-
-        /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
         .country-card {
             background-color: #ffffff;
-            /* Card background putih */
             border-radius: 0.5rem;
-            /* rounded-lg */
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            /* shadow-md */
             transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+            /* Menambahkan cursor pointer untuk card yang bisa diklik */
         }
 
         .product-card:hover,
@@ -62,76 +50,62 @@
         .country-card img {
             width: 100%;
             height: 128px;
-            /* h-32 */
+            /* Tinggi produk card */
             object-fit: cover;
             border-bottom: 1px solid #eee;
-            /* Sedikit pemisah visual */
         }
 
         /* Mengubah warna teks placeholder pada input */
         .header-search::placeholder {
             color: #a0aec0;
-            /* Tailwind gray-400 */
             opacity: 1;
-            /* override default opacity */
         }
 
         .footer-logo {
             filter: brightness(0.6);
-            /* Menggelapkan logo footer agar terlihat di bg abu-abu */
         }
 
         /* Style untuk ikon di header */
         .header-icon {
             color: #4a5568;
-            /* Tailwind gray-700 */
             transition: color 0.2s ease-in-out;
         }
 
         .header-icon:hover {
             color: #e53e3e;
-            /* Tailwind red-600, mendekati pink */
         }
 
         /* Overlay untuk hero section */
         .hero-section .overlay-dark {
             background-color: rgba(0, 0, 0, 0.5);
-            /* Semi-transparan gelap */
         }
 
         /* Overlay untuk section produk best-seller */
         #produk-best-seller-section {
             background-color: #E0F2F7;
-            /* Warna biru muda yang sesuai gambar */
             padding: 3rem 0;
         }
 
         #produk-best-seller-section h2 {
             color: #2C3E50;
-            /* Warna teks gelap */
         }
 
         /* Overlay untuk section negara terpopuler */
         #negara-terpopuler-section {
             background-color: #F7FAFC;
-            /* Warna putih keabu-abuan */
             padding: 3rem 0;
         }
 
         #negara-terpopuler-section h2 {
             color: #1A202C;
-            /* Warna teks sangat gelap */
         }
 
         /* Penyesuaian untuk teks "Apa itu TitipGo?" */
         .titipgo-description-section {
             background-color: #ffffff;
-            /* Ubah ke putih */
             color: #4a5568;
-            /* Teks abu-abu gelap */
             padding: 2rem 1rem;
             text-align: center;
-            /* Pastikan judul di tengah */
         }
 
         .titipgo-description-section h2 {
@@ -142,7 +116,6 @@
             align-items: center;
             justify-content: center;
             color: #1A202C;
-            /* Warna teks judul */
         }
 
         .titipgo-description-section p {
@@ -150,10 +123,8 @@
             margin-left: auto;
             margin-right: auto;
             line-height: 1.7;
-            /* Lebih banyak spasi baris */
             font-size: 1rem;
             text-align: justify;
-            /* Rata kiri kanan untuk kerapihan */
         }
 
         .titipgo-description-section img.logo-in-text {
@@ -162,20 +133,27 @@
         }
 
         /* Kelas untuk menengahkan navigasi dan menambahkan jarak */
-        .nav-center {
-            flex-grow: 1;
+        /* Nav center ini tidak lagi digunakan untuk menengahkan secara global, tetapi untuk mengatur gap antara elemen nav */
+        .nav-items-group {
+            /* Kelas baru untuk menampung nav dan auth buttons */
             display: flex;
-            justify-content: center;
             align-items: center;
-            /* Menambahkan jarak antar item navigasi */
-            gap: 2rem;
-            /* Menggunakan gap untuk jarak antar elemen flexbox */
+            gap: 1.5rem;
+            /* Jarak antara Kategori dan Masuk */
         }
 
-        .nav-center a {
-            padding: 0;
-            /* Menghilangkan padding yang sudah ada jika menggunakan gap */
+        .nav-items-group .nav-link {
+            /* Style untuk link navigasi di dalam grup baru */
+            font-weight: 600;
+            color: #4a5568;
+            transition: color 0.2s ease-in-out;
         }
+
+        .nav-items-group .nav-link:hover {
+            color: #e53e3e;
+            /* Pink on hover */
+        }
+
 
         .country-card {
             position: relative;
@@ -188,6 +166,7 @@
         .country-card img {
             width: 100%;
             height: 160px;
+            /* Tinggi negara card */
             object-fit: cover;
             display: block;
         }
@@ -198,7 +177,6 @@
             left: 0;
             right: 0;
             background-color: rgba(0, 0, 0, 0.5);
-            /* Semi-transparent black overlay */
             color: white;
             padding: 0.5rem 0;
             text-align: center;
@@ -211,54 +189,56 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            /* Jarak antar tombol */
         }
 
         .auth-button {
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
-            /* rounded-lg */
             font-weight: 600;
-            /* font-semibold */
             text-decoration: none;
             transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
             display: inline-flex;
-            /* Untuk menengahkan teks vertikal jika ada padding */
             align-items: center;
             justify-content: center;
             height: 40px;
-            /* Tinggi tetap agar konsisten */
             min-width: 90px;
-            /* Lebar minimum */
         }
 
         .auth-button.masuk {
             background-color: #2563eb;
-            /* Tailwind blue-600 */
             color: white;
             border: 1px solid #2563eb;
         }
 
         .auth-button.masuk:hover {
             background-color: #1d4ed8;
-            /* Tailwind blue-700 */
             border-color: #1d4ed8;
         }
 
         .auth-button.daftar {
             background-color: #ec4899;
-            /* Tailwind pink-500 */
             color: white;
             border: 1px solid #ec4899;
         }
 
         .auth-button.daftar:hover {
             background-color: #db2777;
-            /* Tailwind pink-600 */
             border-color: #db2777;
         }
 
-        /* === End Updated CSS === */
+        /* Style for user profile icon/name (hidden by default in this context) */
+        .user-profile-menu {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-profile-menu:hover .user-name {
+            color: #e53e3e;
+            /* Pink on hover */
+        }
     </style>
 </head>
 
@@ -276,46 +256,60 @@
                 </svg>
             </div>
         </div>
-        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-        </nav>
-        <nav class="flex items-center space-x-4 sm:space-x-6">
-            <a href="pembeli_dashboard.html"
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-            <div class="dropdown-kategori relative inline-block hidden md:block">
-                <a href="pembeli_kategori.html" id="kategoriMenu"
-                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
-                    id="dropdownKategori" style="display:none;">
-                    <a href="pembeli_produk_gucci.html"
-                        class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
-                    <a href="pembeli_kategori.html"
-                        class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
-                        Produk</a>
-                </div>
-            </div>
 
-            <div class="auth-button-container">
+        <!-- Grup baru untuk navigasi dan tombol autentikasi -->
+        <div class="flex items-center space-x-4 sm:space-x-6">
+            <nav class="nav-items-group hidden md:flex items-center gap-6">
+                <a href="pembeli_dashboard.html" class="nav-link">Beranda</a>
+                <div class="dropdown-kategori relative inline-block">
+                    <!-- Link Kategori sekarang langsung ke pembeli_kategori.html -->
+                    <a href="pembeli_kategori.html" id="kategoriMenu" class="nav-link">Kategori</a>
+                    <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+                        id="dropdownKategori" style="display:none;">
+                        <!-- Opsi 'Produk' telah dihapus -->
+                        <a href="pembeli_kategori.html"
+                            class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+                            Kategori</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Authentication buttons - ALWAYS VISIBLE IN PRE-LOGIN STATE -->
+            <div id="authContainer" class="auth-button-container">
                 <a href="login_user.html" class="auth-button masuk">Masuk</a>
                 <a href="daftar_login.html" class="auth-button daftar">Daftar</a>
             </div>
 
-            <div id="userDropdown"
-                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-                <a href="pembeli_akun.html"
-                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-                <a href="pembeli_pesanan_saya.html"
-                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-                <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                    CS</a>
-                <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-                <a href="#" onclick="logoutUser();return false;"
-                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            <!-- User profile (HIDDEN by default, shown via JS after login on other pages if implemented) -->
+            <div id="userProfileContainer" class="hidden user-profile-menu">
+                <img id="userAvatar" src="asset/images/default_avatar.png" alt="User Avatar"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-pink-500">
+                <span id="userName"
+                    class="user-name font-semibold text-gray-700 hover:text-pink-600 hidden md:inline-block"></span>
+                <i class="fas fa-chevron-down text-gray-500 text-xs ml-1"></i>
+
+                <div id="userDropdown"
+                    class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001] py-2 border border-gray-200">
+                    <a href="pembeli_akun.html"
+                        class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Akun
+                        Saya</a>
+                    <a href="pembeli_pesanan_saya.html"
+                        class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Pesanan</a>
+                    <a href="jastiper_dashboard.html"
+                        class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600"
+                        id="tokoSayaLink">Toko Saya</a>
+                    <a href="#" onclick="openChatCS();return false;"
+                        class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Chat
+                        dengan CS</a>
+                    <a href="#" onclick="logoutUser();return false;"
+                        class="block px-5 py-3 text-red-600 no-underline text-sm hover:bg-gray-100">Logout</a>
+                </div>
             </div>
-        </nav>
+        </div>
     </header>
-    <main class="">
+
+    <main class="pt-16">
+        <!-- Adjust pt-16 to clear fixed header -->
         <section id="hero-section"
             class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
@@ -334,9 +328,10 @@
                 Itu?
             </h2>
             <p class="text-base">
-                Aplikasi TitipGo membantu kamu menemukan produk luar negeri yang kamu mau, tanpa ribet dan bisa langsung
-                diantar oleh Jastiper terpercaya. Gabung dan nikmati pengalaman belanja dari berbagai negara hanya dalam
-                satu aplikasi. Platform digital terbaik untuk mendukung bisnis untuk menemukan penemuan baru dari
+                Aplikasi TitipGo membantu kamu menemukan produk luar negeri yang kamu mau, tanpa ribet dan bisa
+                langsung diantar oleh Jastiper terpercaya. Gabung dan nikmati pengalaman belanja dari berbagai negara
+                hanya dalam satu aplikasi. Platform digital terbaik untuk mendukung bisnis untuk menemukan penemuan baru
+                dari
                 barang-barang produk unggulan. Kami siap mengantarkan Anda kemana pun Anda inginkan! TitipGo adalah
                 aplikasi revolusioner yang dirancang untuk mengubah cara Anda berbelanja dari luar negeri. Dengan
                 TitipGo,
@@ -358,56 +353,12 @@
                 <h2 class="text-3xl font-bold mb-10">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk1.jpeg" alt="Produk Gucci"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Gucci Dionysus Bag</p>
-                        <span class="text-sm text-gray-500">Italy</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk2.jpeg" alt="Produk LV Capucines"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">LV Capucines BB</p>
-                        <span class="text-sm text-gray-500">France</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk3.jpeg" alt="Produk Nike Air Force"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Nike Air Force 1 '07</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk4.jpeg" alt="Produk iPhone 15 Pro Max"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">iPhone 15 Pro Max</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk5.jpeg" alt="Produk Dior Saddle Bag"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Dior Saddle Bag</p>
-                        <span class="text-sm text-gray-500">France</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk6.jpeg" alt="Produk Prada Re-Edition"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Prada Re-Edition</p>
-                        <span class="text-sm text-gray-500">Italy</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk7.jpeg" alt="Produk Adidas Samba OG"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Adidas Samba OG</p>
-                        <span class="text-sm text-gray-500">Germany</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk8.jpeg" alt="Produk iPad Air 5"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">iPad Air 5</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
+                    <p id="loadingProducts" class="col-span-full text-center text-gray-500">Memuat produk...</p>
+                    <p id="errorProducts" class="col-span-full text-center text-red-500 hidden">Gagal memuat produk.
+                        Silakan coba lagi nanti.</p>
+                    <!-- Produk akan dimuat di sini oleh JavaScript -->
                 </div>
-                <button
+                <button onclick="window.location.href='pembeli_kategori.html'"
                     class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
                     Lihat Semua
                 </button>
@@ -418,48 +369,12 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
             <div id="negara-terpopuler"
                 class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
-                <div class="country-card">
-                    <img src="asset/images/negara1.jpeg" alt="Japan">
-                    <div class="country-name-overlay">Japan</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara2.jpeg" alt="France">
-                    <div class="country-name-overlay">France</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara3.jpeg" alt="South Korea">
-                    <div class="country-name-overlay">South Korea</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara4.jpeg" alt="USA">
-                    <div class="country-name-overlay">USA</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara5.jpeg" alt="Malaysia">
-                    <div class="country-name-overlay">Malaysia</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara6.jpeg" alt="UK">
-                    <div class="country-name-overlay">UK</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara7.jpeg" alt="Australia">
-                    <div class="country-name-overlay">Australia</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara8.jpeg" alt="Singapore">
-                    <div class="country-name-overlay">Singapore</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara9.jpeg" alt="Thailand">
-                    <div class="country-name-overlay">Thailand</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara10.jpeg" alt="Germany">
-                    <div class="country-name-overlay">Germany</div>
-                </div>
+                <p id="loadingCountries" class="col-span-full text-center text-gray-500">Memuat negara...</p>
+                <p id="errorCountries" class="col-span-full text-center text-red-500 hidden">Gagal memuat negara.
+                    Silakan coba lagi nanti.</p>
+                <!-- Negara akan dimuat di sini oleh JavaScript -->
             </div>
-            <button
+            <button onclick="window.location.href='pembeli_kategori.html'"
                 class="mt-10 bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md">
                 Lihat Semua
             </button>
@@ -527,20 +442,8 @@
         </div>
     </div>
     <script type="module">
-        // --- KONFIGURASI FIREBASE ANDA ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCAEVRX88dod-9BWHPCQ_RTIIHWtws-29RQ", // Ini API Key dari gambar image_9696fc.jpg
-            authDomain: "tittpgo-28f84.firebaseapp.com",
-            projectId: "tittpgo-28f84",
-            storageBucket: "tittpgo-28f84.appspot.com",
-            messagingSenderId: "816687553591",
-            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
-        };
-
-        // Inisialisasi Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(); // Dapatkan instance Firestore
-        const auth = firebase.auth(); // Dapatkan instance Auth
+        // Import db dan fungsi-fungsi Firestore dari firebase-config.js
+        import { db, collection, getDocs } from "./js/firebase-config.js";
 
         // --- PENGATURAN SLIDER HERO SECTION ---
         const heroImages = [
@@ -558,30 +461,21 @@
             heroSection.style.backgroundImage = `url('${nextImageUrl}')`;
         }
 
-        // Panggil fungsi untuk mengubah gambar setiap beberapa detik (misalnya 5 detik)
         setInterval(changeHeroImage, 5000); // Aktifkan slider gambar otomatis
 
-        // --- FUNGSI DROPDOWN MENU ---
-        const userIcon = document.getElementById('userIcon');
-        const userDropdown = document.getElementById('userDropdown');
-
-        // Note: userIcon is now removed from HTML. The user dropdown will only appear if
-        // you re-introduce an element with id 'userIcon' or modify this logic to use
-        // another trigger, perhaps after successful login.
-
-        // Tutup dropdown jika klik di luar area dropdown
-        document.addEventListener('click', function (event) {
-            if (userDropdown && !userDropdown.contains(event.target)) { // Check if userDropdown exists before checking contains
-                userDropdown.classList.add('hidden');
-            }
-        });
-
-        // Dropdown Kategori
+        // --- FUNGSI DROPDOWN KATEGORI ---
         const kategoriMenu = document.getElementById('kategoriMenu');
         const dropdownKategori = document.getElementById('dropdownKategori');
 
         kategoriMenu.addEventListener('click', function (event) {
-            event.preventDefault();
+            // Jika dropdown hanya berisi satu item yang sama dengan link utama,
+            // maka kita bisa mencegah default dan langsung navigasi.
+            // Namun, karena ada kemungkinan dropdown akan berisi lebih banyak item di masa depan,
+            // kita biarkan perilaku default link dan dropdown terbuka.
+            // Jika Anda ingin klik Kategori langsung navigasi tanpa membuka dropdown,
+            // Anda bisa menambahkan event.preventDefault() di sini dan window.location.href.
+            // Untuk saat ini, link sudah mengarah ke pembeli_kategori.html, jadi tidak perlu perubahan di sini.
+            // Cukup tampilkan/sembunyikan dropdown seperti biasa.
             dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
         });
 
@@ -591,27 +485,13 @@
             }
         });
 
-
-        // Fungsi Logout (contoh sederhana, perlu implementasi Firebase Auth)
-        function logoutUser() {
-            // Implementasi logout Firebase Authentication
-            auth.signOut().then(() => {
-                alert("Anda telah logout!");
-                window.location.href = "index.html"; // Redirect ke halaman login setelah logout
-            }).catch((error) => {
-                console.error("Error logging out: ", error);
-                alert("Gagal logout. Silakan coba lagi.");
-            });
-        }
-
-        // Fungsi untuk membuka modal chat CS
+        // --- FUNGSI CHAT CS (tidak memerlukan login) ---
         function openChatCS() {
             document.getElementById('chatCSModal').style.display = 'flex';
             document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?"; // Pesan awal
             document.getElementById('chatCSInput').value = ''; // Kosongkan input
         }
 
-        // Fungsi untuk mengirim pesan ke CS (contoh sederhana, tidak terhubung ke backend)
         function sendCSMessage() {
             const chatInput = document.getElementById('chatCSInput');
             const chatMessages = document.getElementById('chatCSMessages');
@@ -621,7 +501,6 @@
                 chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
                 chatInput.value = '';
 
-                // Contoh balasan otomatis (bukan dari CS sungguhan)
                 setTimeout(() => {
                     chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
                     chatMessages.scrollTop = chatMessages.scrollHeight; // Gulir ke bawah
@@ -629,10 +508,116 @@
             }
         }
 
+        // --- FUNGSI UNTUK MEMUAT PRODUK DARI FIRESTORE ---
+        async function loadProducts() {
+            const produkContainer = document.getElementById('produk-best-seller');
+            const loadingMessage = document.getElementById('loadingProducts');
+            const errorMessage = document.getElementById('errorProducts');
+
+            produkContainer.innerHTML = ''; // Kosongkan konten sebelumnya
+            loadingMessage.classList.remove('hidden'); // Tampilkan pesan loading
+            errorMessage.classList.add('hidden'); // Sembunyikan pesan error
+
+            try {
+                // Menggunakan fungsi collection() dari Modular SDK
+                const productsCollectionRef = collection(db, "produk");
+                const snapshot = await getDocs(productsCollectionRef); // Menggunakan getDocs() dari Modular SDK
+
+                if (snapshot.empty) {
+                    produkContainer.innerHTML = '<p class="col-span-full text-center text-gray-600">Belum ada produk yang tersedia.</p>';
+                    loadingMessage.classList.add('hidden');
+                    return;
+                }
+
+                // Ambil hingga 8 produk teratas
+                const productsToDisplay = snapshot.docs.slice(0, 8);
+
+                productsToDisplay.forEach(doc => {
+                    const product = doc.data();
+                    const productCard = `
+                        <a href="pembeli_detail_produk.html?id=${doc.id}" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
+                            <img src="${product.imageUrl || 'asset/images/default_product.jpeg'}" alt="Produk ${product.namaBarang}"
+                                class="w-full h-32 object-cover rounded mb-2">
+                            <p class="font-semibold text-lg">${product.namaBarang}</p>
+                            <span class="text-sm text-gray-500">${product.negara || 'Negara Asal'}</span>
+                        </a>
+                    `;
+                    produkContainer.innerHTML += productCard;
+                });
+                loadingMessage.classList.add('hidden'); // Sembunyikan pesan loading setelah data dimuat
+
+            } catch (error) {
+                console.error("Error fetching products: ", error);
+                loadingMessage.classList.add('hidden');
+                errorMessage.classList.remove('hidden'); // Tampilkan pesan error
+                errorMessage.textContent = `Gagal memuat produk: ${error.message}. Silakan cek konsol browser untuk detail.`;
+            }
+        }
+
+        // --- FUNGSI UNTUK MEMUAT NEGARA DARI FIRESTORE (dari koleksi produk) ---
+        async function loadCountries() {
+            const negaraContainer = document.getElementById('negara-terpopuler');
+            const loadingMessage = document.getElementById('loadingCountries');
+            const errorMessage = document.getElementById('errorCountries');
+
+            negaraContainer.innerHTML = ''; // Kosongkan konten sebelumnya
+            loadingMessage.classList.remove('hidden'); // Tampilkan pesan loading
+            errorMessage.classList.add('hidden'); // Sembunyikan pesan error
+
+            try {
+                // Menggunakan fungsi collection() dari Modular SDK
+                const productsCollectionRef = collection(db, "produk");
+                const snapshot = await getDocs(productsCollectionRef); // Menggunakan getDocs() dari Modular SDK
+
+                const countries = new Set();
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    if (product.negara && product.negara.trim() !== '') {
+                        countries.add(product.negara.trim());
+                    }
+                });
+
+                if (countries.size === 0) {
+                    negaraContainer.innerHTML = '<p class="col-span-full text-center text-gray-600">Belum ada negara yang tersedia.</p>';
+                    loadingMessage.classList.add('hidden');
+                    return;
+                }
+
+                const sortedCountries = Array.from(countries).sort();
+                const countriesToDisplay = sortedCountries.slice(0, 10); // Ambil hingga 10 negara teratas
+
+                countriesToDisplay.forEach(countryName => {
+                    const countryFlagFileName = countryName.toLowerCase().replace(/\s/g, '_').replace(/[^a-z0-9_]/g, '');
+                    const countryImageUrl = `asset/images/flag_${countryFlagFileName}.jpeg`;
+                    const fallbackImageUrl = 'asset/images/default_country.jpeg';
+
+                    const countryCard = `
+                        <div class="country-card" onclick="window.location.href='pembeli_kategori.html?negara=${encodeURIComponent(countryName)}'">
+                            <img src="${countryImageUrl}" alt="Bendera ${countryName}" onerror="this.onerror=null;this.src='${fallbackImageUrl}';">
+                            <div class="country-name-overlay">${countryName}</div>
+                        </div>
+                    `;
+                    negaraContainer.innerHTML += countryCard;
+                });
+                loadingMessage.classList.add('hidden');
+
+            } catch (error) {
+                console.error("Error fetching countries: ", error);
+                loadingMessage.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+                errorMessage.textContent = `Gagal memuat negara: ${error.message}. Silakan cek konsol browser untuk detail.`;
+            }
+        }
+
         // Expose functions to global scope for onclick attributes
-        window.logoutUser = logoutUser;
         window.openChatCS = openChatCS;
         window.sendCSMessage = sendCSMessage;
+
+        // Panggil fungsi untuk memuat data saat DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            loadCountries();
+        });
 
     </script>
 </body>
