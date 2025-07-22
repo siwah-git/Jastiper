@@ -8,7 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -367,10 +369,7 @@
             <p class="number" id="count-pengikut-toko">0</p>
             <p class="label">Pengikut Toko</p>
           </div>
-          <div class="overview-box">
-            <p class="number" id="count-produk-diblokir">0</p>
-            <p class="label">Produk Diblokir</p>
-          </div>
+          <!-- Removed "Produk Diblokir" section -->
           <div class="overview-box">
             <p class="number" id="count-produk-habis">0</p>
             <p class="label">Produk Habis</p>
@@ -423,6 +422,17 @@
     </div>
   </div>
 
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     // Inisialisasi Firebase App dan layanan di sini
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
@@ -455,8 +465,46 @@
     // Dapatkan instance Auth
     const auth = getAuth(app);
 
-
     let currentTokoId = null;
+
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customConfirmBtn.classList.remove('btn-confirm');
+        customConfirmBtn.classList.add('btn-danger'); // Make confirm button red for delete/logout
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customConfirmBtn.classList.remove('btn-danger'); // Reset to default if not confirmation
+        customConfirmBtn.classList.add('btn-primary'); // Make it green for success/info
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmBtn.textContent = isConfirmation ? "Konfirmasi" : "OK";
+      customConfirmModal.classList.add('show');
+    }
+
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null;
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null;
+    });
 
     // Listen for Firebase authentication state changes
     onAuthStateChanged(auth, (user) => {
@@ -470,9 +518,9 @@
         // User is signed out
         console.warn("No Toko ID found (user not authenticated).");
         localStorage.removeItem("tokoId"); // Clear any stale ID
-        // Karena navigasi langsung ke file lokal tidak didukung, kita hanya log dan tampilkan pesan.
-        alert("Anda belum login. Silakan login di lingkungan yang mendukung navigasi.");
-        console.warn("Navigasi ke halaman login tidak dapat dilakukan di lingkungan pratinjau ini.");
+        showCustomConfirm("Anda belum login. Silakan login.", () => {
+          window.location.href = "login_user.html"; // Redirect ke halaman login
+        });
       }
     });
 
@@ -486,9 +534,7 @@
       "count-perlu-diproses"
     );
     const countPengikutToko = document.getElementById("count-pengikut-toko");
-    const countProdukDiblokir = document.getElementById(
-      "count-produk-diblokir"
-    );
+    // Removed countProdukDiblokir
     const countProdukHabis = document.getElementById("count-produk-habis");
 
     // Get DOM elements for counts in "Performa Toko"
@@ -547,17 +593,14 @@
         const qProducts = query(collection(db, "produk"), where("tokoId", "==", currentTokoId));
         const productSnapshot = await getDocs(qProducts);
 
-        let produkDiblokirCount = 0;
+        // Removed produkDiblokirCount
         let produkHabisCount = 0;
         let produkDilihatCount = 0; // Assuming each product has a view count or similar
 
         productSnapshot.forEach((doc) => {
           const product = doc.data();
-          // Assuming 'isBlocked' is true if blocked, or 'status' is 'blocked'
-          if (product.isBlocked === true || product.status === 'blocked') {
-            produkDiblokirCount++;
-          }
-          if (product.stock === 0) { // Assuming a numeric field 'stock'
+          // Removed logic for produkDiblokirCount
+          if (product.stok === 0) { // Assuming a numeric field 'stok'
             produkHabisCount++;
           }
           if (product.views) { // Assuming a numeric field 'views' for product views
@@ -565,7 +608,7 @@
           }
         });
 
-        countProdukDiblokir.textContent = produkDiblokirCount;
+        // Removed countProdukDiblokir.textContent
         countProdukHabis.textContent = produkHabisCount;
         countProdukDilihat.textContent = produkDilihatCount;
 
@@ -771,13 +814,12 @@
         await signOut(auth);
         console.log("Logged out from Firebase.");
         localStorage.removeItem("tokoId");
-        alert("Anda telah logout.");
-        logoutModal.classList.remove("show");
-        // Karena navigasi langsung ke file lokal tidak didukung, kita hanya log dan tampilkan pesan.
-        console.warn("Navigasi ke halaman login tidak dapat dilakukan di lingkungan pratinjau ini.");
+        showCustomConfirm("Anda telah logout.", () => {
+          window.location.href = "pembeli_dashboard.html"; // Redirect ke halaman pembeli_dashboard.html
+        });
       } catch (error) {
         console.error("Error during logout:", error);
-        alert("Terjadi kesalahan saat logout. Silakan coba lagi.");
+        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", null);
       }
     });
 

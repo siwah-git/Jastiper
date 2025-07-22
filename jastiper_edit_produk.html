@@ -8,13 +8,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     body {
       font-family: "Inter", sans-serif;
-      background-image: url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
-      /* Updated background image URL */
+      background-image: url("asset/images/background.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -91,6 +91,10 @@
       position: relative;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      /* Center content horizontally */
+      justify-content: flex-start;
+      /* Align content to the top */
     }
 
     /* Card Styling (re-used for main sections) */
@@ -100,6 +104,12 @@
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       margin-bottom: 1.5rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      width: 100%;
+      /* Ensure it takes full width of its container */
+      max-width: 768px;
+      /* Reverted max-width for the form/card */
     }
 
     /* Form Input Styling */
@@ -149,15 +159,24 @@
     }
 
     /* Button Styling */
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+      padding: 0.6rem 1rem;
+      /* Reduced padding for smaller buttons */
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      /* General shadow for all buttons */
+      cursor: pointer;
+      font-size: 0.9rem;
+      /* Slightly smaller font size for buttons */
+    }
+
     .btn-primary {
       background-color: #ec4899;
       color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s;
-      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
-      cursor: pointer;
     }
 
     .btn-primary:hover {
@@ -167,12 +186,7 @@
     .btn-secondary {
       background-color: #f0f0f0;
       color: #333;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s, border-color 0.2s;
       border: 1px solid #ccc;
-      cursor: pointer;
     }
 
     .btn-secondary:hover {
@@ -182,12 +196,6 @@
     .btn-danger {
       background-color: #ef4444;
       color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s;
-      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-      cursor: pointer;
     }
 
     .btn-danger:hover {
@@ -314,7 +322,7 @@
   <div class="flex h-full">
     <div class="sidebar">
       <div class="sidebar-header">
-        <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo" />
+        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
       </div>
       <nav class="sidebar-nav">
         <ul>
@@ -333,7 +341,7 @@
     <div class="main-content">
       <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Produk</h1>
 
-      <form id="edit-product-form" class="flex flex-col h-full">
+      <form id="edit-product-form" class="flex flex-col h-full w-full max-w-3xl mx-auto">
         <div class="card flex-grow overflow-y-auto mb-6">
           <div class="tab-container">
             <div class="tab-button active" data-tab="info-produk">
@@ -452,7 +460,7 @@
           </div>
         </div>
 
-        <div class="flex justify-start mt-4 pb-4">
+        <div class="flex justify-end mt-4 pb-4 w-full max-w-3xl mx-auto">
           <button type="submit" class="btn-primary">Simpan Perubahan</button>
           <button type="button" class="btn-secondary ml-4" onclick="window.location.href='jastiper_toko_kita.html'">
             Batal
@@ -505,10 +513,13 @@
       getDoc,
       doc,
       updateDoc,
-      deleteDoc
-    } from './firebase-config.js'; // Ensure this path is correct
+      deleteDoc,
+      ref, // Import ref for storage operations
+      deleteObject, // Import deleteObject for storage operations
+      Timestamp // Import Timestamp from firebase-config.js
+    } from '../js/firebase-config.js'; // Corrected path to firebase-config.js
 
-    let currentJastiperId = null;
+    let currentTokoId = null; // Changed from currentJastiperId to currentTokoId
     let currentProductId = null; // Store product ID from URL
 
     // Custom Confirmation/Alert Modal elements
@@ -549,8 +560,8 @@
 
     // DOM Elements
     const form = document.getElementById("edit-product-form");
-    const namaProdukInput = document.getElementById("edit-namaProduk");
-    const negaraAsalInput = document.getElementById("edit-negaraAsal");
+    const namaProdukInput = document.getElementById("edit-namaProduk"); // This will now map to namaBarang
+    const negaraAsalInput = document.getElementById("edit-negaraAsal"); // This will now map to negara
     const kategoriSelect = document.getElementById("edit-kategori");
     const hargaInput = document.getElementById("edit-harga");
     const stokInput = document.getElementById("edit-stok");
@@ -671,35 +682,32 @@
     let variantsData = []; // Array to hold variant objects
 
     function renderVariant(variant = {}) {
+      console.log("Rendering variant with data:", variant); // Log the variant object being rendered
       const variantDiv = document.createElement('div');
       variantDiv.classList.add('variant-item', 'border', 'border-gray-200', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
       variantDiv.innerHTML = `
-                <div class="flex justify-between items-center mb-3">
-                    <h4 class="font-semibold text-gray-700">Varian Baru</h4>
-                    <button type="button" class="remove-variant-button text-red-500 hover:text-red-700">
-                        <i class="fas fa-times-circle"></i> Hapus Varian
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="input-group">
-                        <label for="variant-name-${Date.now()}">Nama Varian:</label>
-                        <input type="text" class="variant-name w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Contoh: Warna Merah, Ukuran S" value="${variant.name || ''}" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="variant-price-${Date.now()}">Harga Varian (opsional):</label>
-                        <input type="number" class="variant-price w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Jika berbeda dari harga utama" value="${variant.price || ''}" />
-                    </div>
-                    <div class="input-group">
-                        <label for="variant-stock-${Date.now()}">Stok Varian:</label>
-                        <input type="number" class="variant-stock w-full px-3 py-2 border border-gray-300 rounded-md" value="${variant.stock !== undefined ? variant.stock : ''}" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="variant-imageUrl-${Date.now()}">Foto Varian (URL):</label>
-                        <input type="url" class="variant-imageUrl w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="URL Gambar Varian" value="${variant.imageUrl || ''}" />
-                        <img src="${variant.imageUrl || ''}" alt="Variant Image" class="variant-image-preview ${variant.imageUrl ? '' : 'hidden'}" />
-                    </div>
-                </div>
-            `;
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-semibold text-gray-700">Varian Baru</h4>
+                                <button type="button" class="remove-variant-button text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times-circle"></i> Hapus Varian
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group">
+                                    <label for="variant-name-${Date.now()}">Nama Varian:</label>
+                                    <input type="text" class="variant-name w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Contoh: Warna Merah, Ukuran S" value="${variant.name || ''}" required />
+                                </div>
+                                <div class="input-group">
+                                    <label for="variant-price-${Date.now()}">Harga Varian (opsional):</label>
+                                    <input type="number" class="variant-price w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Jika berbeda dari harga utama" value="${variant.price || ''}" />
+                                </div>
+                                <div class="input-group">
+                                    <label for="variant-imageUrl-${Date.now()}">Foto Varian (URL):</label>
+                                    <input type="url" class="variant-imageUrl w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="URL Gambar Varian" value="${variant.imageUrl || ''}" />
+                                    <img src="${variant.imageUrl || ''}" alt="Variant Image" class="variant-image-preview ${variant.imageUrl ? '' : 'hidden'}" />
+                                </div>
+                            </div>
+                        `;
       variantsContainer.appendChild(variantDiv);
 
       // Add event listener for image preview
@@ -737,21 +745,23 @@
       }
 
       try {
-        const productRef = doc(db, "products", productId);
+        const productRef = doc(db, "produk", productId);
         const productSnap = await getDoc(productRef);
 
         if (productSnap.exists()) {
           const product = productSnap.data();
+          console.log("Product data loaded:", product); // Log entire product data
 
-          if (product.tokoId !== currentJastiperId) { // Assuming 'tokoId' is the jastiperId
+          if (product.tokoId !== currentTokoId) {
             showCustomConfirm("Anda tidak memiliki izin untuk mengedit produk ini.", () => {
               window.location.href = "jastiper_toko_kita.html";
             });
             return;
           }
 
-          namaProdukInput.value = product.namaProduk || "";
-          negaraAsalInput.value = product.negaraAsal || "";
+          // Mengisi form dengan data produk
+          namaProdukInput.value = product.namaBarang || "";
+          negaraAsalInput.value = product.negara || "";
           hargaInput.value = product.harga || 0;
           stokInput.value = product.stok !== undefined ? product.stok : 0;
           statusSelect.value = product.status || "READY ID";
@@ -763,7 +773,6 @@
           deskripsiInput.value = product.deskripsi || "";
           merkInput.value = product.merk || "";
           beratInput.value = product.berat !== undefined ? product.berat : 0;
-          // Convert Firebase Timestamp to YYYY-MM-DD for date input
           if (product.batasPesan && product.batasPesan.toDate) {
             const date = product.batasPesan.toDate();
             batasPesanInput.value = date.toISOString().split('T')[0];
@@ -780,8 +789,15 @@
 
           // Load variants
           variantsData = product.variants || [];
+          console.log("Variants data from product (before rendering):", variantsData); // Log variants array
           variantsContainer.innerHTML = ''; // Clear existing variants
-          variantsData.forEach(variant => renderVariant(variant));
+          if (variantsData.length > 0) {
+            variantsData.forEach(variant => renderVariant(variant));
+          } else {
+            console.log("No variants found for this product.");
+            // Optionally, add a message to the UI if no variants are found
+            // variantsContainer.innerHTML = '<p class="text-gray-500">Tidak ada varian untuk produk ini. Klik "Tambah Varian" untuk menambahkan.</p>';
+          }
 
           fetchStoreFeeForEditPage();
 
@@ -800,16 +816,15 @@
 
     async function fetchStoreFeeForEditPage() {
       try {
-        // Fetch store data to get the fee
-        const storeRef = doc(db, "toko", currentJastiperId);
+        const storeRef = doc(db, "toko", currentTokoId);
         const storeSnap = await getDoc(storeRef);
 
         if (storeSnap.exists()) {
           const storeData = storeSnap.data();
-          const fee = storeData.fee || 0; // Assuming 'fee' field exists in 'toko' document
+          const fee = storeData.fee || 0;
           feeInput.value = `Rp ${fee.toLocaleString("id-ID")}`;
         } else {
-          console.warn("Dokumen toko tidak ditemukan untuk jastiper ID:", currentJastiperId);
+          console.warn("Dokumen toko tidak ditemukan untuk toko ID:", currentTokoId);
           feeInput.value = "N/A";
         }
       } catch (error) {
@@ -822,7 +837,6 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Collect variant data
       const collectedVariants = [];
       const variantItems = variantsContainer.querySelectorAll('.variant-item');
       let hasEmptyVariantName = false;
@@ -830,7 +844,6 @@
       variantItems.forEach(item => {
         const nameInput = item.querySelector('.variant-name');
         const priceInput = item.querySelector('.variant-price');
-        const stockInput = item.querySelector('.variant-stock');
         const imageUrlInput = item.querySelector('.variant-imageUrl');
 
         if (!nameInput.value.trim()) {
@@ -840,21 +853,20 @@
         collectedVariants.push({
           name: nameInput.value.trim(),
           price: priceInput.value ? parseFloat(priceInput.value) : null,
-          stock: stockInput.value ? parseInt(stockInput.value) : 0,
           imageUrl: imageUrlInput.value.trim(),
         });
       });
 
       if (hasEmptyVariantName) {
         showCustomConfirm("Nama varian tidak boleh kosong.", () => { }, false);
-        activateTab("selengkapnya"); // Switch to "Selengkapnya" tab
+        activateTab("selengkapnya");
         return;
       }
 
       const updatedData = {
-        namaProduk: namaProdukInput.value,
-        namaProdukLowerCase: namaProdukInput.value.toLowerCase(),
-        negaraAsal: negaraAsalInput.value,
+        namaBarang: namaProdukInput.value,
+        namaBarangLowerCase: namaProdukInput.value.toLowerCase(),
+        negara: negaraAsalInput.value,
         kategori: kategoriSelect.value,
         harga: parseFloat(hargaInput.value),
         stok: parseInt(stokInput.value),
@@ -863,10 +875,9 @@
         deskripsi: deskripsiInput.value,
         merk: merkInput.value,
         berat: parseFloat(beratInput.value),
-        // Convert date string to Firebase Timestamp if not null
-        batasPesan: batasPesanInput.value ? new Date(batasPesanInput.value) : null,
+        batasPesan: batasPesanInput.value ? Timestamp.fromDate(new Date(batasPesanInput.value)) : null,
         jenis: jenisSelect.value,
-        variants: collectedVariants, // Save variants data
+        variants: collectedVariants,
       };
 
       if (!updatedData.kategori) {
@@ -881,93 +892,142 @@
       }
 
       try {
-        const productRef = doc(db, "products", currentProductId);
+        const productRef = doc(db, "produk", currentProductId);
         await updateDoc(productRef, updatedData);
         showCustomConfirm("Detail produk berhasil diperbarui!", () => {
           window.location.href = "jastiper_toko_kita.html";
         }, false);
       } catch (error) {
         console.error("Error updating product:", error);
-        showCustomConfirm("Gagal memperbarui produk: " + error.message, () => { });
+        showCustomConfirm("Gagal memperbarui produk: " + error.message, null);
       }
     });
 
-    // Event listener untuk tombol Hapus Produk
-    btnHapusProduk.addEventListener("click", async () => {
-      if (!currentProductId) return;
-
-      showCustomConfirm("Apakah Anda yakin ingin menghapus produk ini secara permanen?", async () => {
-        try {
-          const productRef = doc(db, "products", currentProductId);
-          await deleteDoc(productRef);
-          showCustomConfirm("Produk berhasil dihapus!", () => {
-            window.location.href = "jastiper_toko_kita.html";
-          }, false);
-        } catch (error) {
-          console.error("Error deleting product:", error);
-          showCustomConfirm("Gagal menghapus produk: " + error.message, () => { });
-        }
-      }, true);
+    btnHapusProduk.addEventListener("click", () => {
+      if (currentProductId) {
+        showCustomConfirm("Apakah Anda yakin ingin menghapus produk ini secara permanen? Aksi ini tidak bisa dibatalkan!", async () => {
+          try {
+            await deleteDoc(doc(db, "produk", currentProductId));
+            showCustomConfirm("Produk berhasil dihapus!", () => {
+              window.location.href = "jastiper_toko_kita.html";
+            }, false);
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            showCustomConfirm("Gagal menghapus produk: " + error.message, null);
+          }
+        }, true);
+      } else {
+        showCustomConfirm("Tidak ada produk yang dipilih untuk dihapus.", null);
+      }
     });
 
-    // Event listener untuk update preview gambar produk utama
-    imageUrlInput.addEventListener("input", () => {
+    imageUrlInput.addEventListener('input', () => {
       if (imageUrlInput.value) {
         imagePreview.src = imageUrlInput.value;
-        imagePreview.classList.remove("hidden");
+        imagePreview.classList.remove('hidden');
       } else {
-        imagePreview.classList.add("hidden");
+        imagePreview.classList.add('hidden');
       }
     });
 
-    // Initial load and Firebase Auth State management
-    onAuthStateChanged(auth, (user) => {
+    const logoutButtonSidebar = document.getElementById("logout-button-sidebar");
+    const logoutModal = document.getElementById("logout-modal");
+    const cancelLogoutButton = document.getElementById("cancel-logout");
+    const confirmLogoutButton = document.getElementById("confirm-logout");
+
+    if (logoutButtonSidebar) {
+      logoutButtonSidebar.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+    }
+
+    if (cancelLogoutButton) {
+      cancelLogoutButton.addEventListener("click", () => {
+        logoutModal.classList.remove("show");
+      });
+    }
+
+    if (confirmLogoutButton) {
+      confirmLogoutButton.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          showCustomConfirm("Anda telah logout.", () => {
+            window.location.href = 'login_user.html';
+          });
+        } catch (error) {
+          console.error("Error during logout:", error);
+          showCustomConfirm("Gagal logout: " + error.message, null);
+        } finally {
+          logoutModal.classList.remove("show");
+        }
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        currentJastiperId = user.uid;
-        console.log("Jastiper ID:", currentJastiperId);
+        currentTokoId = user.uid;
+        console.log("Logged in user UID:", currentTokoId);
 
         const urlParams = new URLSearchParams(window.location.search);
-        currentProductId = urlParams.get("id");
+        currentProductId = urlParams.get('id');
 
         if (currentProductId) {
           loadProductData(currentProductId);
-          activateTab("info-produk"); // Aktifkan tab "Informasi Produk" secara default
         } else {
           showCustomConfirm("ID Produk tidak ditemukan di URL. Kembali ke halaman Toko Kita.", () => {
             window.location.href = "jastiper_toko_kita.html";
           });
         }
       } else {
+        currentTokoId = null;
+        console.log("No user signed in. Redirecting to login.");
         showCustomConfirm("Anda harus login untuk mengedit produk.", () => {
-          window.location.href = "halaman_login_anda.html"; // Ganti dengan URL login Anda
+          window.location.href = 'login_user.html';
         });
       }
     });
 
-    // Logout functionality
-    const logoutButtonSidebar = document.getElementById("logout-button-sidebar");
-    const logoutModal = document.getElementById("logout-modal");
-    const cancelLogoutButton = document.getElementById("cancel-logout");
-    const confirmLogoutButton = document.getElementById("confirm-logout");
+    const currentPath = window.location.pathname.split("/").pop();
+    const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
 
-    logoutButtonSidebar.addEventListener("click", () => {
-      logoutModal.classList.add("show");
+    sidebarLinks.forEach((item) => {
+      const link = item.querySelector("a");
+      if (link) {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
+
+        let isLinkActive = false;
+
+        if (currentPath === linkFileName) {
+          isLinkActive = true;
+        } else if (
+          currentPath === "" &&
+          linkFileName === "jastiper_dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      } else if (
+        item.id === "logout-button-sidebar" &&
+        currentPath === "logout"
+      ) {
+        item.classList.add("active");
+      }
     });
-    cancelLogoutButton.addEventListener("click", () => {
-      logoutModal.classList.remove("show");
-    });
-    confirmLogoutButton.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        console.log("Berhasil logout dari Firebase.");
-        localStorage.removeItem("jastiperId");
-        showCustomConfirm("Anda telah logout.", () => {
-          window.location.href = "halaman_login_anda.html";
-        }, false);
-        logoutModal.classList.remove("show");
-      } catch (error) {
-        console.error("Error saat logout:", error);
-        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi: " + error.message, () => { });
+
+    populateKategoriOptions();
+
+    imageUrlInput.addEventListener('input', () => {
+      if (imageUrlInput.value) {
+        imagePreview.src = imageUrlInput.value;
+        imagePreview.classList.remove('hidden');
+      } else {
+        imagePreview.classList.add('hidden');
       }
     });
   </script>

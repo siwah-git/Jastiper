@@ -14,7 +14,6 @@
         body {
             font-family: "Inter", sans-serif;
             background-image: url("asset/images/background.png");
-            /* Updated image path */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -149,14 +148,12 @@
 
         .modal-buttons .btn-confirm {
             background-color: #ef4444;
-            /* Red color for confirm */
             color: white;
             border: 1px solid #ef4444;
         }
 
         .modal-buttons .btn-confirm.success {
             background-color: #22c55e;
-            /* Green for success */
             border-color: #22c55e;
         }
 
@@ -209,7 +206,6 @@
         </form>
     </div>
 
-    <!-- Success Modal -->
     <div id="success-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-xl font-semibold mb-4" id="success-modal-title">Berhasil!</h3>
@@ -220,7 +216,6 @@
         </div>
     </div>
 
-    <!-- Custom Confirmation/Alert Modal (for general messages) -->
     <div id="custom-confirm-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
@@ -233,16 +228,16 @@
     </div>
 
     <script type="module">
-        // Import Firebase functions from firebase-config.js
-        // Ensure firebase-config.js exports these: auth, db, signOut, onAuthStateChanged, collection, query, where, getDocs, doc, getDoc, serverTimestamp
         import {
             auth,
             db,
             onAuthStateChanged,
             doc,
             getDoc,
+            setDoc,
+            updateDoc, // Pastikan updateDoc diimpor
             serverTimestamp
-        } from './firebase-config.js';
+        } from './js/firebase-config.js';
 
         // DOM Elements
         const registerStoreForm = document.getElementById("register-store-form");
@@ -255,7 +250,6 @@
 
         // Success Modal elements
         const successModal = document.getElementById("success-modal");
-        const successModalTitle = document.getElementById("success-modal-title");
         const successModalMessage = document.getElementById("success-modal-message");
         const closeSuccessModalButton = document.getElementById("close-success-modal");
 
@@ -312,14 +306,15 @@
             const user = auth.currentUser;
             if (!user) {
                 showCustomConfirm("Anda harus login untuk mendaftarkan toko.", () => {
-                    // Optionally redirect to login page if user is not logged in
-                    // window.location.href = "halaman_login_anda.html";
+                    // Opsional: redirect ke halaman login jika user tidak login
+                    // window.location.href = "login.html"; 
                 });
                 return;
             }
 
             const jastiperId = user.uid;
             const namaToko = namaTokoInput.value;
+            // FIX: Menggunakan negaraTokoInput.value (memperbaiki typo)
             const negaraToko = negaraTokoInput.value;
             const fee = parseFloat(feeInput.value);
             const deskripsiToko = deskripsiTokoInput.value;
@@ -339,24 +334,32 @@
                 fee: fee,
                 deskripsiToko: deskripsiToko,
                 alamatToko: alamatToko,
-                gambar: profileImageUrl, // Sesuaikan dengan nama field di koleksi 'toko'
+                gambar: profileImageUrl,
                 created_at: serverTimestamp(),
-                ownerId: jastiperId, // Simpan ownerId di dokumen toko
+                ownerId: jastiperId,
                 totalViews: 0,
-                pengikut: [], // Array kosong untuk pengikut
+                pengikut: [],
             };
 
             try {
-                // Gunakan set() dengan ID dokumen yang sama dengan jastiperId
-                await db.collection("toko").doc(jastiperId).set(newStoreData);
+                // 1. Simpan data toko ke koleksi 'toko'
+                await setDoc(doc(db, "toko", jastiperId), newStoreData);
                 console.log("Toko berhasil didaftarkan untuk Jastiper ID:", jastiperId);
 
+                // 2. Update role user di koleksi 'user' menjadi 'jastiper'
+                // Menggunakan updateDoc untuk hanya mengubah field 'role'
+                const userRef = doc(db, "user", jastiperId);
+                await updateDoc(userRef, {
+                    role: "jastiper"
+                });
+                console.log("Role user berhasil diupdate menjadi 'jastiper' untuk UID:", jastiperId);
+
                 // Tampilkan modal sukses
-                showSuccessModal("Toko Anda berhasil didaftarkan!");
+                showSuccessModal("Toko Anda berhasil didaftarkan dan role Anda diperbarui!");
 
             } catch (error) {
-                console.error("Error mendaftarkan toko:", error);
-                showCustomConfirm("Gagal mendaftarkan toko: " + error.message, () => { });
+                console.error("Error mendaftarkan toko atau memperbarui role:", error);
+                showCustomConfirm("Gagal mendaftarkan toko atau memperbarui role: " + error.message, () => { });
             }
         });
 
@@ -365,16 +368,19 @@
             if (user) {
                 const jastiperId = user.uid;
                 try {
-                    const storeDoc = await db.collection("toko").doc(jastiperId).get();
-                    if (storeDoc.exists) {
+                    const storeDoc = await getDoc(doc(db, "toko", jastiperId));
+                    if (storeDoc.exists()) {
                         showCustomConfirm("Anda sudah memiliki toko. Mengarahkan Anda ke halaman 'Dashboard Jastiper'.", () => {
                             window.location.href = "jastiper_dashboard.html";
                         });
                     }
                 } catch (error) {
                     console.error("Error checking existing store:", error);
-                    // If there's an error checking, don't block the user, let them proceed to register or handle the error
+                    // Jika ada error checking, jangan blokir user
                 }
+            } else {
+                // Opsional: jika user tidak login, redirect ke halaman login
+                // window.location.href = "login.html"; 
             }
         });
     </script>

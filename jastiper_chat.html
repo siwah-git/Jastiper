@@ -489,14 +489,12 @@
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <span>📋</span> <a href="toko_dashboard.html">Dashboard Toko</a> <!-- Sesuaikan tautan -->
-          </li>
-          <li>
-            <span>📦</span> <a href="toko_produk.html">Produk</a> <!-- Sesuaikan tautan -->
+            <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
           </li>
           <li class="active">
-            <span>💬</span> <a href="toko_chat.html">Chat</a>
+            <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
+          <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
           <li id="logout-button-sidebar"><span>➡️</span> Logout</li>
         </ul>
       </nav>
@@ -1083,7 +1081,7 @@
       } else {
         console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
         showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
-          window.location.href = "halaman_login_anda.html"; // Ganti dengan URL halaman login Anda
+          window.location.href = "pembeli_dashboard.html"; // Ganti dengan URL halaman login Anda
         });
       }
     });
@@ -1133,7 +1131,7 @@
         await signOut(auth);
         console.log("Berhasil logout dari Firebase.");
         showCustomConfirm("Anda telah logout.", () => {
-          window.location.href = "halaman_login_anda.html"; // Ganti dengan URL halaman login Anda
+          window.location.href = "pembeli_dashboard.html"; // Ganti dengan URL halaman login Anda
         });
         logoutModal.classList.remove("show");
       } catch (error) {
