@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 
-<<<<<<< HEAD
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-image: url("asset/images/background.png");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        height: 100vh;
-        overflow: hidden;
-      }
-=======
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,12 +8,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
->>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
     body {
       font-family: "Inter", sans-serif;
       background-image: url("asset/images/background.png");
+      /* Consistent background image URL */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -323,7 +312,7 @@
       background-color: #db2777;
     }
 
-    /* Modal (Popup) Styling for Logout */
+    /* Modal (Popup) Styling for Logout and Custom Alerts */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -394,33 +383,21 @@
       border: 1px solid #ef4444;
     }
 
-<<<<<<< HEAD
-  <body class="font-sans h-screen overflow-hidden">
-    <div class="flex h-full">
-      <aside class="sidebar">
-        <div class="sidebar-header">
-          <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
-        </div>
-        <nav class="sidebar-nav">
-          <ul>
-            <li>
-              <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
-            </li>
-            <li class="active">
-              <span>🏬</span><a href="jastiper_toko_kita.html">Toko Kita</a>
-            </li>
-            <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
-            <li id="logout-button"><span>➡️</span> Logout</li>
-          </ul>
-        </nav>
-      </aside>
-=======
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
+
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
   </style>
 </head>
->>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
 
 <body class="font-sans h-screen overflow-hidden">
   <div class="flex h-full">
@@ -525,6 +502,18 @@
     </div>
   </div>
 
+  <!-- Custom Confirmation/Alert Modal (for general messages) -->
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import {
       auth,
@@ -555,8 +544,42 @@
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
 
-    let currentTokoId = null; // Changed from jastiperId to tokoId
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    let currentTokoId = null;
     const MAX_PRODUCTS_LIMIT = 2000;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmModal.classList.add('show');
+    }
+
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null; // Clear callback if cancelled
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null; // Clear callback after execution
+    });
 
     // Function to display products
     function displayProducts(productsToDisplay) {
@@ -570,25 +593,25 @@
 
       productsToDisplay.forEach((product, index) => {
         const row = `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${product.namaProduk || "N/A"}</td>
-            <td>${product.negaraAsal || "N/A"}</td>
-            <td>${product.kategori || "N/A"}</td>
-            <td>Rp ${product.harga ? product.harga.toLocaleString("id-ID") : "N/A"}</td>
-            <td>${product.status || "N/A"}</td>
-            <td>${product.stok !== undefined ? product.stok : "N/A"}</td>
-            <td>
-              ${product.imageUrl
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${product.namaProduk || "N/A"}</td>
+                        <td>${product.negaraAsal || "N/A"}</td>
+                        <td>${product.kategori || "N/A"}</td>
+                        <td>Rp ${product.harga ? product.harga.toLocaleString("id-ID") : "N/A"}</td>
+                        <td>${product.status || "N/A"}</td>
+                        <td>${product.stok !== undefined ? product.stok : "N/A"}</td>
+                        <td>
+                            ${product.imageUrl
             ? `<img src="${product.imageUrl}" alt="${product.namaProduk}">`
             : '<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">No Img</div>'
           }
-            </td>
-            <td class="action-buttons">
-              <button class="btn-ubah-detail" data-id="${product.id}">Ubah Detail</button>
-            </td>
-          </tr>
-        `;
+                        </td>
+                        <td class="action-buttons">
+                            <button class="btn-ubah-detail" data-id="${product.id}">Ubah Detail</button>
+                        </td>
+                    </tr>
+                `;
         productTableBody.insertAdjacentHTML("beforeend", row);
       });
     }
@@ -612,7 +635,7 @@
         return;
       }
 
-      const productsRef = collection(db, "products");
+      const productsRef = collection(db, "produk"); // Changed from "products" to "produk"
       // Query products where 'tokoId' field matches the current user's UID
       let q = query(productsRef, where("tokoId", "==", tokoId));
 
@@ -620,7 +643,6 @@
         // For partial matching, you might need to use a different query approach or client-side filtering
         // Firestore doesn't support "contains" for indexed fields directly without advanced setup (e.g., Algolia)
         // For simplicity, this will filter after fetching if exact match is not suitable.
-        // For proper full-text search, consider a dedicated search service.
       }
       if (filters.kategori) {
         q = query(q, where("kategori", "==", filters.kategori));
@@ -718,11 +740,13 @@
     confirmLogoutButton.addEventListener("click", async () => {
       try {
         await signOut(auth);
-        alert("Anda telah logout.");
-        window.location.href = 'halaman_login_anda.html'; // Redirect to your login page
+        showCustomConfirm("Anda telah logout.", () => {
+          window.location.href = 'halaman_login_anda.html'; // Redirect to your login page
+        });
+        logoutModal.classList.remove("show");
       } catch (error) {
         console.error("Error during logout:", error);
-        alert("Terjadi kesalahan saat logout. Silakan coba lagi.");
+        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", () => { });
       }
     });
 
@@ -737,7 +761,9 @@
         // User is signed out
         console.log("No user signed in.");
         // Redirect to login page if no user is authenticated
-        window.location.href = 'halaman_login_anda.html'; // Ensure this points to your actual login page
+        showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
+          window.location.href = 'halaman_login_anda.html'; // Ensure this points to your actual login page
+        });
       }
 
       // Script to highlight sidebar item - Add this section

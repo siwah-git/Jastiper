@@ -4,9 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Baju Gucci G6000 Man Limited Edition</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
@@ -133,75 +131,72 @@
 </head>
 
 <body class="font-sans bg-gray-100 m-0">
-  <!-- HEADER KONSISTEN DENGAN DASHBOARD, RESPONSIF, UKURAN SAMA -->
   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-        <div class="flex items-center space-x-3">
-            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-            <div class="relative hidden md:block">
-                <input type="text" placeholder="Cari Barang..."
-                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                    viewBox="0 0 20 20">
-                    <path
-                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-                </svg>
-            </div>
+    <div class="flex items-center space-x-3">
+      <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Cari Barang..."
+          class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+          viewBox="0 0 20 20">
+          <path
+            d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+        </svg>
+      </div>
+    </div>
+    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+    </nav>
+    <nav class="flex items-center space-x-4 sm:space-x-6">
+      <a href="pembeli_dashboard.html"
+        class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+      <div class="dropdown-kategori relative inline-block hidden md:block">
+        <a href="#" id="kategoriMenu" class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
+        <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+          id="dropdownKategori" style="display:none;">
+          <a href="pembeli_produk_gucci.html"
+            class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
+          <a href="pembeli_kategori.html"
+            class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+            Produk</a>
         </div>
-        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-        </nav>
-        <nav class="flex items-center space-x-4 sm:space-x-6">
-            <a href="pembeli_dashboard.html"
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-            <div class="dropdown-kategori relative inline-block hidden md:block">
-                <a href="#" id="kategoriMenu"
-                    class="text-blue-700 font-bold cursor-pointer font-semibold text-base">Kategori</a>
-                <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
-                    id="dropdownKategori" style="display:none;">
-                    <a href="pembeli_produk_gucci.html"
-                        class="block px-6 py-2 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Produk</a>
-                    <a href="pembeli_kategori.html"
-                        class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
-                        Produk</a>
-                </div>
-            </div>
+      </div>
 
-            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                    </path>
-                </svg>
-            </a>
-            <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
-                onclick="alert('Belum ada notifikasi!');return false;">
-                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                    </path>
-                </svg>
-            </a>
-            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-                id="userIcon" style="cursor:pointer;">
-            <div id="userDropdown"
-                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-                <a href="pembeli_akun.html"
-                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-                <a href="pembeli_pesanan_saya.html"
-                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-                <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                    CS</a>
-                <a href="#" onclick="openChatCS();return false;"
-                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-                <a href="#" onclick="logoutUser();return false;"
-                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-            </div>
-        </nav>
-    </header>
+      <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+          </path>
+        </svg>
+      </a>
+      <a href="#" class="relative p-2 text-gray-700 hover:text-pink-600"
+        onclick="alert('Belum ada notifikasi!');return false;">
+        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
+        </svg>
+      </a>
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+        id="userIcon" style="cursor:pointer;">
+      <div id="userDropdown"
+        class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+        <a href="pembeli_akun.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+        <a href="pembeli_pesanan_saya.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+          CS</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+        <a href="#" onclick="logoutUser();return false;"
+          class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+      </div>
+    </nav>
+  </header>
   <main class="pt-20">
-    <!-- Modal Chat CS -->
     <div id="chatCSModal"
       class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
       <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
@@ -223,9 +218,6 @@
     </div>
     <div
       class="relative max-w-7xl mx-auto rounded-xl shadow-lg flex flex-col md:flex-row gap-8 p-8 mb-8 bg-[#eaf3fb] border border-gray-200 mt-12 items-start min-h-[340px]">
-      <button
-        class="absolute right-8 top-8 bg-white border border-red-600 text-red-600 rounded px-6 py-2 text-sm font-semibold cursor-pointer shadow hover:bg-red-50"
-        onclick="laporkan()">Laporkan</button>
       <div class="flex-shrink-0">
         <img src="asset/images/ootd (1).jpg" alt="OOTD"
           class="w-44 h-auto rounded-lg object-cover bg-white border border-gray-200" />
@@ -339,10 +331,6 @@
         localStorage.setItem('checkoutProduct', JSON.stringify(produk));
         window.location.href = 'pembeli_checkout.html';
       }
-      // Laporkan
-      function laporkan() {
-        alert('Terima kasih atas laporan Anda!');
-      }
       // Hubungi Toko
       function hubungiToko() {
         alert('Fitur chat toko akan segera hadir!');
@@ -400,7 +388,6 @@
         }
       }
     </script>
-    <!-- Integrasi Firebase Firestore -->
     <script type="module">
       import { db, auth } from './js/firebase-config.js';
       // Contoh: Ambil data produk
