@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     body {
@@ -89,6 +91,10 @@
       position: relative;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      /* Center content horizontally */
+      justify-content: flex-start;
+      /* Align content to the top */
     }
 
     /* Card Styling (re-used for main sections) */
@@ -98,10 +104,15 @@
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       margin-bottom: 1.5rem;
+      flex-grow: 1;
+      overflow-y: auto;
+      width: 100%;
+      /* Ensure it takes full width of its container */
+      max-width: 768px;
+      /* Reverted max-width for the form/card */
     }
 
     /* Form Input Styling */
-    /* Adjusted for more explicit Tailwind usage, keeping some custom for specificity */
     .input-group label {
       font-size: 0.9rem;
       color: #555;
@@ -136,16 +147,36 @@
       border: 1px solid #eee;
     }
 
+    /* Variant Image Preview */
+    .variant-image-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      border: 1px solid #eee;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
     /* Button Styling */
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+      padding: 0.6rem 1rem;
+      /* Reduced padding for smaller buttons */
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      /* General shadow for all buttons */
+      cursor: pointer;
+      font-size: 0.9rem;
+      /* Slightly smaller font size for buttons */
+    }
+
     .btn-primary {
       background-color: #ec4899;
       color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s;
-      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
-      cursor: pointer;
     }
 
     .btn-primary:hover {
@@ -155,12 +186,7 @@
     .btn-secondary {
       background-color: #f0f0f0;
       color: #333;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s, border-color 0.2s;
       border: 1px solid #ccc;
-      cursor: pointer;
     }
 
     .btn-secondary:hover {
@@ -170,19 +196,13 @@
     .btn-danger {
       background-color: #ef4444;
       color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background-color 0.2s;
-      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-      cursor: pointer;
     }
 
     .btn-danger:hover {
       background-color: #dc2626;
     }
 
-    /* Modal (Popup) Styling for Logout */
+    /* Modal (Popup) Styling for Logout and Custom Alerts */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -257,6 +277,16 @@
       background-color: #dc2626;
     }
 
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
+
     /* Tab styling */
     .tab-container {
       display: flex;
@@ -302,8 +332,8 @@
           <li class="active">
             <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
-          <li><span>💬</span><a href="jastiper_chat.html">Toko Kita</a></li>
-          <li id="logout-button"><span>➡️</span> Logout</li>
+          <li><span>💬</span><a href="jastiper_chat.html">Chat</a></li>
+          <li id="logout-button-sidebar"><span>➡️</span> Logout</li>
         </ul>
       </nav>
     </div>
@@ -311,7 +341,7 @@
     <div class="main-content">
       <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Produk</h1>
 
-      <form id="edit-product-form" class="flex flex-col h-full">
+      <form id="edit-product-form" class="flex flex-col h-full w-full max-w-3xl mx-auto">
         <div class="card flex-grow overflow-y-auto mb-6">
           <div class="tab-container">
             <div class="tab-button active" data-tab="info-produk">
@@ -416,10 +446,21 @@
                 </div>
               </div>
             </div>
+
+            <!-- Bagian Varian Produk -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+              <h3 class="text-lg font-bold text-gray-800 mb-4">Varian Produk</h3>
+              <div id="variants-container" class="space-y-6">
+                <!-- Varian akan ditambahkan di sini secara dinamis -->
+              </div>
+              <button type="button" id="add-variant-button" class="btn-secondary mt-4">
+                <i class="fas fa-plus mr-2"></i> Tambah Varian
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="flex justify-start mt-4 pb-4">
+        <div class="flex justify-end mt-4 pb-4 w-full max-w-3xl mx-auto">
           <button type="submit" class="btn-primary">Simpan Perubahan</button>
           <button type="button" class="btn-secondary ml-4" onclick="window.location.href='jastiper_toko_kita.html'">
             Batal
@@ -432,6 +473,7 @@
     </div>
   </div>
 
+  <!-- Logout Confirmation Modal -->
   <div id="logout-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
@@ -445,95 +487,122 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script>
-    // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
-    let currentJastiperId = localStorage.getItem("jastiperId");
-    if (!currentJastiperId) {
-      console.warn(
-        "Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing."
-      );
-      const tempJastiperId = "contoh_jastiper_id_untuk_testing"; // Ganti ini dengan ID jastiper yang valid dari Firestore Anda untuk pengujian
-      localStorage.setItem("jastiperId", tempJastiperId); // Simpan untuk sesi demo
-      currentJastiperId = tempJastiperId;
-    } else {
-      console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
+  <!-- Custom Confirmation/Alert Modal -->
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase functions from firebase-config.js
+    import {
+      auth,
+      db,
+      signOut,
+      onAuthStateChanged,
+      collection,
+      query,
+      where,
+      getDocs,
+      getDoc,
+      doc,
+      updateDoc,
+      deleteDoc,
+      ref, // Import ref for storage operations
+      deleteObject, // Import deleteObject for storage operations
+      Timestamp // Import Timestamp from firebase-config.js
+    } from '../js/firebase-config.js'; // Corrected path to firebase-config.js
+
+    let currentTokoId = null; // Changed from currentJastiperId to currentTokoId
+    let currentProductId = null; // Store product ID from URL
+
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmBtn.textContent = isConfirmation ? "Ya" : "OK"; // Change text based on type
+      customConfirmBtn.classList.remove('success'); // Reset button style
+      customConfirmModal.classList.add('show');
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get("id");
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null; // Clear callback if cancelled
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null; // Clear callback after execution
+    });
 
     // DOM Elements
     const form = document.getElementById("edit-product-form");
-    const namaProdukInput = document.getElementById("edit-namaProduk");
-    const negaraAsalInput = document.getElementById("edit-negaraAsal");
-    const kategoriSelect = document.getElementById("edit-kategori"); // Changed to Select
+    const namaProdukInput = document.getElementById("edit-namaProduk"); // This will now map to namaBarang
+    const negaraAsalInput = document.getElementById("edit-negaraAsal"); // This will now map to negara
+    const kategoriSelect = document.getElementById("edit-kategori");
     const hargaInput = document.getElementById("edit-harga");
     const stokInput = document.getElementById("edit-stok");
     const statusSelect = document.getElementById("edit-status");
     const imageUrlInput = document.getElementById("edit-imageUrl");
-    const imagePreview = document.getElementById(
-      "edit-product-image-preview"
-    );
+    const imagePreview = document.getElementById("edit-product-image-preview");
 
     // New fields
     const deskripsiInput = document.getElementById("edit-deskripsi");
     const merkInput = document.getElementById("edit-merk");
     const beratInput = document.getElementById("edit-berat");
     const batasPesanInput = document.getElementById("edit-batasPesan");
-    const jenisSelect = document.getElementById("edit-jenis"); // Changed to Select
-    const feeInput = document.getElementById("edit-fee"); // Untuk menampilkan fee toko
-    const btnHapusProduk = document.getElementById("btn-hapus-produk"); // Tombol Hapus
+    const jenisSelect = document.getElementById("edit-jenis");
+    const feeInput = document.getElementById("edit-fee");
+    const btnHapusProduk = document.getElementById("btn-hapus-produk");
 
     // Tab Elements
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabContents = document.querySelectorAll(".tab-content");
 
+    // Variant Elements
+    const variantsContainer = document.getElementById("variants-container");
+    const addVariantButton = document.getElementById("add-variant-button");
+
     // --- Data untuk dropdown "Kategori" dan "Jenis" dari image_6ff314.png ---
     const categoryAndTypeOptions = {
       "Fashion & Aksesoris": [
-        "Pakaian",
-        "Sepatu",
-        "Sandal",
-        "Tas",
-        "Dompet",
-        "Jam Tangan",
-        "Topi",
-        "Aksesoris",
+        "Pakaian", "Sepatu", "Sandal", "Tas", "Dompet", "Jam Tangan", "Topi", "Aksesoris",
       ],
       "Kosmetik & Skincare": [
-        "Skincare",
-        "Makeup",
-        "Perawatan Rambut",
-        "Body Care",
-        "Masker Wajah",
-        "Produk Khusus",
+        "Skincare", "Makeup", "Perawatan Rambut", "Body Care", "Masker Wajah", "Produk Khusus",
       ],
       "Elektronik & Gadget": [
-        "Smartphone",
-        "Aksesoris Gadget",
-        "Kamera",
-        "Smartwatch",
-        "Alat Elektronik",
-        "Gaming",
+        "Smartphone", "Aksesoris Gadget", "Kamera", "Smartwatch", "Alat Elektronik", "Gaming",
       ],
       "Makanan & Minuman": [
-        "Snack",
-        "Minuman",
-        "Bumbu",
-        "Makanan",
-        "Cokelat & permen",
-        "Oleh-oleh musiman",
+        "Snack", "Minuman", "Bumbu", "Makanan", "Cokelat & permen", "Oleh-oleh musiman",
       ],
       "Mainan & Hobi": [
-        "Mainan anak",
-        "Action figure",
-        "Puzzle & board game",
-        "Model kit",
-        "Alat gambar",
+        "Mainan anak", "Action figure", "Puzzle & board game", "Model kit", "Alat gambar",
       ],
-      // Tambahkan kategori lain jika ada di desain Anda
     };
 
     // Fungsi untuk mengaktifkan tab
@@ -609,93 +678,196 @@
       updateJenisOptions(); // Reset jenis saat kategori berubah
     });
 
-    async function loadProductData(id) {
-      if (!id) {
-        console.error("Product ID not found in URL.");
-        alert("ID Produk tidak ditemukan. Kembali ke halaman Toko Kita.");
-        window.location.href = "jastiper_toko_kita.html";
+    // --- Variant Management Functions ---
+    let variantsData = []; // Array to hold variant objects
+
+    function renderVariant(variant = {}) {
+      console.log("Rendering variant with data:", variant); // Log the variant object being rendered
+      const variantDiv = document.createElement('div');
+      variantDiv.classList.add('variant-item', 'border', 'border-gray-200', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
+      variantDiv.innerHTML = `
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-semibold text-gray-700">Varian Baru</h4>
+                                <button type="button" class="remove-variant-button text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times-circle"></i> Hapus Varian
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group">
+                                    <label for="variant-name-${Date.now()}">Nama Varian:</label>
+                                    <input type="text" class="variant-name w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Contoh: Warna Merah, Ukuran S" value="${variant.name || ''}" required />
+                                </div>
+                                <div class="input-group">
+                                    <label for="variant-price-${Date.now()}">Harga Varian (opsional):</label>
+                                    <input type="number" class="variant-price w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Jika berbeda dari harga utama" value="${variant.price || ''}" />
+                                </div>
+                                <div class="input-group">
+                                    <label for="variant-imageUrl-${Date.now()}">Foto Varian (URL):</label>
+                                    <input type="url" class="variant-imageUrl w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="URL Gambar Varian" value="${variant.imageUrl || ''}" />
+                                    <img src="${variant.imageUrl || ''}" alt="Variant Image" class="variant-image-preview ${variant.imageUrl ? '' : 'hidden'}" />
+                                </div>
+                            </div>
+                        `;
+      variantsContainer.appendChild(variantDiv);
+
+      // Add event listener for image preview
+      const variantImageUrlInput = variantDiv.querySelector('.variant-imageUrl');
+      const variantImagePreview = variantDiv.querySelector('.variant-image-preview');
+      variantImageUrlInput.addEventListener('input', () => {
+        if (variantImageUrlInput.value) {
+          variantImagePreview.src = variantImageUrlInput.value;
+          variantImagePreview.classList.remove('hidden');
+        } else {
+          variantImagePreview.classList.add('hidden');
+        }
+      });
+
+      // Add event listener for remove button
+      variantDiv.querySelector('.remove-variant-button').addEventListener('click', () => {
+        showCustomConfirm('Apakah Anda yakin ingin menghapus varian ini?', () => {
+          variantDiv.remove();
+          // Update variantsData array (will be handled on form submission)
+        }, true);
+      });
+    }
+
+    addVariantButton.addEventListener('click', () => {
+      renderVariant({}); // Render an empty variant for new input
+    });
+
+    // --- Load Product Data ---
+    async function loadProductData(productId) {
+      if (!productId) {
+        showCustomConfirm("ID Produk tidak ditemukan. Kembali ke halaman Toko Kita.", () => {
+          window.location.href = "jastiper_toko_kita.html";
+        });
         return;
       }
 
       try {
-        // Since Firebase is removed, this function will no longer fetch from Firestore.
-        // You'll need to replace this with your new data fetching logic (e.g., an API call).
-        // For demonstration, we'll simulate loading product data.
-        console.log("Simulating loading product data for ID:", id);
-        const product = {
-          namaProduk: "Contoh Produk",
-          negaraAsal: "Jepang",
-          kategori: "Makanan & Minuman",
-          harga: 150000,
-          stok: 50,
-          status: "READY ID",
-          imageUrl: "https://via.placeholder.com/150",
-          deskripsi: "Ini adalah contoh deskripsi produk.",
-          merk: "Contoh Merk",
-          berat: 0.25,
-          batasPesan: "2025-12-31", // Example date string
-          jenis: "Snack",
-          jastiperId: currentJastiperId, // Ensure this matches for editing
-        };
+        const productRef = doc(db, "produk", productId);
+        const productSnap = await getDoc(productRef);
 
-        if (product.jastiperId !== currentJastiperId) {
-          alert("Anda tidak memiliki izin untuk mengedit produk ini.");
-          window.location.href = "jastiper_toko_kita.html";
-          return;
-        }
+        if (productSnap.exists()) {
+          const product = productSnap.data();
+          console.log("Product data loaded:", product); // Log entire product data
 
-        namaProdukInput.value = product.namaProduk || "";
-        negaraAsalInput.value = product.negaraAsal || "";
-        hargaInput.value = product.harga || 0;
-        stokInput.value = product.stok !== undefined ? product.stok : 0;
-        statusSelect.value = product.status || "READY ID";
-        imageUrlInput.value = product.imageUrl || "";
+          if (product.tokoId !== currentTokoId) {
+            showCustomConfirm("Anda tidak memiliki izin untuk mengedit produk ini.", () => {
+              window.location.href = "jastiper_toko_kita.html";
+            });
+            return;
+          }
 
-        // Populate Kategori and Jenis dropdowns
-        populateKategoriOptions(product.kategori); // Pass existing category to select it
-        updateJenisOptions(product.jenis); // Pass existing type to select it
+          // Mengisi form dengan data produk
+          namaProdukInput.value = product.namaBarang || "";
+          negaraAsalInput.value = product.negara || "";
+          hargaInput.value = product.harga || 0;
+          stokInput.value = product.stok !== undefined ? product.stok : 0;
+          statusSelect.value = product.status || "READY ID";
+          imageUrlInput.value = product.imageUrl || "";
 
-        // Isi field baru
-        deskripsiInput.value = product.deskripsi || "";
-        merkInput.value = product.merk || "";
-        beratInput.value = product.berat !== undefined ? product.berat : 0;
-        batasPesanInput.value = product.batasPesan || "";
+          populateKategoriOptions(product.kategori);
+          updateJenisOptions(product.jenis);
 
-        if (product.imageUrl) {
-          imagePreview.src = imageUrlInput.value; // Use current input value for immediate preview
-          imagePreview.classList.remove("hidden");
+          deskripsiInput.value = product.deskripsi || "";
+          merkInput.value = product.merk || "";
+          beratInput.value = product.berat !== undefined ? product.berat : 0;
+          if (product.batasPesan && product.batasPesan.toDate) {
+            const date = product.batasPesan.toDate();
+            batasPesanInput.value = date.toISOString().split('T')[0];
+          } else {
+            batasPesanInput.value = "";
+          }
+
+          if (product.imageUrl) {
+            imagePreview.src = imageUrlInput.value;
+            imagePreview.classList.remove("hidden");
+          } else {
+            imagePreview.classList.add("hidden");
+          }
+
+          // Load variants
+          variantsData = product.variants || [];
+          console.log("Variants data from product (before rendering):", variantsData); // Log variants array
+          variantsContainer.innerHTML = ''; // Clear existing variants
+          if (variantsData.length > 0) {
+            variantsData.forEach(variant => renderVariant(variant));
+          } else {
+            console.log("No variants found for this product.");
+            // Optionally, add a message to the UI if no variants are found
+            // variantsContainer.innerHTML = '<p class="text-gray-500">Tidak ada varian untuk produk ini. Klik "Tambah Varian" untuk menambahkan.</p>';
+          }
+
+          fetchStoreFeeForEditPage();
+
         } else {
-          imagePreview.classList.add("hidden");
+          showCustomConfirm("Produk tidak ditemukan.", () => {
+            window.location.href = "jastiper_toko_kita.html";
+          });
         }
-
-        fetchStoreFeeForEditPage(); // Panggil untuk mengisi fee toko
       } catch (error) {
         console.error("Error loading product:", error);
-        alert("Terjadi kesalahan saat memuat data produk.");
-        window.location.href = "jastiper_toko_kita.html";
+        showCustomConfirm("Terjadi kesalahan saat memuat data produk: " + error.message, () => {
+          window.location.href = "jastiper_toko_kita.html";
+        });
       }
     }
 
     async function fetchStoreFeeForEditPage() {
       try {
-        // Since Firebase is removed, this function will no longer fetch from Firestore.
-        // Simulate a store fee.
-        const simulatedFee = 15000; // Example fee
-        feeInput.value = `Rp ${simulatedFee.toLocaleString("id-ID")}`;
+        const storeRef = doc(db, "toko", currentTokoId);
+        const storeSnap = await getDoc(storeRef);
+
+        if (storeSnap.exists()) {
+          const storeData = storeSnap.data();
+          const fee = storeData.fee || 0;
+          feeInput.value = `Rp ${fee.toLocaleString("id-ID")}`;
+        } else {
+          console.warn("Dokumen toko tidak ditemukan untuk toko ID:", currentTokoId);
+          feeInput.value = "N/A";
+        }
       } catch (error) {
         console.error("Error fetching store fee for edit page:", error);
         feeInput.value = "Error";
+        showCustomConfirm("Gagal memuat biaya toko: " + error.message, () => { });
       }
     }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const collectedVariants = [];
+      const variantItems = variantsContainer.querySelectorAll('.variant-item');
+      let hasEmptyVariantName = false;
+
+      variantItems.forEach(item => {
+        const nameInput = item.querySelector('.variant-name');
+        const priceInput = item.querySelector('.variant-price');
+        const imageUrlInput = item.querySelector('.variant-imageUrl');
+
+        if (!nameInput.value.trim()) {
+          hasEmptyVariantName = true;
+        }
+
+        collectedVariants.push({
+          name: nameInput.value.trim(),
+          price: priceInput.value ? parseFloat(priceInput.value) : null,
+          imageUrl: imageUrlInput.value.trim(),
+        });
+      });
+
+      if (hasEmptyVariantName) {
+        showCustomConfirm("Nama varian tidak boleh kosong.", () => { }, false);
+        activateTab("selengkapnya");
+        return;
+      }
+
       const updatedData = {
-        namaProduk: namaProdukInput.value,
-        namaProdukLowerCase: namaProdukInput.value.toLowerCase(), // Tambahkan ini
-        negaraAsal: negaraAsalInput.value,
-        kategori: kategoriSelect.value, // Updated to select value
+        namaBarang: namaProdukInput.value,
+        namaBarangLowerCase: namaProdukInput.value.toLowerCase(),
+        negara: negaraAsalInput.value,
+        kategori: kategoriSelect.value,
         harga: parseFloat(hargaInput.value),
         stok: parseInt(stokInput.value),
         status: statusSelect.value,
@@ -703,96 +875,160 @@
         deskripsi: deskripsiInput.value,
         merk: merkInput.value,
         berat: parseFloat(beratInput.value),
-        batasPesan: batasPesanInput.value || null, // No longer a Firebase Timestamp
-        jenis: jenisSelect.value, // Updated to select value
+        batasPesan: batasPesanInput.value ? Timestamp.fromDate(new Date(batasPesanInput.value)) : null,
+        jenis: jenisSelect.value,
+        variants: collectedVariants,
       };
 
-      // Validasi tambahan untuk kategori dan jenis
       if (!updatedData.kategori) {
-        alert("Mohon pilih Kategori produk.");
+        showCustomConfirm("Mohon pilih Kategori produk.", () => { }, false);
+        activateTab("info-produk");
         return;
       }
       if (!updatedData.jenis) {
-        alert("Mohon pilih Jenis produk.");
+        showCustomConfirm("Mohon pilih Jenis produk.", () => { }, false);
+        activateTab("selengkapnya");
         return;
-        activateTab("info-produk"); // Switch back to the first tab if category/type is missing
       }
 
       try {
-        // Since Firebase is removed, this will no longer update Firestore.
-        // You'll need to replace this with your new data update logic (e.g., an API call).
-        console.log(
-          "Simulating product update for ID:",
-          productId,
-          updatedData
-        );
-        alert("Detail produk berhasil diperbarui! (Simulasi)");
-        window.location.href = "jastiper_toko_kita.html"; // Kembali ke daftar produk
+        const productRef = doc(db, "produk", currentProductId);
+        await updateDoc(productRef, updatedData);
+        showCustomConfirm("Detail produk berhasil diperbarui!", () => {
+          window.location.href = "jastiper_toko_kita.html";
+        }, false);
       } catch (error) {
         console.error("Error updating product:", error);
-        alert("Gagal memperbarui produk: " + error.message);
+        showCustomConfirm("Gagal memperbarui produk: " + error.message, null);
       }
     });
 
-    // Event listener untuk tombol Hapus Produk
-    btnHapusProduk.addEventListener("click", async () => {
-      if (!productId) return;
-
-      if (
-        confirm(
-          "Apakah Anda yakin ingin menghapus produk ini secara permanen?"
-        )
-      ) {
-        try {
-          // Since Firebase is removed, this will no longer delete from Firestore.
-          // You'll need to replace this with your new data deletion logic (e.g., an API call).
-          console.log("Simulating product deletion for ID:", productId);
-          alert("Produk berhasil dihapus! (Simulasi)");
-          window.location.href = "jastiper_toko_kita.html"; // Kembali ke daftar produk
-        } catch (error) {
-          console.error("Error deleting product:", error);
-          alert("Gagal menghapus produk: " + error.message);
-        }
+    btnHapusProduk.addEventListener("click", () => {
+      if (currentProductId) {
+        showCustomConfirm("Apakah Anda yakin ingin menghapus produk ini secara permanen? Aksi ini tidak bisa dibatalkan!", async () => {
+          try {
+            await deleteDoc(doc(db, "produk", currentProductId));
+            showCustomConfirm("Produk berhasil dihapus!", () => {
+              window.location.href = "jastiper_toko_kita.html";
+            }, false);
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            showCustomConfirm("Gagal menghapus produk: " + error.message, null);
+          }
+        }, true);
+      } else {
+        showCustomConfirm("Tidak ada produk yang dipilih untuk dihapus.", null);
       }
     });
 
-    // Event listener untuk update preview gambar
-    imageUrlInput.addEventListener("input", () => {
+    imageUrlInput.addEventListener('input', () => {
       if (imageUrlInput.value) {
         imagePreview.src = imageUrlInput.value;
-        imagePreview.classList.remove("hidden");
+        imagePreview.classList.remove('hidden');
       } else {
-        imagePreview.classList.add("hidden");
+        imagePreview.classList.add('hidden');
       }
     });
 
-    // Initial load
-    document.addEventListener("DOMContentLoaded", () => {
-      if (currentJastiperId) {
-        loadProductData(productId);
-        activateTab("info-produk"); // Aktifkan tab "Informasi Produk" secara default
-      } else {
-        alert("Anda harus login untuk mengedit produk.");
-        window.location.href = "halaman_login_anda.html"; // Ganti dengan URL login Anda
-      }
-    });
-
-    // Logout functionality (same as toko_kita.html)
-    const logoutButton = document.getElementById("logout-button");
+    const logoutButtonSidebar = document.getElementById("logout-button-sidebar");
     const logoutModal = document.getElementById("logout-modal");
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
 
-    logoutButton.addEventListener("click", () => {
-      logoutModal.classList.add("show");
+    if (logoutButtonSidebar) {
+      logoutButtonSidebar.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+    }
+
+    if (cancelLogoutButton) {
+      cancelLogoutButton.addEventListener("click", () => {
+        logoutModal.classList.remove("show");
+      });
+    }
+
+    if (confirmLogoutButton) {
+      confirmLogoutButton.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          showCustomConfirm("Anda telah logout.", () => {
+            window.location.href = 'login_user.html';
+          });
+        } catch (error) {
+          console.error("Error during logout:", error);
+          showCustomConfirm("Gagal logout: " + error.message, null);
+        } finally {
+          logoutModal.classList.remove("show");
+        }
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentTokoId = user.uid;
+        console.log("Logged in user UID:", currentTokoId);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        currentProductId = urlParams.get('id');
+
+        if (currentProductId) {
+          loadProductData(currentProductId);
+        } else {
+          showCustomConfirm("ID Produk tidak ditemukan di URL. Kembali ke halaman Toko Kita.", () => {
+            window.location.href = "jastiper_toko_kita.html";
+          });
+        }
+      } else {
+        currentTokoId = null;
+        console.log("No user signed in. Redirecting to login.");
+        showCustomConfirm("Anda harus login untuk mengedit produk.", () => {
+          window.location.href = 'login_user.html';
+        });
+      }
     });
-    cancelLogoutButton.addEventListener("click", () => {
-      logoutModal.classList.remove("show");
+
+    const currentPath = window.location.pathname.split("/").pop();
+    const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
+
+    sidebarLinks.forEach((item) => {
+      const link = item.querySelector("a");
+      if (link) {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
+
+        let isLinkActive = false;
+
+        if (currentPath === linkFileName) {
+          isLinkActive = true;
+        } else if (
+          currentPath === "" &&
+          linkFileName === "jastiper_dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      } else if (
+        item.id === "logout-button-sidebar" &&
+        currentPath === "logout"
+      ) {
+        item.classList.add("active");
+      }
     });
-    confirmLogoutButton.addEventListener("click", () => {
-      localStorage.removeItem("jastiperId");
-      alert("Anda telah logout.");
-      window.location.href = "halaman_login_anda.html"; // Ganti dengan URL halaman login Anda
+
+    populateKategoriOptions();
+
+    imageUrlInput.addEventListener('input', () => {
+      if (imageUrlInput.value) {
+        imagePreview.src = imageUrlInput.value;
+        imagePreview.classList.remove('hidden');
+      } else {
+        imagePreview.classList.add('hidden');
+      }
     });
   </script>
 </body>

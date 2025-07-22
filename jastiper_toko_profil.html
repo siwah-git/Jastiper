@@ -439,7 +439,7 @@
     const formButtons = document.getElementById("form-buttons");
     const cancelEditButton = document.getElementById("cancel-edit-button");
 
-    let currentJastiperId = null; // Akan diisi setelah autentikasi
+    let currentTokoId = null; // Changed from currentJastiperId to currentTokoId
     let originalStoreData = null; // Untuk menyimpan data asli saat mode edit dimulai
 
     // Logout Modal elements
@@ -516,11 +516,11 @@
       }
     }
 
-    async function loadStoreData(jastiperId) {
+    async function loadStoreData(tokoId) { // Changed jastiperId to tokoId
       try {
-        // Mengambil dokumen jastiper dari koleksi 'jastiper'
-        const jastiperDocRef = doc(db, "jastiper", jastiperId);
-        const docSnap = await getDoc(jastiperDocRef);
+        // Mengambil dokumen toko dari koleksi 'toko'
+        const tokoDocRef = doc(db, "toko", tokoId); // Changed collection to "toko"
+        const docSnap = await getDoc(tokoDocRef);
 
         let storeData = {};
 
@@ -528,14 +528,14 @@
           console.log("Data toko ditemukan:", docSnap.data());
           storeData = docSnap.data();
         } else {
-          console.log("Dokumen toko tidak ditemukan untuk Jastiper ID:", jastiperId);
+          console.log("Dokumen toko tidak ditemukan untuk Toko ID:", tokoId); // Updated log message
           // Jika dokumen tidak ada, inisialisasi dengan nilai kosong
           storeData = {
             namaToko: "",
             negaraToko: "",
             deskripsiToko: "",
             alamatToko: "",
-            feeJastiper: 0, // Default fee
+            fee: 0, // Changed from feeJastiper to fee
             profileImageUrl: "",
           };
         }
@@ -555,7 +555,7 @@
       negaraTokoInput.value = store.negaraToko || "";
       deskripsiTokoInput.value = store.deskripsiToko || "";
       alamatTokoInput.value = store.alamatToko || "";
-      feeInput.value = store.feeJastiper !== undefined ? store.feeJastiper : 0; // Menggunakan feeJastiper
+      feeInput.value = store.fee !== undefined ? store.fee : 0; // Changed from feeJastiper to fee
       profileImageUrlInput.value = store.profileImageUrl || "";
 
       if (store.profileImageUrl) {
@@ -589,15 +589,15 @@
         negaraToko: negaraTokoInput.value,
         deskripsiToko: deskripsiTokoInput.value,
         alamatToko: alamatTokoInput.value,
-        feeJastiper: parseFloat(feeInput.value) || 0, // Menggunakan feeJastiper
+        fee: parseFloat(feeInput.value) || 0, // Changed from feeJastiper to fee
         profileImageUrl: profileImageUrlInput.value,
-        // Tambahkan ownerId jika belum ada di dokumen jastiper
-        ownerId: currentJastiperId,
+        // Tambahkan ownerId jika belum ada di dokumen toko
+        ownerId: currentTokoId, // Changed from currentJastiperId to currentTokoId
       };
 
       try {
-        // Menyimpan/memperbarui dokumen di koleksi 'jastiper' dengan ID pengguna
-        await setDoc(doc(db, "jastiper", currentJastiperId), updatedData, { merge: true });
+        // Menyimpan/memperbarui dokumen di koleksi 'toko' dengan ID pengguna
+        await setDoc(doc(db, "toko", currentTokoId), updatedData, { merge: true }); // Changed collection to "toko"
         showCustomConfirm("Informasi toko berhasil diperbarui!", () => {
           originalStoreData = { ...updatedData }; // Update data asli setelah berhasil disimpan
           setFormEditability(false);
@@ -639,11 +639,11 @@
     // Auth State management
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        currentJastiperId = user.uid;
-        console.log("Logged in Jastiper UID:", currentJastiperId);
-        loadStoreData(currentJastiperId);
+        currentTokoId = user.uid; // Changed from currentJastiperId to currentTokoId
+        console.log("Logged in Toko UID:", currentTokoId); // Updated log message
+        loadStoreData(currentTokoId);
       } else {
-        currentJastiperId = null;
+        currentTokoId = null; // Changed from currentJastiperId to currentTokoId
         console.log("No user signed in. Redirecting to login.");
         // Redirect ke halaman login jika tidak ada user
         window.location.href = "login_user.html";
