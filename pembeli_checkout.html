@@ -527,9 +527,6 @@
             Agustus 2025</span></span>
       </div>
       <div class="checkout-section checkout-voucher">
-        <span>Voucher</span>
-        <a href="#" class="checkout-voucher-link" onclick="pilihVoucher()">Pilih Voucher</a>
-        <span class="checkout-metode-row">
           <span class="checkout-metode">Metode Pembayaran: <span class="checkout-metode-bank" id="metodeBank">Transfer
               Bank (BCA)</span></span>
           <button type="button" id="ubahPembayaran"
@@ -869,13 +866,7 @@
         if (!pesan.trim()) {
           alert('Silakan tulis pesan untuk penjual!');
           return;
-        }
-
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-          alert("Anda harus login untuk melakukan checkout.");
-          window.location.href = "login.html"; // Redirect to login page
-          return;
+        
         }
 
         const products = JSON.parse(localStorage.getItem('checkoutCart') || localStorage.getItem('checkoutProduct') || '[]');
