@@ -18,7 +18,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #f3f4f6;
+        /* Hapus background-color: src="/"; yang salah */
+        /* Tambahkan background image */
+        background-image: url("asset/images/Bg_login.jpeg"); /* Ganti URL ini dengan gambar latar belakang Anda */
+        background-size: cover; /* Pastikan gambar menutupi seluruh area */
+        background-position: center; /* Pusatkan gambar */
+        background-repeat: no-repeat; /* Jangan ulangi gambar */
         font-family: "Inter", sans-serif;
       }
 
@@ -126,7 +131,7 @@
 
           <div class="text-sm">
             <a
-              href="admin-forgot-password.html"
+              href="admin-lupapasword.html"
               class="font-medium text-blue-600 hover:text-blue-500"
             >
               Lupa Password?

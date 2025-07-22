@@ -430,514 +430,549 @@
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
-    <script>
-      // Your Firebase configuration (same as your dashboard)
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID",
-      };
+<script>
+  // Your Firebase configuration (same as your dashboard)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+  };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-      document.addEventListener("DOMContentLoaded", async function () {
-        const currentPath = window.location.pathname.split("/").pop();
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get("id"); // Get order ID from URL
+  document.addEventListener("DOMContentLoaded", async function () {
+    const currentPath = window.location.pathname.split("/").pop();
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get("id"); // Get order ID from URL
 
-        // --- Sidebar Active State Logic ---
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
+    // --- Sidebar Active State Logic ---
+    const sidebarLinks = document.querySelectorAll(".sidebar-item");
+    sidebarLinks.forEach((link) => {
+      const linkHref = link.getAttribute("href");
+      const linkFileName = linkHref.split("/").pop();
 
-          let isLinkActive = false;
+      let isLinkActive = false;
 
-          // Highlight "Manajemen Pesanan" if on this detail page
-          if (
-            linkFileName === "admin-pesanan.html" &&
-            currentPath.startsWith("admin-pesanan-detail")
-          ) {
-            isLinkActive = true;
-          } else if (linkFileName === currentPath) {
-            isLinkActive = true;
-          } else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
+      // Highlight "Manajemen Pesanan" if on this detail page
+      if (
+        linkFileName === "admin-pesanan.html" &&
+        currentPath.startsWith("admin-pesanan-detail")
+      ) {
+        isLinkActive = true;
+      } else if (linkFileName === currentPath) {
+        isLinkActive = true;
+      } else if (
+        (currentPath === "" || currentPath === "index.html") &&
+        linkFileName === "admin-dashboard.html"
+      ) {
+        isLinkActive = true;
+      }
 
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+      if (isLinkActive) {
+        link.classList.remove(
+          "text-gray-700",
+          "hover:bg-pink-100",
+          "hover:text-pink-600",
+          "transition",
+          "duration-200",
+          "ease-in-out"
+        );
+        link.classList.add("bg-pink-600", "text-white", "font-semibold");
+      } else {
+        link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+        link.classList.add(
+          "text-gray-700",
+          "hover:bg-pink-100",
+          "hover:text-pink-600",
+          "transition",
+          "duration-200",
+          "ease-in-out"
+        );
+      }
+    });
+
+    // --- Firebase Data Fetching and Display ---
+
+    // Helper function to format currency
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(amount);
+    };
+
+    // Helper function to format date/timestamp
+    const formatDate = (timestamp) => {
+      if (!timestamp) return "N/A";
+      let date;
+      if (timestamp.toDate) {
+        date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
+      } else if (
+        typeof timestamp === "string" ||
+        typeof timestamp === "number"
+      ) {
+        date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
+      } else {
+        return "Invalid Date";
+      }
+
+      return new Intl.DateTimeFormat("id-ID", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(date);
+    };
+
+    // Helper function for status badge styling
+    const getStatusClass = (status) => {
+      switch (status) {
+        case "pending":
+          return "status-pending";
+        case "processing":
+          return "status-processing";
+        case "shipped":
+          return "status-shipped";
+        case "delivered":
+          return "status-delivered";
+        case "cancelled":
+          return "status-cancelled";
+        case "completed":
+          return "status-completed";
+        case "refunded":
+          return "status-refunded";
+        default:
+          return "bg-gray-200 text-gray-800"; // Default styling
+      }
+    };
+
+    // GET ALL THE ELEMENTS THAT WILL DISPLAY ORDER DATA
+    const orderDetailTitleEl = document.getElementById("order-detail-title");
+    const breadcrumbOrderIdEl = document.getElementById("breadcrumb-order-id");
+    const orderIdEl = document.getElementById("order-id");
+    const orderDateEl = document.getElementById("order-date");
+    const orderStatusBadgeEl = document.getElementById("admin-order-status-badge");
+    const totalPaymentEl = document.getElementById("total-payment");
+    const paymentMethodEl = document.getElementById("payment-method");
+    const paymentStatusEl = document.getElementById("payment-status");
+    const customerNameLinkEl = document.getElementById("customer-name-link");
+    const orderItemsContainerEl = document.getElementById("order-items-container");
+    const itemsSubtotalEl = document.getElementById("items-subtotal");
+    const receiverNameEl = document.getElementById("receiver-name");
+    const receiverPhoneEl = document.getElementById("receiver-phone");
+    const shippingAddressEl = document.getElementById("shipping-address");
+    const shippingMethodEl = document.getElementById("shipping-method");
+    const deliveryEstimateEl = document.getElementById("delivery-estimate");
+    const trackingNumberEl = document.getElementById("tracking-number");
+    const trackingLinkEl = document.getElementById("tracking-link");
+    const shippingCostEl = document.getElementById("shipping-cost");
+    const finalTotalEl = document.getElementById("final-total");
+    const jastiperPhotoEl = document.getElementById("jastiper-photo");
+    const jastiperNameEl = document.getElementById("jastiper-name");
+    const jastiperIdEl = document.getElementById("jastiper-id");
+    const jastiperOriginCountryEl = document.getElementById("jastiper-origin-country");
+    const jastiperEmailEl = document.getElementById("jastiper-email");
+    const jastiperPhoneEl = document.getElementById("jastiper-phone");
+    const viewJastiperProfileLinkEl = document.getElementById("view-jastiper-profile-link");
+    const orderHistoryListEl = document.getElementById("order-history-list");
+
+    // Elements for action buttons
+    const updateStatusButton = document.getElementById("update-status-button");
+    const deleteOrderButton = document.getElementById("delete-order-button");
+
+    // Main content wrapper, where you might want to show a general error
+    const contentWrapper = document.querySelector(".content-wrapper");
+
+
+    try {
+      if (!orderId) {
+        document.title = `Detail Pesanan : ID Tidak Ditemukan - TitipGo Admin`;
+        orderDetailTitleEl.textContent = "Detail Pesanan : ID Tidak Ditemukan";
+        breadcrumbOrderIdEl.textContent = "ID Tidak Ditemukan";
+
+        // Show a specific error message within the content wrapper
+        contentWrapper.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <p class="text-center text-red-500 text-xl font-semibold">ID Pesanan tidak ditemukan di URL.</p>
+            <p class="text-center text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID pesanan yang valid.</p>
+            <div class="text-center mt-4">
+              <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
+              </a>
+            </div>
+          </div>
+        `;
+        // Disable and hide buttons if no order ID
+        if (updateStatusButton) updateStatusButton.classList.add('hidden');
+        if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
+        return; // Stop further execution
+      }
+
+      // 1. Fetch Order Data
+      const orderDoc = await db.collection("pemesanan").doc(orderId).get();
+
+      if (orderDoc.exists) {
+        const orderData = orderDoc.data();
+
+        document.title = `Detail Pesanan - #${orderId} - TitipGo Admin`;
+        orderDetailTitleEl.textContent = `Detail Pesanan: #${orderId}`;
+        breadcrumbOrderIdEl.textContent = `#${orderId}`;
+
+        orderIdEl.textContent = `#${orderId}`;
+        orderDateEl.textContent = formatDate(orderData.orderDate);
+
+        orderStatusBadgeEl.textContent = orderData.status || "N/A";
+        orderStatusBadgeEl.className = `status-badge ${getStatusClass(
+          orderData.status
+        )}`;
+
+        totalPaymentEl.textContent = formatCurrency(orderData.totalAmount || 0);
+        paymentMethodEl.textContent = orderData.paymentMethod || "N/A";
+
+        if (orderData.paymentStatus === "paid") {
+          paymentStatusEl.textContent = "Lunas";
+          paymentStatusEl.classList.add("text-green-600");
+        } else if (orderData.paymentStatus === "unpaid") {
+          paymentStatusEl.textContent = "Belum Lunas";
+          paymentStatusEl.classList.add("text-red-600");
+        } else {
+          paymentStatusEl.textContent = orderData.paymentStatus || "N/A";
+        }
+
+        // 2. Fetch Customer Data
+        const customerId = orderData.userId; // Assuming userId is customer's ID
+        if (customerId) {
+          const customerDoc = await db
+            .collection("users")
+            .doc(customerId)
+            .get();
+          if (customerDoc.exists) {
+            const customerData = customerDoc.data();
+            customerNameLinkEl.textContent = customerData.fullName || "N/A";
+            customerNameLinkEl.href = `admin-pengguna-detail.html?id=${customerId}`;
           } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
+            customerNameLinkEl.textContent = "Pengguna Tidak Ditemukan";
+            customerNameLinkEl.href = "#";
+          }
+        } else {
+          customerNameLinkEl.textContent = "N/A";
+          customerNameLinkEl.href = "#";
+        }
+
+        // 3. Populate Order Items
+        orderItemsContainerEl.innerHTML = ""; // Clear loading text
+        let itemsSubtotal = 0;
+
+        if (orderData.items && orderData.items.length > 0) {
+          for (const item of orderData.items) {
+            const itemTotal =
+              (item.quantity || 0) * (item.pricePerUnit || 0);
+            itemsSubtotal += itemTotal;
+
+            // Fetch catalog details for image and correct product name
+            let catalogName =
+              item.productName || "Nama Produk Tidak Ditemukan";
+            let catalogImage =
+              item.imageUrl ||
+              "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Image";
+            if (item.catalogId) {
+              try {
+                const catalogDoc = await db
+                  .collection("catalogs")
+                  .doc(item.catalogId)
+                  .get();
+                if (catalogDoc.exists) {
+                  const catalog = catalogDoc.data();
+                  catalogName = catalog.productName || catalogName;
+                  catalogImage =
+                    catalog.imageUrls && catalog.imageUrls[0]
+                      ? catalog.imageUrls[0]
+                      : catalogImage;
+                }
+              } catch (error) {
+                console.error(
+                  "Error fetching catalog for item:",
+                  item.catalogId,
+                  error
+                );
+              }
+            }
+
+            const itemHtml = `
+              <div class="flex items-center border-b pb-4 mb-4">
+                <img
+                  src="${catalogImage}"
+                  alt="${catalogName}"
+                  class="w-20 h-20 object-cover rounded-md mr-4"
+                />
+                <div class="flex-1">
+                  <h4 class="font-semibold text-gray-800">
+                    <a
+                      href="admin-katalog-detail.html?id=${
+                        item.catalogId || "#"
+                      }"
+                      class="text-blue-600 hover:underline"
+                      >${catalogName}</a
+                    >
+                  </h4>
+                  ${
+                    item.variant
+                      ? `<p class="text-sm text-gray-600">Varian: ${item.variant}</p>`
+                      : ""
+                  }
+                  <p class="text-sm text-gray-600">Jumlah: ${
+                    item.quantity || 0
+                  }</p>
+                  <p class="text-md font-bold text-green-600">${formatCurrency(
+                    item.pricePerUnit || 0
+                  )}</p>
+                </div>
+              </div>
+            `;
+            orderItemsContainerEl.insertAdjacentHTML("beforeend", itemHtml);
+          }
+        } else {
+          orderItemsContainerEl.innerHTML =
+            '<p class="text-gray-500">Tidak ada item dalam pesanan ini.</p>';
+        }
+        itemsSubtotalEl.textContent =
+          formatCurrency(itemsSubtotal);
+
+        // 4. Populate Shipping Information
+        receiverNameEl.textContent =
+          orderData.shippingAddress?.receiverName || "N/A";
+        receiverPhoneEl.textContent =
+          orderData.shippingAddress?.receiverPhone || "N/A";
+        shippingAddressEl.textContent =
+          orderData.shippingAddress?.fullAddress || "N/A";
+        shippingMethodEl.textContent = orderData.shippingMethod || "N/A";
+        deliveryEstimateEl.textContent =
+          orderData.deliveryEstimate || "N/A";
+        trackingNumberEl.textContent = orderData.trackingNumber || "N/A";
+
+        if (orderData.trackingNumber && orderData.shippingMethod) {
+          // You might need a more sophisticated mapping for tracking URLs
+          // This is a placeholder
+          trackingLinkEl.href = `https://cekresi.com/?no=${orderData.trackingNumber}`;
+          trackingLinkEl.classList.remove("hidden");
+        } else {
+          trackingLinkEl.classList.add("hidden");
+        }
+        shippingCostEl.textContent =
+          formatCurrency(orderData.shippingCost || 0);
+        finalTotalEl.textContent = formatCurrency(
+          orderData.totalAmount || 0
+        );
+
+        // 5. Populate Jastiper Information (Assuming one jastiper per order for simplicity,
+        // or fetch the jastiper of the first item if multiple jastipers are allowed in one order)
+        const firstItemJastiperId =
+          orderData.items && orderData.items.length > 0
+            ? orderData.items[0].jastiperId
+            : null;
+        if (firstItemJastiperId) {
+          const jastiperDoc = await db
+            .collection("users")
+            .doc(firstItemJastiperId)
+            .get();
+          if (jastiperDoc.exists) {
+            const jastiperData = jastiperDoc.data();
+            jastiperPhotoEl.src =
+              jastiperData.profilePictureUrl ||
+              "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
+            jastiperNameEl.textContent =
+              jastiperData.fullName || "N/A";
+            jastiperIdEl.textContent =
+              firstItemJastiperId;
+            jastiperOriginCountryEl.textContent =
+              jastiperData.originCountry || "N/A";
+
+            jastiperEmailEl.textContent = jastiperData.email || "N/A";
+            jastiperEmailEl.href = `mailto:${jastiperData.email}`;
+
+            jastiperPhoneEl.textContent =
+              jastiperData.phoneNumber || "N/A";
+            jastiperPhoneEl.href = `tel:${jastiperData.phoneNumber}`;
+
+            viewJastiperProfileLinkEl.href = `admin-pengguna-detail.html?id=${firstItemJastiperId}`;
+            viewJastiperProfileLinkEl.classList.remove("hidden"); // Ensure it's visible
+          } else {
+            jastiperNameEl.textContent =
+              "Jastiper Tidak Ditemukan";
+            jastiperIdEl.textContent = "N/A";
+            jastiperOriginCountryEl.textContent =
+              "N/A";
+            jastiperEmailEl.textContent = "N/A";
+            jastiperPhoneEl.textContent = "N/A";
+            jastiperPhotoEl.src = "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
+            viewJastiperProfileLinkEl.classList.add("hidden");
+          }
+        } else {
+          jastiperNameEl.textContent =
+            "Tidak Ada Jastiper Terkait";
+          jastiperIdEl.textContent = "N/A";
+          jastiperOriginCountryEl.textContent =
+            "N/A";
+          jastiperEmailEl.textContent = "N/A";
+          jastiperPhoneEl.textContent = "N/A";
+          jastiperPhotoEl.src =
+            "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
+          viewJastiperProfileLinkEl.classList.add("hidden");
+        }
+
+        // 6. Populate Order History
+        orderHistoryListEl.innerHTML = ""; // Clear loading text
+
+        if (orderData.statusHistory && orderData.statusHistory.length > 0) {
+          // Sort history by date in descending order (newest first)
+          orderData.statusHistory.sort(
+            (a, b) => b.timestamp.toDate() - a.timestamp.toDate()
+          );
+
+          orderData.statusHistory.forEach((history) => {
+            let iconClass = "fas fa-info-circle text-gray-500"; // Default
+            switch (history.status) {
+              case "pending":
+                iconClass = "fas fa-clock text-yellow-500";
+                break;
+              case "processing":
+                iconClass = "fas fa-cogs text-orange-500";
+                break;
+              case "shipped":
+                iconClass = "fas fa-truck text-blue-500";
+                break;
+              case "delivered":
+                iconClass = "fas fa-check-circle text-green-500";
+                break;
+              case "completed":
+                iconClass = "fas fa-clipboard-check text-green-600";
+                break;
+              case "cancelled":
+                iconClass = "fas fa-times-circle text-red-500";
+                break;
+              case "refunded":
+                iconClass = "fas fa-wallet text-indigo-500";
+                break;
+            }
+
+            const historyHtml = `
+              <li class="flex items-start text-gray-700 text-sm mb-2">
+                <i class="${iconClass} mr-3 mt-1"></i>
+                <div>
+                  <strong class="block">Status: ${
+                    history.status
+                  }</strong>
+                  <span class="text-xs text-gray-500">${formatDate(
+                    history.timestamp
+                  )}</span>
+                  <p class="text-xs text-gray-600">${
+                    history.notes || ""
+                  }</p>
+                </div>
+              </li>
+            `;
+            orderHistoryListEl.insertAdjacentHTML("beforeend", historyHtml);
+          });
+        } else {
+          orderHistoryListEl.innerHTML =
+            '<p class="text-gray-500">Tidak ada riwayat status pesanan.</p>';
+        }
+
+        // --- Action Buttons Functionality ---
+        // Ensure buttons are visible if data exists
+        if (updateStatusButton) updateStatusButton.classList.remove('hidden');
+        if (deleteOrderButton) deleteOrderButton.classList.remove('hidden');
+
+        updateStatusButton.addEventListener("click", async () => {
+          const newStatus = prompt(
+            `Masukkan status baru untuk pesanan #${orderId} (contoh: processing, shipped, delivered, cancelled, completed):`
+          );
+          if (newStatus) {
+            try {
+              await db
+                .collection("pemesanan")
+                .doc(orderId)
+                .update({
+                  status: newStatus.toLowerCase(),
+                  statusHistory: firebase.firestore.FieldValue.arrayUnion({
+                    status: newStatus.toLowerCase(),
+                    timestamp: firebase.firestore.Timestamp.now(),
+                    notes: `Status diperbarui oleh Admin ke '${newStatus}'.`,
+                  }),
+                });
+              alert("Status pesanan berhasil diperbarui!");
+              location.reload(); // Reload page to show updated data
+            } catch (error) {
+              console.error("Error updating order status:", error);
+              alert("Gagal memperbarui status pesanan. Coba lagi.");
+            }
           }
         });
 
-        // --- Firebase Data Fetching and Display ---
-
-        if (!orderId) {
-          console.error("Order ID not found in URL.");
-          document.getElementById("order-detail-title").textContent =
-            "Detail Pesanan : Tidak Ditemukan";
-          document.getElementById("breadcrumb-order-id").textContent =
-            "Tidak Ditemukan";
-          document.querySelector(".content-wrapper").innerHTML =
-            '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">ID Pesanan tidak ditemukan.</div>';
-          return;
-        }
-
-        // Helper function to format currency
-        const formatCurrency = (amount) => {
-          return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          }).format(amount);
-        };
-
-        // Helper function to format date/timestamp
-        const formatDate = (timestamp) => {
-          if (!timestamp) return "N/A";
-          let date;
-          if (timestamp.toDate) {
-            date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
-          } else if (
-            typeof timestamp === "string" ||
-            typeof timestamp === "number"
+        deleteOrderButton.addEventListener("click", async () => {
+          if (
+            confirm(
+              `Apakah Anda yakin ingin menghapus pesanan #${orderId} secara permanen? Aksi ini tidak bisa dibatalkan!`
+            )
           ) {
-            date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
-          } else {
-            return "Invalid Date";
+            try {
+              await db.collection("pemesanan").doc(orderId).delete();
+              alert("Pesanan berhasil dihapus.");
+              window.location.href = "admin-pesanan.html"; // Redirect back to orders list
+            } catch (error) {
+              console.error("Error deleting order:", error);
+              alert("Gagal menghapus pesanan. Coba lagi.");
+            }
           }
+        });
+      } else {
+        // If order document does not exist in Firestore
+        document.title = `Detail Pesanan : Tidak Ditemukan - TitipGo Admin`;
+        orderDetailTitleEl.textContent = "Detail Pesanan : Tidak Ditemukan";
+        breadcrumbOrderIdEl.textContent = "Tidak Ditemukan";
 
-          return new Intl.DateTimeFormat("id-ID", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }).format(date);
-        };
-
-        // Helper function for status badge styling
-        const getStatusClass = (status) => {
-          switch (status) {
-            case "pending":
-              return "status-pending";
-            case "processing":
-              return "status-processing";
-            case "shipped":
-              return "status-shipped";
-            case "delivered":
-              return "status-delivered";
-            case "cancelled":
-              return "status-cancelled";
-            case "completed":
-              return "status-completed";
-            case "refunded":
-              return "status-refunded";
-            default:
-              return "bg-gray-200 text-gray-800"; // Default styling
-          }
-        };
-
-        try {
-          // 1. Fetch Order Data
-          const orderDoc = await db.collection("pemesanan").doc(orderId).get();
-
-          if (orderDoc.exists) {
-            const orderData = orderDoc.data();
-
-            document.title = `Detail Pesanan - #${orderId} - TitipGo Admin`;
-            document.getElementById(
-              "order-detail-title"
-            ).textContent = `Detail Pesanan: #${orderId}`;
-            document.getElementById(
-              "breadcrumb-order-id"
-            ).textContent = `#${orderId}`;
-
-            document.getElementById("order-id").textContent = `#${orderId}`;
-            document.getElementById("order-date").textContent = formatDate(
-              orderData.orderDate
-            );
-
-            const orderStatusBadge = document.getElementById(
-              "admin-order-status-badge"
-            );
-            orderStatusBadge.textContent = orderData.status || "N/A";
-            orderStatusBadge.className = `status-badge ${getStatusClass(
-              orderData.status
-            )}`;
-
-            document.getElementById("total-payment").textContent =
-              formatCurrency(orderData.totalAmount || 0);
-            document.getElementById("payment-method").textContent =
-              orderData.paymentMethod || "N/A";
-
-            const paymentStatusElement =
-              document.getElementById("payment-status");
-            if (orderData.paymentStatus === "paid") {
-              paymentStatusElement.textContent = "Lunas";
-              paymentStatusElement.classList.add("text-green-600");
-            } else if (orderData.paymentStatus === "unpaid") {
-              paymentStatusElement.textContent = "Belum Lunas";
-              paymentStatusElement.classList.add("text-red-600");
-            } else {
-              paymentStatusElement.textContent =
-                orderData.paymentStatus || "N/A";
-            }
-
-            // 2. Fetch Customer Data
-            const customerId = orderData.userId; // Assuming userId is customer's ID
-            if (customerId) {
-              const customerDoc = await db
-                .collection("users")
-                .doc(customerId)
-                .get();
-              const customerNameLink =
-                document.getElementById("customer-name-link");
-              if (customerDoc.exists) {
-                const customerData = customerDoc.data();
-                customerNameLink.textContent = customerData.fullName || "N/A";
-                customerNameLink.href = `admin-pengguna-detail.html?id=${customerId}`;
-              } else {
-                customerNameLink.textContent = "Pengguna Tidak Ditemukan";
-                customerNameLink.href = "#";
-              }
-            } else {
-              document.getElementById("customer-name-link").textContent = "N/A";
-              document.getElementById("customer-name-link").href = "#";
-            }
-
-            // 3. Populate Order Items
-            const orderItemsContainer = document.getElementById(
-              "order-items-container"
-            );
-            orderItemsContainer.innerHTML = ""; // Clear loading text
-            let itemsSubtotal = 0;
-
-            if (orderData.items && orderData.items.length > 0) {
-              for (const item of orderData.items) {
-                const itemTotal =
-                  (item.quantity || 0) * (item.pricePerUnit || 0);
-                itemsSubtotal += itemTotal;
-
-                // Fetch catalog details for image and correct product name
-                let catalogName =
-                  item.productName || "Nama Produk Tidak Ditemukan";
-                let catalogImage =
-                  item.imageUrl ||
-                  "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Image";
-                if (item.catalogId) {
-                  try {
-                    const catalogDoc = await db
-                      .collection("catalogs")
-                      .doc(item.catalogId)
-                      .get();
-                    if (catalogDoc.exists) {
-                      const catalog = catalogDoc.data();
-                      catalogName = catalog.productName || catalogName;
-                      catalogImage =
-                        catalog.imageUrls && catalog.imageUrls[0]
-                          ? catalog.imageUrls[0]
-                          : catalogImage;
-                    }
-                  } catch (error) {
-                    console.error(
-                      "Error fetching catalog for item:",
-                      item.catalogId,
-                      error
-                    );
-                  }
-                }
-
-                const itemHtml = `
-                        <div class="flex items-center border-b pb-4">
-                            <img
-                                src="${catalogImage}"
-                                alt="${catalogName}"
-                                class="w-20 h-20 object-cover rounded-md mr-4"
-                            />
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-800">
-                                    <a
-                                        href="admin-katalog-detail.html?id=${
-                                          item.catalogId || "#"
-                                        }"
-                                        class="text-blue-600 hover:underline"
-                                        >${catalogName}</a
-                                    >
-                                </h4>
-                                ${
-                                  item.variant
-                                    ? `<p class="text-sm text-gray-600">Varian: ${item.variant}</p>`
-                                    : ""
-                                }
-                                <p class="text-sm text-gray-600">Jumlah: ${
-                                  item.quantity || 0
-                                }</p>
-                                <p class="text-md font-bold text-green-600">${formatCurrency(
-                                  item.pricePerUnit || 0
-                                )}</p>
-                            </div>
-                        </div>
-                    `;
-                orderItemsContainer.insertAdjacentHTML("beforeend", itemHtml);
-              }
-            } else {
-              orderItemsContainer.innerHTML =
-                '<p class="text-gray-500">Tidak ada item dalam pesanan ini.</p>';
-            }
-            document.getElementById("items-subtotal").textContent =
-              formatCurrency(itemsSubtotal);
-
-            // 4. Populate Shipping Information
-            document.getElementById("receiver-name").textContent =
-              orderData.shippingAddress?.receiverName || "N/A";
-            document.getElementById("receiver-phone").textContent =
-              orderData.shippingAddress?.receiverPhone || "N/A";
-            document.getElementById("shipping-address").textContent =
-              orderData.shippingAddress?.fullAddress || "N/A";
-            document.getElementById("shipping-method").textContent =
-              orderData.shippingMethod || "N/A";
-            document.getElementById("delivery-estimate").textContent =
-              orderData.deliveryEstimate || "N/A";
-            document.getElementById("tracking-number").textContent =
-              orderData.trackingNumber || "N/A";
-
-            const trackingLink = document.getElementById("tracking-link");
-            if (orderData.trackingNumber && orderData.shippingMethod) {
-              // You might need a more sophisticated mapping for tracking URLs
-              // This is a placeholder
-              trackingLink.href = `https://cekresi.com/?no=${orderData.trackingNumber}`;
-              trackingLink.classList.remove("hidden");
-            } else {
-              trackingLink.classList.add("hidden");
-            }
-            document.getElementById("shipping-cost").textContent =
-              formatCurrency(orderData.shippingCost || 0);
-            document.getElementById("final-total").textContent = formatCurrency(
-              orderData.totalAmount || 0
-            );
-
-            // 5. Populate Jastiper Information (Assuming one jastiper per order for simplicity,
-            // or fetch the jastiper of the first item if multiple jastipers are allowed in one order)
-            // If an order can have items from multiple jastipers, this section needs to be an array/list.
-            const firstItemJastiperId =
-              orderData.items && orderData.items.length > 0
-                ? orderData.items[0].jastiperId
-                : null;
-            if (firstItemJastiperId) {
-              const jastiperDoc = await db
-                .collection("users")
-                .doc(firstItemJastiperId)
-                .get();
-              if (jastiperDoc.exists) {
-                const jastiperData = jastiperDoc.data();
-                document.getElementById("jastiper-photo").src =
-                  jastiperData.profilePictureUrl ||
-                  "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
-                document.getElementById("jastiper-name").textContent =
-                  jastiperData.fullName || "N/A";
-                document.getElementById("jastiper-id").textContent =
-                  firstItemJastiperId;
-                document.getElementById("jastiper-origin-country").textContent =
-                  jastiperData.originCountry || "N/A";
-
-                const jastiperEmailLink =
-                  document.getElementById("jastiper-email");
-                jastiperEmailLink.textContent = jastiperData.email || "N/A";
-                jastiperEmailLink.href = `mailto:${jastiperData.email}`;
-
-                const jastiperPhoneLink =
-                  document.getElementById("jastiper-phone");
-                jastiperPhoneLink.textContent =
-                  jastiperData.phoneNumber || "N/A";
-                jastiperPhoneLink.href = `tel:${jastiperData.phoneNumber}`;
-
-                document.getElementById(
-                  "view-jastiper-profile-link"
-                ).href = `admin-pengguna-detail.html?id=${firstItemJastiperId}`;
-              } else {
-                document.getElementById("jastiper-name").textContent =
-                  "Jastiper Tidak Ditemukan";
-                document.getElementById("jastiper-id").textContent = "N/A";
-                document.getElementById("jastiper-origin-country").textContent =
-                  "N/A";
-                document.getElementById("jastiper-email").textContent = "N/A";
-                document.getElementById("jastiper-phone").textContent = "N/A";
-                document
-                  .getElementById("view-jastiper-profile-link")
-                  .classList.add("hidden");
-              }
-            } else {
-              document.getElementById("jastiper-name").textContent =
-                "Tidak Ada Jastiper Terkait";
-              document.getElementById("jastiper-id").textContent = "N/A";
-              document.getElementById("jastiper-origin-country").textContent =
-                "N/A";
-              document.getElementById("jastiper-email").textContent = "N/A";
-              document.getElementById("jastiper-phone").textContent = "N/A";
-              document.getElementById("jastiper-photo").src =
-                "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
-              document
-                .getElementById("view-jastiper-profile-link")
-                .classList.add("hidden");
-            }
-
-            // 6. Populate Order History
-            const orderHistoryList =
-              document.getElementById("order-history-list");
-            orderHistoryList.innerHTML = ""; // Clear loading text
-
-            if (orderData.statusHistory && orderData.statusHistory.length > 0) {
-              // Sort history by date in descending order (newest first)
-              orderData.statusHistory.sort(
-                (a, b) => b.timestamp.toDate() - a.timestamp.toDate()
-              );
-
-              orderData.statusHistory.forEach((history) => {
-                let iconClass = "fas fa-info-circle text-gray-500"; // Default
-                switch (history.status) {
-                  case "pending":
-                    iconClass = "fas fa-clock text-yellow-500";
-                    break;
-                  case "processing":
-                    iconClass = "fas fa-cogs text-orange-500";
-                    break;
-                  case "shipped":
-                    iconClass = "fas fa-truck text-blue-500";
-                    break;
-                  case "delivered":
-                    iconClass = "fas fa-check-circle text-green-500";
-                    break;
-                  case "completed":
-                    iconClass = "fas fa-clipboard-check text-green-600";
-                    break;
-                  case "cancelled":
-                    iconClass = "fas fa-times-circle text-red-500";
-                    break;
-                  case "refunded":
-                    iconClass = "fas fa-wallet text-indigo-500";
-                    break;
-                }
-
-                const historyHtml = `
-                        <li class="flex items-start text-gray-700 text-sm">
-                            <i class="${iconClass} mr-3 mt-1"></i>
-                            <div>
-                                <strong class="block">Status: ${
-                                  history.status
-                                }</strong>
-                                <span class="text-xs text-gray-500">${formatDate(
-                                  history.timestamp
-                                )}</span>
-                                <p class="text-xs text-gray-600">${
-                                  history.notes || ""
-                                }</p>
-                            </div>
-                        </li>
-                    `;
-                orderHistoryList.insertAdjacentHTML("beforeend", historyHtml);
-              });
-            } else {
-              orderHistoryList.innerHTML =
-                '<p class="text-gray-500">Tidak ada riwayat status pesanan.</p>';
-            }
-
-            // --- Action Buttons Functionality ---
-            document
-              .getElementById("update-status-button")
-              .addEventListener("click", async () => {
-                const newStatus = prompt(
-                  `Masukkan status baru untuk pesanan #${orderId} (contoh: processing, shipped, delivered, cancelled, completed):`
-                );
-                if (newStatus) {
-                  try {
-                    await db
-                      .collection("pemesanan")
-                      .doc(orderId)
-                      .update({
-                        status: newStatus.toLowerCase(),
-                        statusHistory: firebase.firestore.FieldValue.arrayUnion(
-                          {
-                            status: newStatus.toLowerCase(),
-                            timestamp: firebase.firestore.Timestamp.now(),
-                            notes: `Status diperbarui oleh Admin ke '${newStatus}'.`,
-                          }
-                        ),
-                      });
-                    alert("Status pesanan berhasil diperbarui!");
-                    location.reload(); // Reload page to show updated data
-                  } catch (error) {
-                    console.error("Error updating order status:", error);
-                    alert("Gagal memperbarui status pesanan. Coba lagi.");
-                  }
-                }
-              });
-
-            document
-              .getElementById("delete-order-button")
-              .addEventListener("click", async () => {
-                if (
-                  confirm(
-                    `Apakah Anda yakin ingin menghapus pesanan #${orderId} secara permanen? Aksi ini tidak bisa dibatalkan!`
-                  )
-                ) {
-                  try {
-                    await db.collection("pemesanan").doc(orderId).delete();
-                    alert("Pesanan berhasil dihapus.");
-                    window.location.href = "admin-pesanan.html"; // Redirect back to orders list
-                  } catch (error) {
-                    console.error("Error deleting order:", error);
-                    alert("Gagal menghapus pesanan. Coba lagi.");
-                  }
-                }
-              });
-          } else {
-            console.error("Order document does not exist!");
-            document.getElementById("order-detail-title").textContent =
-              "Detail Pesanan : Tidak Ditemukan";
-            document.getElementById("breadcrumb-order-id").textContent =
-              "Tidak Ditemukan";
-            document.querySelector(".content-wrapper").innerHTML =
-              '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">Pesanan tidak ditemukan.</div>';
-          }
-        } catch (error) {
-          console.error("Error fetching order data:", error);
-          document.getElementById("order-detail-title").textContent =
-            "Detail Pesanan : Error";
-          document.getElementById("breadcrumb-order-id").textContent = "Error";
-          document.querySelector(".content-wrapper").innerHTML =
-            '<div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">Terjadi kesalahan saat memuat data pesanan.</div>';
-        }
-      });
+        contentWrapper.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <p class="text-center text-red-500 text-xl font-semibold">Pesanan dengan ID #${orderId} tidak ditemukan.</p>
+            <p class="text-center text-gray-600 mt-2">Mungkin ID pesanan salah atau pesanan telah dihapus.</p>
+            <div class="text-center mt-4">
+              <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
+              </a>
+            </div>
+          </div>
+        `;
+        // Disable and hide buttons if no order data
+        if (updateStatusButton) updateStatusButton.classList.add('hidden');
+        if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
+      }
+    } catch (error) {
+      console.error("Error fetching order data:", error);
+      document.title = `Detail Pesanan : Error - TitipGo Admin`;
+      orderDetailTitleEl.textContent = "Detail Pesanan : Error";
+      breadcrumbOrderIdEl.textContent = "Error";
+      contentWrapper.innerHTML = `
+        <div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">
+          Terjadi kesalahan saat memuat data pesanan. Silakan coba lagi.
+          <p class="text-sm text-gray-600 mt-2">${error.message || ''}</p>
+        </div>
+      `;
+      // Disable and hide buttons on error
+      if (updateStatusButton) updateStatusButton.classList.add('hidden');
+      if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
+    }
+  });
+</script>
     </script>
   </body>
 </html>

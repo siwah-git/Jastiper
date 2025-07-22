@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lupa Password Admin - TitipGo</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Pastikan path ke firebase-config.js benar -->
+    <script type="module" src="./js/firebase-config.js"></script>
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Background image yang sama dengan halaman login */
+        background-image: url("asset/images/Bg_login.jpeg"); /* Ganti URL ini dengan gambar latar belakang Anda */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: "Inter", sans-serif;
+      }
+
+      .forgot-password-container {
+        width: 100%;
+        max-width: 480px;
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        text-align: center;
+      }
+
+      .logo {
+        max-width: 200px;
+        height: auto;
+        margin: 0 auto 2rem auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div
+      id="loading-overlay"
+      class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"
+      ></div>
+    </div>
+
+    <div class="forgot-password-container">
+      <img src="asset/images/logosiwah.png" alt="TitipGo Logo" class="logo" />
+
+      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Lupa Password</h2>
+      <p class="text-gray-600 mb-8">
+        Masukkan alamat email Anda yang terdaftar. Kami akan mengirimkan tautan
+        untuk mereset password Anda.
+      </p>
+
+      <form id="forgotPasswordForm" class="space-y-6">
+        <div>
+          <label for="email" class="sr-only">Alamat Email</label>
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-envelope text-gray-400"></i>
+            </div>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Alamat Email"
+            />
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out"
+          >
+            <i class="fas fa-paper-plane mr-2"></i> Kirim Tautan Reset
+          </button>
+        </div>
+        <p id="messageDisplay" class="text-sm mt-4 hidden"></p>
+      </form>
+
+      <div class="mt-8 text-center text-sm text-gray-500">
+        <p>
+          Ingat password Anda?
+          <a
+            href="admin-login.html"
+            class="font-medium text-blue-600 hover:text-blue-500"
+            >Kembali ke Login</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import 'auth' dari file konfigurasi Firebase Anda
+      import { auth } from "./js/firebase-config.js";
+      // Import fungsi spesifik dari CDN Firebase Auth
+      import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Pastikan versi ini konsisten
+
+      const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+      const emailInput = document.getElementById("email");
+      const messageDisplay = document.getElementById("messageDisplay");
+      const loadingOverlay = document.getElementById("loading-overlay");
+
+      forgotPasswordForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = emailInput.value;
+
+        // Tampilkan loading overlay
+        loadingOverlay.classList.remove("hidden");
+        messageDisplay.classList.add("hidden"); // Sembunyikan pesan sebelumnya
+        messageDisplay.classList.remove("text-red-500", "text-green-500"); // Hapus kelas warna sebelumnya
+
+        try {
+          await sendPasswordResetEmail(auth, email);
+          messageDisplay.textContent =
+            "Tautan reset password telah dikirim ke email Anda. Silakan periksa inbox Anda (dan folder spam/junk).";
+          messageDisplay.classList.add("text-green-500");
+          messageDisplay.classList.remove("hidden");
+        } catch (error) {
+          console.error("Firebase Auth Error:", error);
+
+          let message =
+            "Terjadi kesalahan saat mengirim tautan reset password. Silakan coba lagi.";
+          switch (error.code) {
+            case "auth/invalid-email":
+              message = "Alamat email tidak valid.";
+              break;
+            case "auth/user-not-found":
+              message = "Tidak ada pengguna dengan alamat email tersebut.";
+              break;
+            case "auth/too-many-requests":
+              message = "Terlalu banyak permintaan. Coba lagi nanti.";
+              break;
+            default:
+              message = "Gagal mengirim tautan: " + error.message;
+              break;
+          }
+          messageDisplay.textContent = message;
+          messageDisplay.classList.add("text-red-500");
+          messageDisplay.classList.remove("hidden");
+        } finally {
+          // Sembunyikan loading overlay
+          loadingOverlay.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
