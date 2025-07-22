@@ -4,21 +4,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pesanan - TitipGo</title>
+  <title>Tambah Produk Baru</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
       font-family: "Inter", sans-serif;
-      background-image: url("asset/images/background.png");
+      background-image: url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
       height: 100vh;
       overflow: hidden;
+      /* Prevent scroll on body, main content handles it */
     }
 
+    /* Sidebar Styling */
     .sidebar {
       width: 250px;
       background-color: #fff;
@@ -27,6 +30,7 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      /* Allow sidebar to scroll if content is long */
     }
 
     .sidebar-header {
@@ -45,6 +49,7 @@
     .sidebar-nav ul {
       padding: 1rem 0;
       flex-grow: 1;
+      /* Allow navigation to take available space */
     }
 
     .sidebar-nav li {
@@ -63,6 +68,7 @@
       color: #ec4899;
     }
 
+    /* Active state for sidebar navigation */
     .sidebar-nav li.active {
       background-color: #f8e5f0;
       color: #ec4899;
@@ -71,148 +77,133 @@
 
     .sidebar-nav li.active span {
       font-weight: 800;
+      /* Make emoji/icon bolder if it's an actual icon */
     }
 
+    .sidebar-nav li a {
+      text-decoration: none;
+      /* Remove underline for links in sidebar */
+      color: inherit;
+      /* Inherit color from parent li */
+    }
+
+    /* Main Content Area */
     .main-content {
       flex-grow: 1;
       padding: 1.5rem;
       overflow-y: auto;
+      /* Enable scrolling for main content */
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* Card Styling (re-used for main sections) */
     .card {
       background-color: rgba(255, 255, 255, 0.9);
+      /* Slightly transparent white */
       border-radius: 0.75rem;
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+      /* Add margin-bottom for spacing */
     }
 
-    /* Tabs Styling */
-    .tabs {
+    /* Form Input Styling */
+    .input-group {
       display: flex;
-      border-bottom: 1px solid #e0e0e0;
+      flex-direction: column;
+      /* Stack label and input vertically */
       margin-bottom: 1rem;
-      flex-wrap: wrap;
-      /* Allow tabs to wrap on smaller screens */
     }
 
-    .tab-item {
-      padding: 0.75rem 1.25rem;
-      cursor: pointer;
-      font-weight: 500;
+    .input-group label {
+      font-size: 0.9rem;
       color: #555;
-      transition: color 0.2s, border-bottom 0.2s;
-      white-space: nowrap;
-      /* Prevent tab names from breaking */
+      margin-bottom: 0.25rem;
+      /* Space between label and input */
+      font-weight: 500;
     }
 
-    .tab-item:hover {
-      color: #ec4899;
-    }
-
-    .tab-item.active {
-      color: #ec4899;
-      border-bottom: 2px solid #ec4899;
-      font-weight: 600;
-    }
-
-    /* Table Styling */
-    .order-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-      background-color: #fff;
-      /* Ensure table background is white */
-      border-radius: 0.5rem;
-      overflow: hidden;
-      /* For rounded corners on table */
-    }
-
-    .order-table th,
-    .order-table td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-
-    .order-table th {
-      background-color: #f8f8f8;
-      font-weight: 600;
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      flex-grow: 1;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 0.9rem;
       color: #333;
-      position: sticky;
-      /* Make header sticky */
-      top: 0;
-      /* Stick to the top */
-      z-index: 10;
-      /* Ensure it's above other content */
+      background-color: #f9f9f9;
     }
 
-    .order-table tbody tr:last-child td {
-      border-bottom: none;
+    .input-group input:focus,
+    .input-group select:focus,
+    .input-group textarea:focus {
+      outline: none;
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
     }
 
-    .order-table img {
-      width: 50px;
-      height: 50px;
+    /* Image Preview for Product Photo */
+    #product-image-preview {
+      width: 120px;
+      /* Adjusted size */
+      height: 120px;
+      /* Adjusted size */
       object-fit: cover;
-      border-radius: 0.25rem;
-      margin-right: 0.75rem;
-      vertical-align: middle;
-    }
-
-    .product-info {
-      display: flex;
-      align-items: center;
-    }
-
-    .buyer-row {
-      background-color: #fce7f3;
-      font-weight: 700;
-      color: #be185d;
-      padding: 0.75rem 1rem;
-      /* Adjusted padding */
-      margin-bottom: 1rem;
-      /* Increased margin */
       border-radius: 0.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      /* Added subtle shadow */
-      display: flex;
-      /* Use flex for alignment */
-      align-items: center;
+      /* Slightly larger border radius */
+      border: 1px solid #eee;
     }
 
-    .status-badge {
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.25rem;
-      font-size: 0.8rem;
-      font-weight: 600;
+    /* Button Styling */
+    .btn-primary {
+      background-color: #ec4899;
       color: white;
-      text-align: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
       cursor: pointer;
     }
 
-    .status-pending {
-      background-color: #f59e0b;
+    .btn-primary:hover {
+      background-color: #db2777;
     }
 
-    .status-cancelled {
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s, border-color 0.2s;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+    }
+
+    .btn-danger {
       background-color: #ef4444;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+      cursor: pointer;
     }
 
-    .status-processed {
-      background-color: #3b82f6;
+    .btn-danger:hover {
+      background-color: #dc2626;
     }
 
-    .status-shipped {
-      background-color: #10b981;
-    }
-
-    .status-blocked {
-      background-color: #6b7280;
-    }
-
-    /* Modal (Popup) Styling */
+    /* Modal (Popup) Styling for Logout and Success */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -279,30 +270,140 @@
 
     .modal-buttons .btn-confirm {
       background-color: #ef4444;
+      /* Red color for confirm */
       color: white;
       border: 1px solid #ef4444;
+    }
+
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
     }
 
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
+
+    /* Tab styling */
+    .tab-container {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab-button {
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-button.active {
+      color: #ec4899;
+      border-color: #ec4899;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Variant specific styling */
+    .single-variant-entry {
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      background-color: #fcfcfc;
+    }
+
+    .variant-details-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      /* Space between details and image */
+    }
+
+    .variant-details-row .input-group {
+      flex-grow: 1;
+      /* Allow them to grow */
+      flex-shrink: 1;
+      /* Allow them to shrink */
+      flex-basis: auto;
+      /* Let content determine initial size, then grow/shrink */
+      min-width: 0;
+      /* Allow shrinking below content size if needed */
+      margin-bottom: 0;
+    }
+
+    .variant-details-row .input-group input {
+      width: 100%;
+      /* Ensure input fills its parent input-group */
+    }
+
+    .remove-variant-btn {
+      background-color: #ef4444;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      flex-shrink: 0;
+      /* Prevent shrinking */
+      width: 38px;
+      /* Explicitly set width */
+      height: 38px;
+      /* Match input height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .remove-variant-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .variant-image-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.375rem;
+      border: 1px solid #eee;
+    }
   </style>
 </head>
 
-<body class="font-sans h-screen overflow-hidden">
+<body>
   <div class="flex h-full">
     <div class="sidebar">
       <div class="sidebar-header">
-        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
+        <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo" />
       </div>
       <nav class="sidebar-nav">
         <ul>
-          <li> <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
+          <li>
+            <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
           </li>
           <li>
             <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
-          <li><span>💬</span><a href="jastiper_chat.html">Chat</a></li>
+          <li class="active">
+            <span>📦</span> <a href="jastiper_pesanan.html">Pesanan</a>
+          </li>
+          <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
+          <li id="logout-button-sidebar"><span>➡️</span> Logout</li>
         </ul>
       </nav>
     </div>
@@ -317,352 +418,481 @@
           </div>
           <div class="tab-item" data-tab="belum-bayar">BELUM BAYAR</div>
           <div class="tab-item" data-tab="dibatalkan">DIBATALKAN</div>
-          <div class="tab-item" data-tab="produk-diblok">PRODUK DIBLOK</div>
+          <!-- Removed "PRODUK DIBLOK" tab -->
           <div class="tab-item" data-tab="pengiriman">PENGIRIMAN</div>
         </div>
 
         <div id="tab-content-pesanan-saya" class="tab-content active">
-          <div class="buyer-row">BUDI GUNAWAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>KATEGORI</th>
-                <th>PESANAN DIBUAT</th>
-                <th>DIKIRIM SEBELUM</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF 2025</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="buyer-row">ANIN-CHAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>KATEGORI</th>
-                <th>PESANAN DIBUAT</th>
-                <th>DIKIRIM SEBELUM</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/k2c5g9v/product2.png"
-                      alt="CD + BD LiSA - Shine in a Cruel Night dengan Bonus Eksklusif Anime Kemetos no Yaiba POS" />
-                    <span>CD + BD LiSA - Shine in a Cruel Night dengan Bonus
-                      Eksklusif Anime Kemetos no Yaiba POS</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <div id="tab-content-belum-bayar" class="tab-content hidden">
-          <div class="buyer-row">SATO DEWI</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>PESANAN DIBUAT</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">BELUM DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <div id="tab-content-dibatalkan" class="tab-content hidden">
-          <div class="buyer-row">BUDI GUNAWAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>PESANAN DIBUAT</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-cancelled">DIBATALKAN PENGGUNA</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
-        <div id="tab-content-produk-diblok" class="tab-content hidden">
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>NEGARA ASAL</th>
-                <th>ALASAN PRODUK DIBLOKIR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/m0B7x5W/product3.png" alt="Bape STA Low Pink" />
-                    <span>Bape STA Low Pink</span>
-                  </div>
-                </td>
-                <td>Jepang</td>
-                <td>TERLALU LAMA</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Removed "tab-content-produk-diblok" -->
 
         <div id="tab-content-pengiriman" class="tab-content hidden">
-          <div class="buyer-row">WAHYUNI</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>WAKTU PEMESANAN</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/bF9c11J/product4.png" alt="KAWS Holiday Japan Vinyl" />
-                    <span>KAWS Holiday Japan Vinyl</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-processed shipping-status" data-status="KONFIRMASI PRODUK">KONFIRMASI
-                    PRODUK</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="buyer-row">ANA NIA</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>WAKTU PEMESANAN</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/m0B7x5W/product3.png" alt="Bape STA Low Pink" />
-                    <span>Bape STA Low Pink</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-shipped shipping-status" data-status="SUDAH DIKIRIM">SUDAH
-                    DIKIRIM</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="logout-modal" class="modal-overlay">
-    <div class="modal-content">
-      <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
-      <p class="text-gray-700">
-        Apakah Anda yakin ingin keluar dari akun ini?
-      </p>
-      <div class="modal-buttons">
-        <button id="cancel-logout" class="btn-cancel">Batal</button>
-        <button id="confirm-logout" class="btn-confirm">Logout</button>
+    <div id="logout-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+        <p class="text-gray-700">
+          Apakah Anda yakin ingin keluar dari akun ini?
+        </p>
+        <div class="modal-buttons">
+          <button id="cancel-logout" class="btn-cancel">Batal</button>
+          <button id="confirm-logout" class="btn-confirm">Logout</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    // Get DOM elements
-    const tabItems = document.querySelectorAll(".tab-item");
-    const tabContents = document.querySelectorAll(".tab-content");
-    const logoutButton = document.getElementById("logout-button");
-    const logoutModal = document.getElementById("logout-modal");
-    const cancelLogoutButton = document.getElementById("cancel-logout");
-    const confirmLogoutButton = document.getElementById("confirm-logout");
-    const shippingStatusElements =
-      document.querySelectorAll(".shipping-status");
+    <div id="custom-confirm-modal" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+        <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+        <div class="modal-buttons">
+          <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+          <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+        </div>
+      </div>
+    </div>
 
-    // Function to handle tab switching
-    function switchTab(selectedTab) {
+    <script type="module">
+      // Import Firebase functions from firebase-config.js
+      import {
+        auth,
+        db,
+        signOut,
+        onAuthStateChanged,
+        collection,
+        query,
+        where,
+        getDocs,
+        doc,
+        updateDoc
+      } from './firebase-config.js'; // Ensure this path is correct
+
+      let currentJastiperId = null;
+
+      // Custom Confirmation/Alert Modal elements
+      const customConfirmModal = document.getElementById('custom-confirm-modal');
+      const customConfirmTitle = document.getElementById('custom-confirm-title');
+      const customConfirmMessage = document.getElementById('custom-confirm-message');
+      const customCancelBtn = document.getElementById('custom-cancel-btn');
+      const customConfirmBtn = document.getElementById('custom-confirm-btn');
+      let customConfirmCallback = null;
+
+      // Function to show custom confirmation/alert modal
+      function showCustomConfirm(message, callback, isConfirmation = false) {
+        customConfirmMessage.textContent = message;
+        customConfirmCallback = callback;
+        customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+        if (isConfirmation) {
+          customCancelBtn.classList.remove('hidden');
+        } else {
+          customCancelBtn.classList.add('hidden');
+        }
+        customConfirmBtn.textContent = isConfirmation ? "Ya" : "OK"; // Change text based on type
+        customConfirmBtn.classList.remove('success'); // Reset button style
+        customConfirmModal.classList.add('show');
+      }
+
+      customCancelBtn.addEventListener('click', () => {
+        customConfirmModal.classList.remove('show');
+        customConfirmCallback = null; // Clear callback if cancelled
+      });
+
+      customConfirmBtn.addEventListener('click', () => {
+        customConfirmModal.classList.remove('show');
+        if (customConfirmCallback) {
+          customConfirmCallback();
+        }
+        customConfirmCallback = null; // Clear callback after execution
+      });
+
+      // Helper function for date formatting
+      const formatDate = (timestamp) => {
+        if (!timestamp) return '-';
+        // Firebase Timestamp to Date object
+        const date = timestamp.toDate();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      // Helper function for status display text
+      const getStatusDisplayName = (status) => {
+        switch (status) {
+          case 'menunggu_dibayar':
+            return 'MENUNGGU DIBAYAR';
+          case 'diproses':
+            return 'KONFIRMASI PRODUK'; // As per old HTML "KONFIRMASI PRODUK"
+          case 'dikirim':
+            return 'SUDAH DIKIRIM';
+          case 'dibatalkan':
+            return 'DIBATALKAN PENGGUNA';
+          case 'selesai':
+            return 'SELESAI';
+          default:
+            return status.toUpperCase();
+        }
+      };
+
+      // Helper function for status badge class
+      const getStatusBadgeClass = (status) => {
+        switch (status) {
+          case 'menunggu_dibayar':
+            return 'pending';
+          case 'diproses':
+            return 'processed';
+          case 'dikirim':
+            return 'shipped';
+          case 'dibatalkan':
+            return 'cancelled';
+          default:
+            return ''; // Default or generic color
+        }
+      };
+
+      // DOM Elements
+      const tabItems = document.querySelectorAll(".tab-item");
+      const tabContents = document.querySelectorAll(".tab-content");
+      const logoutButtonSidebar = document.getElementById("logout-button-sidebar"); // Changed ID
+
+
+      // Function to handle tab switching
+      function switchTab(selectedTab) {
+        tabItems.forEach((item) => {
+          item.classList.remove("active");
+        });
+        tabContents.forEach((content) => {
+          content.classList.add("hidden");
+        });
+
+        const activeTabItem = document.querySelector(`[data-tab="${selectedTab}"]`);
+        if (activeTabItem) {
+          activeTabItem.classList.add("active");
+        }
+        const activeTabContent = document.getElementById(`tab-content-${selectedTab}`);
+        if (activeTabContent) {
+          activeTabContent.classList.remove("hidden");
+        }
+
+        // Load data based on the active tab
+        if (currentJastiperId) {
+          switch (selectedTab) {
+            case 'pesanan-saya':
+              fetchAndRenderPesananSaya(currentJastiperId);
+              break;
+            case 'belum-bayar':
+              fetchAndRenderBelumBayar(currentJastiperId);
+              break;
+            case 'dibatalkan':
+              fetchAndRenderDibatalkan(currentJastiperId);
+              break;
+            case 'pengiriman':
+              fetchAndRenderPengiriman(currentJastiperId);
+              break;
+            default:
+              break;
+          }
+        }
+      }
+
+      // Event listeners for tab items
       tabItems.forEach((item) => {
-        item.classList.remove("active");
+        item.addEventListener("click", () => {
+          const selectedTab = item.dataset.tab;
+          switchTab(selectedTab);
+        });
       });
-      tabContents.forEach((content) => {
-        content.classList.add("hidden");
-      });
 
-      document
-        .querySelector(`[data-tab="${selectedTab}"]`)
-        .classList.add("active");
-      document
-        .getElementById(`tab-content-${selectedTab}`)
-        .classList.remove("hidden");
-    }
+      // --- Data Fetching and Rendering Functions ---
 
-    // Add event listeners to tab items
-    tabItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        const selectedTab = item.dataset.tab;
-        switchTab(selectedTab);
-      });
-    });
+      async function fetchOrders(jastiperId, statuses, targetElementId) {
+        const container = document.getElementById(targetElementId);
+        container.innerHTML = ''; // Clear previous content
 
-    // Event listener for logout button (opens modal)
-    logoutButton.addEventListener("click", () => {
-      logoutModal.classList.add("show");
-    });
+        if (!jastiperId) {
+          container.innerHTML = '<p class="text-gray-600 text-center mt-4">Mohon login untuk melihat pesanan.</p>';
+          return;
+        }
 
-    // Event listener for "Cancel" button in modal
-    cancelLogoutButton.addEventListener("click", () => {
-      logoutModal.classList.remove("show");
-    });
+        try {
+          let q;
+          if (statuses === 'all_active') { // For 'Pesanan Saya'
+            q = query(collection(db, "orders"),
+              where("tokoId", "==", jastiperId),
+              where("status", "in", ["menunggu_dibayar", "diproses", "dikirim"])
+            );
+          } else if (Array.isArray(statuses)) { // For 'Pengiriman' or other multi-status
+            q = query(collection(db, "orders"),
+              where("tokoId", "==", jastiperId),
+              where("status", "in", statuses)
+            );
+          } else { // For single status tabs
+            q = query(collection(db, "orders"),
+              where("tokoId", "==", jastiperId),
+              where("status", "==", statuses)
+            );
+          }
 
-    // Event listener for "Logout" button in modal (no actual Firebase logout)
-    confirmLogoutButton.addEventListener("click", () => {
-      console.log("Simulating logout (no Firebase connection).");
-      alert("Anda telah logout (simulasi).");
-      logoutModal.classList.remove("show"); // Close modal
-    });
+          const querySnapshot = await getDocs(q);
+          const orders = [];
+          querySnapshot.forEach((doc) => {
+            orders.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
 
-    // Function to handle shipping status change
-    shippingStatusElements.forEach((element) => {
-      element.addEventListener("click", () => {
-        let currentStatus = element.dataset.status;
-        if (currentStatus === "KONFIRMASI PRODUK") {
-          element.textContent = "SUDAH DIKIRIM";
-          element.classList.remove("status-processed");
-          element.classList.add("status-shipped");
-          element.dataset.status = "SUDAH DIKIRIM";
-          alert('Status berhasil diubah menjadi "SUDAH DIKIRIM"!');
-        } else if (currentStatus === "SUDAH DIKIRIM") {
-          alert("Produk ini sudah dikirim.");
+          if (orders.length === 0) {
+            container.innerHTML = '<p class="text-gray-600 text-center mt-4">Tidak ada pesanan dalam kategori ini.</p>';
+            return;
+          }
+
+          // Group orders by buyer
+          const ordersByBuyer = orders.reduce((acc, order) => {
+            const buyerName = order.buyerName || 'Pembeli Tidak Dikenal';
+            if (!acc[buyerName]) {
+              acc[buyerName] = [];
+            }
+            acc[buyerName].push(order);
+            return acc;
+          }, {});
+
+          for (const buyerName in ordersByBuyer) {
+            const buyerOrders = ordersByBuyer[buyerName];
+            let tableHTML = `
+                                            <div class="buyer-row">${buyerName.toUpperCase()}</div>
+                                            <table class="order-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>NO</th>
+                                                        <th>NAMA PRODUK</th>
+                                                        <th>JUMLAH</th>
+                                            `;
+            // Dynamically add headers based on target element
+            if (targetElementId === 'tab-content-belum-bayar') {
+              tableHTML += `<th>JASA KIRIM</th><th>PESANAN DIBUAT</th><th>BATAS BAYAR</th><th>STATUS</th>`;
+            } else if (targetElementId === 'tab-content-dibatalkan') {
+              tableHTML += `<th>JASA KIRIM</th><th>PESANAN DIBUAT</th><th>BATAS BAYAR</th><th>STATUS</th>`;
+            } else if (targetElementId === 'tab-content-pengiriman') {
+              tableHTML += `<th>JASA KIRIM</th><th>WAKTU PEMESANAN</th><th>BATAS BAYAR</th><th>STATUS</th>`;
+            } else { // pesanan-saya default
+              tableHTML += `<th>KATEGORI</th><th>PESANAN DIBUAT</th><th>DIKIRIM SEBELUM</th><th>STATUS</th>`;
+            }
+            tableHTML += `
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                        `;
+
+            buyerOrders.forEach((order, orderIndex) => {
+              order.orderItems.forEach((item, itemIndex) => {
+                const combinedIndex = itemIndex === 0 ? orderIndex + 1 : ''; // Only show NO for the first item of an order
+                tableHTML += `
+                                                    <tr>
+                                                        <td>${combinedIndex}</td>
+                                                        <td>
+                                                            <div class="product-info">
+                                                                <img src="${item.imageUrl || 'https://via.placeholder.com/50'}" alt="${item.productName}" />
+                                                                <span>${item.productName || 'Nama Produk Tidak Diketahui'}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>${item.quantity || 1}</td>
+                                            `;
+                // Dynamically add cells based on target element
+                if (targetElementId === 'tab-content-belum-bayar') {
+                  tableHTML += `
+                                                        <td>${order.shippingService || '-'}</td>
+                                                        <td>${formatDate(order.orderDate)}</td>
+                                                        <td>${formatDate(order.paymentDueDate)}</td>
+                                                        <td><span class="status-badge ${getStatusBadgeClass(order.status)}">${getStatusDisplayName(order.status)}</span></td>
+                                            `;
+                } else if (targetElementId === 'tab-content-dibatalkan') {
+                  tableHTML += `
+                                                        <td>${order.shippingService || '-'}</td>
+                                                        <td>${formatDate(order.orderDate)}</td>
+                                                        <td>${formatDate(order.paymentDueDate || order.deliveryBefore)}</td>
+                                                        <td><span class="status-badge ${getStatusBadgeClass(order.status)}">${getStatusDisplayName(order.status)}</span></td>
+                                            `;
+                } else if (targetElementId === 'tab-content-pengiriman') {
+                  tableHTML += `
+                                                        <td>${order.shippingService || '-'}</td>
+                                                        <td>${formatDate(order.orderDate)}</td>
+                                                        <td>${formatDate(order.deliveryBefore)}</td>
+                                                        <td>
+                                                            <span class="status-badge ${getStatusBadgeClass(order.status)} shipping-status"
+                                                                data-status="${order.status}" data-order-id="${order.id}">
+                                                                ${getStatusDisplayName(order.status)}
+                                                            </span>
+                                                        </td>
+                                            `;
+                } else { // pesanan-saya default
+                  tableHTML += `
+                                                        <td>${item.category || '-'}</td>
+                                                        <td>${formatDate(order.orderDate)}</td>
+                                                        <td>${formatDate(order.deliveryBefore)}</td>
+                                                        <td><span class="status-badge ${getStatusBadgeClass(order.status)}">${getStatusDisplayName(order.status)}</span></td>
+                                            `;
+                }
+                tableHTML += `
+                                                    </tr>
+                                        `;
+              });
+            });
+            tableHTML += `
+                                                </tbody>
+                                            </table>
+                                        `;
+            container.insertAdjacentHTML('beforeend', tableHTML);
+          }
+
+          // Re-attach event listeners for shipping status after rendering
+          if (targetElementId === 'tab-content-pengiriman') {
+            attachShippingStatusListeners();
+          }
+
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+          container.innerHTML = '<p class="text-red-500 text-center mt-4">Gagal memuat pesanan. Silakan coba lagi.</p>';
+          showCustomConfirm("Gagal memuat pesanan: " + error.message, () => { });
+        }
+      }
+
+      async function fetchAndRenderPesananSaya(jastiperId) {
+        await fetchOrders(jastiperId, 'all_active', 'tab-content-pesanan-saya');
+      }
+
+      async function fetchAndRenderBelumBayar(jastiperId) {
+        await fetchOrders(jastiperId, 'menunggu_dibayar', 'tab-content-belum-bayar');
+      }
+
+      async function fetchAndRenderDibatalkan(jastiperId) {
+        await fetchOrders(jastiperId, 'dibatalkan', 'tab-content-dibatalkan');
+      }
+
+      async function fetchAndRenderPengiriman(jastiperId) {
+        await fetchOrders(jastiperId, ['diproses', 'dikirim'], 'tab-content-pengiriman');
+      }
+
+      // Removed fetchAndRenderProdukDiblok function
+
+      // Function to attach event listeners for shipping status badges
+      function attachShippingStatusListeners() {
+        const shippingStatusElements = document.querySelectorAll(".shipping-status");
+        shippingStatusElements.forEach((element) => {
+          element.removeEventListener("click", handleShippingStatusClick); // Prevent duplicate listeners
+          element.addEventListener("click", handleShippingStatusClick);
+        });
+      }
+
+      async function handleShippingStatusClick(event) {
+        const element = event.target;
+        const currentStatus = element.dataset.status;
+        const orderId = element.dataset.orderId;
+
+        if (!orderId) {
+          showCustomConfirm("ID Pesanan tidak ditemukan.", () => { });
+          return;
+        }
+
+        if (currentStatus === "diproses") { // Assuming "KONFIRMASI PRODUK" maps to "diproses"
+          showCustomConfirm('Apakah Anda yakin ingin mengubah status menjadi "SUDAH DIKIRIM"?', async () => {
+            try {
+              const orderRef = doc(db, "orders", orderId);
+              await updateDoc(orderRef, {
+                status: "dikirim"
+              });
+              showCustomConfirm('Status berhasil diubah menjadi "SUDAH DIKIRIM"!', () => {
+                // Re-fetch and render the 'Pengiriman' tab to reflect changes
+                switchTab('pengiriman');
+              }, false); // Not a confirmation, just an alert
+            } catch (error) {
+              console.error("Error updating status:", error);
+              showCustomConfirm("Gagal mengubah status: " + error.message, () => { });
+            }
+          }, true); // This is a confirmation
+        } else if (currentStatus === "dikirim") { // Assuming "SUDAH DIKIRIM" maps to "dikirim"
+          showCustomConfirm("Produk ini sudah dikirim.", () => { }, false); // Not a confirmation
+        }
+      }
+
+
+      // --- Autentikasi dan Pemuatan Data Awal ---
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentJastiperId = user.uid;
+          console.log("Jastiper ID:", currentJastiperId);
+          // Load initial data for the default active tab
+          switchTab(document.querySelector('.tab-item.active').dataset.tab);
+        } else {
+          // User not logged in, redirect to login page
+          console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
+          showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
+            window.location.href = "halaman_login_anda.html"; // Replace with your actual login page
+          });
         }
       });
-    });
 
-    // Set initial active tab on page load
-    document.addEventListener("DOMContentLoaded", () => {
-      switchTab("pesanan-saya"); // Default to "PESANAN SAYA" tab
-    });
-  </script>
+      // Script to highlight sidebar item
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.split("/").pop();
+        const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
+
+        sidebarLinks.forEach((item) => {
+          const link = item.querySelector("a");
+          if (link) {
+            const linkHref = link.getAttribute("href");
+            const linkFileName = linkHref.split("/").pop();
+
+            if (currentPath === linkFileName) {
+              item.classList.add("active");
+            } else {
+              item.classList.remove("active");
+            }
+          } else if (item.id === "logout-button-sidebar") {
+            // Logout button doesn't have a direct link to a page, so it won't be active based on URL
+          }
+        });
+      });
+
+      // Logout functionality
+      const logoutButtonSidebar = document.getElementById("logout-button-sidebar");
+      const logoutModal = document.getElementById("logout-modal");
+      const cancelLogoutButton = document.getElementById("cancel-logout");
+      const confirmLogoutButton = document.getElementById("confirm-logout");
+
+      logoutButtonSidebar.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+
+      cancelLogoutButton.addEventListener("click", () => {
+        logoutModal.classList.remove("show");
+      });
+
+      confirmLogoutButton.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          console.log("Berhasil logout dari Firebase.");
+          localStorage.removeItem("jastiperId"); // Clean up any local storage ID if used
+          showCustomConfirm("Anda telah logout.", () => {
+            window.location.href = "halaman_login_anda.html"; // Redirect to your login page
+          });
+          logoutModal.classList.remove("show");
+        } catch (error) {
+          console.error("Error saat logout:", error);
+          showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi: " + error.message, () => { });
+        }
+      });
+    </script>
 </body>
 
 </html>
