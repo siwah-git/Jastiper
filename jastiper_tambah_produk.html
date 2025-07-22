@@ -9,12 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- Hapus Firebase compat SDKs karena akan diimpor via module -->
-  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script> -->
-  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script> -->
-  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script> -->
-
   <style>
     body {
       font-family: "Inter", sans-serif;
@@ -209,7 +203,7 @@
       background-color: #dc2626;
     }
 
-    /* Modal (Popup) Styling for Logout */
+    /* Modal (Popup) Styling for Logout and Success */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -281,6 +275,16 @@
       border: 1px solid #ef4444;
     }
 
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
+
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
@@ -313,6 +317,71 @@
     .tab-content.active {
       display: block;
     }
+
+    /* Variant specific styling */
+    .single-variant-entry {
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      background-color: #fcfcfc;
+    }
+
+    .variant-details-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      /* Space between details and image */
+    }
+
+    .variant-details-row .input-group {
+      flex-grow: 1;
+      /* Allow them to grow */
+      flex-shrink: 1;
+      /* Allow them to shrink */
+      flex-basis: auto;
+      /* Let content determine initial size, then grow/shrink */
+      min-width: 0;
+      /* Allow shrinking below content size if needed */
+      margin-bottom: 0;
+    }
+
+    .variant-details-row .input-group input {
+      width: 100%;
+      /* Ensure input fills its parent input-group */
+    }
+
+    .remove-variant-btn {
+      background-color: #ef4444;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      flex-shrink: 0;
+      /* Prevent shrinking */
+      width: 38px;
+      /* Explicitly set width */
+      height: 38px;
+      /* Match input height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .remove-variant-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .variant-image-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.375rem;
+      border: 1px solid #eee;
+    }
   </style>
 </head>
 
@@ -328,7 +397,7 @@
             <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
           </li>
           <li class="active">
-            <span>🏬</span> <a href="toko_kita.html">Toko Kita</a>
+            <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
           <li><span>💬</span> Chat</li>
           <li id="logout-button"><span>➡️</span> Logout</li>
@@ -354,7 +423,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <div class="mb-4">
-                  <label for="imageUrl" class="block text-sm font-medium text-gray-700 mb-2">Foto Produk:</label>
+                  <label for="imageUrl" class="block text-sm font-medium text-gray-700 mb-2">Foto
+                    Produk:</label>
                   <input type="url" id="imageUrl"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                     placeholder="URL Gambar Produk" />
@@ -362,8 +432,8 @@
                 </div>
 
                 <div class="input-group">
-                  <label for="namaProduk">Nama Produk:</label>
-                  <input type="text" id="namaProduk" required />
+                  <label for="namaBarang">Nama Barang:</label>
+                  <input type="text" id="namaBarang" required />
                 </div>
                 <div class="input-group">
                   <label for="kategori">Kategori:</label>
@@ -406,8 +476,8 @@
                   <input type="text" id="merk" />
                 </div>
                 <div class="input-group">
-                  <label for="negaraAsal">Negara Asal:</label>
-                  <input type="text" id="negaraAsal" />
+                  <label for="negara">Negara:</label>
+                  <input type="text" id="negara" />
                 </div>
                 <div class="input-group">
                   <label for="jenis">Jenis:</label>
@@ -416,6 +486,14 @@
                       Pilih Jenis (Pilih Kategori Dahulu)
                     </option>
                   </select>
+                </div>
+                <!-- New Varian Section -->
+                <div class="mt-4">
+                  <h3 class="text-md font-semibold text-gray-700 mb-2">Varian Produk (Opsional)</h3>
+                  <div id="variants-container">
+                    <!-- Variant rows will be added here by JavaScript -->
+                  </div>
+                  <button type="button" id="add-variant-button" class="btn-secondary mt-2 w-full">Tambah Varian</button>
                 </div>
               </div>
               <div>
@@ -438,7 +516,7 @@
 
         <div class="flex justify-end mt-4">
           <button type="submit" class="btn-primary">Tambah Produk</button>
-          <button type="button" class="btn-secondary ml-4" onclick="window.location.href='toko_kita.html'">
+          <button type="button" class="btn-secondary ml-4" onclick="window.location.href='jastiper_toko_kita.html'">
             Batal
           </button>
         </div>
@@ -446,6 +524,7 @@
     </div>
   </div>
 
+  <!-- Logout Modal -->
   <div id="logout-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
@@ -455,6 +534,17 @@
       <div class="modal-buttons">
         <button id="cancel-logout" class="btn-cancel">Batal</button>
         <button id="confirm-logout" class="btn-confirm">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="success-modal-title">Berhasil!</h3>
+      <p class="text-gray-700" id="success-modal-message">Produk baru berhasil ditambahkan!</p>
+      <div class="modal-buttons">
+        <button id="close-success-modal" class="btn-confirm success">OK</button>
       </div>
     </div>
   </div>
@@ -492,8 +582,8 @@
 
     // DOM Elements
     const form = document.getElementById("add-product-form");
-    const namaProdukInput = document.getElementById("namaProduk");
-    const negaraAsalInput = document.getElementById("negaraAsal");
+    const namaBarangInput = document.getElementById("namaBarang");
+    const negaraInput = document.getElementById("negara");
     const kategoriSelect = document.getElementById("kategori");
     const hargaInput = document.getElementById("harga");
     const stokInput = document.getElementById("stok");
@@ -507,7 +597,7 @@
     const beratInput = document.getElementById("berat");
     const batasPesanInput = document.getElementById("batasPesan");
     const jenisSelect = document.getElementById("jenis");
-    const feeInput = document.getElementById("fee"); // Untuk menampilkan fee toko
+    const feeInput = document.getElementById("fee");
 
     // Tab Elements
     const tabButtons = document.querySelectorAll(".tab-button");
@@ -519,6 +609,17 @@
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
 
+    // Success Modal elements
+    const successModal = document.getElementById("success-modal");
+    const successModalTitle = document.getElementById("success-modal-title");
+    const successModalMessage = document.getElementById("success-modal-message");
+    const closeSuccessModalButton = document.getElementById("close-success-modal");
+
+
+    // Variant elements
+    const variantsContainer = document.getElementById("variants-container");
+    const addVariantButton = document.getElementById("add-variant-button");
+
     // --- Data untuk dropdown "Kategori" dan "Jenis" dari image_6ff314.png ---
     const categoryAndTypeOptions = {
       "Fashion & Aksesoris": [
@@ -528,7 +629,6 @@
         "Tas",
         "Dompet",
         "Jam Tangan",
-        "Topi",
         "Aksesoris",
       ],
       "Kosmetik & Skincare": [
@@ -656,43 +756,142 @@
       }
     }
 
+    // Fungsi untuk menambahkan baris varian baru
+    function addVariantRow() {
+      const variantEntryDiv = document.createElement("div");
+      variantEntryDiv.classList.add("single-variant-entry");
+
+      variantEntryDiv.innerHTML = `
+                <div class="variant-details-row">
+                    <div class="input-group">
+                        <label>Tipe Varian:</label>
+                        <input type="text" class="variant-type-input" placeholder="Contoh: Warna" />
+                    </div>
+                    <div class="input-group">
+                        <label>Nilai Varian (pisahkan dengan koma):</label>
+                        <input type="text" class="variant-values-input" placeholder="Contoh: Merah, Biru" />
+                    </div>
+                    <button type="button" class="remove-variant-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Foto Varian (URL):</label>
+                    <input type="url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm variant-image-url-input" placeholder="URL Gambar Varian" />
+                    <img src="" alt="Variant Image" class="mt-2 hidden variant-image-preview" />
+                </div>
+            `;
+
+      // Add event listener to the remove button
+      variantEntryDiv.querySelector(".remove-variant-btn").addEventListener("click", () => {
+        console.log("Remove button clicked for variant row."); // Debugging line
+        variantEntryDiv.remove();
+      });
+
+      // Add event listener for the variant image URL input
+      const imageUrlInputForVariant = variantEntryDiv.querySelector(".variant-image-url-input");
+      const imagePreviewForVariant = variantEntryDiv.querySelector(".variant-image-preview");
+
+      imageUrlInputForVariant.addEventListener("input", () => {
+        if (imageUrlInputForVariant.value) {
+          imagePreviewForVariant.src = imageUrlInputForVariant.value;
+          imagePreviewForVariant.classList.remove("hidden");
+        } else {
+          imagePreviewForVariant.classList.add("hidden");
+        }
+      });
+
+      variantsContainer.appendChild(variantEntryDiv);
+    }
+
+    // Event listener untuk tombol "Tambah Varian"
+    addVariantButton.addEventListener("click", addVariantRow);
+
+    // Fungsi untuk mereset semua field formulir
+    function resetForm() {
+      form.reset(); // Mereset semua input dalam form
+      imagePreview.src = ""; // Kosongkan src gambar produk utama
+      imagePreview.classList.add("hidden"); // Sembunyikan pratinjau gambar produk utama
+      populateKategoriOptions(); // Setel ulang dropdown kategori ke default
+      updateJenisOptions(); // Setel ulang dropdown jenis ke default
+      // Pastikan fee tetap terisi jika data toko sudah dimuat
+      fetchStoreFee();
+      activateTab("info-produk"); // Kembali ke tab pertama
+      variantsContainer.innerHTML = ''; // Clear all variant rows
+      addVariantRow(); // Add an empty variant row
+    }
+
+    // Function to show success modal
+    function showSuccessModal(message) {
+      successModalMessage.textContent = message;
+      successModal.classList.add("show");
+    }
+
+    // Event listener for close success modal button
+    closeSuccessModalButton.addEventListener("click", () => {
+      successModal.classList.remove("show");
+    });
+
+
     // Event listener untuk submit form
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       if (!currentTokoId) {
-        alert("Anda belum login sebagai Jastiper. Silakan login terlebih dahulu.");
-        window.location.href = "halaman_login_anda.html"; // Redirect ke halaman login
+        // Menggunakan modal kustom untuk pesan error
+        showCustomConfirm("Anda belum login sebagai Jastiper. Silakan login terlebih dahulu.", () => {
+          window.location.href = "halaman_login_anda.html"; // Redirect ke halaman login
+        });
         return;
       }
 
       // Validasi formulir
       if (
-        !namaProdukInput.value ||
+        !namaBarangInput.value ||
         !kategoriSelect.value ||
         !hargaInput.value ||
         !stokInput.value ||
         !statusSelect.value ||
         !jenisSelect.value
       ) {
-        alert("Mohon isi semua bidang yang wajib.");
+        showCustomConfirm("Mohon isi semua bidang yang wajib.", () => { }); // Menggunakan modal kustom
         return;
       }
 
+      // Collect variant data
+      const variants = [];
+      document.querySelectorAll(".single-variant-entry").forEach(entryDiv => {
+        const typeInput = entryDiv.querySelector(".variant-type-input");
+        const valuesInput = entryDiv.querySelector(".variant-values-input");
+        const imageUrlInputVariant = entryDiv.querySelector(".variant-image-url-input");
+
+        if (typeInput.value && valuesInput.value) {
+          const type = typeInput.value.trim();
+          const values = valuesInput.value.split(',').map(v => v.trim()).filter(v => v !== '');
+          const imageUrl = imageUrlInputVariant.value.trim();
+
+          if (type && values.length > 0) {
+            variants.push({ type, values, imageUrl });
+          }
+        }
+      });
+
+
       const newProductData = {
         tokoId: currentTokoId, // Tambahkan tokoId dari user yang login
-        namaProduk: namaProdukInput.value,
-        negaraAsal: negaraAsalInput.value || "", // Opsional
+        namaBarang: namaBarangInput.value,
+        negara: negaraInput.value || "",
         kategori: kategoriSelect.value,
         harga: parseFloat(hargaInput.value),
         stok: parseInt(stokInput.value),
         status: statusSelect.value,
-        imageUrl: imageUrlInput.value || "", // Opsional
-        deskripsi: deskripsiInput.value || "", // Opsional
-        merk: merkInput.value || "", // Opsional
-        berat: parseFloat(beratInput.value) || 0, // Opsional, default 0
-        batasPesan: batasPesanInput.value ? new Date(batasPesanInput.value) : null, // Konversi ke Date object jika ada
+        imageUrl: imageUrlInput.value || "",
+        deskripsi: deskripsiInput.value || "",
+        merk: merkInput.value || "",
+        berat: parseFloat(beratInput.value) || 0,
+        batasPesan: batasPesanInput.value ? new Date(batasPesanInput.value) : null,
         jenis: jenisSelect.value,
+        variants: variants, // Add variants array
         createdAt: serverTimestamp(), // Gunakan serverTimestamp untuk waktu server
         views: 0, // Inisialisasi jumlah tampilan produk
         isBlocked: false, // Inisialisasi status blokir
@@ -701,15 +900,15 @@
       try {
         const docRef = await addDoc(collection(db, "produk"), newProductData);
         console.log("Dokumen produk berhasil ditulis dengan ID: ", docRef.id);
-        alert("Produk baru berhasil ditambahkan!");
-        window.location.href = "toko_kita.html"; // Kembali ke daftar produk
+        showSuccessModal("Produk baru berhasil ditambahkan!"); // Menggunakan modal sukses kustom
+        resetForm(); // Panggil fungsi reset form setelah berhasil
       } catch (e) {
         console.error("Error menambahkan dokumen: ", e);
-        alert("Gagal menambahkan produk. Silakan coba lagi.");
+        showCustomConfirm("Gagal menambahkan produk. Silakan coba lagi.", () => { }); // Menggunakan modal kustom
       }
     });
 
-    // Event listener untuk update preview gambar
+    // Event listener untuk update preview gambar produk utama
     imageUrlInput.addEventListener("input", () => {
       if (imageUrlInput.value) {
         imagePreview.src = imageUrlInput.value;
@@ -728,10 +927,13 @@
         populateKategoriOptions(); // Isi dropdown kategori saat halaman dimuat
         updateJenisOptions(); // Panggil pertama kali untuk mengisi dropdown "Jenis" (akan menampilkan placeholder)
         fetchStoreFee(); // Ambil dan tampilkan fee toko
+        addVariantRow(); // Add initial empty variant row
       } else {
         // User tidak login, arahkan ke halaman login
         console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
-        window.location.href = "halaman_login_anda.html";
+        showCustomConfirm("User tidak terautentikasi. Mengarahkan ke halaman login.", () => {
+          window.location.href = "halaman_login_anda.html";
+        });
       }
     });
 
@@ -785,14 +987,62 @@
         await signOut(auth);
         console.log("Berhasil logout dari Firebase.");
         localStorage.removeItem("tokoId"); // Hapus tokoId dari local storage
-        alert("Anda telah logout.");
+        showSuccessModal("Anda telah logout."); // Menggunakan modal sukses kustom
         logoutModal.classList.remove("show");
         window.location.href = "halaman_login_anda.html"; // Arahkan ke halaman login
       } catch (error) {
         console.error("Error saat logout:", error);
-        alert("Terjadi kesalahan saat logout. Silakan coba lagi.");
+        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", () => { }); // Menggunakan modal kustom
       }
     });
+
+    // Custom Confirmation Modal Logic (reused for general alerts/errors)
+    const customConfirmModal = document.createElement('div');
+    customConfirmModal.id = 'custom-confirm-modal';
+    customConfirmModal.classList.add('modal-overlay');
+    customConfirmModal.innerHTML = `
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+                <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+                <div class="modal-buttons">
+                    <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+                    <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+                </div>
+            </div>
+        `;
+    document.body.appendChild(customConfirmModal);
+
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmModal.classList.add('show');
+    }
+
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null; // Clear callback if cancelled
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null; // Clear callback after execution
+    });
+
   </script>
 </body>
 
