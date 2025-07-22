@@ -39,7 +39,7 @@ export {
   auth,
   analytics,
   db,
-  // Ekspor fungsi-fungsi Firestore agar bisa digunakan langsung
+
   collection,
   query,
   where,

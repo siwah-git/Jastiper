@@ -76,8 +76,15 @@
     .main-content {
       flex-grow: 1;
       padding: 1.5rem;
-      overflow-y: auto;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 1rem;
     }
 
     .card {
@@ -85,15 +92,29 @@
       border-radius: 0.75rem;
       padding: 1.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* Tabs Styling */
     .tabs {
       display: flex;
       border-bottom: 1px solid #e0e0e0;
-      margin-bottom: 1rem;
       flex-wrap: wrap;
-      /* Allow tabs to wrap on smaller screens */
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      z-index: 20;
+      margin-top: -1.5rem;
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-top: 1.5rem;
+      padding-bottom: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .tab-item {
@@ -103,7 +124,6 @@
       color: #555;
       transition: color 0.2s, border-bottom 0.2s;
       white-space: nowrap;
-      /* Prevent tab names from breaking */
     }
 
     .tab-item:hover {
@@ -116,24 +136,34 @@
       font-weight: 600;
     }
 
-    /* Table Styling */
+    .tab-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 0;
+      padding-right: 15px;
+    }
+
+    .tab-content .buyer-row:first-of-type,
+    .tab-content .order-table:first-of-type {
+      margin-top: 1rem;
+    }
+
     .order-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 0.5rem;
       margin-bottom: 1rem;
       background-color: #fff;
-      /* Ensure table background is white */
+      border: 1px solid #e0e0e0;
       border-radius: 0.5rem;
       overflow: hidden;
-      /* For rounded corners on table */
     }
 
     .order-table th,
     .order-table td {
       padding: 0.75rem;
       text-align: left;
-      border-bottom: 1px solid #eee;
+      border: 1px solid #e0e0e0;
+      vertical-align: middle;
     }
 
     .order-table th {
@@ -141,15 +171,14 @@
       font-weight: 600;
       color: #333;
       position: sticky;
-      /* Make header sticky */
       top: 0;
-      /* Stick to the top */
       z-index: 10;
-      /* Ensure it's above other content */
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
     }
 
     .order-table tbody tr:last-child td {
-      border-bottom: none;
+      border-bottom: 1px solid #e0e0e0;
     }
 
     .order-table img {
@@ -171,14 +200,10 @@
       font-weight: 700;
       color: #be185d;
       padding: 0.75rem 1rem;
-      /* Adjusted padding */
       margin-bottom: 1rem;
-      /* Increased margin */
       border-radius: 0.5rem;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      /* Added subtle shadow */
       display: flex;
-      /* Use flex for alignment */
       align-items: center;
     }
 
@@ -188,8 +213,14 @@
       font-size: 0.8rem;
       font-weight: 600;
       color: white;
-      text-align: center;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 120px;
+      min-height: 30px;
+      box-sizing: border-box;
     }
 
     .status-pending {
@@ -212,7 +243,6 @@
       background-color: #6b7280;
     }
 
-    /* Modal (Popup) Styling */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -286,6 +316,16 @@
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
+
+    .modal-buttons .btn-success {
+      background-color: #10b981;
+      color: white;
+      border: 1px solid #10b981;
+    }
+
+    .modal-buttons .btn-success:hover {
+      background-color: #059669;
+    }
   </style>
 </head>
 
@@ -316,261 +356,16 @@
             PESANAN SAYA
           </div>
           <div class="tab-item" data-tab="belum-bayar">BELUM BAYAR</div>
-          <div class="tab-item" data-tab="dibatalkan">DIBATALKAN</div>
-          <div class="tab-item" data-tab="produk-diblok">PRODUK DIBLOK</div>
           <div class="tab-item" data-tab="pengiriman">PENGIRIMAN</div>
         </div>
 
         <div id="tab-content-pesanan-saya" class="tab-content active">
-          <div class="buyer-row">BUDI GUNAWAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>KATEGORI</th>
-                <th>PESANAN DIBUAT</th>
-                <th>DIKIRIM SEBELUM</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF 2025</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="buyer-row">ANIN-CHAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>KATEGORI</th>
-                <th>PESANAN DIBUAT</th>
-                <th>DIKIRIM SEBELUM</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/k2c5g9v/product2.png"
-                      alt="CD + BD LiSA - Shine in a Cruel Night dengan Bonus Eksklusif Anime Kemetos no Yaiba POS" />
-                    <span>CD + BD LiSA - Shine in a Cruel Night dengan Bonus
-                      Eksklusif Anime Kemetos no Yaiba POS</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">MENUNGGU DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <div id="tab-content-belum-bayar" class="tab-content hidden">
-          <div class="buyer-row">SATO DEWI</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>PESANAN DIBUAT</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-pending">BELUM DIBAYAR</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div id="tab-content-dibatalkan" class="tab-content hidden">
-          <div class="buyer-row">BUDI GUNAWAN</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>PESANAN DIBUAT</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/Lh5R7J2/product1.png" alt="SAKAMOT OFF VOL.1" />
-                    <span>SAKAMOT O'S DAY'S OFF VOL.1</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-cancelled">DIBATALKAN PENGGUNA</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div id="tab-content-produk-diblok" class="tab-content hidden">
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>NEGARA ASAL</th>
-                <th>ALASAN PRODUK DIBLOKIR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/m0B7x5W/product3.png" alt="Bape STA Low Pink" />
-                    <span>Bape STA Low Pink</span>
-                  </div>
-                </td>
-                <td>Jepang</td>
-                <td>TERLALU LAMA</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <div id="tab-content-pengiriman" class="tab-content hidden">
-          <div class="buyer-row">WAHYUNI</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>WAKTU PEMESANAN</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/bF9c11J/product4.png" alt="KAWS Holiday Japan Vinyl" />
-                    <span>KAWS Holiday Japan Vinyl</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-processed shipping-status" data-status="KONFIRMASI PRODUK">KONFIRMASI
-                    PRODUK</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="buyer-row">ANA NIA</div>
-          <table class="order-table">
-            <thead>
-              <tr>
-                <th>NO</th>
-                <th>NAMA PRODUK</th>
-                <th>JUMLAH</th>
-                <th>JASA KIRIM</th>
-                <th>WAKTU PEMESANAN</th>
-                <th>BATAS BAYAR</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="product-info">
-                    <img src="https://i.ibb.co/m0B7x5W/product3.png" alt="Bape STA Low Pink" />
-                    <span>Bape STA Low Pink</span>
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Mainan & Hobi</td>
-                <td>12/02/2025</td>
-                <td>16/07/2025</td>
-                <td>
-                  <span class="status-badge status-shipped shipping-status" data-status="SUDAH DIKIRIM">SUDAH
-                    DIKIRIM</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -589,16 +384,248 @@
     </div>
   </div>
 
-  <script>
+  <div id="shipping-success-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4 text-green-700">Status Berhasil Diubah!</h3>
+      <p class="text-gray-700">
+        Status produk berhasil diubah menjadi "SUDAH DIKIRIM".
+      </p>
+      <div class="modal-buttons">
+        <button id="close-shipping-success-modal" class="btn-success">Oke</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase modules
+    import { db, collection, query, where, getDocs, doc, updateDoc } from "./firebase-config.js";
+
     // Get DOM elements
     const tabItems = document.querySelectorAll(".tab-item");
     const tabContents = document.querySelectorAll(".tab-content");
-    const logoutButton = document.getElementById("logout-button");
+    const logoutButton = document.getElementById("logout-button"); // Perlu ditambahkan elemen ini jika ingin berfungsi
     const logoutModal = document.getElementById("logout-modal");
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
-    const shippingStatusElements =
-      document.querySelectorAll(".shipping-status");
+
+    const shippingSuccessModal = document.getElementById("shipping-success-modal");
+    const closeShippingSuccessModalButton = document.getElementById("close-shipping-success-modal");
+
+    // =========================================================
+    // Firebase Data Fetching and Rendering
+    // =========================================================
+
+    // Dummy Store ID for demonstration.
+    // In a real application, this would come from user authentication or URL.
+    const CURRENT_STORE_ID = "tokoku123"; // Ganti dengan ID toko yang sesuai dari Firestore Anda
+
+    async function fetchOrders() {
+      console.log("Fetching orders for store:", CURRENT_STORE_ID);
+      const ordersRef = collection(db, "orders");
+      // Query untuk mengambil semua pesanan yang relevan untuk toko ini
+      const q = query(ordersRef, where("storeId", "==", CURRENT_STORE_ID));
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const orders = [];
+        querySnapshot.forEach((doc) => {
+          orders.push({ id: doc.id, ...doc.data() });
+        });
+        console.log("Fetched orders:", orders);
+        renderOrders(orders); // Panggil render setelah data diambil
+      } catch (error) {
+        console.error("Error fetching orders: ", error);
+        alert("Gagal memuat pesanan: " + error.message);
+      }
+    }
+
+    function renderOrders(orders) {
+      const pesananSayaContent = document.getElementById("tab-content-pesanan-saya");
+      const belumBayarContent = document.getElementById("tab-content-belum-bayar");
+      const pengirimanContent = document.getElementById("tab-content-pengiriman");
+
+      // Clear previous content
+      pesananSayaContent.innerHTML = "";
+      belumBayarContent.innerHTML = "";
+      pengirimanContent.innerHTML = "";
+
+      // Group orders by buyer and status for each tab
+      const ordersByBuyerPesananSaya = {};
+      const ordersByBuyerBelumBayar = {};
+      const ordersByBuyerPengiriman = {};
+
+      orders.forEach(order => {
+        // Asumsi 'items' adalah array produk di dalam dokumen pesanan
+        order.items.forEach((item, itemIndex) => {
+          // Buat salinan item dan tambahkan detail pesanan ke dalamnya
+          const orderItem = {
+            ...item, // Detail produk
+            orderId: order.id, // ID dokumen pesanan dari Firestore
+            buyerName: order.buyerName,
+            orderDate: order.orderDate,
+            dueDate: order.dueDate,
+            status: order.status,
+            address: order.address || '', // Alamat mungkin hanya relevan untuk tab tertentu
+            rowIndex: itemIndex + 1 // Untuk kolom NO
+          };
+
+          // Filtering berdasarkan status untuk tiap tab
+          if (order.status === "MENUNGGU DIBAYAR") {
+            if (!ordersByBuyerPesananSaya[order.buyerName]) {
+              ordersByBuyerPesananSaya[order.buyerName] = [];
+            }
+            ordersByBuyerPesananSaya[order.buyerName].push(orderItem);
+          } else if (order.status === "BELUM DIBAYAR") {
+            if (!ordersByBuyerBelumBayar[order.buyerName]) {
+              ordersByBuyerBelumBayar[order.buyerName] = [];
+            }
+            ordersByBuyerBelumBayar[order.buyerName].push(orderItem);
+          } else if (order.status === "KONFIRMASI PRODUK" || order.status === "SUDAH DIKIRIM") {
+            // Jika Anda ingin pesanan yang sudah "SUDAH DIKIRIM" hilang dari tab ini setelah diubah,
+            // maka cukup gunakan: `if (order.status === "KONFIRMASI PRODUK")`
+            // Saat ini, ia akan tetap tampil tetapi tidak bisa diubah lagi.
+            if (!ordersByBuyerPengiriman[order.buyerName]) {
+              ordersByBuyerPengiriman[order.buyerName] = [];
+            }
+            ordersByBuyerPengiriman[order.buyerName].push(orderItem);
+          }
+        });
+      });
+
+
+      // Render "PESANAN SAYA" tab
+      for (const buyerName in ordersByBuyerPesananSaya) {
+        pesananSayaContent.innerHTML += `<div class="buyer-row">${buyerName}</div>`;
+        pesananSayaContent.innerHTML += `
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>NAMA PRODUK</th>
+                  <th>JUMLAH</th>
+                  <th>KATEGORI</th>
+                  <th>PESANAN DIBUAT</th>
+                  <th>DIKIRIM SEBELUM</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ordersByBuyerPesananSaya[buyerName].map(item => `
+                  <tr>
+                    <td>${item.rowIndex}</td>
+                    <td>
+                      <div class="product-info">
+                        <img src="${item.imageUrl}" alt="${item.productName}" />
+                        <span>${item.productName}</span>
+                      </div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td>${item.category}</td>
+                    <td>${item.orderDate}</td>
+                    <td>${item.dueDate}</td>
+                    <td>
+                      <span class="status-badge status-pending">${item.status}</span>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>`;
+      }
+
+      // Render "BELUM BAYAR" tab
+      for (const buyerName in ordersByBuyerBelumBayar) {
+        belumBayarContent.innerHTML += `<div class="buyer-row">${buyerName}</div>`;
+        belumBayarContent.innerHTML += `
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>NAMA PRODUK</th>
+                  <th>JUMLAH</th>
+                  <th>ALAMAT</th>
+                  <th>PESANAN DIBUAT</th>
+                  <th>BATAS BAYAR</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ordersByBuyerBelumBayar[buyerName].map(item => `
+                  <tr>
+                    <td>${item.rowIndex}</td>
+                    <td>
+                      <div class="product-info">
+                        <img src="${item.imageUrl}" alt="${item.productName}" />
+                        <span>${item.productName}</span>
+                      </div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td>${item.address}</td>
+                    <td>${item.orderDate}</td>
+                    <td>${item.dueDate}</td>
+                    <td>
+                      <span class="status-badge status-pending">${item.status}</span>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>`;
+      }
+
+
+      // Render "PENGIRIMAN" tab
+      for (const buyerName in ordersByBuyerPengiriman) {
+        pengirimanContent.innerHTML += `<div class="buyer-row">${buyerName}</div>`;
+        pengirimanContent.innerHTML += `
+            <table class="order-table">
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>NAMA PRODUK</th>
+                  <th>JUMLAH</th>
+                  <th>ALAMAT</th>
+                  <th>WAKTU PEMESANAN</th>
+                  <th>BATAS BAYAR</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ordersByBuyerPengiriman[buyerName].map(item => {
+          let statusClass = '';
+          if (item.status === 'KONFIRMASI PRODUK') {
+            statusClass = 'status-processed';
+          } else if (item.status === 'SUDAH DIKIRIM') {
+            statusClass = 'status-shipped';
+          }
+          return `
+                  <tr>
+                    <td>${item.rowIndex}</td>
+                    <td>
+                      <div class="product-info">
+                        <img src="${item.imageUrl}" alt="${item.productName}" />
+                        <span>${item.productName}</span>
+                      </div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td>${item.address}</td>
+                    <td>${item.orderDate}</td>
+                    <td>${item.dueDate}</td>
+                    <td>
+                      <span class="status-badge ${statusClass} shipping-status"
+                            data-status="${item.status}"
+                            data-order-id="${item.orderId}">
+                        ${item.status}
+                      </span>
+                    </td>
+                  </tr>
+                `;
+        }).join('')}
+              </tbody>
+            </table>`;
+      }
+
+      // Re-attach event listeners after rendering new content
+      attachShippingStatusEventListeners();
+    }
 
     // Function to handle tab switching
     function switchTab(selectedTab) {
@@ -607,6 +634,7 @@
       });
       tabContents.forEach((content) => {
         content.classList.add("hidden");
+        content.scrollTop = 0; // Reset scroll position when switching tabs
       });
 
       document
@@ -626,41 +654,88 @@
     });
 
     // Event listener for logout button (opens modal)
-    logoutButton.addEventListener("click", () => {
-      logoutModal.classList.add("show");
-    });
+    if (logoutButton) {
+      logoutButton.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+    }
 
-    // Event listener for "Cancel" button in modal
+    // Event listener for "Cancel" button in logout modal
     cancelLogoutButton.addEventListener("click", () => {
       logoutModal.classList.remove("show");
     });
 
-    // Event listener for "Logout" button in modal (no actual Firebase logout)
+    // Event listener for "Logout" button in logout modal
     confirmLogoutButton.addEventListener("click", () => {
       console.log("Simulating logout (no Firebase connection).");
-      alert("Anda telah logout (simulasi).");
+      // Di sini Anda akan menambahkan logika logout yang sebenarnya (misal: Firebase signOut)
       logoutModal.classList.remove("show"); // Close modal
     });
 
-    // Function to handle shipping status change
-    shippingStatusElements.forEach((element) => {
-      element.addEventListener("click", () => {
-        let currentStatus = element.dataset.status;
-        if (currentStatus === "KONFIRMASI PRODUK") {
-          element.textContent = "SUDAH DIKIRIM";
-          element.classList.remove("status-processed");
-          element.classList.add("status-shipped");
-          element.dataset.status = "SUDAH DIKIRIM";
-          alert('Status berhasil diubah menjadi "SUDAH DIKIRIM"!');
-        } else if (currentStatus === "SUDAH DIKIRIM") {
-          alert("Produk ini sudah dikirim.");
-        }
+    // Function to attach event listeners to newly rendered shipping status badges
+    function attachShippingStatusEventListeners() {
+      const shippingStatusElements = document.querySelectorAll(".shipping-status");
+      shippingStatusElements.forEach((element) => {
+        // Hapus listener lama untuk mencegah duplikasi jika renderOrders dipanggil berulang
+        element.removeEventListener("click", handleShippingStatusClick);
+        element.addEventListener("click", handleShippingStatusClick);
       });
+    }
+
+    // Handler function for shipping status clicks
+    async function handleShippingStatusClick() {
+      const element = this; // 'this' merujuk pada elemen yang diklik
+      let currentStatus = element.dataset.status;
+      const orderId = element.dataset.orderId; // Dapatkan ID dokumen pesanan
+
+      if (currentStatus === "KONFIRMASI PRODUK") {
+        try {
+          // 1. Update status di Firestore
+          const orderDocRef = doc(db, "orders", orderId);
+          await updateDoc(orderDocRef, {
+            status: "SUDAH DIKIRIM"
+            // Anda mungkin ingin menambahkan timestamp pengiriman juga
+            // shippingDate: new Date().toISOString()
+          });
+
+          console.log(`Order ${orderId} status updated to SUDAH DIKIRIM.`);
+
+          // 2. Muat ulang dan render ulang semua pesanan untuk merefleksikan perubahan
+          // Ini akan memastikan pesanan menghilang dari tab 'PENGIRIMAN' jika logic rendering Anda
+          // tidak lagi menampilkannya untuk status 'SUDAH DIKIRIM'.
+          await fetchOrders();
+
+          // 3. Tampilkan modal sukses
+          shippingSuccessModal.querySelector('h3').textContent = 'Status Berhasil Diubah!';
+          shippingSuccessModal.querySelector('h3').classList.add('text-green-700');
+          shippingSuccessModal.querySelector('p').textContent = 'Status produk berhasil diubah menjadi "SUDAH DIKIRIM".';
+          shippingSuccessModal.querySelector('.btn-success').textContent = 'Oke';
+          shippingSuccessModal.classList.add("show");
+
+        } catch (error) {
+          console.error("Error updating order status:", error);
+          alert("Gagal mengubah status pesanan: " + error.message);
+        }
+
+      } else if (currentStatus === "SUDAH DIKIRIM") {
+        // Jika status sudah 'SUDAH DIKIRIM', tampilkan modal informasi saja
+        shippingSuccessModal.querySelector('h3').textContent = 'Informasi Pengiriman';
+        shippingSuccessModal.querySelector('h3').classList.remove('text-green-700');
+        shippingSuccessModal.querySelector('p').textContent = 'Produk ini sudah dikirim.';
+        shippingSuccessModal.querySelector('.btn-success').textContent = 'Tutup';
+        shippingSuccessModal.classList.add("show");
+      }
+    }
+
+    // Event listener untuk menutup modal sukses pengiriman
+    closeShippingSuccessModalButton.addEventListener("click", () => {
+      shippingSuccessModal.classList.remove("show");
     });
 
-    // Set initial active tab on page load
+    // Set initial active tab and fetch data on page load
     document.addEventListener("DOMContentLoaded", () => {
-      switchTab("pesanan-saya"); // Default to "PESANAN SAYA" tab
+      switchTab("pesanan-saya"); // Default ke tab "PESANAN SAYA"
+      fetchOrders(); // Ambil data dari Firebase saat halaman dimuat
     });
   </script>
 </body>

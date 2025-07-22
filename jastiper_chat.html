@@ -4,25 +4,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat</title>
+  <title>Chat Toko</title> <!-- Judul halaman diubah -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-
   <style>
     body {
       font-family: "Inter", sans-serif;
-      background-image: url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
-      /* Updated background image URL */
+      background-image: url("asset/images/background.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
       height: 100vh;
       overflow: hidden;
       display: flex;
-      /* Ensure body takes full height and contains flex items */
     }
 
     /* Sidebar Styling */
@@ -94,22 +91,21 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      /* Align content to the left */
+      align-items: center;
+      justify-content: flex-start;
     }
 
     /* Chat Layout */
     .chat-container {
       display: flex;
       width: 100%;
-      height: calc(100vh - 80px - 3rem - 24px);
-      /* Full height minus header and padding */
+      height: calc(100vh - 80px - 3rem - 24px - 80px);
       max-width: 1000px;
-      /* Max width for the entire chat area */
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 0.75rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       overflow: hidden;
+      margin-bottom: 1rem;
     }
 
     .chat-list {
@@ -118,16 +114,45 @@
       overflow-y: auto;
       background-color: #f8f8f8;
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-list-search {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      background-color: #f0f0f0;
+      flex-shrink: 0;
+    }
+
+    .chat-list-search input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .chat-list-search input:focus {
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+    }
+
+    .chat-list-items-container {
+      overflow-y: auto;
+      flex-grow: 1;
     }
 
     .chat-list-item {
       display: flex;
       align-items: center;
-      padding: 1rem 1.25rem;
+      padding: 0.75rem 1.25rem;
       border-bottom: 1px solid #eee;
       cursor: pointer;
       transition: background-color 0.2s;
-      gap: 1rem;
+      gap: 0.75rem;
+      flex-direction: row;
     }
 
     .chat-list-item:hover {
@@ -145,7 +170,34 @@
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
+      flex-shrink: 0;
+      margin-bottom: 0;
     }
+
+    .chat-list-item .user-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .chat-list-item .user-name {
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-list-item .user-email {
+      font-size: 0.8em;
+      color: #777;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
 
     .chat-window {
       flex-grow: 1;
@@ -169,29 +221,86 @@
       object-fit: cover;
     }
 
+    .chat-header .header-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .chat-header .header-name {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .chat-header .header-email {
+      font-size: 0.85em;
+      color: #777;
+    }
+
+
     .chat-messages {
       flex-grow: 1;
       padding: 1.5rem;
       overflow-y: auto;
       background-color: #fdfcff;
+      display: flex;
+      flex-direction: column;
     }
 
-    .chat-message-placeholder {
-      background-color: #e0e0e0;
-      /* Placeholder color */
+    /* Untuk tombol hapus pesan */
+    .message-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .chat-message-received,
+    .chat-message-sent {
       border-radius: 0.5rem;
-      height: 50px;
-      /* Fixed height for placeholder messages */
-      margin-bottom: 1rem;
-      width: 70%;
-      /* Example width for messages */
+      padding: 0.75rem 1rem;
+      width: fit-content;
+      max-width: 70%;
     }
 
-    .chat-message-placeholder:nth-child(even) {
+    .chat-message-received {
+      background-color: #e0e0e0;
+      align-self: flex-start;
+      margin-right: auto;
+    }
+
+    .chat-message-sent {
+      background-color: #f8e5f0;
+      color: #333;
+      align-self: flex-end;
       margin-left: auto;
-      /* Align some messages to the right */
-      background-color: #d1e7dd;
-      /* Different color for 'sent' messages */
+    }
+
+    .delete-message-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ef4444;
+      font-size: 1.1rem;
+      padding: 0.25rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .message-wrapper.show-delete-btn .delete-message-btn {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .message-wrapper.sent .delete-message-btn {
+      order: -1;
+    }
+
+    .message-wrapper.received .delete-message-btn {
+      order: 1;
     }
 
     .chat-input-area {
@@ -224,11 +333,65 @@
       padding: 0.5rem;
       border-radius: 0.25rem;
       transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .chat-input-area button:hover {
       background-color: #f0f0f0;
     }
+
+    /* Shortcut Hubungi Admin (Kecil) */
+    .contact-admin-shortcut {
+      width: fit-content;
+      max-width: 300px;
+      background-color: #f0f0f0;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      margin-top: 1rem;
+
+      /* Pastikan URL gambar ini benar atau gunakan jalur lokal */
+      background-image: url('asset/images/titipgo_logo_remove.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-admin-shortcut:hover {
+      transform: translateY(-2px);
+    }
+
+    .contact-admin-shortcut::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 0.5rem;
+      z-index: 1;
+    }
+
+    .contact-admin-shortcut span {
+      position: relative;
+      z-index: 2;
+      color: #fff;
+      font-weight: 600;
+    }
+
 
     /* Modal (Popup) Styling for Logout */
     .modal-overlay {
@@ -307,7 +470,6 @@
 
     .modal-buttons .btn-confirm.success {
       background-color: #22c55e;
-      /* Green for success */
       border-color: #22c55e;
     }
 
@@ -321,18 +483,19 @@
   <div class="flex h-full w-full">
     <div class="sidebar">
       <div class="sidebar-header">
-        <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="TitipGo" />
+        <!-- Pastikan URL gambar ini benar atau gunakan jalur lokal -->
+        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
       </div>
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
+            <span>📋</span> <a href="toko_dashboard.html">Dashboard Toko</a> <!-- Sesuaikan tautan -->
           </li>
           <li>
-            <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
+            <span>📦</span> <a href="toko_produk.html">Produk</a> <!-- Sesuaikan tautan -->
           </li>
           <li class="active">
-            <span>💬</span> <a href="jastiper_chat.html">Chat</a>
+            <span>💬</span> <a href="toko_chat.html">Chat</a>
           </li>
           <li id="logout-button-sidebar"><span>➡️</span> Logout</li>
         </ul>
@@ -346,65 +509,28 @@
 
       <div class="chat-container">
         <div class="chat-list">
-          <div class="chat-list-item active">
-            <img src="https://placehold.co/40x40/FF5733/FFFFFF?text=LN" alt="User Avatar" />
-            <span>Liliana Nasution</span>
+          <div class="chat-list-search">
+            <input type="text" id="search-user-input" placeholder="Cari pengguna berdasarkan email..." />
           </div>
-          <div class="chat-list-item">
-            <img src="https://placehold.co/40x40/33FF57/FFFFFF?text=AU" alt="User Avatar" />
-            <span>Akunpengguna31</span>
-          </div>
-          <div class="chat-list-item">
-            <img src="https://placehold.co/40x40/3357FF/FFFFFF?text=R4" alt="User Avatar" />
-            <span>Ryan45</span>
-          </div>
-          <div class="chat-list-item">
-            <img src="https://placehold.co/40x40/FF33E0/FFFFFF?text=R5" alt="User Avatar" />
-            <span>Ryan5</span>
+          <div id="chat-list-items-container" class="chat-list-items-container">
+            <!-- Chat items will be loaded here dynamically -->
           </div>
         </div>
 
         <div class="chat-window">
           <div class="chat-header">
-            <img src="https://placehold.co/40x40/FF5733/FFFFFF?text=LN" alt="User Avatar" />
-            <span class="font-semibold text-lg">Liliana Nasution</span>
+            <img id="chat-header-avatar" src="https://placehold.co/40x40/FF5733/FFFFFF?text=LN" alt="User Avatar" />
+            <div class="header-info">
+              <span id="chat-header-name" class="header-name">Pilih Chat</span>
+              <span id="chat-header-email" class="header-email"></span>
+            </div>
           </div>
-          <div class="chat-messages">
-            <!-- Example chat messages (placeholders) -->
-            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
-              Halo Liliana, ada yang bisa saya bantu?
-            </div>
-            <div class="p-3 rounded-lg mb-2 bg-pink-100 self-end max-w-[70%] ml-auto">
-              Hai! Saya ingin menanyakan tentang produk terbaru.
-            </div>
-            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
-              Tentu, produk apa yang Anda maksud?
-            </div>
-            <div class="p-3 rounded-lg mb-2 bg-pink-100 self-end max-w-[70%] ml-auto">
-              Yang kategori fashion, apakah ada tas baru?
-            </div>
-            <div class="p-3 rounded-lg mb-2 bg-gray-200 self-start max-w-[70%]">
-              Ya, kami baru saja menambahkan beberapa koleksi tas terbaru. Anda bisa melihatnya di bagian "Toko Kita".
-            </div>
-            <!-- More messages can be added here dynamically -->
+          <div id="chat-messages" class="chat-messages">
+            <div class="text-center text-gray-500 p-4">Pilih pengguna untuk memulai percakapan.</div>
           </div>
           <div class="chat-input-area">
-            <button>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-6 h-6 text-gray-500">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-            </button>
-            <button>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-6 h-6 text-gray-500">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15.182 15.182a4.5 4.5 0 0 1-6.364-6.364M12 20.25c4.97 0 9-3.694 9-8.25S16.97 3.75 12 3.75 3 7.444 3 12c0 2.104.859 4.023 2.273 5.484m-4.406-4.406c.032.032.05.068.08.106V12a9 9 0 0 0 17.999.327l-.01.012c-.2.2-.45.418-.703.626C15.91 19.824 12 20.25 12 20.25Z" />
-              </svg>
-            </button>
-            <input type="text" placeholder="Ketik pesan..." class="chat-input" />
-            <button>
+            <input type="text" id="chat-input" placeholder="Ketik pesan..." class="chat-input" disabled />
+            <button id="send-message-button" title="Send message" disabled>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                 stroke="currentColor" class="w-6 h-6 text-pink-500">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -414,6 +540,13 @@
           </div>
         </div>
       </div>
+
+      <!-- Shortcut Hubungi Admin -->
+      <div id="contact-admin-shortcut" class="contact-admin-shortcut">
+        <span>💬 Hubungi Admin</span>
+      </div>
+      <!-- Akhir Shortcut Hubungi Admin -->
+
     </div>
   </div>
 
@@ -430,7 +563,6 @@
     </div>
   </div>
 
-  <!-- Custom Confirmation/Alert Modal (for general messages) -->
   <div id="custom-confirm-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
@@ -443,23 +575,41 @@
   </div>
 
   <script type="module">
-    // Import Firebase functions from firebase-config.js
+    // Impor instance auth dan db dari firebase-config.js Anda
     import {
       auth,
-      db,
+      db
+    } from './js/firebase-config.js';
+
+    // Impor fungsi-fungsi Auth dan Firestore yang spesifik langsung dari CDN Firebase SDK
+    import {
       signOut,
-      onAuthStateChanged,
+      onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js'; // Untuk Auth
+    import {
       collection,
       query,
       where,
       getDocs,
       getDoc,
-      doc
-    } from './firebase-config.js';
+      doc,
+      addDoc,
+      onSnapshot,
+      orderBy,
+      serverTimestamp,
+      deleteDoc,
+      setDoc // Tambahkan ini jika Anda menggunakan setDoc di toko_chat.html
+    } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js'; // Untuk Firestore
 
-    let currentTokoId = null;
+    // currentSenderId adalah UID dari toko yang login
+    let currentSenderId = null;
+    let currentSenderDisplayName = null;
+    let currentRecipientId = null;
+    let unsubscribeFromMessages = null;
 
-    // Custom Confirmation/Alert Modal elements
+    let adminUser = null; // Akan menyimpan data admin
+
+    // --- Custom Confirmation/Alert Modal elements ---
     const customConfirmModal = document.getElementById('custom-confirm-modal');
     const customConfirmTitle = document.getElementById('custom-confirm-title');
     const customConfirmMessage = document.getElementById('custom-confirm-message');
@@ -467,22 +617,27 @@
     const customConfirmBtn = document.getElementById('custom-confirm-btn');
     let customConfirmCallback = null;
 
-    // Function to show custom confirmation/alert modal
     function showCustomConfirm(message, callback, isConfirmation = false) {
       customConfirmMessage.textContent = message;
       customConfirmCallback = callback;
       customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
       if (isConfirmation) {
         customCancelBtn.classList.remove('hidden');
+        customConfirmBtn.textContent = "Ya, Hapus";
+        customConfirmBtn.classList.remove('btn-confirm');
+        customConfirmBtn.classList.add('btn-confirm');
       } else {
         customCancelBtn.classList.add('hidden');
+        customConfirmBtn.textContent = "OK";
+        customConfirmBtn.classList.remove('btn-confirm');
+        customConfirmBtn.classList.add('btn-confirm');
       }
       customConfirmModal.classList.add('show');
     }
 
     customCancelBtn.addEventListener('click', () => {
       customConfirmModal.classList.remove('show');
-      customConfirmCallback = null; // Clear callback if cancelled
+      customConfirmCallback = null;
     });
 
     customConfirmBtn.addEventListener('click', () => {
@@ -490,79 +645,450 @@
       if (customConfirmCallback) {
         customConfirmCallback();
       }
-      customConfirmCallback = null; // Clear callback after execution
+      customConfirmCallback = null;
     });
 
-
-    // DOM Elements
-    const logoutButtonSidebar = document.getElementById("logout-button-sidebar"); // Changed ID
+    // --- DOM Elements ---
+    const logoutButtonSidebar = document.getElementById("logout-button-sidebar");
     const logoutModal = document.getElementById("logout-modal");
     const cancelLogoutButton = document.getElementById("cancel-logout");
     const confirmLogoutButton = document.getElementById("confirm-logout");
 
-    // Basic chat list interaction (for demo purposes)
-    const chatListItems = document.querySelectorAll(".chat-list-item");
-    const chatHeaderName = document.querySelector(".chat-header span");
-    const chatHeaderAvatar = document.querySelector(".chat-header img");
-    const chatMessagesContainer = document.querySelector(".chat-messages");
+    const chatListItemsContainer = document.getElementById("chat-list-items-container");
+    const chatHeaderName = document.getElementById("chat-header-name");
+    const chatHeaderEmail = document.getElementById("chat-header-email");
+    const chatHeaderAvatar = document.getElementById("chat-header-avatar");
+    const chatMessagesContainer = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-input");
+    const sendMessageButton = document.getElementById("send-message-button");
+    const searchUserInput = document.getElementById("search-user-input");
+    const contactAdminShortcut = document.getElementById("contact-admin-shortcut");
 
-    chatListItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        // Remove 'active' class from all items
-        chatListItems.forEach((li) => li.classList.remove("active"));
-        // Add 'active' class to the clicked item
-        item.classList.add("active");
-
-        // Update chat header with selected user's name and a generic avatar
-        const userName = item.querySelector("span").textContent;
-        chatHeaderName.textContent = userName;
-        // For a real app, you'd load the actual avatar based on the user
-        chatHeaderAvatar.src = item.querySelector("img").src; // Use the image from the clicked list item
-        chatMessagesContainer.innerHTML = ''; // Clear messages when switching chat
-        // In a real app, you'd fetch messages for the selected user here
-      });
-    });
-
-    // Dummy logic for sending messages (for demo purposes)
-    const chatInput = document.querySelector(".chat-input");
-    const sendMessageButton = document.querySelector(
-      ".chat-input-area button:last-child"
-    );
-
-    sendMessageButton.addEventListener("click", () => {
-      const messageText = chatInput.value.trim();
-      if (messageText) {
-        const newMessageDiv = document.createElement('div');
-        newMessageDiv.classList.add('p-3', 'rounded-lg', 'mb-2', 'bg-pink-100', 'self-end', 'max-w-[70%]', 'ml-auto');
-        newMessageDiv.textContent = messageText;
-        chatMessagesContainer.appendChild(newMessageDiv);
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
-        chatInput.value = ""; // Clear input
+    // --- Helper: Generate consistent avatar color ---
+    const stringHash = str => {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
       }
-    });
+      let color = '#';
+      for (let i = 0; i < 3; i++) {
+        let value = (hash >> (i * 8)) & 0xFF;
+        color += ('00' + value.toString(16)).substr(-2);
+      }
+      return color;
+    };
 
+    // --- Function to create a chat list item ---
+    function createChatListItem(user) {
+      const item = document.createElement('div');
+      item.classList.add('chat-list-item');
+      item.dataset.userId = user.uid;
+      item.dataset.userName = user.displayName || 'Pengguna Tidak Dikenal';
+      item.dataset.userEmail = user.email || 'email_tidak_ditemukan@example.com';
+      item.dataset.userAvatar = user.avatar_url || '';
+
+      const initials = (user.displayName || user.email || 'UN')
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+      const avatarColor = stringHash(user.email || user.uid);
+      const avatarSrc = user.avatar_url || `https://placehold.co/40x40/${avatarColor.substring(1)}/FFFFFF?text=${initials}`;
+
+      item.innerHTML = `
+                <img src="${avatarSrc}" alt="User Avatar" />
+                <div class="user-info">
+                    <span class="user-name">${user.displayName || 'Pengguna Tidak Dikenal'}</span>
+                    <span class="user-email">${user.email || 'email_tidak_ditemukan@example.com'}</span>
+                </div>
+            `;
+      item.addEventListener("click", () => handleChatListItemClick(user));
+      return item;
+    }
+
+    // --- Function to handle chat list item click ---
+    function handleChatListItemClick(user) {
+      if (unsubscribeFromMessages) {
+        unsubscribeFromMessages();
+        unsubscribeFromMessages = null;
+      }
+
+      // Hapus kelas 'active' dari semua item chat yang sudah ada
+      document.querySelectorAll(".chat-list-item").forEach((li) => li.classList.remove("active"));
+
+      // Tambahkan kelas 'active' ke item yang diklik, jika ada di DOM
+      const clickedItem = document.querySelector(`[data-user-id="${user.uid}"]`);
+      if (clickedItem) {
+        clickedItem.classList.add("active");
+      }
+      // Khusus untuk admin, jika tidak ada di daftar, kita tidak perlu menambahkan kelas 'active'
+
+      currentRecipientId = user.uid;
+      chatHeaderName.textContent = user.displayName || 'Pengguna Tidak Dikenal';
+      chatHeaderEmail.textContent = user.email || 'email_tidak_ditemukan@example.com';
+
+      const initials = (user.displayName || user.email || 'UN')
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+      const avatarColor = stringHash(user.email || user.uid);
+      chatHeaderAvatar.src = user.avatar_url || `https://placehold.co/40x40/${avatarColor.substring(1)}/FFFFFF?text=${initials}`;
+
+      chatMessagesContainer.innerHTML = ''; // Bersihkan pesan sebelumnya
+
+      loadAndListenToMessages(currentSenderId, currentRecipientId);
+
+      chatInput.disabled = false;
+      sendMessageButton.disabled = false;
+      chatInput.focus();
+    }
+
+    // --- Function to load and listen to messages ---
+    async function loadAndListenToMessages(senderId, receiverId) {
+      if (!senderId || !receiverId) {
+        chatMessagesContainer.innerHTML = '<div class="text-center text-gray-500 p-4">Pilih pengguna untuk memulai percakapan.</div>';
+        chatInput.disabled = true;
+        sendMessageButton.disabled = true;
+        return;
+      }
+
+      const chatId = [senderId, receiverId].sort().join('_');
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const q = query(messagesRef, orderBy("timestamp"));
+
+      chatMessagesContainer.innerHTML = '<div class="text-center text-gray-500 p-4">Memuat pesan...</div>';
+
+      unsubscribeFromMessages = onSnapshot(q, (snapshot) => {
+        let initialLoad = chatMessagesContainer.innerHTML.includes('Memuat pesan...');
+        chatMessagesContainer.innerHTML = '';
+
+        snapshot.docChanges().forEach((change) => {
+          const messageData = change.doc.data();
+          const messageId = change.doc.id;
+          appendMessageToChat({ ...messageData, id: messageId }, currentSenderId);
+
+          if (!initialLoad && messageData.senderId !== currentSenderId && Notification.permission === "granted") {
+            new Notification(`Pesan baru dari ${chatHeaderName.textContent}`, {
+              body: messageData.message,
+              icon: chatHeaderAvatar.src,
+              silent: false
+            });
+          }
+        });
+
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      }, (error) => {
+        console.error("Error listening to messages:", error);
+        chatMessagesContainer.innerHTML = '<div class="text-center text-red-500 p-4">Gagal memuat pesan.</div>';
+      });
+    }
+
+    // --- Function to append a message to chat UI ---
+    function appendMessageToChat(messageData, currentAppSenderId) {
+      const messageWrapper = document.createElement('div');
+      messageWrapper.classList.add('message-wrapper');
+      messageWrapper.dataset.messageId = messageData.id;
+      messageWrapper.dataset.chatId = [messageData.senderId, messageData.receiverId].sort().join('_');
+
+      const messageDiv = document.createElement('div');
+      messageDiv.textContent = messageData.message;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.classList.add('delete-message-btn');
+      deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+      deleteBtn.title = 'Hapus pesan';
+
+      if (messageData.senderId === currentAppSenderId) {
+        messageDiv.classList.add('chat-message-sent');
+        messageWrapper.classList.add('sent');
+        messageWrapper.appendChild(deleteBtn);
+        messageWrapper.appendChild(messageDiv);
+      } else {
+        messageDiv.classList.add('chat-message-received');
+        messageWrapper.classList.add('received');
+        messageWrapper.appendChild(messageDiv);
+        messageWrapper.appendChild(deleteBtn);
+      }
+
+      messageWrapper.addEventListener('dblclick', () => {
+        messageWrapper.classList.toggle('show-delete-btn');
+        setTimeout(() => {
+          messageWrapper.classList.remove('show-delete-btn');
+        }, 5000);
+      });
+
+      deleteBtn.addEventListener('click', () => {
+        const msgId = messageWrapper.dataset.messageId;
+        const cId = messageWrapper.dataset.chatId;
+
+        showCustomConfirm("Apakah Anda yakin ingin menghapus pesan ini?", async () => {
+          await deleteMessage(cId, msgId);
+        }, true);
+      });
+
+      chatMessagesContainer.appendChild(messageWrapper);
+    }
+
+    // --- Function to delete a message from Firestore ---
+    async function deleteMessage(chatId, messageId) {
+      try {
+        const messageDocRef = doc(db, "chats", chatId, "messages", messageId);
+        await deleteDoc(messageDocRef);
+        console.log("Pesan berhasil dihapus:", messageId);
+      } catch (error) {
+        console.error("Error menghapus pesan:", error);
+        showCustomConfirm("Gagal menghapus pesan. Terjadi kesalahan.", () => { });
+      }
+    }
+
+    // --- Send message logic ---
+    sendMessageButton.addEventListener("click", sendMessage);
     chatInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        sendMessageButton.click();
+        e.preventDefault();
+        sendMessage();
       }
     });
 
-    // --- Autentikasi dan Pemuatan Data Awal ---
-    onAuthStateChanged(auth, (user) => {
+    async function sendMessage() {
+      const messageText = chatInput.value.trim();
+      if (messageText && currentSenderId && currentRecipientId) {
+        try {
+          const chatId = [currentSenderId, currentRecipientId].sort().join('_');
+          await addDoc(collection(db, "chats", chatId, "messages"), {
+            senderId: currentSenderId,
+            senderName: currentSenderDisplayName,
+            receiverId: currentRecipientId,
+            message: messageText,
+            timestamp: serverTimestamp()
+          });
+          chatInput.value = "";
+        } catch (error) {
+          console.error("Error sending message:", error);
+          showCustomConfirm("Gagal mengirim pesan. Silakan coba lagi.", () => { });
+        }
+      } else if (!currentRecipientId) {
+        showCustomConfirm("Pilih pengguna untuk mengirim pesan.", () => { });
+      } else if (!currentSenderId) {
+        showCustomConfirm("Data toko tidak ditemukan untuk mengirim pesan.", () => { });
+      }
+    }
+
+    // --- Search functionality ---
+    let searchTimeout;
+    searchUserInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const searchTerm = searchUserInput.value.trim();
+        if (searchTerm.length > 2) {
+          searchUsersByEmail(searchTerm);
+        } else if (searchTerm.length === 0) {
+          loadInitialChatList();
+        }
+      }, 500);
+    });
+
+    async function searchUsersByEmail(emailPartial) {
+      chatListItemsContainer.innerHTML = `<div class="p-4 text-gray-500">Mencari pengguna...</div>`;
+      try {
+        const usersRef = collection(db, "users");
+        // Cari pengguna berdasarkan email yang cocok
+        const q = query(usersRef,
+          where("email", ">=", emailPartial),
+          where("email", "<=", emailPartial + '\uf8ff'));
+
+        const querySnapshot = await getDocs(q);
+
+        chatListItemsContainer.innerHTML = '';
+        let foundUsersCount = 0;
+        let firstUser = null;
+
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const user = {
+            uid: doc.id,
+            email: userData.email,
+            displayName: userData.displayName || userData.nama || userData.email.split('@')[0],
+            avatar_url: userData.avatar_url
+          };
+
+          // Filter: Jangan tampilkan user yang sama dengan Toko yang sedang login, atau admin.
+          if (user.uid !== currentSenderId && user.uid !== adminUser?.uid) {
+            chatListItemsContainer.appendChild(createChatListItem(user));
+            if (!firstUser) {
+              firstUser = user;
+            }
+            foundUsersCount++;
+          }
+        });
+
+        if (foundUsersCount > 0) {
+          handleChatListItemClick(firstUser);
+        } else {
+          chatListItemsContainer.innerHTML = `<div class="p-4 text-gray-500">Tidak ada pengguna ditemukan dengan email '${emailPartial}'.</div>`;
+          chatHeaderName.textContent = 'Pilih Chat';
+          chatHeaderEmail.textContent = '';
+          chatHeaderAvatar.src = 'https://placehold.co/40x40/CCCCCC/FFFFFF?text=UN';
+          chatMessagesContainer.innerHTML = '<div class="text-center text-gray-500 p-4">Pilih pengguna untuk memulai percakapan.</div>';
+          chatInput.disabled = true;
+          sendMessageButton.disabled = true;
+        }
+      } catch (error) {
+        console.error("Error searching users:", error);
+        showCustomConfirm("Terjadi kesalahan saat mencari pengguna.", () => { });
+      }
+    }
+
+    // --- Initial loading of chat list (placeholder for actual recent chats) ---
+    function loadInitialChatList() {
+      chatListItemsContainer.innerHTML = `<div class="p-4 text-gray-500">Silakan gunakan fitur pencarian untuk menemukan pengguna.</div>`;
+      chatHeaderName.textContent = 'Pilih Chat';
+      chatHeaderEmail.textContent = '';
+      chatHeaderAvatar.src = 'https://placehold.co/40x40/CCCCCC/FFFFFF?text=UN';
+      chatMessagesContainer.innerHTML = '<div class="text-center text-gray-500 p-4">Pilih pengguna untuk memulai percakapan.</div>';
+      chatInput.disabled = true;
+      sendMessageButton.disabled = true;
+    }
+
+    // --- Function to fetch Admin data ---
+    async function fetchAdminData() {
+      // GANTI INI DENGAN ID DOKUMEN ADMIN DI KOLEKSI 'admin' ANDA!
+      // Contoh: 'main_admin_profile' atau UID akun admin jika itu ID dokumennya
+      const adminDocId = "7IDLqh3FefzdIiUFE1Z7"; // <--- **GANTI INI!**
+
+      // Ubah path koleksi dari "users" menjadi "admin"
+      const adminDocRef = doc(db, "admin", adminDocId);
+
+      try {
+        const adminDocSnap = await getDoc(adminDocRef);
+        if (adminDocSnap.exists()) {
+          const adminData = adminDocSnap.data();
+
+          // Pastikan email ada, jika tidak, berikan nilai default.
+          const adminEmail = adminData.email || "admin@titipgo.com";
+
+          adminUser = {
+            uid: adminDocSnap.id,
+            // Jika displayName tidak ada di dokumen, gunakan 'Admin TitipGo'
+            displayName: adminData.displayName || "Admin TitipGo",
+            email: adminEmail,
+            // Jika avatar_url tidak ada, biarkan kosong atau berikan URL default
+            avatar_url: adminData.avatar_url || ''
+          };
+          console.log("Admin data loaded from 'admin' collection:", adminUser.displayName, adminUser.email);
+        } else {
+          console.warn("Dokumen admin tidak ditemukan di Firestore dengan ID:", adminDocId, "di koleksi 'admin'.");
+          // Jika dokumen tidak ada, berikan nilai adminUser default yang masih bisa digunakan
+          adminUser = {
+            uid: adminDocId, // Gunakan ID yang diharapkan meskipun dokumen tidak ada
+            displayName: "Admin TitipGo (Data Tidak Lengkap)",
+            email: "admin@titipgo.com",
+            avatar_url: ''
+          };
+          showCustomConfirm("Data admin tidak ditemukan di database. Chat dengan admin mungkin terbatas.", () => { });
+        }
+      } catch (error) {
+        console.error("Error fetching admin data from 'admin' collection:", error);
+        // Jika terjadi error, berikan nilai adminUser default juga
+        adminUser = {
+          uid: adminDocId,
+          displayName: "Admin TitipGo (Error Memuat)",
+          email: "admin@titipgo.com",
+          avatar_url: ''
+        };
+        showCustomConfirm("Terjadi kesalahan saat memuat data admin. Tidak dapat menghubungi admin.", () => { });
+      }
+    }
+
+    // --- Event Listener for Contact Admin Shortcut ---
+    contactAdminShortcut.addEventListener('click', async () => {
+      console.log("Contact Admin Shortcut clicked!"); // Debug
+      console.log("currentSenderId:", currentSenderId); // Debug
+
+      if (!currentSenderId) {
+        showCustomConfirm("Data toko Anda belum dimuat. Tidak dapat memulai chat dengan admin. Pastikan Anda login sebagai toko.", () => { });
+        return;
+      }
+
+      console.log("adminUser before fetch:", adminUser); // Debug
+      if (!adminUser) {
+        // Coba muat ulang data admin jika belum ada (mungkin ada masalah di pemuatan awal)
+        await fetchAdminData();
+        console.log("adminUser after fetch (attempt):", adminUser); // Debug
+        if (!adminUser || !adminUser.uid) { // Jika setelah coba lagi masih kosong atau UID-nya null/undefined
+          showCustomConfirm("Data admin belum berhasil dimuat atau tidak lengkap. Silakan coba lagi.", () => { });
+          return;
+        }
+      }
+
+      // Panggil handleChatListItemClick dengan data admin
+      console.log("Calling handleChatListItemClick with adminUser:", adminUser); // Debug
+      handleChatListItemClick(adminUser);
+    });
+
+
+    // --- Authentication and Initial Data Load ---
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        currentTokoId = user.uid;
-        console.log("Jastiper ID:", currentTokoId);
-        // No specific data loading for chat page yet, but useful for authentication context
+        // User UID sekarang adalah ID Toko
+        currentSenderId = user.uid;
+        console.log("ID Toko (dari auth):", currentSenderId);
+
+        // Panggil fetchAdminData() segera setelah user terautentikasi
+        await fetchAdminData();
+
+        try {
+          // Ambil detail toko dari koleksi 'users' menggunakan UID yang login
+          const tokoDocRef = doc(db, "users", currentSenderId);
+          const tokoDocSnap = await getDoc(tokoDocRef);
+
+          if (tokoDocSnap.exists()) {
+            const tokoData = tokoDocSnap.data();
+            // Gunakan nama toko dari dokumen user sebagai display name pengirim
+            currentSenderDisplayName = tokoData.displayName || tokoData.nama_toko || tokoData.email.split('@')[0];
+
+            if (!currentSenderDisplayName) {
+              console.warn("Nama toko Anda tidak ditemukan. Pesan mungkin tidak menampilkan nama pengirim.");
+              showCustomConfirm("Nama toko Anda tidak ditemukan. Pesan mungkin tidak menampilkan nama pengirim.", () => { });
+            }
+            console.log("Chat sender akan menjadi:", currentSenderDisplayName, "(ID:", currentSenderId, ")");
+
+          } else {
+            console.error("Data profil toko tidak ditemukan untuk UID:", currentSenderId);
+            showCustomConfirm("Data profil toko tidak ditemukan. Pesan tidak dapat dikirim.", () => { });
+            // Anda bisa menambahkan redirect ke halaman profil toko jika diperlukan
+          }
+
+        } catch (error) {
+          console.error("Error fetching toko data:", error);
+          showCustomConfirm("Terjadi kesalahan saat memuat data toko Anda.", () => { });
+        }
+
+        // Request Notification permission
+        if ("Notification" in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+              console.log("Notification permission granted.");
+            } else {
+              console.warn("Notification permission denied.");
+            }
+          });
+        }
+
+        loadInitialChatList(); // Muat tampilan chat awal
+
       } else {
-        // User tidak login, arahkan ke halaman login
         console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
         showCustomConfirm("Anda belum login. Silakan login terlebih dahulu.", () => {
-          window.location.href = "halaman_login_anda.html";
+          window.location.href = "halaman_login_anda.html"; // Ganti dengan URL halaman login Anda
         });
       }
     });
 
-    // Script to highlight sidebar item
+    // --- Sidebar highlight logic ---
     document.addEventListener("DOMContentLoaded", function () {
       const currentPath = window.location.pathname.split("/").pop();
       const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
@@ -575,12 +1101,10 @@
 
           let isLinkActive = false;
 
+          // Sesuaikan dengan nama file halaman toko Anda
           if (currentPath === linkFileName) {
             isLinkActive = true;
-          } else if (
-            currentPath === "" &&
-            linkFileName === "jastiper_dashboard.html"
-          ) {
+          } else if (currentPath === "" && linkFileName === "toko_dashboard.html") {
             isLinkActive = true;
           }
 
@@ -589,16 +1113,13 @@
           } else {
             item.classList.remove("active");
           }
-        } else if (
-          item.id === "logout-button-sidebar" &&
-          currentPath === "logout"
-        ) {
+        } else if (item.id === "logout-button-sidebar" && currentPath === "logout") {
           item.classList.add("active");
         }
       });
     });
 
-    // Logout functionality
+    // --- Logout functionality ---
     logoutButtonSidebar.addEventListener("click", () => {
       logoutModal.classList.add("show");
     });
@@ -611,9 +1132,8 @@
       try {
         await signOut(auth);
         console.log("Berhasil logout dari Firebase.");
-        localStorage.removeItem("tokoId"); // Hapus tokoId dari local storage
         showCustomConfirm("Anda telah logout.", () => {
-          window.location.href = "halaman_login_anda.html"; // Arahkan ke halaman login
+          window.location.href = "halaman_login_anda.html"; // Ganti dengan URL halaman login Anda
         });
         logoutModal.classList.remove("show");
       } catch (error) {
