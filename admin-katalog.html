@@ -34,7 +34,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.1); 
+        background-color: rgba(0, 0, 0, 0.1);
         z-index: 0;
         border-radius: inherit;
       } */
@@ -156,6 +156,11 @@
         <p class="text-lg font-semibold">Manajemen Katalog</p>
         <div class="flex gap-3 text-right ml-auto">
           <a
+            href="admin-notifikasi.html"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+            ><i class="fas fa-bell mr-2"></i> Notifikasi</a
+          >
+          <a
             href="#"
             class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
             ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
@@ -186,32 +191,24 @@
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
           >
             <option value="">Semua Status</option>
-            <option value="Disetujui">Disetujui</option>
-            <option value="Pending">Pending</option>
-            <option value="Ditolak">Ditolak</option>
           </select>
         </div>
         <div>
-          <label for="jastiper" class="sr-only">Nama Jastiper</label>
+          <label for="toko" class="sr-only">Nama Toko</label>
           <select
-            id="jastiper"
+            id="toko"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
           >
-            <option value="">Semua Jastiper</option>
+            <option value="">Semua Toko</option>
           </select>
         </div>
         <div>
-          <label for="category" class="sr-only">Kategori</label>
+          <label for="kategori" class="sr-only">Kategori</label>
           <select
-            id="category"
+            id="kategori"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
           >
             <option value="">Semua Kategori</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Elektronik">Elektronik</option>
-            <option value="Buku">Buku</option>
-            <option value="Koleksi">Koleksi</option>
-            <option value="Alat peledak">Alat peledak</option>
           </select>
         </div>
       </div>
@@ -250,7 +247,7 @@
                 scope="col"
                 class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
               >
-                Jastiper
+                Toko
               </th>
               <th
                 scope="col"
@@ -325,20 +322,13 @@
         };
         firebase.initializeApp(firebaseConfig);
       }
-      const db = firebase.firestore(); // Inisialisasi db dengan sintaksis compat
-      // const auth = firebase.auth(); // Jika Anda butuh auth juga
-
-      // Hapus bagian ini karena sudah dipindahkan ke blok script utama di bawah
-      // const querySnapshot = await getDocs(collection(db, "katalog"));
-      // querySnapshot.forEach((doc) => {
-      //   console.log(doc.id, " => ", doc.data());
-      // });
+      const db = firebase.firestore();
     </script>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Sidebar active link logic
-        const currentPath = window.location.pathname.split("/").pop(); // Get just the filename
+        // Logika tautan sidebar aktif
+        const currentPath = window.location.pathname.split("/").pop();
         const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
         sidebarLinks.forEach((link) => {
@@ -360,19 +350,20 @@
           }
         });
 
-        // Firebase Data Loading, Search, and Filter
+        // Pemuatan Data Firebase, Pencarian, dan Filter
         const catalogTableBody = document.getElementById("catalogTableBody");
         const noDataMessage = document.getElementById("noDataMessage");
         const searchInput = document.getElementById("search");
         const statusFilter = document.getElementById("status");
-        const jastiperFilter = document.getElementById("jastiper");
-        const categoryFilter = document.getElementById("category");
+        const tokoFilter = document.getElementById("toko");
+        // Mengubah dari 'category' ke 'kategori' sesuai dengan ID HTML
+        const kategoriFilter = document.getElementById("kategori");
 
-        let allProducts = []; // To store all products fetched from Firebase
+        let allProducts = [];
         const itemsPerPage = 10;
         let currentPage = 1;
 
-        // Function to format price to IDR
+        // Fungsi untuk memformat harga ke IDR
         function formatRupiah(amount) {
           return new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -385,7 +376,6 @@
           catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-gray-500">Memuat data katalog...</td></tr>`;
           noDataMessage.classList.add("hidden");
           try {
-            // Periksa apakah 'db' telah diinisialisasi secara global dari script di atas
             if (typeof db === "undefined" || !db) {
               console.error(
                 "Firebase Firestore tidak diinisialisasi. Pastikan SDK Firebase dimuat dengan benar."
@@ -394,22 +384,46 @@
               return;
             }
 
-            // Menggunakan sintaksis lama (compat) untuk Firestore
             const productsCol = db.collection("produk");
-            const productSnapshot = await productsCol.get(); // Menggunakan .get() untuk mengambil data
+            const tokoCol = db.collection("toko");
 
-            allProducts = []; // Clear previous data
-            const uniqueJastipers = new Set();
+            const productSnapshot = await productsCol.get();
+            const tokoSnapshot = await tokoCol.get();
+
+            const tokoMap = new Map();
+            tokoSnapshot.forEach((doc) => {
+              // Asumsi 'namaToko' adalah field yang berisi nama toko di koleksi 'toko'
+              tokoMap.set(doc.id, doc.data().namaToko);
+            });
+
+            allProducts = [];
+            const uniqueTokos = new Set();
+            const uniqueKategori = new Set(); // Mengubah ini ke uniqueKategori
+            const uniqueStatus = new Set();
+
             productSnapshot.forEach((doc) => {
               const data = doc.data();
-              allProducts.push({ id: doc.id, ...data });
-              if (data.jastiper) {
-                uniqueJastipers.add(data.jastiper);
+              // Asumsi 'idToko' adalah field di koleksi 'produk' yang menyimpan ID toko
+              const tokoId = data.tokoId;
+              const namaToko = tokoMap.get(tokoId) || "Toko Tidak Ditemukan";
+
+              allProducts.push({ id: doc.id, namaToko: namaToko, ...data });
+
+              if (namaToko) {
+                uniqueTokos.add(namaToko);
+              }
+              // Menggunakan 'kategori' sebagai nama field dari produk di Firebase
+              if (data.kategori) {
+                uniqueKategori.add(data.kategori);
+              }
+              if (data.status) {
+                uniqueStatus.add(data.status);
               }
             });
 
-            populateJastiperFilter(Array.from(uniqueJastipers)); // Populate jastiper filter
-            // Initial render with all data
+            populateTokoFilter(Array.from(uniqueTokos));
+            populateKategoriFilter(Array.from(uniqueKategori)); // Memanggil fungsi baru untuk kategori
+            populateStatusFilter(Array.from(uniqueStatus));
             renderTable();
           } catch (error) {
             console.error("Error fetching catalog data: ", error);
@@ -417,18 +431,39 @@
           }
         }
 
-        function populateJastiperFilter(jastipers) {
-          jastiperFilter.innerHTML = '<option value="">Semua Jastiper</option>'; // Keep "Semua Jastiper" option
-          jastipers.sort().forEach((jastiper) => {
+        function populateTokoFilter(tokos) {
+          tokoFilter.innerHTML = '<option value="">Semua Toko</option>';
+          tokos.sort().forEach((toko) => {
             const option = document.createElement("option");
-            option.value = jastiper;
-            option.textContent = jastiper;
-            jastiperFilter.appendChild(option);
+            option.value = toko;
+            option.textContent = toko;
+            tokoFilter.appendChild(option);
+          });
+        }
+
+        // Fungsi baru untuk mengisi filter kategori (menggunakan 'kategori')
+        function populateKategoriFilter(kategoriArray) {
+          kategoriFilter.innerHTML = '<option value="">Semua Kategori</option>';
+          kategoriArray.sort().forEach((kategori) => {
+            const option = document.createElement("option");
+            option.value = kategori;
+            option.textContent = kategori;
+            kategoriFilter.appendChild(option);
+          });
+        }
+
+        function populateStatusFilter(statusArray) {
+          statusFilter.innerHTML = '<option value="">Semua Status</option>';
+          statusArray.sort().forEach((status) => {
+            const option = document.createElement("option");
+            option.value = status;
+            option.textContent = status;
+            statusFilter.appendChild(option);
           });
         }
 
         function renderTable() {
-          catalogTableBody.innerHTML = ""; // Clear existing rows
+          catalogTableBody.innerHTML = "";
           const filteredProducts = applyFilters(allProducts);
 
           if (filteredProducts.length === 0) {
@@ -440,7 +475,6 @@
             noDataMessage.classList.add("hidden");
           }
 
-          // Apply pagination
           const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
           const startIndex = (currentPage - 1) * itemsPerPage;
           const endIndex = Math.min(
@@ -454,12 +488,11 @@
 
           paginatedProducts.forEach((product, index) => {
             const row = document.createElement("tr");
-            row.classList.add("bg-white", "bg-opacity-80"); // Apply transparent background to each row
-            const displayIndex = startIndex + index + 1; // Calculate actual display index
+            row.classList.add("bg-white", "bg-opacity-80");
+            const displayIndex = startIndex + index + 1;
 
-            // Determine status styling
             let statusText = product.status || "Tidak Diketahui";
-            let statusClass = "bg-gray-100 text-gray-800"; // Default
+            let statusClass = "bg-gray-100 text-gray-800";
             if (statusText === "Disetujui") {
               statusClass = "bg-green-100 text-green-800";
             } else if (statusText === "Pending") {
@@ -482,10 +515,10 @@
                         product.namaBarang || "-"
                       }</td>
                       <td class="py-3 px-4 text-sm text-gray-700">${
-                        product.kategori || "-"
+                        product.kategori || "-" // Menggunakan 'kategori' untuk tampilan
                       }</td>
                       <td class="py-3 px-4 text-sm text-gray-700">${
-                        product.jastiper || "-"
+                        product.namaToko || "-"
                       }</td>
                       <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
                         product.harga || 0
@@ -512,16 +545,37 @@
             catalogTableBody.appendChild(row);
           });
 
+          document.querySelectorAll(".delete-button").forEach((button) => {
+            button.addEventListener("click", function (event) {
+              event.preventDefault();
+              const productId = this.dataset.id;
+              if (confirm("Apakah Anda yakin ingin menghapus katalog ini?")) {
+                deleteProduct(productId);
+              }
+            });
+          });
+
           updatePaginationControls(filteredProducts.length, totalPages);
         }
 
+        async function deleteProduct(productId) {
+          try {
+            await db.collection("produk").doc(productId).delete();
+            alert("Katalog berhasil dihapus!");
+            fetchCatalogData();
+          } catch (error) {
+            console.error("Error removing document: ", error);
+            alert("Gagal menghapus katalog: " + error.message);
+          }
+        }
+
         function applyFilters(products) {
-          let filtered = [...products]; // Create a shallow copy
+          let filtered = [...products];
 
           const searchTerm = searchInput.value.toLowerCase();
           const selectedStatus = statusFilter.value;
-          const selectedJastiper = jastiperFilter.value;
-          const selectedCategory = categoryFilter.value;
+          const selectedToko = tokoFilter.value;
+          const selectedKategori = kategoriFilter.value; // Menggunakan selectedKategori
 
           if (searchTerm) {
             filtered = filtered.filter((product) =>
@@ -535,15 +589,16 @@
             );
           }
 
-          if (selectedJastiper) {
+          if (selectedToko) {
             filtered = filtered.filter(
-              (product) => product.jastiper === selectedJastiper
+              (product) => product.namaToko === selectedToko
             );
           }
 
-          if (selectedCategory) {
+          if (selectedKategori) {
+            // Memfilter berdasarkan selectedKategori
             filtered = filtered.filter(
-              (product) => product.kategori === selectedCategory
+              (product) => product.kategori === selectedKategori // Memfilter berdasarkan field 'kategori' di produk
             );
           }
           return filtered;
@@ -558,9 +613,8 @@
           const endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems);
           paginationInfo.textContent = `Menampilkan ${startIndex} sampai ${endIndex} dari ${totalItems} data`;
 
-          paginationButtons.innerHTML = ""; // Clear existing buttons
+          paginationButtons.innerHTML = "";
 
-          // Previous button
           const prevButton = document.createElement("button");
           prevButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 ${
             currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
@@ -575,10 +629,8 @@
           });
           paginationButtons.appendChild(prevButton);
 
-          // Page number buttons
           for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement("button");
-            // Only apply rounded-l-md to the first page button, and rounded-r-md to the last
             let buttonClass = `px-4 py-2 text-sm font-medium ${
               currentPage === i
                 ? "text-pink-600 bg-pink-100"
@@ -586,16 +638,12 @@
             } border border-gray-300 hover:bg-gray-50`;
 
             if (i === 1 && totalPages === 1) {
-              // Only one page, apply both roundings
               buttonClass += " rounded-l-md rounded-r-md";
             } else if (i === 1) {
-              // First page
-              buttonClass += " -ml-px"; // Remove left border for subsequent buttons
+              buttonClass += " -ml-px";
             } else if (i === totalPages) {
-              // Last page
               buttonClass += " -ml-px rounded-r-md";
             } else {
-              // Middle pages
               buttonClass += " -ml-px";
             }
 
@@ -608,7 +656,6 @@
             paginationButtons.appendChild(pageButton);
           }
 
-          // Next button
           const nextButton = document.createElement("button");
           nextButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 -ml-px ${
             currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
@@ -624,25 +671,26 @@
           paginationButtons.appendChild(nextButton);
         }
 
-        // Event Listeners for search and filters
+        // Event Listener untuk pencarian dan filter
         searchInput.addEventListener("keyup", () => {
-          currentPage = 1; // Reset to first page on search
+          currentPage = 1;
           renderTable();
         });
         statusFilter.addEventListener("change", () => {
-          currentPage = 1; // Reset to first page on filter change
+          currentPage = 1;
           renderTable();
         });
-        jastiperFilter.addEventListener("change", () => {
-          currentPage = 1; // Reset to first page on filter change
+        tokoFilter.addEventListener("change", () => {
+          currentPage = 1;
           renderTable();
         });
-        categoryFilter.addEventListener("change", () => {
-          currentPage = 1; // Reset to first page on filter change
+        kategoriFilter.addEventListener("change", () => {
+          // Menggunakan kategoriFilter
+          currentPage = 1;
           renderTable();
         });
 
-        // Initial fetch of data when the page loads
+        // Panggil fungsi pengambilan data saat halaman dimuat
         fetchCatalogData();
       });
     </script>

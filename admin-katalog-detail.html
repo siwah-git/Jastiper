@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
   <head>
-    <meta charset="UTF-8" />
-    <title>Manajemen Katalog - TitipGo Admin</title>
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Manajemen  Katalog - TitipGo Admin</title> </head>
+   
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -159,13 +162,6 @@
           <div class="text-right flex gap-3">
             <!-- Tombol aksi produk, misalnya Edit/Hapus -->
             <button
-              id="edit-product-button"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-edit mr-2"></i> Edit Produk
-            </button>
-            <button
-              id="delete-product-button"
               class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
             >
               <i class="fas fa-trash-alt mr-2"></i> Hapus Produk
@@ -180,32 +176,20 @@
         </div>
 
         <!-- Breadcrumb Dinamis -->
-        <nav class="text-sm text-gray-600 mb-6">
-          <ol class="list-none p-0 inline-flex">
-            <li class="flex items-center">
-              <a
-                href="admin-dashboard.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Dashboard</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li class="flex items-center">
-              <a
-                href="admin-katalog.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Manajemen Katalog</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li
-              id="breadcrumbProductName"
-              class="flex items-center text-gray-500"
-            >
-              Memuat...
-            </li>
-          </ol>
-        </nav>
+       <nav class="text-sm font-medium text-gray-500 mb-6">
+    <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+            <a href="dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
+            <i class="fas fa-chevron-right mx-2 text-gray-400"></i>
+        </li>
+        <li class="flex items-center">
+            <a href="admin-katalog.html" class="text-blue-600 hover:text-blue-800">Manajemen Katalog</a>
+            <i class="fas fa-chevron-right mx-2 text-gray-400"></i>
+        </li>
+        <li class="flex items-center text-gray-700">
+            <span id="breadcrumbProductName">Memuat...</span> </li>
+    </ol>
+</nav>
 
         <!-- Konten Detail Produk (akan diisi oleh JavaScript) -->
         <div id="productDetailContent" class="flex flex-col space-y-6">
@@ -218,607 +202,421 @@
     </main>
 
     <!-- Firebase SDKs (Modular SDK v9.6.0) -->
-    <script type="module">
-      // Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.0)
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        getDoc,
-        deleteDoc,
-        collection,
-      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
-      import {
-        getStorage,
-        ref,
-        getDownloadURL,
-      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
+<script type="module">
+  // Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.0)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  deleteDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
 
-      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-      const firebaseConfig = {
-        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-        authDomain: "titipgo-28f84.firebaseapp.com",
-        projectId: "titipgo-28f84",
-        storageBucket: "titipgo-28f84.firebasestorage.app",
-        messagingSenderId: "816687535591",
-        appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
-      };
+// KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
+const firebaseConfig = {
+  apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+  authDomain: "titipgo-28f84.firebaseapp.com",
+  projectId: "titipgo-28f84",
+  storageBucket: "titipgo-28f84.firebasestorage.app",
+  messagingSenderId: "816687535591",
+  appId: "1:816687535591:web:eaecf2fcc994636a319942",
+  // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
+};
 
-      // Inisialisasi Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const storage = getStorage(app);
+// Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-      // --- Fungsi untuk Mendapatkan Parameter URL (Product ID) ---
-      function getUrlParameter(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        var results = regex.exec(location.search);
-        return results === null
-          ? ""
-          : decodeURIComponent(results[1].replace(/\+/g, " "));
-      }
+// --- Fungsi untuk Mendapatkan Parameter URL (product ID) ---
+function getUrlParameter(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  var results = regex.exec(location.search);
+  return results === null
+    ? ""
+    : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
-      // --- Fungsi untuk Memuat Detail Produk ---
-      async function loadProductDetail() {
-        const productId = getUrlParameter("id");
-        const productDetailContent = document.getElementById(
-          "productDetailContent"
-        );
-        const productDetailTitle =
-          document.getElementById("productDetailTitle");
-        const breadcrumbProductName = document.getElementById(
-          "breadcrumbProductName"
-        );
-        const pageTitleEl = document.getElementById("page-title");
-        const editProductButton = document.getElementById(
-          "edit-product-button"
-        );
-        const deleteProductButton = document.getElementById(
-          "delete-product-button"
-        );
+// Fungsi untuk memformat harga ke IDR
+function formatRupiah(amount) {
+  if (typeof amount !== 'number') return 'N/A';
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(amount);
+}
 
-        // Set initial loading state for the content area
-        productDetailContent.innerHTML = `
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <p class="text-gray-600 text-lg">Memuat data produk...</p>
+// --- Fungsi Utama untuk Memuat Detail Produk dan Toko ---
+async function loadProductAndTokoDetail() {
+  const productIdFromUrl = getUrlParameter("id");
+
+  // Menggunakan productDetailContent sebagai elemen target utama untuk semua konten dinamis
+  const productDetailContent = document.getElementById("productDetailContent");
+  // Elemen untuk update di header/breadcrumb (asumsi ini sudah ada di HTML Anda)
+  const productDetailTitle = document.getElementById("productDetailTitle");
+  const breadcrumbProductName = document.getElementById("breadcrumbProductName");
+  const pageTitleEl = document.getElementById("page-title"); // Tag <title> di <head>
+
+  // Inisialisasi UI loading state
+  if (pageTitleEl) pageTitleEl.textContent = `Memuat Detail - TitipGo Admin`;
+  if (productDetailTitle) productDetailTitle.textContent = `Memuat Detail Produk...`;
+  if (breadcrumbProductName) breadcrumbProductName.textContent = `Memuat...`;
+
+  if (!productDetailContent) {
+    console.error("Critical HTML element 'productDetailContent' not found! Please ensure this ID exists in your main content area.");
+    // Tampilkan pesan error jika elemen utama tidak ditemukan
+    document.body.innerHTML = `
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" style="margin: 20px;">
+          <strong class="font-bold">Error Fatal!</strong>
+          <span class="block sm:inline">Elemen utama konten 'productDetailContent' tidak ditemukan. Mohon periksa ID di HTML Anda.</span>
+        </div>
+    `;
+    return;
+  }
+
+  // Set initial loading state inside the productDetailContent
+  productDetailContent.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+      <p class="text-gray-600 text-lg">Memuat detail produk dan toko...</p>
+    </div>
+  `;
+
+  if (!productIdFromUrl) {
+    productDetailContent.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
+          <p class="text-red-500 text-xl font-semibold">ID Produk tidak ditemukan di URL.</p>
+          <p class="text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan parameter 'id' (ID produk) yang valid.</p>
+          <div class="mt-4">
+            <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
+            </a>
           </div>
-        `;
+        </div>
+      `;
+    if (pageTitleEl) pageTitleEl.textContent = `Error - TitipGo Admin`;
+    if (productDetailTitle) productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+    if (breadcrumbProductName) breadcrumbProductName.textContent = `Tidak Ditemukan`;
+    return;
+  }
+
+  try {
+    // LANGKAH 1: Ambil dokumen produk berdasarkan ID Produk
+    const productRef = doc(db, "produk", productIdFromUrl);
+    const productDoc = await getDoc(productRef);
+
+    if (!productDoc.exists()) {
+      productDetailContent.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
+                  <p class="text-red-500 text-xl font-semibold">Produk dengan ID '${productIdFromUrl}' tidak ditemukan.</p>
+                  <p class="text-gray-600 mt-2">Pastikan ID produk yang Anda cari sudah benar atau produk telah dihapus.</p>
+                  <div class="mt-4">
+                    <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
+                    </a>
+                  </div>
+                </div>
+              `;
+      if (pageTitleEl) pageTitleEl.textContent = `Produk Tidak Ditemukan - TitipGo Admin`;
+      if (productDetailTitle) productDetailTitle.textContent = `Produk Tidak Ditemukan`;
+      if (breadcrumbProductName) breadcrumbProductName.textContent = `Tidak Ditemukan`;
+      return;
+    }
+
+    const productData = productDoc.data();
+    const tokoId = productData.tokoId;
+
+    // LANGKAH 2: Ambil detail toko menggunakan tokoId
+    let tokoData = null;
+    if (tokoId) {
+      const tokoRef = doc(db, "toko", tokoId);
+      const tokoDoc = await getDoc(tokoRef);
+      if (tokoDoc.exists()) {
+        tokoData = tokoDoc.data();
+      } else {
+        console.warn(`Toko dengan ID '${tokoId}' tidak ditemukan.`);
       }
-      pageTitleEl.textContent = `Memuat Produk - TitipGo Admin`;
-      if (productDetailTitle)
-        productDetailTitle.textContent = `Memuat Detail Produk...`;
-      if (breadcrumbProductName)
-        breadcrumbProductName.textContent = `Memuat...`;
-      if (editProductButton) editProductButton.classList.add("hidden");
-      if (deleteProductButton) deleteProductButton.classList.add("hidden");
+    } else {
+      console.warn(`Produk '${productData.namaBarang}' tidak memiliki tokoId.`);
+    }
 
-      if (!productId) {
-        productDetailContent.innerHTML = `
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-              <p class="text-red-500 text-xl font-semibold">ID Produk tidak ditemukan di URL.</p>
-              <p class="text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID produk yang valid.</p>
-              <div class="mt-4">
-                <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
-                </a>
-              </div>
-            </div>
-          `;
-        pageTitleEl.textContent = `Error - TitipGo Admin`;
-        if (productDetailTitle)
-          productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-        if (breadcrumbProductName)
-          breadcrumbProductName.textContent = `Tidak Ditemukan`;
-        return;
-      }
+    // Update title dan breadcrumb dengan nama produk
+    if (pageTitleEl) pageTitleEl.textContent = `Detail Produk - ${productData.namaBarang || "N/A"} - TitipGo Admin`;
+    if (productDetailTitle) productDetailTitle.textContent = `Detail Produk: ${productData.namaBarang || "N/A"}`;
+    if (breadcrumbProductName) breadcrumbProductName.textContent = productData.namaBarang || "N/A";
 
-      try {
-        // Ambil data produk dari koleksi "produk"
-        const productDocRef = doc(db, "produk", productId);
-        const productDoc = await getDoc(productDocRef);
+    // --- Render Konten Utama: Detail Produk, Detail Toko, dan Produk Lain ---
+    let productImageUrl = productData.imageUrl?.[0] || "https://via.placeholder.com/400x300/CCCCCC/FFFFFF?text=No+Image";
+    if (Array.isArray(productData.imageUrl) && productData.imageUrl.length > 0) {
+        productImageUrl = productData.imageUrl[0];
+    } else if (typeof productData.imageUrl === 'string') {
+        productImageUrl = productData.imageUrl;
+    }
 
-        if (productDoc.exists()) {
-          const productData = productDoc.data();
-
-          // Ambil informasi jastiper/toko
-          let jastiperInfo = {
-            name: "Tidak Diketahui",
-            id: "",
-            location: "Tidak Diketahui",
-            email: "#",
-            phone: "#",
-            profileUrl: "#",
-            photoUrl:
-              "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper",
-          };
-
-          if (productData.jastiperId) {
-            const jastiperDocRef = doc(db, "users", productData.jastiperId); // Asumsi jastiper ada di koleksi 'users'
-            const jastiperDoc = await getDoc(jastiperDocRef);
-            if (jastiperDoc.exists()) {
-              const jastiperData = jastiperDoc.data();
-              jastiperInfo = {
-                name: jastiperData.fullName || "Nama Jastiper",
-                id: productData.jastiperId,
-                location: jastiperData.originCountry || "Lokasi", // Asumsi originCountry adalah lokasi
-                email: jastiperData.email || "#",
-                phone: jastiperData.phoneNumber || "#",
-                profileUrl: `admin-pengguna-detail.html?id=${productData.jastiperId}`,
-                photoUrl:
-                  jastiperData.profilePictureUrl ||
-                  "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper",
-              };
-              // Fetch jastiper photo from storage if it's a gs:// path
-              if (jastiperInfo.photoUrl.startsWith("gs://")) {
-                try {
-                  const photoRef = ref(storage, jastiperInfo.photoUrl);
-                  jastiperInfo.photoUrl = await getDownloadURL(photoRef);
-                } catch (error) {
-                  console.warn(
-                    "Error fetching jastiper photo from storage:",
-                    error
-                  );
-                  jastiperInfo.photoUrl =
-                    "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=Error";
-                }
-              }
-            }
-          }
-
-          // Dapatkan URL gambar utama dari Firebase Storage jika disimpan di sana
-          let mainImageUrl =
-            productData.mainImage ||
-            "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Tidak+Ada+Gambar";
-          if (mainImageUrl.startsWith("gs://")) {
+    let tokoHtml = '';
+    if (tokoData) {
+        let tokoPhotoUrl = tokoData.gambar || "https://via.placeholder.com/100x100/20B2AA/FFFFFF?text=Toko";
+        if (tokoPhotoUrl.startsWith("gs://")) {
             try {
-              const imageRef = ref(storage, mainImageUrl);
-              mainImageUrl = await getDownloadURL(imageRef);
-            } catch (storageError) {
-              console.warn(
-                "Error fetching main image from storage:",
-                storageError
-              );
-              mainImageUrl =
-                "https://via.placeholder.com/400x400/FF69B4/FFFFFF?text=Gagal+Muat+Gambar";
+                const photoRef = ref(storage, tokoPhotoUrl);
+                tokoPhotoUrl = await getDownloadURL(photoRef);
+            } catch (error) {
+                console.warn("Error fetching toko photo from storage:", error);
+                tokoPhotoUrl = "https://via.placeholder.com/100x100/CCCCCC/FFFFFF?text=Error";
             }
-          }
+        }
+        tokoHtml = `
+            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-store text-blue-600 mr-2"></i> Detail Toko
+                </h2>
+                <div class="flex items-start md:items-center mb-4 pb-2">
+                    <img
+                        src="${tokoPhotoUrl}"
+                        alt="${tokoData.nama_toko || "Nama Toko"}"
+                        class="w-24 h-24 object-cover rounded-full shadow-sm mr-4"
+                    />
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">${tokoData.nama_toko || "Nama Toko Tidak Ditemukan"}</h3>
+                        <p class="text-gray-700 text-sm mb-2">${tokoData.deskripsi || "Tidak ada deskripsi toko."}</p>
+                        <div class="flex items-center text-gray-600 text-xs">
+                            <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i> ${tokoData.originCountry || "Tidak Diketahui"}
+                        </div>
+                    </div>
+                </div>
 
-          // Dapatkan URL galeri gambar
-          let galleryImagesHtml = "";
-          if (
-            productData.galleryImages &&
-            productData.galleryImages.length > 0
-          ) {
-            for (const imgPath of productData.galleryImages) {
-              let downloadUrl = imgPath;
-              if (imgPath.startsWith("gs://")) {
-                try {
-                  const imageRef = ref(storage, imgPath);
-                  downloadUrl = await getDownloadURL(imageRef);
-                } catch (storageError) {
-                  console.warn(
-                    "Error fetching gallery image from storage:",
-                    storageError
-                  );
-                  downloadUrl =
-                    "https://via.placeholder.com/100x100/CCCCCC/000000?text=Error";
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm">
+                    <p><strong>Email:</strong> <a href="mailto:${tokoData.email}" class="text-blue-600 hover:underline">${tokoData.email || "N/A"}</a></p>
+                    <p><strong>Telepon:</strong> <a href="tel:${tokoData.whatsApp}" class="text-blue-600 hover:underline">${tokoData.whatsApp || "N/A"}</a></p>
+                    <p><strong>Instagram:</strong> <a href="${tokoData.Instagram || "#"}" target="_blank" class="text-blue-600 hover:underline">${tokoData.Instagram || "N/A"}</a></p>
+                    <p><strong>Dibuat:</strong> ${
+                        tokoData.created_at
+                        ? new Date(tokoData.created_at.toDate()).toLocaleString("id-ID")
+                        : "N/A"
+                    }</p>
+                    <p><strong>Diperbarui:</strong> ${
+                        tokoData.updatedAt
+                        ? new Date(tokoData.updatedAt.toDate()).toLocaleString("id-ID")
+                        : "N/A"
+                    }</p>
+                    <p><strong>Status Akun:</strong> <span class="px-3 py-1 rounded-full text-xs font-semibold ${tokoData.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${tokoData.status || 'N/A'}</span></p>
+                </div>
+            </div>
+        `;
+    } else {
+        tokoHtml = `
+            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-store text-blue-600 mr-2"></i> Detail Toko
+                </h2>
+                <p class="text-red-500">Detail toko tidak dapat dimuat atau tidak ditemukan.</p>
+            </div>
+        `;
+    }
+
+    let relatedProductsHtml = '';
+    if (tokoId) {
+        try {
+            const productsRef = collection(db, "produk");
+            const qOtherProducts = query(productsRef, where("tokoId", "==", tokoId));
+            const otherProductSnapshot = await getDocs(qOtherProducts);
+
+            if (!otherProductSnapshot.empty) {
+                let tempProductsHtml = '';
+                otherProductSnapshot.forEach((pDoc) => {
+                    const pData = pDoc.data();
+                    const pId = pDoc.id;
+                    if (pId !== productIdFromUrl) { // Pastikan produk yang sedang dilihat tidak ditampilkan
+                        let otherProductImageUrl = pData.imageUrl?.[0] || 'https://via.placeholder.com/60x60/87CEEB/FFFFFF?text=Prod';
+                        if (Array.isArray(pData.imageUrl) && pData.imageUrl.length > 0) {
+                            otherProductImageUrl = pData.imageUrl[0];
+                        } else if (typeof pData.imageUrl === 'string') {
+                            otherProductImageUrl = pData.imageUrl;
+                        }
+                        tempProductsHtml += `
+                            <div class="border rounded-lg p-4 shadow-sm flex items-center space-x-4">
+                                <img src="${otherProductImageUrl}" alt="${pData.namaBarang}" class="w-16 h-16 object-cover rounded-md">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">${pData.namaBarang}</h4>
+                                    <p class="text-sm text-gray-600">Harga: ${formatRupiah(pData.harga)}</p>
+                                    <p class="text-sm text-gray-600">Stok: ${pData.stok || 0}</p>
+                                    <a href="admin-katalog-detail.html?id=${pId}" class="text-blue-500 hover:underline text-xs mt-1 inline-block">Lihat Detail Produk</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                if (tempProductsHtml === '') {
+                    relatedProductsHtml = '<p class="text-gray-500">Tidak ada produk lain yang ditemukan untuk toko ini.</p>';
+                } else {
+                    relatedProductsHtml = `
+                        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
+                            </h2>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                ${tempProductsHtml}
+                            </div>
+                        </div>
+                    `;
                 }
-              }
-              galleryImagesHtml += `
-                  <img
-                    src="${downloadUrl}"
-                    alt="Gambar Produk"
-                    class="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200 hover:border-blue-400 cursor-pointer transition duration-200"
-                    onclick="window.open('${downloadUrl}', '_blank');"
-                  />
+            } else {
+                relatedProductsHtml = `
+                    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
+                        </h2>
+                        <p class="text-gray-500">Tidak ada produk lain yang ditemukan untuk toko ini.</p>
+                    </div>
                 `;
             }
-          } else {
-            galleryImagesHtml = `
-                <p class="text-gray-500 text-sm italic col-span-full">Tidak ada gambar galeri.</p>
-              `;
-          }
-
-          // Render konten produk
-          productDetailContent.innerHTML = `
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="flex flex-col md:flex-row items-start md:items-center mb-6 border-b pb-4">
-                  <img
-                    src="${mainImageUrl}"
-                    alt="${productData.productName || "Nama Produk"}"
-                    class="w-full md:w-64 h-auto md:h-64 object-cover rounded-lg shadow-lg mb-4 md:mb-0 md:mr-6"
-                  />
-                  <div>
-                    <span
-                      class="text-sm font-semibold ${
-                        productData.stock > 0
-                          ? "text-pink-600 bg-pink-100"
-                          : "text-red-600 bg-red-100"
-                      } px-3 py-1 rounded-full"
-                    >${productData.stock > 0 ? "Tersedia" : "Habis"}</span
-                    >
-                    <h2 class="text-3xl font-bold text-gray-800 mt-2 mb-2">
-                      ${productData.productName || "Nama Produk"}
+        } catch (productError) {
+            console.error("Error fetching related products:", productError);
+            relatedProductsHtml = `
+                <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
                     </h2>
-                    <p class="text-green-600 text-3xl font-bold mb-4">Rp ${(
-                      productData.price || 0
-                    ).toLocaleString("id-ID")}</p>
-                    <div class="flex items-center text-gray-600 text-sm mb-2">
-                      <i class="fas fa-star text-yellow-500 mr-1"></i> ${
-                        productData.rating || "N/A"
-                      } (${productData.reviewsCount || 0} Ulasan)
-                    </div>
-                    <p class="text-gray-700 text-md leading-relaxed">
-                      ${
-                        productData.shortDescription ||
-                        "Tidak ada deskripsi singkat."
-                      }
-                    </p>
-                  </div>
+                    <p class="text-red-500">Gagal memuat produk terkait.</p>
                 </div>
-
-                <div class="mb-6">
-                  <h3
-                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-                  >
-                    <i class="fas fa-info-circle text-blue-500 mr-2"></i> Detail Produk
-                  </h3>
-                  <div
-                    class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm"
-                  >
-                    <p><strong>SKU:</strong> ${productData.sku || "N/A"}</p>
-                    <p><strong>Kategori:</strong> ${
-                      productData.category || "N/A"
-                    }</p>
-                    <p><strong>Brand:</strong> ${productData.brand || "N/A"}</p>
-                    <p><strong>Berat:</strong> ${
-                      productData.weight || "N/A"
-                    } kg</p>
-                    <p><strong>Dimensi:</strong> ${
-                      productData.dimensions || "N/A"
-                    } cm</p>
-                    <p><strong>Material:</strong> ${
-                      productData.material || "N/A"
-                    }</p>
-                    <p><strong>Kondisi:</strong> ${
-                      productData.condition || "N/A"
-                    }</p>
-                  </div>
-                </div>
-
-                <div class="mb-6">
-                  <h3
-                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-                  >
-                    <i class="fas fa-file-invoice text-green-500 mr-2"></i> Deskripsi Lengkap
-                  </h3>
-                  <p class="text-gray-700 leading-relaxed text-sm">
-                    ${
-                      productData.fullDescription ||
-                      "Tidak ada deskripsi lengkap."
-                    }
-                  </p>
-                </div>
-
-                <div class="mb-6">
-                  <h3
-                    class="text-xl font-semibold text-gray-800 mb-3 flex items-center"
-                  >
-                    <i class="fas fa-images text-purple-500 mr-2"></i> Galeri Gambar
-                  </h3>
-                  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    ${galleryImagesHtml}
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <i class="fas fa-user-tie text-teal-600 mr-2"></i> Informasi Jastiper
-                </h3>
-                <div class="flex items-center mb-4">
-                  <img
-                    src="${jastiperInfo.photoUrl}"
-                    alt="Foto Jastiper"
-                    class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-teal-400"
-                  />
-                  <div>
-                    <p class="text-lg font-semibold text-gray-800">
-                      ${jastiperInfo.name}
-                    </p>
-                    <p class="text-sm text-gray-600">ID Jastiper: ${
-                      jastiperInfo.id || "N/A"
-                    }</p>
-                  </div>
-                </div>
-                <ul class="text-gray-700 space-y-2 text-sm">
-                  <li>
-                    <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi Asal: ${
-                      jastiperInfo.location
-                    }
-                  </li>
-                  <li>
-                    <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
-                    <a
-                      href="mailto:${jastiperInfo.email}"
-                      class="text-blue-600 hover:underline"
-                      >${jastiperInfo.email}</a
-                    >
-                  </li>
-                  <li>
-                    <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
-                    <a href="tel:${
-                      jastiperInfo.phone
-                    }" class="text-blue-600 hover:underline"
-                      >${jastiperInfo.phone}</a
-                    >
-                  </li>
-                  <li class="mt-3">
-                    <a
-                      href="${jastiperInfo.profileUrl}"
-                      class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
-                    >
-                      Lihat Profil Jastiper
-                      <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <i class="fas fa-boxes text-orange-500 mr-2"></i> Stok & Varian
-                </h3>
-                <div class="overflow-x-auto">
-                  <table class="min-w-full bg-white rounded-lg">
-                    <thead>
-                      <tr
-                        class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
-                      >
-                        <th class="py-3 px-6 text-left">Varian</th>
-                        <th class="py-3 px-6 text-center">Stok</th>
-                      </tr>
-                    </thead>
-                    <tbody class="text-gray-700 text-sm">
-                      ${
-                        productData.variants && productData.variants.length > 0
-                          ? productData.variants
-                              .map(
-                                (variant) => `
-                                <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                  <td class="py-3 px-6 text-left whitespace-nowrap">${
-                                    variant.name || "N/A"
-                                  }</td>
-                                  <td class="py-3 px-6 text-center">
-                                    <span
-                                      class="${
-                                        variant.stock > 10
-                                          ? "bg-green-200 text-green-800"
-                                          : variant.stock > 0
-                                          ? "bg-yellow-200 text-yellow-800"
-                                          : "bg-red-200 text-red-800"
-                                      } py-1 px-3 rounded-full text-xs"
-                                    >${
-                                      variant.stock > 0
-                                        ? `Tersedia (${variant.stock})`
-                                        : "Habis (0)"
-                                    }</span
-                                    >
-                                  </td>
-                                </tr>
-                              `
-                              )
-                              .join("")
-                          : `<tr><td colspan="2" class="py-3 px-6 text-center text-gray-500">Tidak ada varian.</td></tr>`
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <i class="fas fa-history text-blue-500 mr-2"></i> Riwayat Aktivitas
-                </h3>
-                <ul class="text-gray-700 space-y-3 text-sm">
-                  <li class="flex items-start">
-                    <i class="fas fa-calendar-alt text-gray-400 mr-3 mt-1"></i>
-                    <div>
-                      <strong>Dibuat:</strong> ${
-                        productData.createdAt
-                          ? new Date(
-                              productData.createdAt.toDate()
-                            ).toLocaleString("id-ID")
-                          : "N/A"
-                      }
-                      <p class="text-xs text-gray-500">
-                        Oleh:
-                        <a
-                          href="${jastiperInfo.profileUrl}"
-                          class="text-blue-600 hover:underline"
-                          >${jastiperInfo.name}</a
-                        >
-                      </p>
-                    </div>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-pencil-alt text-gray-400 mr-3 mt-1"></i>
-                    <div>
-                      <strong>Terakhir Diperbarui:</strong> ${
-                        productData.updatedAt
-                          ? new Date(
-                              productData.updatedAt.toDate()
-                            ).toLocaleString("id-ID")
-                          : "N/A"
-                      }
-                      <p class="text-xs text-gray-500">
-                        Oleh: ${productData.lastUpdatedBy || "Sistem"} (${
-            productData.lastUpdateReason || "N/A"
-          })
-                      </p>
-                    </div>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chart-line text-gray-400 mr-3 mt-1"></i>
-                    <div>
-                      <strong>Penjualan Terakhir:</strong> ${
-                        productData.lastSoldDate
-                          ? new Date(
-                              productData.lastSoldDate.toDate()
-                            ).toLocaleDateString("id-ID")
-                          : "N/A"
-                      } (${productData.lastSoldQuantity || 0} Pcs)
-                      <p class="text-xs text-gray-500">Total Terjual: ${
-                        productData.totalSold || 0
-                      } Pcs</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3
-                  class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-                >
-                  <i class="fas fa-globe text-orange-500 mr-2"></i> SEO & Metadata
-                </h3>
-                <ul class="text-gray-700 space-y-2 text-sm">
-                  <li>
-                    <strong>Meta Judul:</strong> ${
-                      productData.metaTitle || productData.productName || "N/A"
-                    } | TitipGo
-                  </li>
-                  <li>
-                    <strong>Meta Deskripsi:</strong> ${
-                      productData.metaDescription ||
-                      productData.shortDescription ||
-                      "N/A"
-                    }
-                  </li>
-                  <li>
-                    <strong>Keyword:</strong> ${
-                      (productData.keywords || []).join(", ") || "N/A"
-                    }
-                  </li>
-                  <li>
-                    <strong>Slug URL:</strong> /produk/${productDoc.id}
-                  </li>
-                </ul>
-              </div>
             `;
-
-          // Update title dan breadcrumb
-          pageTitleEl.textContent = `Detail Produk - ${
-            productData.productName || "N/A"
-          } - TitipGo Admin`;
-          if (productDetailTitle)
-            productDetailTitle.textContent = `Detail Produk: ${
-              productData.productName || "N/A"
-            }`;
-          if (breadcrumbProductName)
-            breadcrumbProductName.textContent =
-              productData.productName || "N/A";
-
-          // Tampilkan tombol aksi setelah data dimuat
-          if (editProductButton) editProductButton.classList.remove("hidden");
-          if (deleteProductButton)
-            deleteProductButton.classList.remove("hidden");
-
-          // --- Fungsionalitas Tombol Aksi Produk ---
-          editProductButton.onclick = () => {
-            // Arahkan ke halaman edit produk, misalnya:
-            alert("Fungsi Edit Produk akan diarahkan ke halaman form edit.");
-            // window.location.href = `admin-katalog-edit.html?id=${productId}`;
-          };
-
-          deleteProductButton.onclick = async () => {
-            if (
-              confirm(
-                `Apakah Anda yakin ingin menghapus produk "${
-                  productData.productName || "ini"
-                }" secara permanen? Aksi ini tidak bisa dibatalkan!`
-              )
-            ) {
-              try {
-                await deleteDoc(productDocRef); // Menggunakan deleteDoc
-                alert("Produk berhasil dihapus.");
-                window.location.href = "admin-katalog.html"; // Redirect kembali ke daftar katalog
-              } catch (error) {
-                console.error("Error deleting product:", error);
-                alert("Gagal menghapus produk. Coba lagi.");
-              }
-            }
-          };
-        } else {
-          // Jika dokumen produk tidak ada di Firestore
-          productDetailContent.innerHTML = `
-              <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-                <p class="text-red-500 text-xl font-semibold">Produk dengan ID #${productId} tidak ditemukan.</p>
-                <p class="text-gray-600 mt-2">Mungkin ID produk salah atau produk telah dihapus.</p>
-                <div class="mt-4">
-                  <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
-                  </a>
-                </div>
-              </div>
-            `;
-          pageTitleEl.textContent = `Produk Tidak Ditemukan - TitipGo Admin`;
-          if (productDetailTitle)
-            productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-          if (breadcrumbProductName)
-            breadcrumbProductName.textContent = `Tidak Ditemukan`;
         }
-      } catch (error) {
-        console.error("Error fetching product detail:", error);
-        let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
-        if (error.code === "unavailable") {
-          errorMessage =
-            "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
-        } else {
-          errorMessage = error.message;
+    } else {
+        relatedProductsHtml = `
+            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
+                </h2>
+                <p class="text-gray-500">Tidak dapat memuat produk lain karena ID toko tidak tersedia.</p>
+            </div>
+        `;
+    }
+
+
+    productDetailContent.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-box-open text-pink-600 mr-2"></i> Detail Produk
+        </h2>
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="md:w-1/3">
+            <img src="${productImageUrl}" alt="${productData.namaBarang || 'Produk'}" class="w-full h-auto object-contain rounded-lg shadow-md border border-gray-200">
+          </div>
+          <div class="md:w-2/3">
+            <h3 class="text-3xl font-bold text-gray-900 mb-2">${productData.namaBarang || 'Nama Produk Tidak Diketahui'}</h3>
+            <p class="text-2xl font-semibold text-pink-600 mb-4">${formatRupiah(productData.harga)}</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm mb-4">
+                <p><strong>Jenis:</strong> ${productData.jenis || 'N/A'}</p>
+                <p><strong>Kategori:</strong> ${productData.kategori || 'N/A'}</p>
+                <p><strong>Merk:</strong> ${productData.merk || 'N/A'}</p>
+                <p><strong>Negara Asal:</strong> ${productData.negara || 'N/A'}</p>
+                <p><strong>Stok:</strong> ${productData.stok !== undefined ? productData.stok : 'N/A'}</p>
+                <p><strong>Status:</strong> <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${productData.status === 'PRE-ORDER' ? 'bg-blue-100 text-blue-800' : (productData.status === 'READY' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}">${productData.status || 'N/A'}</span></p>
+                <p><strong>Diblokir:</strong> <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${productData.isBlocked ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">${productData.isBlocked ? 'Ya' : 'Tidak'}</span></p>
+            </div>
+            <p class="text-gray-700 mb-4"><strong>Deskripsi:</strong> ${productData.deskripsi || 'Tidak ada deskripsi.'}</p>
+
+            <div class="flex space-x-2 mt-4">
+                
+                <button id="deleteProductButton" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <i class="fas fa-trash-alt mr-2"></i> Hapus Produk
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      ${tokoHtml}
+      ${relatedProductsHtml}
+    `;
+
+    // --- Fungsionalitas Tombol Hapus Produk (dilampirkan setelah HTML di-render) ---
+    const deleteProductButton = document.getElementById("deleteProductButton");
+    if (deleteProductButton) {
+      deleteProductButton.onclick = async () => {
+        if (
+          confirm(
+            `Apakah Anda yakin ingin menghapus produk "${
+              productData.namaBarang || "ini"
+            }" secara permanen? Aksi ini tidak bisa dibatalkan!`
+          )
+        ) {
+          try {
+            await deleteDoc(doc(db, "produk", productIdFromUrl));
+            alert("Produk berhasil dihapus!");
+            window.location.href = "admin-katalog.html"; // Arahkan kembali ke daftar katalog
+          } catch (error) {
+            console.error("Error deleting product:", error);
+            alert("Gagal menghapus produk: " + error.message);
+          }
         }
-        productDetailContent.innerHTML = `
+      };
+    }
+
+  } catch (error) {
+    console.error("Error in loadProductAndTokoDetail:", error);
+    let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
+    if (error.code === "unavailable") {
+      errorMessage = "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
+    } else {
+      errorMessage = error.message;
+    }
+    productDetailContent.innerHTML = `
             <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-              <p class="text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail produk.</p>
+              <p class="text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail.</p>
               <p class="text-gray-600 mt-2">Detail: ${errorMessage}</p>
               <div class="mt-4">
                 <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Katalog
+                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
                 </a>
               </div>
             </div>
           `;
-        pageTitleEl.textContent = `Error - TitipGo Admin`;
-        if (productDetailTitle)
-          productDetailTitle.textContent = `Error Loading Product`;
-        if (breadcrumbProductName) breadcrumbProductName.textContent = `Error`;
-      }
+    if (pageTitleEl) pageTitleEl.textContent = `Error - TitipGo Admin`;
+    if (productDetailTitle) productDetailTitle.textContent = `Error Loading Detail`;
+    if (breadcrumbProductName) breadcrumbProductName.textContent = `Error`;
+  }
+}
 
-      // --- Fungsionalitas Logout ---
-      const logoutButton = document.getElementById("logoutButton");
-      if (logoutButton) {
-        logoutButton.addEventListener("click", async (e) => {
-          e.preventDefault();
-          try {
-            await auth.signOut();
-            alert("Anda telah logout!");
-            window.location.href = "login.html"; // Arahkan ke halaman login Anda
-          } catch (error) {
-            console.error("Error during logout:", error);
-            alert("Gagal logout: " + error.message);
-          }
-        });
-      }
-    </script>
+// Panggil fungsi utama saat DOMContentLoaded atau saat status autentikasi berubah
+document.addEventListener("DOMContentLoaded", () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loadProductAndTokoDetail();
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+});
+
+// --- Fungsionalitas Logout ---
+const logoutButton = document.getElementById("logoutButton");
+if (logoutButton) {
+  logoutButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await auth.signOut();
+      alert("Anda telah logout!");
+      window.location.href = "login.html";
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("Gagal logout: " + error.message);
+    }
+  });
+}
+</script>
   </body>
 </html>

@@ -162,10 +162,43 @@
           </p>
           <div class="flex gap-3 text-right ml-auto">
             <a
-              href="#"
+              href="admin-notifikasi.html"
               class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
+              ><i class="fas fa-bell mr-2"></i> Notifikasi</a
             >
+            <button
+              onclick="showLogoutPopup()"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+            >
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
+          </div>
+        </div>
+        <!-- Modal Popup Logout -->
+
+        <div
+          id="logoutModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden"
+        >
+          <div class="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800">
+              Konfirmasi Logout
+            </h2>
+            <p class="mb-6 text-gray-600">Apakah Anda yakin ingin logout?</p>
+            <div class="flex justify-center gap-4">
+              <button
+                onclick="hideLogoutPopup()"
+                class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <a
+                href="login.html"
+                class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+              >
+                Logout
+              </a>
+            </div>
           </div>
         </div>
 
@@ -187,10 +220,8 @@
             </p>
           </div>
           <div class="card-bg-transparent p-4 rounded shadow text-center">
-            <p class="text-sm text-gray-500">Jastiper Aktif</p>
-            <p class="text-2xl text-pink-600 font-bold" id="activeJastipers">
-              0
-            </p>
+            <p class="text-sm text-gray-500">Toko Aktif</p>
+            <p class="text-2xl text-pink-600 font-bold" id="activeTokos">0</p>
           </div>
         </div>
 
@@ -376,18 +407,12 @@
           // Atau, jika Anda memiliki field status di setiap item katalog.
           // Contoh sederhana: hitung semua item di semua katalog jastiper
           let pendingCatalogCount = 0;
-          const jastipersRef = collection(db, "users");
-          const qJastipers = query(
-            jastipersRef,
-            where("role", "==", "jastiper")
-          );
-          const jastipersSnap = await getDocs(qJastipers);
+          const tokosRef = collection(db, "users");
+          const qTokos = query(TokoRef, where("role", "==", "toko"));
+          const tokosSnap = await getDocs(qTokos);
 
-          for (const jastiperDoc of jastipersSnap.docs) {
-            const catalogRef = collection(
-              db,
-              `users/${jastiperDoc.id}/catalog`
-            );
+          for (const tokoDoc of tokosSnap.docs) {
+            const catalogRef = collection(db, `users/${tokoDoc.id}/catalog`);
             // Jika Anda memiliki field 'status' di setiap item katalog:
             const qPendingCatalogItems = query(
               catalogRef,
@@ -402,14 +427,14 @@
             pendingCatalogCount;
 
           // Jastiper Aktif (misal: role 'jastiper' dan status 'aktif')
-          const qActiveJastipers = query(
+          const qActiveTokos = query(
             collection(db, "users"),
-            where("role", "==", "jastiper")
+            where("role", "==", "toko")
             // where("status", "==", "aktif") // Tambahkan ini jika ada field status jastiper
           );
-          const activeJastipersSnap = await getDocs(qActiveJastipers);
-          document.getElementById("activeJastipers").textContent =
-            activeJastipersSnap.size;
+          const activeTokosSnap = await getDocs(qActiveTokos);
+          document.getElementById("activeTokos").textContent =
+            activeTokosSnap.size;
         } catch (error) {
           console.error("Error updating stats cards:", error);
         }
@@ -459,6 +484,13 @@
           }
         });
       });
+      function showLogoutPopup() {
+        document.getElementById("logoutModal").classList.remove("hidden");
+      }
+
+      function hideLogoutPopup() {
+        document.getElementById("logoutModal").classList.add("hidden");
+      }
     </script>
   </body>
 </html>

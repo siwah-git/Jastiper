@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Manajemen Pengguna - TitipGo Admin</title>
+    <title id="page-title">Manajemen Pengguna - TitipGo Admin</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -107,7 +107,7 @@
             </a>
             <a
               href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
+              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
             >
               <i class="fas fa-users mr-3"></i> Manajemen Pengguna
             </a>
@@ -181,6 +181,11 @@
           <p class="text-lg font-semibold">Manajemen Pengguna</p>
           <div class="flex gap-3 text-right ml-auto">
             <a
+              href="admin-notifikasi.html"
+              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
+              ><i class="fas fa-bell mr-2"></i> Notifikasi</a
+            >
+            <a
               href="#"
               id="logoutButton"
               class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
@@ -210,11 +215,12 @@
             <label for="statusFilter" class="sr-only">Status</label>
             <select
               id="statusFilter"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
+              class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-pink-200"
             >
               <option value="">Semua Status</option>
               <option value="Aktif">Aktif</option>
               <option value="Nonaktif">Nonaktif</option>
+              <option value="Diblokir">Diblokir</option>
             </select>
           </div>
         </div>
@@ -257,6 +263,24 @@
                   scope="col"
                   class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
                 >
+                  Jenis Kelamin
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Tanggal daftar
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
+                  Tanggal Lahir
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
+                >
                   Status
                 </th>
                 <th
@@ -281,8 +305,27 @@
       </main>
     </div>
 
-    <script>
-      // Firebase configuration (replace with your actual config from Firebase project settings)
+    <script type="module">
+      // Import modul Firebase
+      // admin-pengguna.js
+
+      // Import modul Firebase
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        deleteDoc,
+        // updateDoc // Jika Anda ingin menggunakan fungsionalitas update status peringatan
+      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
       const firebaseConfig = {
         apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
         authDomain: "titipgo-28f84.firebaseapp.com",
@@ -290,48 +333,80 @@
         storageBucket: "titipgo-28f84.firebasestorage.app",
         messagingSenderId: "816687535591",
         appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        measurementId: "G-CS3V405F3B",
+        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
       };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-      const auth = firebase.auth();
+      // Inisialisasi Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
+      // Dapatkan referensi ke elemen HTML
       const userTableBody = document.getElementById("userTableBody");
       const searchInput = document.getElementById("search");
       const statusFilter = document.getElementById("statusFilter");
-      // const roleFilter = document.getElementById("roleFilter"); // Dihapus
       const paginationInfo = document.getElementById("paginationInfo");
       const paginationControls = document.getElementById("paginationControls");
       const logoutButton = document.getElementById("logoutButton");
+      const pageTitleEl = document.getElementById("page-title"); // Untuk update title di <head>
 
-      let allUsers = []; // To store all users fetched from Firebase
-      let filteredUsers = []; // To store users after search and filter
+      let allUser = []; // Untuk menyimpan semua pengguna yang diambil dari Firebase
+      let filteredUser = []; // Untuk menyimpan pengguna setelah pencarian dan filter
       const itemsPerPage = 10;
       let currentPage = 1;
 
-      // Function to fetch users from Firebase
-      async function fetchUsers() {
+      // Helper function untuk memformat timestamp
+      function formatTimestamp(timestamp) {
+        if (timestamp && typeof timestamp.toDate === "function") {
+          const date = timestamp.toDate();
+          return date.toLocaleDateString("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+        return "-";
+      }
+
+      // Fungsi untuk mengambil pengguna dari Firebase
+      async function fetchUser() {
+        // Mengubah nama fungsi dari fetchUsers menjadi fetchUser
+        console.log("Memulai fetchUser()");
+        userTableBody.innerHTML = `<tr><td colspan="9" class="py-3 px-4 text-center text-sm text-gray-600">Memuat data pengguna...</td></tr>`; // Kolom diubah menjadi 9
+        if (pageTitleEl)
+          pageTitleEl.textContent = "Memuat Pengguna - TitipGo Admin";
+
         try {
-          const usersRef = db.collection("users");
-          const snapshot = await usersRef.get();
-          allUsers = snapshot.docs.map((doc) => ({
+          const usersRef = collection(db, "user"); // Nama koleksi: "user" (singular)
+          console.log("Mengambil snapshot dari koleksi 'user'...");
+          const snapshot = await getDocs(usersRef);
+          console.log("Snapshot berhasil diambil.");
+          console.log("Jumlah dokumen yang ditemukan:", snapshot.docs.length);
+
+          allUser = snapshot.docs.map((doc) => ({
+            // Mengubah allUsers menjadi allUser
             id: doc.id,
             ...doc.data(),
           }));
-          applyFiltersAndSearch(); // Apply filters and search after fetching
+          console.log("allUser setelah map:", allUser); // Mengubah allUsers menjadi allUser
+
+          applyFiltersAndSearch(); // Terapkan filter dan pencarian setelah mengambil data
+          if (pageTitleEl)
+            pageTitleEl.textContent = "Manajemen Pengguna - TitipGo Admin";
+          console.log("fetchUser() selesai."); // Mengubah fetchUsers() menjadi fetchUser()
         } catch (error) {
-          console.error("Error fetching users: ", error);
-          alert("Gagal memuat data pengguna.");
+          console.error("Error fetching user: ", error); // Mengubah users menjadi user
+          alert("Gagal memuat data pengguna: " + error.message);
+          userTableBody.innerHTML = `<tr><td colspan="9" class="py-3 px-4 text-center text-sm text-red-600">Gagal memuat data pengguna. Silakan coba lagi.</td></tr>`; // Kolom diubah menjadi 9
+          if (pageTitleEl) pageTitleEl.textContent = "Error - TitipGo Admin";
         }
       }
 
-      // Function to render table rows
+      // Fungsi untuk merender baris tabel
       function renderTable(usersToDisplay) {
-        userTableBody.innerHTML = ""; // Clear existing rows
+        userTableBody.innerHTML = ""; // Hapus baris yang ada
         if (usersToDisplay.length === 0) {
-          userTableBody.innerHTML = `<tr><td colspan="7" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pengguna.</td></tr>`; // Ubah colspan menjadi 7
+          userTableBody.innerHTML = `<tr><td colspan="9" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pengguna yang cocok dengan kriteria.</td></tr>`; // Kolom diubah menjadi 9
           paginationInfo.textContent = "Menampilkan 0 dari 0 data";
           paginationControls.innerHTML = "";
           return;
@@ -343,210 +418,307 @@
 
         paginatedUsers.forEach((user, index) => {
           const row = userTableBody.insertRow();
-          const displayIndex = startIndex + index + 1; // Correct index for display
+          const displayIndex = startIndex + index + 1; // Indeks yang benar untuk tampilan
 
-          const statusClass =
-            user.status === "Aktif"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800";
+          // --- PENANGANAN user.status_akun DI renderTable ---
+          let displayStatus = "Tidak Diketahui";
+          let statusClass = "bg-gray-100 text-gray-800"; // Default class
+
+          if (typeof user.status_akun === "string") {
+            const lowerCaseStatus = user.status_akun.toLowerCase();
+            if (lowerCaseStatus === "active") {
+              displayStatus = "Aktif";
+              statusClass = "bg-green-100 text-green-800";
+            } else if (lowerCaseStatus === "nonactive") {
+              displayStatus = "Nonaktif";
+              statusClass = "bg-yellow-100 text-yellow-800";
+            } else if (lowerCaseStatus === "diblokir") {
+              // Asumsi ada status ini di Firestore
+              displayStatus = "Diblokir";
+              statusClass = "bg-red-100 text-red-800";
+            } else {
+              // Kapitalisasi awal untuk status lain
+              displayStatus =
+                lowerCaseStatus.charAt(0).toUpperCase() +
+                lowerCaseStatus.slice(1);
+            }
+          }
+
+          // Format tanggal daftar
+          const formattedTanggalDaftar = formatTimestamp(user.tanggal_daftar);
+
+          // Pastikan semua field yang ada di Firestore diakses dengan aman
+          const namaPembeli = user.nama_pembeli || "-";
+          const email = user.email || "-";
+          const noTelepon = user.no_telepon || "-";
+          const alamat = user.alamat || "-";
+          const jenisKelamin = user.jenis_kelamin || "-";
+          const tanggalLahir = user.tanggal_lahir || "-"; // Asumsi ini string atau bisa ditangani seperti tanggal biasa jika diperlukan
 
           row.innerHTML = `
-            <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${user.nama || "-"}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              user.email || "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              user.nomorTelepon || "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${user.kota || "-"}</td>
-            <td class="py-3 px-4 text-sm">
-              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${
-            user.status || "Tidak Diketahui"
-          }</span>
-            </td>
-            <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-              <a href="admin-pengguna-detail.html?id=${
-                user.id
-              }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-              <a href="#" class="text-red-600 hover:text-red-900 delete-user-btn" data-id="${
-                user.id
-              }" title="Hapus"><i class="fas fa-times-circle"></i></a>
-              <a href="#" class="text-yellow-600 hover:text-yellow-900 warn-user-btn" data-id="${
-                user.id
-              }" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
-            </td>
-          `;
+        <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${namaPembeli}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${email}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${noTelepon}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${alamat}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${jenisKelamin}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${tanggalLahir}</td>
+        <td class="py-3 px-4 text-sm text-gray-700">${formattedTanggalDaftar}</td>
+        <td class="py-3 px-4 text-sm">
+          <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${displayStatus}</span>
+        </td>
+        <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
+          <a href="admin-pengguna-detail.html?id=${user.id}" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+          <a href="#" class="text-red-600 hover:text-red-900 delete-user-btn" data-id="${user.id}" title="Hapus"><i class="fas fa-times-circle"></i></a>
+          <a href="#" class="text-yellow-600 hover:text-yellow-900 warn-user-btn" data-id="${user.id}" title="Peringatan"><i class="fas fa-exclamation-triangle"></i></a>
+        </td>
+      `;
         });
         updatePagination(usersToDisplay.length);
       }
 
-      // Function to apply search and filter
+      // Fungsi untuk menerapkan pencarian dan filter
       function applyFiltersAndSearch() {
+        console.log("Memulai applyFiltersAndSearch()");
         const searchTerm = searchInput.value.toLowerCase();
-        const selectedStatus = statusFilter.value;
-        // const selectedRole = roleFilter.value; // Dihapus
+        const selectedStatus = statusFilter.value; // Nilai dari dropdown: "Aktif", "Nonaktif", "Diblokir"
 
-        filteredUsers = allUsers.filter((user) => {
+        filteredUser = allUser.filter((user) => {
+          // Mengubah filteredUsers menjadi filteredUser, dan allUsers menjadi allUser
+          // Memastikan field yang dicari ada dan merupakan string sebelum memanggil toLowerCase
           const matchesSearch =
-            (user.nama && user.nama.toLowerCase().includes(searchTerm)) ||
-            (user.email && user.email.toLowerCase().includes(searchTerm)) ||
-            (user.nomorTelepon &&
-              user.nomorTelepon.toLowerCase().includes(searchTerm)) ||
-            (user.kota && user.kota.toLowerCase().includes(searchTerm));
-          // (user.role && user.role.toLowerCase().includes(searchTerm)); // Dihapus
+            (typeof user.nama_pembeli === "string" &&
+              user.nama_pembeli.toLowerCase().includes(searchTerm)) ||
+            (typeof user.email === "string" &&
+              user.email.toLowerCase().includes(searchTerm)) ||
+            (typeof user.no_telepon === "string" &&
+              user.no_telepon.toLowerCase().includes(searchTerm)) ||
+            (typeof user.alamat === "string" &&
+              user.alamat.toLowerCase().includes(searchTerm));
+
+          // --- PENANGANAN user.status_akun DI applyFiltersAndSearch ---
+          let normalizedUserStatus = "";
+          if (typeof user.status_akun === "string") {
+            const lowerCaseStatus = user.status_akun.toLowerCase();
+            if (lowerCaseStatus === "active") {
+              normalizedUserStatus = "Aktif";
+            } else if (lowerCaseStatus === "nonactive") {
+              normalizedUserStatus = "Nonaktif";
+            } else {
+              normalizedUserStatus = lowerCaseStatus; // Jika status lain, gunakan apa adanya (misal "diblokir")
+            }
+          }
 
           const matchesStatus =
-            selectedStatus === "" || user.status === selectedStatus;
-          // const matchesRole = selectedRole === "" || user.role === selectedRole; // Dihapus
+            selectedStatus === "" || normalizedUserStatus === selectedStatus;
 
-          return matchesSearch && matchesStatus; // Hanya cocokkan dengan status
+          return matchesSearch && matchesStatus;
         });
 
-        currentPage = 1; // Reset to first page after filtering/searching
-        renderTable(filteredUsers);
+        console.log("filteredUser setelah filter:", filteredUser); // Mengubah filteredUsers menjadi filteredUser
+        currentPage = 1; // Atur ulang ke halaman pertama setelah memfilter/mencari
+        renderTable(filteredUser); // Mengubah filteredUsers menjadi filteredUser
+        console.log("applyFiltersAndSearch() selesai.");
       }
 
-      // Pagination functions
+      // Fungsi untuk memperbarui informasi paginasi dan kontrol
       function updatePagination(totalItems) {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         paginationInfo.textContent = `Menampilkan ${Math.min(
           (currentPage - 1) * itemsPerPage + 1,
           totalItems
-        )} sampai ${Math.min(
+        )}-${Math.min(
           currentPage * itemsPerPage,
           totalItems
         )} dari ${totalItems} data`;
 
-        paginationControls.innerHTML = "";
+        paginationControls.innerHTML = ""; // Hapus kontrol paginasi lama
 
+        // Tombol Previous
         const prevButton = document.createElement("button");
-        prevButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
         prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1;
+        prevButton.classList.add(
+          "px-3",
+          "py-1",
+          "rounded-md",
+          "border",
+          "border-gray-300",
+          "text-sm",
+          "font-medium",
+          "hover:bg-gray-200"
+        );
+        if (currentPage === 1) {
+          prevButton.disabled = true;
+          prevButton.classList.add("opacity-50", "cursor-not-allowed");
+        }
         prevButton.addEventListener("click", () => {
           if (currentPage > 1) {
             currentPage--;
-            renderTable(filteredUsers);
+            renderTable(filteredUser); // Mengubah filteredUsers menjadi filteredUser
           }
         });
         paginationControls.appendChild(prevButton);
 
+        // Tombol Nomor Halaman
         for (let i = 1; i <= totalPages; i++) {
           const pageButton = document.createElement("button");
-          pageButton.className = `px-4 py-2 text-sm font-medium ${
-            i === currentPage
-              ? "text-pink-600 bg-pink-100"
-              : "text-gray-700 bg-white hover:bg-gray-50"
-          } border border-gray-300`;
           pageButton.textContent = i;
+          pageButton.classList.add(
+            "px-3",
+            "py-1",
+            "rounded-md",
+            "border",
+            "border-gray-300",
+            "text-sm",
+            "font-medium",
+            "hover:bg-gray-200"
+          );
+          if (i === currentPage) {
+            pageButton.classList.add("bg-pink-600", "text-white");
+          }
           pageButton.addEventListener("click", () => {
             currentPage = i;
-            renderTable(filteredUsers);
+            renderTable(filteredUser); // Mengubah filteredUsers menjadi filteredUser
           });
           paginationControls.appendChild(pageButton);
         }
 
+        // Tombol Next
         const nextButton = document.createElement("button");
-        nextButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
         nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages || totalPages === 0;
+        nextButton.classList.add(
+          "px-3",
+          "py-1",
+          "rounded-md",
+          "border",
+          "border-gray-300",
+          "text-sm",
+          "font-medium",
+          "hover:bg-gray-200"
+        );
+        if (currentPage === totalPages || totalPages === 0) {
+          nextButton.disabled = true;
+          nextButton.classList.add("opacity-50", "cursor-not-allowed");
+        }
         nextButton.addEventListener("click", () => {
           if (currentPage < totalPages) {
             currentPage++;
-            renderTable(filteredUsers);
+            renderTable(filteredUser); // Mengubah filteredUsers menjadi filteredUser
           }
         });
         paginationControls.appendChild(nextButton);
       }
 
-      // Event listeners for search and filter
+      // Event listeners untuk pencarian dan filter
       searchInput.addEventListener("keyup", applyFiltersAndSearch);
       statusFilter.addEventListener("change", applyFiltersAndSearch);
-      // roleFilter.addEventListener("change", applyFiltersAndSearch); // Dihapus
 
-      // Delete User Functionality
+      // Fungsionalitas Hapus Pengguna
       userTableBody.addEventListener("click", async (event) => {
         if (event.target.closest(".delete-user-btn")) {
           event.preventDefault();
           const userId = event.target.closest(".delete-user-btn").dataset.id;
           if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
             try {
-              await db.collection("users").doc(userId).delete();
+              await deleteDoc(doc(db, "user", userId)); // Nama koleksi: "user"
               alert("Pengguna berhasil dihapus!");
-              fetchUsers(); // Re-fetch data to update table
+              fetchUser(); // Mengubah fetchUsers() menjadi fetchUser()
             } catch (error) {
               console.error("Error removing user: ", error);
-              alert("Gagal menghapus pengguna.");
+              alert("Gagal menghapus pengguna: " + error.message);
             }
           }
         }
-        // Implement warning functionality similarly if needed
+        // Implementasi fungsionalitas peringatan serupa jika diperlukan
         if (event.target.closest(".warn-user-btn")) {
           event.preventDefault();
           const userId = event.target.closest(".warn-user-btn").dataset.id;
-          // You can add logic here to send a warning, change status, etc.
           alert(`Memberikan peringatan kepada pengguna dengan ID: ${userId}`);
+          // Jika Anda ingin mengubah status pengguna menjadi "Nonaktif" dari "active"
+          // try {
+          //   await updateDoc(doc(db, "user", userId), { status_akun: "nonactive" }); // Update field status_akun
+          //   alert("Status pengguna diperbarui menjadi Nonaktif!");
+          //   fetchUser(); // Mengubah fetchUsers() menjadi fetchUser()
+          // } catch (error) {
+          //   console.error("Error updating user status:", error);
+          //   alert("Gagal memperbarui status pengguna.");
+          // }
         }
       });
 
-      // Logout Functionality
-      logoutButton.addEventListener("click", async (e) => {
-        e.preventDefault();
-        try {
-          await auth.signOut();
-          window.location.href = "admin-login.html"; // Redirect to login page after logout
-        } catch (error) {
-          console.error("Error logging out: ", error);
-          alert("Gagal logout. Silakan coba lagi.");
-        }
-      });
+      // Fungsionalitas Logout
+      if (logoutButton) {
+        logoutButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            await signOut(auth);
+            alert("Anda telah logout!");
+            window.location.href = "admin-login.html"; // Arahkan ke halaman login setelah logout
+          } catch (error) {
+            console.error("Error logging out: ", error);
+            alert("Gagal logout: " + error.message);
+          }
+        });
+      }
 
-      // Initial fetch of users when the page loads
+      // Pengambilan pengguna awal saat halaman dimuat dan cek autentikasi
       document.addEventListener("DOMContentLoaded", () => {
-        fetchUsers();
+        onAuthStateChanged(auth, (user) => {
+          console.log("onAuthStateChanged dipanggil.");
+          if (user) {
+            console.log("Pengguna terautentikasi:", user.uid);
+            fetchUser(); // Mengubah fetchUsers() menjadi fetchUser()
 
-        // Sidebar active link logic
-        const currentPath = window.location.pathname;
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+            // Logika Sidebar active link
+            const currentPath = window.location.pathname;
+            const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href"); // e.g., "admin-dashboard.html"
-          // Extract the filename from the currentPath
-          const currentFilename = currentPath.substring(
-            currentPath.lastIndexOf("/") + 1
-          ); // e.g., "admin-pengguna.html" from "/admin-pengguna.html"
+            sidebarLinks.forEach((link) => {
+              const linkHref = link.getAttribute("href");
+              const currentFilename = currentPath.substring(
+                currentPath.lastIndexOf("/") + 1
+              );
 
-          let isLinkActive = false;
+              let isLinkActive = false;
 
-          // Check if the link's href matches the current filename
-          if (linkHref === currentFilename) {
-            isLinkActive = true;
-          }
-          // Special case for dashboard if it's the root or index
-          else if (
-            currentFilename === "" &&
-            linkHref === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
+              if (linkHref === currentFilename) {
+                isLinkActive = true;
+              } else if (
+                currentFilename === "" &&
+                linkHref === "admin-dashboard.html"
+              ) {
+                isLinkActive = true;
+              }
 
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
+              if (isLinkActive) {
+                link.classList.remove(
+                  "text-gray-700",
+                  "hover:bg-pink-100",
+                  "hover:text-pink-600"
+                );
+                link.classList.add(
+                  "bg-pink-600",
+                  "text-white",
+                  "font-semibold"
+                );
+              } else {
+                link.classList.remove(
+                  "bg-pink-600",
+                  "text-white",
+                  "font-semibold"
+                );
+                link.classList.add(
+                  "text-gray-700",
+                  "hover:bg-pink-100",
+                  "hover:text-pink-600"
+                );
+              }
+            });
           } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
+            console.log(
+              "Tidak ada pengguna terautentikasi. Mengarahkan ke login."
             );
+            window.location.href = "admin-login.html";
           }
         });
       });
