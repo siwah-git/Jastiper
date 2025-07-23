@@ -1,50 +1,42 @@
-// js/firebase-config.js
+// firebase-config.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { getAuth, signInWithCustomToken, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
-// Impor fungsi-fungsi Firebase dari CDN (Modular SDK v9)
-// Pastikan versi yang digunakan konsisten di seluruh proyek Anda.
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Untuk Authentication
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics.js"; // Untuk Analytics (opsional)
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  getDoc,
-  doc,
-  setDoc // Menambahkan setDoc jika Anda menggunakannya untuk menyimpan data
-} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"; // Untuk Cloud Firestore
-
-// Konfigurasi Firebase aplikasi web Anda (INI BAGIAN YANG UNIK UNTUK PROYEK ANDA)
+// Konfigurasi Firebase Anda dari Firebase Console
+// Menggunakan nilai hardcoded untuk penggunaan lokal
 const firebaseConfig = {
-  apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-  authDomain: "titipgo-28f84.firebaseapp.com",
-  projectId: "titipgo-28f84",
-  storageBucket: "titipgo-28f84.firebasestorage.app",
-  messagingSenderId: "816687535591",
-  appId: "1:816687535591:web:eaecf2fcc994636a319942",
-  measurementId: "G-CS3V405F3B",
+    apiKey: "AlzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ", // Web API Key Anda
+    authDomain: "titipgo-28f84.firebaseapp.com",
+    projectId: "titipgo-28f84", // Project ID Anda
+    storageBucket: "titipgo-28f84.appspot.com",
+    messagingSenderId: "816687535591", // Project number Anda
+    appId: "1:816687535591:web:YOUR_ACTUAL_APP_ID_HERE" // Ganti dengan App ID Anda yang sebenarnya dari Firebase Console
 };
 
-// Inisialisasi layanan Firebase
+// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Inisialisasi Auth
-const analytics = getAnalytics(app); // Inisialisasi Analytics (opsional)
-const db = getFirestore(app); // Inisialisasi Firestore
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Ekspor objek dan layanan agar bisa diimpor di file lain
-export {
-  app,
-  auth,
-  analytics,
-  db,
-  // Ekspor fungsi-fungsi Firestore agar bisa digunakan langsung
-  collection,
-  query,
-  where,
-  getDocs,
-  getDoc,
-  doc,
-  setDoc // Mengekspor setDoc
-};
+// Autentikasi pengguna saat aplikasi dimuat
+// Untuk penggunaan lokal, kita akan langsung mencoba signInAnonymously atau Anda bisa menambahkan logika login/register
+if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+    signInWithCustomToken(auth, __initial_auth_token)
+        .then(() => {
+            console.log("Signed in with custom token.");
+        })
+        .catch((error) => {
+            console.error("Error signing in with custom token:", error);
+            // Fallback to anonymous sign-in if custom token fails
+            signInAnonymously(auth)
+                .then(() => console.log("Signed in anonymously."))
+                .catch(e => console.error("Error signing in anonymously:", e));
+        });
+} else {
+    signInAnonymously(auth)
+        .then(() => console.log("Signed in anonymously."))
+        .catch(e => console.error("Error signing in anonymously:", e));
+}
+
+export { db, auth, app }; // Menghapus appId dari export karena tidak digunakan di tempat lain

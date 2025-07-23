@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Toko</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+
+        /* Re-use header CSS from product page */
+        .header-search {
+            font-size: 1rem;
+            height: 36px;
+            padding-left: 2.2rem;
+            padding-right: 1rem;
+            border-radius: 9999px;
+            width: 180px;
+            font-weight: 600;
+        }
+
+        @media (min-width: 1024px) {
+            .header-search {
+                width: 220px;
+            }
+        }
+
+        .header-search::placeholder {
+            color: #a0aec0;
+            opacity: 1;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .icon-nav,
+        nav svg {
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px;
+            min-height: 28px;
+        }
+
+        .icon-nav:hover {
+            filter: brightness(0.7);
+        }
+
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-center a,
+        .nav-center .dropdown-kategori>a {
+            padding: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .dropdown-kategori .dropdown-content {
+            min-width: 160px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+            background: #fff;
+            padding: 0;
+            margin-top: 4px;
+            z-index: 50;
+        }
+
+        .dropdown-kategori .dropdown-content a {
+            display: block;
+            padding: 10px 18px;
+            color: #222;
+            text-decoration: none;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .dropdown-kategori .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-kategori .dropdown-content a:hover {
+            background: #f5f7fa;
+            color: #1976d2;
+        }
+
+        .logo-titipgo {
+            width: 112px !important;
+            min-width: 112px;
+            max-width: 128px;
+        }
+
+        @media (max-width: 900px) {
+
+            .icon-nav,
+            nav svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            .logo-titipgo {
+                width: 90px !important;
+            }
+
+            .header-search {
+                font-size: 1rem;
+                height: 36px;
+                width: 180px;
+            }
+
+            .header-search::placeholder {
+                font-size: 1rem;
+            }
+
+            .nav-center a,
+            .nav-center .dropdown-kategori>a {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+            </div>
+
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg
+                    class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-20">
+        <div id="chatCSModal"
+            class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
+            <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
+                <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
+                    <span class="font-bold text-lg">Chat dengan CS</span>
+                    <button onclick="document.getElementById('chatCSModal').style.display='none'"
+                        class="bg-none border-none text-2xl cursor-pointer">&times;</button>
+                </div>
+                <div class="px-5 pt-5 min-h-[80px] overflow-y-auto max-h-[300px]">
+                    <div id="chatCSMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
+                </div>
+                <div class="flex items-center px-5 pt-2 gap-2">
+                    <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+                        class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
+                    <button onclick="sendCSMessage()"
+                        class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chatJastiperModal"
+            class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
+            <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
+                <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
+                    <span class="font-bold text-lg" id="chatJastiperHeader">Chat dengan Toko</span>
+                    <button onclick="document.getElementById('chatJastiperModal').style.display='none'"
+                        class="bg-none border-none text-2xl cursor-pointer">&times;</button>
+                </div>
+                <div class="px-5 pt-5 min-h-[80px] overflow-y-auto max-h-[300px]">
+                    <div id="chatJastiperMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
+                </div>
+                <div class="flex items-center px-5 pt-2 gap-2">
+                    <input id="chatJastiperInput" type="text" placeholder="Tulis pesan..."
+                        class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
+                    <button onclick="sendJastiperMessageFromStorePage()"
+                        class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-8 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6" id="storeNameDetail">Memuat Detail Toko...</h1>
+
+            <div class="flex items-center mb-4">
+                <img id="storeImage" src="https://via.placeholder.com/80" alt="Logo Toko"
+                    class="w-20 h-20 rounded-full mr-4 object-cover border border-gray-200">
+                <div>
+                    <div class="text-xl font-semibold text-gray-800" id="storeDisplayName"></div>
+                    <div class="text-sm text-gray-500" id="storeActiveStatus"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-gray-700"><span class="font-semibold">Pengikut:</span> <span id="storeFollowers"
+                            class="text-blue-600"></span></p>
+                </div>
+                <div>
+                    <p class="text-gray-700"><span class="font-semibold">Jumlah Produk:</span> <span
+                            id="storeProductsCount" class="text-blue-600"></span></p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Tentang Toko</h2>
+                <p class="text-gray-700 leading-relaxed" id="storeDescription">
+                    </p>
+            </div>
+
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Produk dari Toko Ini</h2>
+                <div id="storeProductsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <p class="text-gray-500" id="noProductsMessage">Memuat produk...</p>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button
+                    class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800"
+                    onclick="openChatJastiperOnStorePage()">Chat dengan Toko Ini</button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        // Pastikan path ke firebase-config.js benar relatif dari toko.html
+        import { db, auth } from './js/firebase-config.js'; 
+        import { doc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+        // Fungsi untuk mengambil parameter dari URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function loadStoreDetail() {
+            const storeId = getQueryParam('storeId');
+            const storeNameDetailElement = document.getElementById('storeNameDetail');
+            const storeDisplayNameElement = document.getElementById('storeDisplayName');
+            const storeActiveStatusElement = document.getElementById('storeActiveStatus');
+            const storeFollowersElement = document.getElementById('storeFollowers');
+            const storeProductsCountElement = document.getElementById('storeProductsCount');
+            const storeDescriptionElement = document.getElementById('storeDescription');
+            const storeImageElement = document.getElementById('storeImage');
+            const chatJastiperHeaderElement = document.getElementById('chatJastiperHeader');
+            const storeProductsGridElement = document.getElementById('storeProductsGrid');
+            const noProductsMessageElement = document.getElementById('noProductsMessage');
+
+            if (!storeId) {
+                storeNameDetailElement.textContent = "ID Toko tidak ditemukan.";
+                noProductsMessageElement.textContent = "Tidak ada toko yang dipilih.";
+                return;
+            }
+
+            try {
+                // Ambil detail toko
+                const storeDocRef = doc(db, "stores", storeId);
+                const storeDocSnap = await getDoc(storeDocRef);
+
+                if (storeDocSnap.exists()) {
+                    const storeData = storeDocSnap.data();
+                    storeNameDetailElement.textContent = storeData.name || "Nama Toko";
+                    storeDisplayNameElement.textContent = storeData.name || "Nama Toko";
+                    storeActiveStatusElement.textContent = storeData.active_status || "Tidak diketahui";
+                    storeFollowersElement.textContent = storeData.followers ? storeData.followers.toLocaleString('id-ID') : '0';
+                    storeProductsCountElement.textContent = storeData.products_count ? storeData.products_count.toLocaleString('id-ID') : '0';
+                    storeDescriptionElement.textContent = storeData.description || "Deskripsi toko belum tersedia.";
+                    if (storeData.image_url) {
+                        storeImageElement.src = storeData.image_url;
+                    } else {
+                        storeImageElement.src = "https://via.placeholder.com/80"; // Default image if none
+                    }
+                    if (chatJastiperHeaderElement) {
+                        chatJastiperHeaderElement.textContent = `Chat dengan ${storeData.name || 'Toko'}`;
+                    }
+
+                    // Ambil produk-produk dari toko ini
+                    const productsQuery = query(collection(db, "products"), where("storeId", "==", storeId));
+                    const productsSnap = await getDocs(productsQuery);
+
+                    storeProductsGridElement.innerHTML = ''; // Bersihkan pesan "Memuat produk..."
+                    if (!productsSnap.empty) {
+                        productsSnap.forEach(productDoc => {
+                            const productData = productDoc.data();
+                            const productId = productDoc.id; // Ambil ID produk
+
+                            // Buat elemen HTML untuk setiap produk
+                            const productElement = document.createElement('a'); // Gunakan <a> untuk bisa diklik ke detail produk
+                            productElement.href = `pembeli_produk_detail.html?productId=${productId}`; // Link ke halaman detail produk
+                            productElement.className = 'block bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200';
+                            productElement.innerHTML = `
+                                <img src="${productData.imageUrl || 'https://via.placeholder.com/150'}" alt="${productData.name}" class="w-full h-32 object-cover rounded-md mb-2">
+                                <h3 class="font-semibold text-gray-900 truncate">${productData.name}</h3>
+                                <p class="text-red-700 font-bold text-lg mt-1">Rp ${productData.price ? productData.price.toLocaleString('id-ID') : '0'}</p>
+                            `;
+                            storeProductsGridElement.appendChild(productElement);
+                        });
+                    } else {
+                        noProductsMessageElement.textContent = "Tidak ada produk dari toko ini.";
+                        storeProductsGridElement.appendChild(noProductsMessageElement);
+                    }
+
+                } else {
+                    storeNameDetailElement.textContent = "Toko tidak ditemukan.";
+                    noProductsMessageElement.textContent = "Toko yang Anda cari tidak ditemukan.";
+                }
+            } catch (error) {
+                console.error("Error loading store detail: ", error);
+                storeNameDetailElement.textContent = "Gagal memuat detail toko.";
+                noProductsMessageElement.textContent = "Terjadi kesalahan saat memuat produk.";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadStoreDetail);
+
+        // Dropdown User (copied from main page for consistency)
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+        if (userIcon && userDropdown) {
+            userIcon.onclick = function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            };
+            document.addEventListener('click', function (e) {
+                if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
+        function logoutUser() {
+            alert('Berhasil logout!');
+            userDropdown.classList.add('hidden');
+        }
+        function openChatCS() {
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = '<b>CS:</b> Ada yang bisa kami bantu?';
+        }
+        function sendCSMessage() {
+            var input = document.getElementById('chatCSInput');
+            var messages = document.getElementById('chatCSMessages');
+            if (input.value.trim() !== '') {
+                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+                setTimeout(function () {
+                    messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
+                }, 800);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight; // Scroll to bottom
+            }
+        }
+
+        // Functions for Jastiper Chat on the Store Detail page
+        function openChatJastiperOnStorePage() {
+            const chatJastiperModal = document.getElementById('chatJastiperModal');
+            const chatJastiperMessages = document.getElementById('chatJastiperMessages');
+            const storeDisplayName = document.getElementById('storeDisplayName').textContent;
+            const storeId = getQueryParam('storeId'); // Ambil storeId dari URL halaman toko
+
+            if (chatJastiperModal && chatJastiperMessages) {
+                document.getElementById('chatJastiperHeader').textContent = `Chat dengan ${storeDisplayName}`;
+                chatJastiperMessages.innerHTML = `<b>${storeDisplayName}:</b> Halo, ada yang bisa saya bantu?`;
+                chatJastiperModal.style.display = 'flex';
+                chatJastiperModal.dataset.storeId = storeId; // Simpan storeId di modal untuk digunakan nanti
+            }
+        }
+
+        function sendJastiperMessageFromStorePage() {
+            var input = document.getElementById('chatJastiperInput');
+            var messages = document.getElementById('chatJastiperMessages');
+            const storeName = document.getElementById('chatJastiperHeader').textContent.replace('Chat dengan ', '');
+            const storeId = document.getElementById('chatJastiperModal').dataset.storeId; // Ambil storeId dari dataset
+
+            if (input.value.trim() !== '') {
+                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+                // Di sini Anda akan mengintegrasikan dengan Firebase Firestore untuk menyimpan pesan
+                // Misalnya: addDoc(collection(db, "chats"), { sender: "user", receiverId: storeId, message: input.value, timestamp: serverTimestamp() });
+                setTimeout(function () {
+                    messages.innerHTML += `<br><b>${storeName}:</b> Oke, terima kasih pesan Anda sudah kami terima!`;
+                }, 800);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight; // Scroll to bottom
+            }
+        }
+
+        // Make these functions globally accessible if they are called from inline HTML attributes
+        window.openChatJastiperOnStorePage = openChatJastiperOnStorePage;
+        window.sendJastiperMessageFromStorePage = sendJastiperMessageFromStorePage;
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+        window.logoutUser = logoutUser;
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Ini akan mengizinkan siapa pun (termasuk yang tidak login) untuk membaca/menulis ke semua koleksi.
+    // HANYA UNTUK PENGUJIAN.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

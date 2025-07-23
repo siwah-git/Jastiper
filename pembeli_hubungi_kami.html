@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Kami - TitipGo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom styles for dropdowns and chat popup */
+        .dropdown-content {
+            display: none;
+        }
+
+        .dropdown-kategori:hover .dropdown-content {
+            display: block;
+        }
+
+        #userDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 60px;
+            background-color: white;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            min-width: 160px;
+            border-radius: 0.5rem;
+        }
+
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chat-body {
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid #eee;
+            display: flex;
+        }
+
+        .chat-footer input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .chat-footer button {
+            background-color: #ec4899;
+            /* pink-500 */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        /* Hero section styling for background image */
+        .hero-section {
+            background-image: url('https://source.unsplash.com/random/1600x600/?travel,shopping'); /* Random travel/shopping image */
+            background-size: cover;
+            background-position: center;
+            /* color: white; <-- Dihapus karena teks sekarang hitam */
+            /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); <-- Dihapus/Dikomnetari */
+        }
+    </style>
+</head>
+
+<body class="bg-blue-100 font-sans">
+
+  <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+    <div class="flex items-center space-x-3">
+        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+        <div class="relative hidden md:block">
+            <input type="text" placeholder="Cari Barang..."
+                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+            </svg>
+        </div>
+    </div>
+    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+    </nav>
+    <nav class="flex items-center space-x-4 sm:space-x-6">
+        <a href="pembeli_dashboard.html"
+            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+        <div class="dropdown-kategori relative inline-block hidden md:block">
+            <a href="pembeli_kategori.html" 
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+        </div>
+
+        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+            </svg>
+        </a>
+        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                </path>
+            </svg>
+        </a>
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+            id="userIcon" style="cursor:pointer;">
+        <div id="userDropdown"
+            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+            <a href="pembeli_akun.html"
+                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+            <a href="pembeli_pesanan_saya.html"
+                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+            <a href="#" onclick="openChatCS();return false;"
+                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                CS</a>
+            <a href="#" onclick="openChatCS();return false;"
+                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+            <a href="#" onclick="logoutUser();return false;"
+                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+        </div>
+    </nav>
+</header>
+
+    <section class="hero-section py-16 mt-16 text-center rounded-b-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-6xl font-extrabold mb-4 text-black">Hubungi Kami</h1>
+            <p class="text-lg md:text-xl max-w-2xl mx-auto text-black">
+                Kami siap membantu Anda! Jangan ragu untuk menghubungi kami dengan pertanyaan, saran, atau masukan.
+            </p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Informasi Kontak</h2>
+                <div class="space-y-6 text-gray-700">
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-pink-500 text-xl mr-4"></i>
+                        <div>
+                            <p class="font-semibold">Alamat Kantor:</p>
+                            <p>Jl. Menuju Kesuksesan, N0.11, Surakartta, Jawa Tengah, Indonesia 60231</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-pink-500 text-xl mr-4"></i>
+                        <div>
+                            <p class="font-semibold">Email:</p>
+                            <p><a href="mailto:support@titipgo.com" class="text-blue-600 hover:underline">support@titipgo.com</a></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-phone-alt text-pink-500 text-xl mr-4"></i>
+                        <div>
+                            <p class="font-semibold">Telepon:</p>
+                            <p><a href="tel:+6281234567890" class="text-blue-600 hover:underline">+62 812-3456-7890</a></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fab fa-whatsapp text-pink-500 text-xl mr-4"></i>
+                        <div>
+                            <p class="font-semibold">WhatsApp:</p>
+                            <p><a href="https://wa.me/6281234567890" target="_blank" class="text-blue-600 hover:underline">+62 812-3456-7890</a></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock text-pink-500 text-xl mr-4"></i>
+                        <div>
+                            <p class="font-semibold">Jam Operasional:</p>
+                            <p>Senin - Jumat: 09:00 - 17:00 WIB</p>
+                            <p>Sabtu, Minggu & Hari Libur Nasional: Tutup</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Kirim Pesan kepada Kami</h2>
+                <form action="#" method="POST" class="space-y-4">
+                    <div>
+                        <label for="nama" class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap:</label>
+                        <input type="text" id="nama" name="nama"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-pink-500"
+                            placeholder="Masukkan nama lengkap Anda" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" name="email"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-pink-500"
+                            placeholder="Masukkan alamat email Anda" required>
+                    </div>
+                    <div>
+                        <label for="subjek" class="block text-gray-700 text-sm font-bold mb-2">Subjek:</label>
+                        <input type="text" id="subjek" name="subjek"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-pink-500"
+                            placeholder="Contoh: Pertanyaan Produk, Dukungan Teknis" required>
+                    </div>
+                    <div>
+                        <label for="pesan" class="block text-gray-700 text-sm font-bold mb-2">Pesan Anda:</label>
+                        <textarea id="pesan" name="pesan" rows="6"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-pink-500"
+                            placeholder="Tulis pesan Anda di sini..." required></textarea>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit"
+                            class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">
+                            Kirim Pesan
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <section class="bg-white p-8 rounded-lg shadow-md mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3 text-center">Lokasi Kami</h2>
+            <div class="aspect-w-16 aspect-h-9">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.985739906456!2d110.80802867363907!3d-7.576530292437764!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a17cb1d602faf%3A0x72d326508fea95a7!2sKost%20fatimah!5e0!3m2!1sen!2sid!4v1753172423744!5m2!1sen!2sid" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <p class="text-center text-gray-600 mt-4">Kunjungi kantor kami atau lihat di peta.</p>
+        </section>
+    </main>
+
+ <footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
+                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
+                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
+                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
+            </ul>
+        </div>
+        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+        </div>
+        <div class="w-full sm:w-1/3 text-right">
+            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
+                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
+                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
+                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
+    </div>
+</footer>
+    <div id="chatPopup" class="chat-popup">
+        <div class="chat-header">
+            <span>Chat dengan CS</span>
+            <button onclick="closeChatCS()" class="text-gray-500 hover:text-gray-700">×</button>
+        </div>
+        <div class="chat-body">
+            <p>Halo! Ada yang bisa kami bantu?</p>
+            </div>
+        <div class="chat-footer">
+            <input type="text" placeholder="Tulis pesan..." id="chatMessageInput">
+            <button onclick="sendChatMessage()">Kirim</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Dropdown functionality for Kategori
+        document.getElementById('kategoriMenu').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            const dropdown = document.getElementById('dropdownKategori');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown if clicked outside
+        window.addEventListener('click', function (event) {
+            if (!event.target.matches('#kategoriMenu')) {
+                const dropdown = document.getElementById('dropdownKategori');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+
+        // User dropdown functionality
+        document.getElementById('userIcon').addEventListener('click', function (event) {
+            event.stopPropagation(); // Prevent click from closing immediately
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (!event.target.closest('#userDropdown') && !event.target.matches('#userIcon')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+
+        // Chat with CS functionality
+        function openChatCS() {
+            document.getElementById('chatPopup').style.display = 'block';
+        }
+
+        function closeChatCS() {
+            document.getElementById('chatPopup').style.display = 'none';
+        }
+
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatMessageInput');
+            const message = chatInput.value.trim();
+            if (message) {
+                const chatBody = document.querySelector('.chat-body');
+                const newMessage = document.createElement('p');
+                newMessage.textContent = `Anda: ${message}`;
+                chatBody.appendChild(newMessage);
+                chatInput.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight; // Scroll to bottom
+                // In a real application, you would send this message to a backend/CS
+            }
+        }
+
+        // Logout functionality (example)
+        function logoutUser() {
+            alert('Anda telah logout!');
+            // Implement actual logout logic, e.g., clear session, redirect to login page
+            window.location.href = 'index.html'; // Example redirect
+        }
+    </script>
+</body>
+
+</html>
