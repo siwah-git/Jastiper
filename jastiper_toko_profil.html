@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 
-<<<<<<< HEAD
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-image: url("asset/images/background.png");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        height: 100vh;
-        overflow: hidden;
-      }
-=======
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,7 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
->>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     body {
@@ -304,26 +294,6 @@
       border: 1px solid #ef4444;
     }
 
-<<<<<<< HEAD
-  <body>
-    <div class="flex h-full">
-      <div class="sidebar">
-        <div class="sidebar-header">
-          <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
-        </div>
-        <nav class="sidebar-nav">
-          <ul>
-            <li>
-              <span>📋</span> <a href="jastiper_dashboard.html">To-Do List</a>
-            </li>
-            <li class="active">
-              <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
-            </li>
-            <li><span>💬</span> <a href="jastiper_chat.html">Chat</a></li>
-            <li id="logout-button"><span>➡️</span> Logout</li>
-          </ul>
-        </nav>
-=======
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
     }
@@ -335,7 +305,6 @@
     <div class="sidebar">
       <div class="sidebar-header">
         <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
->>>>>>> 98533d9d2e888bc08fb42c417ce1273101df9f57
       </div>
       <nav class="sidebar-nav">
         <ul>
@@ -436,21 +405,23 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script>
-    // --- PENGAMBILAN JASTIPER ID SETELAH LOGIN ---
-    let currentJastiperId = localStorage.getItem("jastiperId");
-    if (!currentJastiperId) {
-      console.warn(
-        "Jastiper ID tidak ditemukan di localStorage. Menggunakan ID contoh untuk testing."
-      );
-      const tempJastiperId = "contoh_jastiper_id_untuk_testing"; // Ganti ini dengan ID jastiper yang valid dari Firestore Anda untuk pengujian
-      localStorage.setItem("jastiperId", tempJastiperId); // Simpan untuk sesi demo
-      currentJastiperId = tempJastiperId;
-    } else {
-      console.log("Jastiper ID yang terdeteksi:", currentJastiperId);
-    }
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import dari firebase-config.js yang sudah Anda buat
+    import { db, auth, doc, getDoc, setDoc } from "../js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+    // Jika Anda berencana untuk mengupload gambar, Anda juga perlu import ini:
+    // import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
 
     // DOM Elements for Store Information
     const form = document.getElementById("edit-store-form");
@@ -458,25 +429,63 @@
     const negaraTokoInput = document.getElementById("edit-negaraToko");
     const deskripsiTokoInput = document.getElementById("edit-deskripsiToko");
     const alamatTokoInput = document.getElementById("edit-alamatToko");
-    const feeInput = document.getElementById("edit-fee"); // Fee input
-    const profileImageUrlInput = document.getElementById(
-      "edit-profileImageUrl"
-    );
-    const storeProfileImagePreview = document.getElementById(
-      "store-profile-image-preview"
-    );
-    const storeImagePlaceholder = document.getElementById(
-      "store-image-placeholder"
-    );
-    const profileImageUrlInputContainer = document.getElementById(
-      "profileImageUrlInputContainer"
-    );
+    const feeInput = document.getElementById("edit-fee");
+    const profileImageUrlInput = document.getElementById("edit-profileImageUrl");
+    const storeProfileImagePreview = document.getElementById("store-profile-image-preview");
+    const storeImagePlaceholder = document.getElementById("store-image-placeholder");
+    const profileImageUrlInputContainer = document.getElementById("profileImageUrlInputContainer");
 
     const editButton = document.getElementById("edit-button");
     const formButtons = document.getElementById("form-buttons");
     const cancelEditButton = document.getElementById("cancel-edit-button");
 
-    let originalStoreData = null; // To store data when edit mode starts, for cancel functionality
+    let currentTokoId = null; // Changed from currentJastiperId to currentTokoId
+    let originalStoreData = null; // Untuk menyimpan data asli saat mode edit dimulai
+
+    // Logout Modal elements
+    const logoutButton = document.getElementById("logout-button");
+    const logoutModal = document.getElementById("logout-modal");
+    const cancelLogoutButton = document.getElementById("cancel-logout");
+    const confirmLogoutButton = document.getElementById("confirm-logout");
+
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customConfirmBtn.classList.remove('btn-confirm');
+        customConfirmBtn.classList.add('btn-danger'); // Make confirm button red for delete/logout
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customConfirmBtn.classList.remove('btn-danger'); // Reset to default if not confirmation
+        customConfirmBtn.classList.add('btn-primary'); // Make it green for success/info
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmBtn.textContent = isConfirmation ? "Konfirmasi" : "OK";
+      customConfirmModal.classList.add('show');
+    }
+
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null;
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null;
+    });
 
     // Function to toggle form fields read-only/disabled state
     function setFormEditability(isEditable) {
@@ -487,11 +496,10 @@
         alamatTokoInput,
         profileImageUrlInput,
         feeInput,
-      ]; // Added feeInput here
+      ];
 
       fields.forEach((field) => {
         field.readOnly = !isEditable;
-        // Add/remove disabled class for visual cue
         if (isEditable) {
           field.classList.remove("bg-gray-100", "cursor-not-allowed");
         } else {
@@ -499,61 +507,46 @@
         }
       });
 
-      // Toggle image URL input container visibility
       if (isEditable) {
         profileImageUrlInputContainer.classList.remove("hidden");
-      } else {
-        profileImageUrlInputContainer.classList.add("hidden");
-      }
-
-      // Toggle buttons visibility (Simpan, Batal)
-      if (isEditable) {
         formButtons.classList.remove("hidden");
       } else {
+        profileImageUrlInputContainer.classList.add("hidden");
         formButtons.classList.add("hidden");
       }
     }
 
-    async function loadStoreData(jastiperId) {
-      if (!jastiperId) {
-        console.error("Jastiper ID not found.");
-        alert("Jastiper ID tidak ditemukan. Kembali ke halaman login.");
-        window.location.href = "halaman_login_anda.html";
-        return;
-      }
-
+    async function loadStoreData(tokoId) { // Changed jastiperId to tokoId
       try {
-        console.log(
-          "Simulating loading store data for Jastiper ID:",
-          jastiperId
-        );
-        // Simulate fetching store data (replace with actual Firestore fetch later)
-        const store = {
-          namaToko: "OTAKU PICK",
-          negaraToko: "Indonesia",
-          deskripsiToko:
-            "OtakuPick adalah layanan jastip (jasa titip) khusus barang-barang original dan eksklusif bertema anime langsung dari Jepang! Kami baru kamu mendapatkan merchandise impian dari official store, event terbatas, atau rilisan khusus yang sulit ditemukan di Indonesia.",
-          alamatToko:
-            "Jl. Melati No. 12, RT 05 RW 03, Kelurahan Sukajaya, Kecamatan Cibuninying Kaler, Kota Bandung, Jawa Barat, 40123 - Indonesia",
-          fee: 15000, // Example fee
-          profileImageUrl: "https://i.ibb.co/L5r001B/profile-placeholder.png", // Example profile image
-          ownerId: jastiperId, // Ensure the store belongs to this jastiper
-        };
+        // Mengambil dokumen toko dari koleksi 'toko'
+        const tokoDocRef = doc(db, "toko", tokoId); // Changed collection to "toko"
+        const docSnap = await getDoc(tokoDocRef);
 
-        // In a real application, you'd verify ownerId with currentJastiperId here
-        if (store.ownerId !== jastiperId) {
-          alert("Anda tidak memiliki izin untuk melihat/mengedit toko ini.");
-          window.location.href = "jastiper_dashboard.html"; // Or relevant page
-          return;
+        let storeData = {};
+
+        if (docSnap.exists()) {
+          console.log("Data toko ditemukan:", docSnap.data());
+          storeData = docSnap.data();
+        } else {
+          console.log("Dokumen toko tidak ditemukan untuk Toko ID:", tokoId); // Updated log message
+          // Jika dokumen tidak ada, inisialisasi dengan nilai kosong
+          storeData = {
+            namaToko: "",
+            negaraToko: "",
+            deskripsiToko: "",
+            alamatToko: "",
+            fee: 0, // Changed from feeJastiper to fee
+            profileImageUrl: "",
+          };
         }
 
-        originalStoreData = { ...store }; // Store original data for cancel
-        populateStoreForm(store);
-        setFormEditability(false); // Initially read-only
+        originalStoreData = { ...storeData }; // Simpan data asli
+        populateStoreForm(storeData);
+        setFormEditability(false); // Awalnya read-only
       } catch (error) {
         console.error("Error loading store data:", error);
-        alert("Terjadi kesalahan saat memuat informasi toko.");
-        window.location.href = "jastiper_dashboard.html"; // Or relevant page
+        showCustomConfirm("Terjadi kesalahan saat memuat informasi toko: " + error.message, null);
+        // Opsional: Redirect atau tampilkan pesan error yang lebih spesifik
       }
     }
 
@@ -562,17 +555,16 @@
       negaraTokoInput.value = store.negaraToko || "";
       deskripsiTokoInput.value = store.deskripsiToko || "";
       alamatTokoInput.value = store.alamatToko || "";
-      // Display fee as number in the input, not formatted
-      feeInput.value = store.fee || 0;
+      feeInput.value = store.fee !== undefined ? store.fee : 0; // Changed from feeJastiper to fee
       profileImageUrlInput.value = store.profileImageUrl || "";
 
       if (store.profileImageUrl) {
-        storeProfileImagePreview.src = profileImageUrlInput.value;
+        storeProfileImagePreview.src = store.profileImageUrl; // Menggunakan store.profileImageUrl
         storeProfileImagePreview.classList.remove("hidden");
-        storeImagePlaceholder.classList.add("hidden"); // Hide placeholder if image exists
+        storeImagePlaceholder.classList.add("hidden");
       } else {
         storeProfileImagePreview.classList.add("hidden");
-        storeImagePlaceholder.classList.remove("hidden"); // Show placeholder if no image
+        storeImagePlaceholder.classList.remove("hidden");
       }
     }
 
@@ -583,9 +575,9 @@
 
     cancelEditButton.addEventListener("click", () => {
       if (originalStoreData) {
-        populateStoreForm(originalStoreData); // Revert to original data
+        populateStoreForm(originalStoreData); // Mengembalikan ke data asli
       }
-      setFormEditability(false); // Go back to read-only mode
+      setFormEditability(false); // Kembali ke mode read-only
     });
 
     form.addEventListener("submit", async (e) => {
@@ -593,68 +585,103 @@
 
       const updatedData = {
         namaToko: namaTokoInput.value,
-        namaTokoLowerCase: namaTokoInput.value.toLowerCase(), // For searching
+        namaTokoLowerCase: namaTokoInput.value.toLowerCase(), // Untuk pencarian
         negaraToko: negaraTokoInput.value,
         deskripsiToko: deskripsiTokoInput.value,
         alamatToko: alamatTokoInput.value,
-        fee: parseFloat(feeInput.value) || 0, // Parse fee as a number
+        fee: parseFloat(feeInput.value) || 0, // Changed from feeJastiper to fee
         profileImageUrl: profileImageUrlInput.value,
+        // Tambahkan ownerId jika belum ada di dokumen toko
+        ownerId: currentTokoId, // Changed from currentJastiperId to currentTokoId
       };
 
       try {
-        console.log(
-          "Simulating store update for Jastiper ID:",
-          currentJastiperId,
-          updatedData
-        );
-        alert("Informasi toko berhasil diperbarui! (Simulasi)");
-        // After successful save, update originalStoreData and revert to view mode
-        originalStoreData = { ...updatedData }; // Update original data with new fee
-        setFormEditability(false);
+        // Menyimpan/memperbarui dokumen di koleksi 'toko' dengan ID pengguna
+        await setDoc(doc(db, "toko", currentTokoId), updatedData, { merge: true }); // Changed collection to "toko"
+        showCustomConfirm("Informasi toko berhasil diperbarui!", () => {
+          originalStoreData = { ...updatedData }; // Update data asli setelah berhasil disimpan
+          setFormEditability(false);
+        });
       } catch (error) {
         console.error("Error updating store:", error);
-        alert("Gagal memperbarui informasi toko: " + error.message);
+        showCustomConfirm("Gagal memperbarui informasi toko: " + error.message, null);
       }
     });
 
-    // Event listener for profile image URL input
+    // Event listener for profile image URL input to show preview
     profileImageUrlInput.addEventListener("input", () => {
       if (profileImageUrlInput.value) {
         storeProfileImagePreview.src = profileImageUrlInput.value;
         storeProfileImagePreview.classList.remove("hidden");
-        storeImagePlaceholder.classList.add("hidden"); // Hide placeholder
+        storeImagePlaceholder.classList.add("hidden");
       } else {
         storeProfileImagePreview.classList.add("hidden");
-        storeImagePlaceholder.classList.remove("hidden"); // Show placeholder
-      }
-    });
-
-    // Initial load for store data
-    document.addEventListener("DOMContentLoaded", () => {
-      if (currentJastiperId) {
-        loadStoreData(currentJastiperId);
-      } else {
-        alert("Anda harus login untuk melihat informasi toko.");
-        window.location.href = "jastiper_daftar_toko.html";
+        storeImagePlaceholder.classList.remove("hidden");
       }
     });
 
     // Logout functionality
-    const logoutButton = document.getElementById("logout-button");
-    const logoutModal = document.getElementById("logout-modal");
-    const cancelLogoutButton = document.getElementById("cancel-logout");
-    const confirmLogoutButton = document.getElementById("confirm-logout");
-
     logoutButton.addEventListener("click", () => {
-      logoutModal.classList.add("show");
+      showCustomConfirm("Apakah Anda yakin ingin keluar dari akun ini?", async () => {
+        try {
+          await signOut(auth);
+          showCustomConfirm("Anda telah logout.", () => {
+            window.location.href = "login_user.html"; // Redirect ke halaman login
+          });
+        } catch (error) {
+          console.error("Error logging out:", error);
+          showCustomConfirm("Gagal logout. Silakan coba lagi.", null);
+        }
+      }, true); // true untuk menampilkan sebagai konfirmasi
     });
-    cancelLogoutButton.addEventListener("click", () => {
-      logoutModal.classList.remove("show");
+
+
+    // Auth State management
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentTokoId = user.uid; // Changed from currentJastiperId to currentTokoId
+        console.log("Logged in Toko UID:", currentTokoId); // Updated log message
+        loadStoreData(currentTokoId);
+      } else {
+        currentTokoId = null; // Changed from currentJastiperId to currentTokoId
+        console.log("No user signed in. Redirecting to login.");
+        // Redirect ke halaman login jika tidak ada user
+        window.location.href = "login_user.html";
+      }
     });
-    confirmLogoutButton.addEventListener("click", () => {
-      localStorage.removeItem("jastiperId");
-      alert("Anda telah logout.");
-      window.location.href = "pembeli_dashboard.html";
+
+    // Script to highlight sidebar item
+    const currentPath = window.location.pathname.split("/").pop();
+    const sidebarLinks = document.querySelectorAll(".sidebar-nav li");
+
+    sidebarLinks.forEach((item) => {
+      const link = item.querySelector("a");
+      if (link) {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
+
+        let isLinkActive = false;
+
+        if (currentPath === linkFileName) {
+          isLinkActive = true;
+        } else if (
+          currentPath === "" &&
+          linkFileName === "jastiper_dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      } else if (
+        item.id === "logout-button" &&
+        currentPath === "logout"
+      ) {
+        item.classList.add("active");
+      }
     });
   </script>
 </body>

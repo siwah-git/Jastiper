@@ -12,7 +12,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDKs - Pastikan versi konsisten dengan firebase-config.js Anda -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
@@ -429,7 +428,7 @@
             const address = addressInput.value.trim();
 
             // Validasi sederhana
-            if (!fullName || !phoneNumber || !email || !password || !dob || !gender || !address) { // DIKOREKSI: !email
+            if (!fullName || !phoneNumber || !email || !password || !dob || !gender || !address) {
                 errorMessageDisplay.textContent = "Semua field harus diisi.";
                 errorMessageDisplay.classList.remove("hidden");
                 return;
@@ -453,18 +452,17 @@
                 console.log("User berhasil terdaftar di Firebase Auth:", user);
 
                 console.log("Mencoba menyimpan data tambahan ke Firestore...");
-                // Simpan data tambahan user ke Firestore dalam koleksi 'user' (sesuai image_9bc0d1.png)
-                await setDoc(doc(db, "user", user.uid), { // <-- KOLEKSI 'user' (huruf kecil)
+                // Simpan data tambahan user ke Firestore dalam koleksi 'user'
+                await setDoc(doc(db, "user", user.uid), {
                     nama_pembeli: fullName,
                     no_telepon: phoneNumber,
                     email: email,
                     tanggal_lahir: dob,
-                    jenis_kelamin: gender, // Sesuaikan dengan field di Firestore Anda
+                    jenis_kelamin: gender,
                     alamat: address,
                     tanggal_daftar: new Date(),
-                    status_akun: "active", // Default status akun
-                    // id_pembeli tidak perlu diisi di sini karena UID dari Auth sudah unik
-                    // kata_sandi tidak perlu disimpan di Firestore jika sudah ada di Auth
+                    status_akun: "active",
+                    role: "pembeli" // <-- Ini adalah baris yang ditambahkan/diubah!
                 });
                 console.log("Data user berhasil disimpan di Firestore dengan UID:", user.uid);
 

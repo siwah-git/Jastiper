@@ -3,8 +3,34 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 import { getAuth, signInWithCustomToken, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
+<<<<<<< HEAD
 // Konfigurasi Firebase Anda dari Firebase Console
 // Menggunakan nilai hardcoded untuk penggunaan lokal
+=======
+// Impor fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.10)
+// Pastikan versi yang digunakan konsisten di seluruh proyek Anda.
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  addDoc,
+  deleteDoc,
+  serverTimestamp,
+  Timestamp // <--- Pastikan Timestamp diimpor di sini
+} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+
+// Konfigurasi Firebase aplikasi web Anda (INI BAGIAN YANG UNIK UNTUK PROYEK ANDA)
+>>>>>>> d7f2f82e32093a3ff9fa634514ba2263a8590fc0
 const firebaseConfig = {
     apiKey: "AlzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ", // Web API Key Anda
     authDomain: "titipgo-28f84.firebaseapp.com",
@@ -16,6 +42,7 @@ const firebaseConfig = {
 
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
+<<<<<<< HEAD
 const db = getFirestore(app);
 const auth = getAuth(app);
 
@@ -40,3 +67,44 @@ if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
 }
 
 export { db, auth, app }; // Menghapus appId dari export karena tidak digunakan di tempat lain
+=======
+const auth = getAuth(app);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// Ekspor objek dan layanan agar bisa diimpor di file lain
+export {
+  app,
+  auth,
+  analytics,
+  db,
+  storage,
+
+  // Fungsi Auth
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+
+  // Fungsi Firestore
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  addDoc,
+  deleteDoc,
+  serverTimestamp,
+  Timestamp, // <--- Pastikan Timestamp diekspor di sini
+
+  // Fungsi Storage
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject
+};
+>>>>>>> d7f2f82e32093a3ff9fa634514ba2263a8590fc0

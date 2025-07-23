@@ -281,8 +281,28 @@
       </main>
     </div>
 
-    <script>
-      // Firebase configuration (replace with your actual config from Firebase project settings)
+    <script type="module">
+      // Pastikan PATH ini benar sesuai struktur folder Anda
+      // Pastikan PATH ini benar sesuai struktur folder Anda
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        getDoc,
+        query,
+        where,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
+      // PASTIKAN ANDA MENGGANTI INI DENGAN KONFIGURASI PROYEK FIREBASE ANDA!
       const firebaseConfig = {
         apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
         authDomain: "titipgo-28f84.firebaseapp.com",
@@ -290,17 +310,18 @@
         storageBucket: "titipgo-28f84.firebasestorage.app",
         messagingSenderId: "816687535591",
         appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        measurementId: "G-CS3V405F3B",
+        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
       };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-      const auth = firebase.auth();
+      // Inisialisasi Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
 
+      // Get references to HTML elements
       const storeTableBody = document.getElementById("storeTableBody");
       const searchInput = document.getElementById("search");
-      const statusFilter = document.getElementById("statusFilter");
+      const statusFilter = document.getElementById("statusFilter"); // Asumsi ini untuk status verifikasi toko
       const paginationInfo = document.getElementById("paginationInfo");
       const paginationControls = document.getElementById("paginationControls");
       const logoutButton = document.getElementById("logoutButton");
@@ -310,29 +331,118 @@
       const itemsPerPage = 10;
       let currentPage = 1;
 
+      // Helper function to get status class (for verificationStatus or general status)
+      function getStoreStatusClass(status) {
+        // Sesuaikan kelas ini berdasarkan nilai status yang ada di data toko Anda
+        // Misalnya, jika status di toko bisa 'active', 'inactive', 'pending', dll.
+        switch (status) {
+          case "active": // Contoh status aktif
+            return "bg-green-100 text-green-800";
+          case "pending": // Contoh status menunggu verifikasi
+            return "bg-yellow-100 text-yellow-800";
+          case "rejected": // Contoh status ditolak
+            return "bg-red-100 text-red-800";
+          case "inactive": // Contoh status tidak aktif
+            return "bg-gray-100 text-gray-800";
+          default:
+            return "bg-gray-100 text-gray-800"; // Default jika tidak diketahui
+        }
+      }
+
+      // Helper function to calculate average rating based on your 'bintang' map structure
+      async function getAverageRating(storeId) {
+        const ratingsRef = collection(db, "rating"); // Menggunakan nama koleksi "rating"
+        // Kueri ini akan mencari rating yang terkait dengan `storeId`
+        // ASUMSI: Setiap dokumen rating memiliki field 'id_toko' (string) yang merujuk ke ID dokumen toko
+        // ASUMSI: Setiap dokumen rating memiliki field 'nilai_bintang' (number) yang menyimpan nilai bintang (1-5)
+
+        // Jika koleksi `rating` Anda berisi dokumen ulasan INDIVIDUAL, maka seharusnya ada field `id_toko` dan `nilai_bintang`.
+        // Jika tidak ada `id_toko` di dokumen rating Anda, kita tidak bisa menghitung rating per toko secara langsung dari koleksi `rating` ini.
+        // Jika field `bintang` Anda adalah map frekuensi (misal: { "1": 5, "2": 3, ...}), ini perlu logika penghitungan yang berbeda.
+        // Untuk saat ini, saya tetap pada asumsi rating individu per dokumen dengan field `nilai_bintang`.
+        const q = query(ratingsRef, where("id_toko", "==", storeId));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          return { average: 0, count: 0 };
+        }
+
+        let totalRating = 0;
+        querySnapshot.forEach((doc) => {
+          // ASUMSI: Setiap dokumen rating memiliki field 'nilai_bintang' (contoh: 4)
+          // JIKA TIDAK ADA FIELD INI, INI AKAN GAGAL.
+          totalRating += doc.data().nilai_bintang || 0;
+        });
+
+        const count = querySnapshot.size;
+        return { average: (totalRating / count).toFixed(1), count: count };
+      }
+
       // Function to fetch stores from Firebase
       async function fetchStores() {
         try {
-          const storesRef = db.collection("stores"); // Asumsi koleksi "stores"
-          const snapshot = await storesRef.get();
-          allStores = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          applyFiltersAndSearch(); // Apply filters and search after fetching
+          const storesRef = collection(db, "toko"); // MENGGANTI 'stores' menjadi 'toko'
+          const snapshot = await getDocs(storesRef);
+
+          const fetchedStores = [];
+          for (const storeDoc of snapshot.docs) {
+            const storeData = storeDoc.data();
+            const storeId = storeDoc.id; // Ini adalah ID dokumen toko
+
+            // 1. Ambil Nama Pemilik Toko dari koleksi 'user'
+            let pemilikTokoNama = "N/A";
+            // Kritis: `id_user` di koleksi `toko` Anda adalah NUMBER (1000),
+            // sedangkan ID dokumen di koleksi `user` adalah STRING (contoh: mWSuPs89pUXwpENwNXyV4KAAcc93).
+            // Anda HARUS mengubah `id_user` di koleksi `toko` menjadi STRING ID DOKUMEN `user` yang sebenarnya.
+            // Workaround ini mungkin TIDAK BERHASIL jika angka 1000 tidak sesuai ID dokumen string.
+            if (storeData.id_user) {
+              const userIdAsString = String(storeData.id_user); // Coba konversi ke string
+              const userDocRef = doc(db, "user", userIdAsString); // MENGGANTI 'user' menjadi 'user'
+              const userDoc = await getDoc(userDocRef);
+              if (userDoc.exists()) {
+                pemilikTokoNama = userDoc.data().nama_pembeli || "N/A";
+              }
+            }
+
+            // 2. Ambil Rata-rata Rating Toko
+            const { average: avgRating, count: ratingCount } =
+              await getAverageRating(storeId);
+
+            fetchedStores.push({
+              id: storeId, // ID dokumen toko Firebase
+              ...storeData, // Semua data dari dokumen toko
+              pemilikToko: pemilikTokoNama, // Nama pemilik dari koleksi user
+              averageRating: avgRating,
+              ratingCount: ratingCount,
+              // Asumsi ada field 'status' di koleksi 'toko' yang merepresentasikan status verifikasi toko
+              // Jika tidak ada, ini akan menjadi "Tidak Ditetapkan"
+              status_toko_display: storeData.status || "Tidak Ditetapkan",
+            });
+          }
+
+          allStores = fetchedStores;
+          applyFiltersAndSearch();
         } catch (error) {
           console.error("Error fetching stores: ", error);
-          alert("Gagal memuat data toko.");
+          alert(
+            "Gagal memuat data toko. Periksa koneksi internet Anda, hak akses Firebase, atau struktur data."
+          );
         }
       }
 
       // Function to render table rows
       function renderTable(storesToDisplay) {
+        if (!storeTableBody) {
+          console.error("Elemen storeTableBody tidak ditemukan!");
+          return;
+        }
         storeTableBody.innerHTML = ""; // Clear existing rows
+
         if (storesToDisplay.length === 0) {
-          storeTableBody.innerHTML = `<tr><td colspan="7" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data toko.</td></tr>`;
-          paginationInfo.textContent = "Menampilkan 0 dari 0 data";
-          paginationControls.innerHTML = "";
+          storeTableBody.innerHTML = `<tr><td colspan="8" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data toko.</td></tr>`;
+          if (paginationInfo)
+            paginationInfo.textContent = "Menampilkan 0 dari 0 data";
+          if (paginationControls) paginationControls.innerHTML = "";
           return;
         }
 
@@ -342,139 +452,176 @@
 
         paginatedStores.forEach((store, index) => {
           const row = storeTableBody.insertRow();
-          const displayIndex = startIndex + index + 1; // Correct index for display
+          const displayIndex = startIndex + index + 1;
 
-          const statusClass =
-            store.status === "Aktif"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800";
+          const currentStoreStatus = store.status_toko_display || "unknown";
+          const statusClass = getStoreStatusClass(
+            currentStoreStatus.toLowerCase()
+          );
+
+          let displayStatusText = currentStoreStatus;
+          if (currentStoreStatus === "active") displayStatusText = "Aktif";
+          if (currentStoreStatus === "pending") displayStatusText = "Menunggu";
+          if (currentStoreStatus === "rejected") displayStatusText = "Ditolak";
 
           row.innerHTML = `
             <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${
-              store.namaToko || "-"
+              store.nama_toko || "-"
             }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${
-              store.feeToko !== undefined ? store.feeToko + "%" : "-"
+              store.fee !== undefined ? store.fee + "%" : "-"
             }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${
               store.pemilikToko || "-"
             }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${
-              store.alamat || "-"
+              store.alamat_lengkap || "-"
             }</td>
-            <td class="py-3 px-4 text-sm">
-              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${
-            store.status || "Tidak Diketahui"
-          }</span>
+            <td class="py-3 px-4 text-sm text-gray-700">${
+              store.averageRating || "0.0"
+            } (${store.ratingCount || "0"} ulasan)</td>
+            <td class="py-3 px-4 text-sm text-center">
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                    ${displayStatusText}
+                </span>
             </td>
             <td class="py-3 px-4 text-sm text-center">
-              <a href="admin-toko-detail.html?id=${
-                store.id
-              }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
+                <a href="admin-toko-detail.html?id=${
+                  store.id
+                }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
             </td>
-          `;
+        `;
         });
         updatePagination(storesToDisplay.length);
       }
 
       // Function to apply search and filter
       function applyFiltersAndSearch() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedStatus = statusFilter.value;
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+        const selectedStatus = statusFilter ? statusFilter.value : "";
 
         filteredStores = allStores.filter((store) => {
+          const namaToko = store.nama_toko ? store.nama_toko.toLowerCase() : "";
+          const pemilikToko = store.pemilikToko
+            ? store.pemilikToko.toLowerCase()
+            : "";
+          const alamatToko = store.alamat_lengkap
+            ? store.alamat_lengkap.toLowerCase()
+            : "";
+
           const matchesSearch =
-            (store.namaToko &&
-              store.namaToko.toLowerCase().includes(searchTerm)) ||
-            (store.pemilikToko &&
-              store.pemilikToko.toLowerCase().includes(searchTerm)) ||
-            (store.alamat && store.alamat.toLowerCase().includes(searchTerm));
+            namaToko.includes(searchTerm) ||
+            pemilikToko.includes(searchTerm) ||
+            alamatToko.includes(searchTerm);
 
           const matchesStatus =
-            selectedStatus === "" || store.status === selectedStatus;
+            selectedStatus === "" ||
+            (store.status_toko_display &&
+              store.status_toko_display.toLowerCase() ===
+                selectedStatus.toLowerCase());
 
           return matchesSearch && matchesStatus;
         });
 
-        currentPage = 1; // Reset to first page after filtering/searching
+        currentPage = 1;
         renderTable(filteredStores);
       }
 
-      // Pagination functions
+      // Pagination functions (tidak ada perubahan signifikan di sini)
       function updatePagination(totalItems) {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
-        paginationInfo.textContent = `Menampilkan ${Math.min(
-          (currentPage - 1) * itemsPerPage + 1,
-          totalItems
-        )} sampai ${Math.min(
-          currentPage * itemsPerPage,
-          totalItems
-        )} dari ${totalItems} data`;
-
-        paginationControls.innerHTML = "";
-
-        const prevButton = document.createElement("button");
-        prevButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
-        prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            renderTable(filteredStores);
-          }
-        });
-        paginationControls.appendChild(prevButton);
-
-        for (let i = 1; i <= totalPages; i++) {
-          const pageButton = document.createElement("button");
-          pageButton.className = `px-4 py-2 text-sm font-medium ${
-            i === currentPage
-              ? "text-pink-600 bg-pink-100"
-              : "text-gray-700 bg-white hover:bg-gray-50"
-          } border border-gray-300`;
-          pageButton.textContent = i;
-          pageButton.addEventListener("click", () => {
-            currentPage = i;
-            renderTable(filteredStores);
-          });
-          paginationControls.appendChild(pageButton);
+        if (paginationInfo) {
+          paginationInfo.textContent = `Menampilkan ${Math.min(
+            (currentPage - 1) * itemsPerPage + 1,
+            totalItems
+          )} sampai ${Math.min(
+            currentPage * itemsPerPage,
+            totalItems
+          )} dari ${totalItems} data`;
         }
 
-        const nextButton = document.createElement("button");
-        nextButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
-        nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages || totalPages === 0;
-        nextButton.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderTable(filteredStores);
+        if (paginationControls) {
+          paginationControls.innerHTML = "";
+
+          const prevButton = document.createElement("button");
+          prevButton.className =
+            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+          prevButton.textContent = "Previous";
+          prevButton.disabled = currentPage === 1;
+          prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+              currentPage--;
+              renderTable(filteredStores);
+            }
+          });
+          paginationControls.appendChild(prevButton);
+
+          for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement("button");
+            pageButton.className = `px-4 py-2 text-sm font-medium ${
+              i === currentPage
+                ? "text-pink-600 bg-pink-100"
+                : "text-gray-700 bg-white hover:bg-gray-50"
+            } border border-gray-300`;
+            pageButton.textContent = i;
+            pageButton.addEventListener("click", () => {
+              currentPage = i;
+              renderTable(filteredStores);
+            });
+            paginationControls.appendChild(pageButton);
           }
-        });
-        paginationControls.appendChild(nextButton);
+
+          const nextButton = document.createElement("button");
+          nextButton.className =
+            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+          nextButton.textContent = "Next";
+          nextButton.disabled = currentPage === totalPages || totalPages === 0;
+          nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+              currentPage++;
+              renderTable(filteredStores);
+            }
+          });
+          paginationControls.appendChild(nextButton);
+        }
       }
 
-      // Event listeners for search and filter
-      searchInput.addEventListener("keyup", applyFiltersAndSearch);
-      statusFilter.addEventListener("change", applyFiltersAndSearch);
+      // Event listeners for search and filter (dengan null checks)
+      if (searchInput)
+        searchInput.addEventListener("keyup", applyFiltersAndSearch);
+      if (statusFilter)
+        statusFilter.addEventListener("change", applyFiltersAndSearch);
 
-      // Logout Functionality
-      logoutButton.addEventListener("click", async (e) => {
-        e.preventDefault();
-        try {
-          await auth.signOut();
-          window.location.href = "admin-login.html"; // Redirect to login page after logout
-        } catch (error) {
-          console.error("Error logging out: ", error);
-          alert("Gagal logout. Silakan coba lagi.");
-        }
-      });
+      // Logout Functionality (dengan null checks)
+      if (logoutButton) {
+        logoutButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            await signOut(auth);
+            alert("Anda telah logout!");
+            window.location.href = "admin-login.html"; // Redirect to login page after logout
+          } catch (error) {
+            console.error("Error logging out: ", error);
+            alert("Gagal logout. Silakan coba lagi.");
+          }
+        });
+      }
 
       // Initial fetch of stores when the page loads
       document.addEventListener("DOMContentLoaded", () => {
-        fetchStores();
+        // Cek autentikasi sebelum memuat data
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log("Admin terautentikasi:", user.uid);
+            fetchStores(); // Ambil data toko setelah admin terautentikasi
+          } else {
+            console.log(
+              "Tidak ada admin terautentikasi. Mengarahkan ke halaman login."
+            );
+            window.location.href = "admin-login.html";
+          }
+        });
 
         // Sidebar active link logic
         const currentPath = window.location.pathname;
@@ -494,6 +641,12 @@
             currentFilename === "" &&
             linkHref === "admin-dashboard.html"
           ) {
+            isLinkActive = true;
+          } else if (
+            currentFilename.startsWith("admin-toko-detail") &&
+            linkHref === "admin-toko.html"
+          ) {
+            // Khusus untuk halaman detail, aktifkan link master
             isLinkActive = true;
           }
 
