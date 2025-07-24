@@ -1,264 +1,449 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login Admin - TitipGo</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin - TitipGo</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script type="module" src="./js/firebase-config.js"></script>
-    <style>
-      body {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* Hapus background-color: src="/"; yang salah */
-        /* Tambahkan background image */
-        background-image: url("asset/images/Bg_login.jpeg"); /* Ganti URL ini dengan gambar latar belakang Anda */
-        background-size: cover; /* Pastikan gambar menutupi seluruh area */
-        background-position: center; /* Pusatkan gambar */
-        background-repeat: no-repeat; /* Jangan ulangi gambar */
-        font-family: "Inter", sans-serif;
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-      .login-container {
-        width: 100%;
-        max-width: 480px;
-        background-color: #ffffff;
-        border-radius: 0.75rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        padding: 2.5rem;
-        text-align: center;
-      }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-      .login-logo {
-        max-width: 200px;
-        height: auto;
-        margin: 0 auto 2rem auto;
-      }
-    </style>
-  </head>
-  <body>
-    <div
-      id="loading-overlay"
-      class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden"
-    >
-      <div
-        class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"
-      ></div>
+  <style>
+    body {
+      background-image: url('asset/images/Bg_login.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 320px;
+      background-color: #ffffff;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+      text-align: center;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .login-header {
+      text-align: center;
+    }
+
+    .login-header img {
+      max-width: 150px;
+      height: auto;
+      margin: 0 auto 1rem auto;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+
+    .login-header h2 {
+      color: #333;
+      font-weight: 800;
+      font-size: 1.75rem;
+      margin-bottom: 0;
+    }
+
+    /* Styling untuk input fields */
+    .form-input-custom {
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+      color: #374151;
+    }
+
+    .form-input-custom:focus {
+      outline: none;
+      border-color: #9333ea;
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.5);
+    }
+
+    .form-input-custom::placeholder {
+      color: #6b7280;
+    }
+
+    /* Styling untuk ikon di dalam input */
+    .input-icon {
+      color: #6b7280 !important;
+    }
+
+    /* Untuk ikon mata (password), pastikan area kliknya responsif */
+    .relative>div.absolute.right-0 {
+      cursor: pointer;
+      z-index: 10;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    #loading-overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    #loading-overlay>div {
+      border-top-color: #9333ea;
+      border-bottom-color: #9333ea;
+    }
+
+    .login-button {
+      background-color: #9333ea;
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.2s ease-in-out;
+      width: 100%;
+    }
+
+    .login-button:hover {
+      background-color: #7e22ce;
+    }
+
+    .text-link-custom {
+      color: #9333ea;
+      font-weight: 600;
+    }
+
+    .text-link-custom:hover {
+      text-decoration: underline;
+      color: #7e22ce;
+    }
+
+    /* Modal (Popup) Styling for Auth Errors and Success */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .modal-buttons .btn-ok {
+      background-color: #9333ea;
+      color: white;
+      border: 1px solid #9333ea;
+    }
+
+    .modal-buttons .btn-ok:hover {
+      background-color: #7e22ce;
+      border-color: #7e22ce;
+    }
+
+    .modal-buttons .btn-success {
+      background-color: #22c55e;
+      color: white;
+      border: 1px solid #22c55e;
+    }
+
+    .modal-buttons .btn-success:hover {
+      background-color: #16a34a;
+      border-color: #16a34a;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading-overlay"
+    class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-header">
+      <img src="asset/images/logosiwah.png" alt="TitipGo Logo" class="login-logo" />
+      <h2 class="text-2xl font-extrabold text-gray-900">Login Admin</h2>
     </div>
-    <div class="login-container">
-      <img
-        src="asset/images/logosiwah.png"
-        alt="TitipGo Logo"
-        class="login-logo"
-      />
 
-      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Login Admin</h2>
-      <p class="text-gray-600 mb-8">
-        Selamat datang kembali, silakan masuk ke akun Anda.
-      </p>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label for="email" class="sr-only">E-mail</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-envelope input-icon"></i>
+          </div>
+          <input id="email" name="email" type="email" autocomplete="email" required
+            class="appearance-none block w-full pl-10 pr-3 py-2 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+            placeholder="E-mail" />
+        </div>
+      </div>
 
-      <form id="loginForm" class="space-y-6">
-        <div>
-          <label for="email" class="sr-only">Alamat Email</label>
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-envelope text-gray-400"></i>
-            </div>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Alamat Email"
-            />
+      <div>
+        <label for="password" class="sr-only">Password</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-lock input-icon"></i>
+          </div>
+          <input id="password" name="password" type="password" autocomplete="current-password" required
+            class="appearance-none block w-full pl-10 pr-3 py-2 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+            placeholder="Password" />
+          <div id="togglePasswordVisibilityButton"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+            <i id="togglePasswordIcon" class="fas fa-eye input-icon hover:text-gray-700"></i>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label for="password" class="sr-only">Password</label>
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-lock text-gray-400"></i>
-            </div>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Password"
-            />
-            <div
-              class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-              onclick="togglePasswordVisibility()"
-            >
-              <i
-                id="togglePasswordIcon"
-                class="fas fa-eye text-gray-400 hover:text-gray-600"
-              ></i>
-            </div>
-          </div>
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center">
+          <input id="remember-me" name="remember-me" type="checkbox"
+            class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+          <label for="remember-me" class="ml-2 block text-gray-900">Ingat Saya</label>
         </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Ingat Saya
-            </label>
-          </div>
-
-          <div class="text-sm">
-            <a
-              href="admin-lupapasword.html"
-              class="font-medium text-blue-600 hover:text-blue-500"
-            >
-              Lupa Password?
-            </a>
-          </div>
+        <div class="text-sm">
+          <a href="admin_lupa_password.html" class="font-medium text-link-custom">Lupa Password?</a>
         </div>
+      </div>
 
-        <div>
-          <button
-            type="submit"
-            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-sign-in-alt mr-2"></i> Login
-          </button>
-        </div>
-        <p id="errorMessage" class="text-red-500 text-sm mt-4 hidden"></p>
-      </form>
+      <div>
+        <button type="submit" class="login-button">
+          <i class="fas fa-sign-in-alt mr-2"></i> Login
+        </button>
+      </div>
+    </form>
 
+  </div>
 
-    <script type="module">
-      // --- Debugging Initialization Start ---
-      console.log("Memulai loading skrip modul utama...");
+  <div id="authResponseModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="authResponseTitle"></h3>
+      <p class="text-gray-700 mb-4" id="authResponseMessage"></p>
+      <div class="modal-buttons">
+        <button id="authResponseOkButton" class="btn-ok">OK</button>
+      </div>
+    </div>
+  </div>
 
-      // Import 'auth' dari file konfigurasi Firebase Anda
-      import { auth } from "./js/firebase-config.js";
-      // Import fungsi spesifik dari CDN Firebase Auth
-      import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Pastikan versi ini konsisten
+  <script type="module">
+    console.log("Memulai loading skrip modul utama login...");
 
-      console.log("Import Firebase Auth berhasil.");
-      console.log("Objek 'auth' setelah import:", auth); // HARUS MENAMPILKAN OBJEK AUTH
+    // Import modul Firebase Auth dan Firestore dari firebase-config.js
+    import { auth, db, signInWithEmailAndPassword, doc, getDoc } from "./js/firebase-config.js";
 
-      // --- Debugging Initialization End ---
+    console.log("Import Firebase Auth dan Firestore berhasil.");
+    console.log("Objek 'auth' setelah import:", auth);
+    console.log("Objek 'db' setelah import:", db);
 
-      function togglePasswordVisibility() {
-        const passwordField = document.getElementById("password");
-        const toggleIcon = document.getElementById("togglePasswordIcon");
+    // Fungsi untuk mengaktifkan/menonaktifkan tampilan password
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById("password");
+      const toggleIcon = document.getElementById("togglePasswordIcon");
 
-        if (passwordField.type === "password") {
-          passwordField.type = "text";
-          toggleIcon.classList.remove("fa-eye");
-          toggleIcon.classList.add("fa-eye-slash");
-        } else {
-          passwordField.type = "password";
-          toggleIcon.classList.remove("fa-eye-slash");
-          toggleIcon.classList.add("fa-eye");
-        }
-      }
-
-      const loginForm = document.getElementById("loginForm");
-      const emailInput = document.getElementById("email");
-      const passwordInput = document.getElementById("password");
-      const errorMessageDisplay = document.getElementById("errorMessage");
-      const loadingOverlay = document.getElementById("loading-overlay");
-
-      // --- Debugging Element Checks ---
-      if (loginForm) {
-        console.log("loginForm ditemukan.");
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
       } else {
-        console.error(
-          "Error FATAL: loginForm tidak ditemukan! Periksa ID pada tag <form>."
-        );
+        passwordField.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
       }
-      if (emailInput) {
-        console.log("emailInput ditemukan.");
+    }
+
+    // Dapatkan elemen tombol toggle password
+    const togglePasswordVisibilityButton = document.getElementById("togglePasswordVisibilityButton");
+    if (togglePasswordVisibilityButton) {
+      togglePasswordVisibilityButton.addEventListener('click', togglePasswordVisibility);
+      console.log("Event listener untuk toggle password visibility ditambahkan.");
+    } else {
+      console.error("Error: Tombol toggle password visibility tidak ditemukan!");
+    }
+
+    // Dapatkan elemen-elemen form
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loadingOverlay = document.getElementById("loading-overlay");
+
+    // Auth Response Modal elements
+    const authResponseModal = document.getElementById('authResponseModal');
+    const authResponseTitle = document.getElementById('authResponseTitle');
+    const authResponseMessage = document.getElementById('authResponseMessage');
+    const authResponseOkButton = document.getElementById('authResponseOkButton');
+
+    // Function to show auth response modal (for both success and error)
+    function showAuthResponseModal(message, title, isSuccess = false) {
+      authResponseTitle.textContent = title;
+      authResponseMessage.textContent = message;
+
+      if (isSuccess) {
+        authResponseTitle.classList.remove('text-red-600');
+        authResponseTitle.classList.add('text-green-600');
+        authResponseOkButton.classList.remove('btn-ok');
+        authResponseOkButton.classList.add('btn-success');
+      } else {
+        authResponseTitle.classList.remove('text-green-600');
+        authResponseTitle.classList.add('text-red-600');
+        authResponseOkButton.classList.remove('btn-success');
+        authResponseOkButton.classList.add('btn-ok');
       }
-      if (passwordInput) {
-        console.log("passwordInput ditemukan.");
+
+      authResponseModal.classList.add('show');
+    }
+
+    // Event listener for auth response modal's OK button
+    authResponseOkButton.addEventListener('click', () => {
+      authResponseModal.classList.remove('show');
+    });
+
+    // Event listener untuk submit formulir login
+    loginForm.addEventListener("submit", async (e) => {
+      console.log("Event 'submit' pada form login terdeteksi!");
+      e.preventDefault(); // Mencegah refresh halaman
+      console.log("Default form submit telah dicegah.");
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        showAuthResponseModal("Email dan password harus diisi.", "Login Gagal", false);
+        return;
       }
-      if (errorMessageDisplay) {
-        console.log("errorMessageDisplay ditemukan.");
-      }
-      if (loadingOverlay) {
-        console.log("loadingOverlay ditemukan.");
-      }
-      // --- End Debugging Element Checks ---
 
-      loginForm.addEventListener("submit", async (e) => {
-        // --- Debugging Event Listener ---
-        console.log("Event 'submit' pada form terdeteksi!");
-        e.preventDefault(); // Mencegah reload halaman
-        console.log("Default form submit telah dicegah.");
-        // --- End Debugging Event Listener ---
+      loadingOverlay.classList.remove("hidden");
+      console.log("Mencoba login dengan Firebase Authentication...");
+      console.log("Email yang dimasukkan:", email);
+      console.log("Password yang dimasukkan:", "*".repeat(password.length)); // Jangan log password asli
 
-        const email = emailInput.value;
-        const password = passwordInput.value;
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Login berhasil! UID user:", user.uid);
 
-        // --- Debugging Input Values ---
-        console.log("Email yang dimasukkan:", email);
-        console.log("Password yang dimasukkan:", password);
-        // --- End Debugging Input Values ---
+        // Verifikasi peran (role) pengguna dari Firestore
+        console.log("Mengecek role user di Firestore...");
+        const userDocRef = doc(db, "admin", user.uid); // <--- Memeriksa di koleksi "admin"
+        const userDocSnap = await getDoc(userDocRef);
 
-        // Tampilkan loading overlay
-        loadingOverlay.classList.remove("hidden");
-        errorMessageDisplay.classList.add("hidden");
-
-        try {
-          console.log("Mencoba login dengan Firebase Authentication...");
-          await signInWithEmailAndPassword(auth, email, password);
-          console.log("Login Firebase berhasil!");
-          // Jika berhasil, pengalihan akan terjadi
-          window.location.href = "admin-dashboard.html";
-        } catch (error) {
-          // Jika gagal, sembunyikan loading dan tampilkan pesan error
-          loadingOverlay.classList.add("hidden");
-          console.error("Firebase Auth Error:", error); // Log error lengkap dari Firebase
-
-          let message = "Terjadi kesalahan saat login. Silakan coba lagi.";
-          switch (error.code) {
-            case "auth/user-not-found":
-            case "auth/wrong-password":
-              message = "Email atau password salah. Silakan periksa kembali.";
-              break;
-            case "auth/invalid-email":
-              message = "Format email tidak valid.";
-              break;
-            case "auth/too-many-requests":
-              message =
-                "Terlalu banyak percobaan login gagal. Coba lagi nanti.";
-              break;
-            default:
-              message = "Login gagal: " + error.message;
-              break;
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          if (userData.role === "admin") {
+            console.log("User adalah admin. Redirect ke dashboard admin.");
+            showAuthResponseModal("Login berhasil! Anda akan diarahkan ke Dashboard.", "Login Berhasil", true);
+            // Tunggu sebentar sebelum redirect agar user sempat melihat pesan sukses
+            setTimeout(() => {
+              window.location.href = "admin-dashboard.html"; // <--- Perubahan di sini
+            }, 1500); // Redirect setelah 1.5 detik
+          } else {
+            // Jika user ada di Firestore tapi bukan role "admin" (misal "pembeli")
+            console.warn("User ditemukan tetapi bukan admin. Mengeluarkan user dan menampilkan pesan error.");
+            await auth.signOut(); // Logout user dari Firebase Auth
+            showAuthResponseModal("Akses ditolak: Hanya admin yang diizinkan login di sini.", "Login Gagal", false);
           }
-          errorMessageDisplay.textContent = message;
-          errorMessageDisplay.classList.remove("hidden");
+        } else {
+          // Jika user tidak ditemukan di koleksi "admin"
+          console.warn("User tidak ditemukan di koleksi 'admin'. Mengeluarkan user.");
+          await auth.signOut(); // Logout user dari Firebase Auth
+          showAuthResponseModal("Kredensial tidak valid atau akun Anda bukan admin.", "Login Gagal", false);
         }
-      });
-    </script>
-  </body>
+
+      } catch (error) {
+        loadingOverlay.classList.add("hidden");
+        console.error("Firebase Auth error:", error);
+
+        let message = "Terjadi kesalahan saat login. Silakan coba lagi.";
+        switch (error.code) {
+          case "auth/invalid-email":
+            message = "Format email tidak valid.";
+            break;
+          case "auth/user-disabled":
+            message = "Akun ini telah dinonaktifkan.";
+            break;
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+          case "auth/invalid-credential": // Firebase v9+ sometimes uses this for wrong password/email
+            message = "Email atau password salah.";
+            break;
+          case "auth/network-request-failed":
+            message = "Login gagal: Tidak ada koneksi internet atau masalah jaringan."; // Seperti error Anda sebelumnya
+            break;
+          case "auth/timeout":
+            message = "Login gagal: Waktu koneksi habis. Coba lagi."; // Error timeout yang baru Anda alami
+            break;
+          default:
+            message = `Login gagal: ${error.message}`;
+            break;
+        }
+        showAuthResponseModal(message, "Login Gagal", false);
+      } finally {
+        loadingOverlay.classList.add("hidden"); // Pastikan overlay tersembunyi
+      }
+    });
+  </script>
+</body>
+
 </html>

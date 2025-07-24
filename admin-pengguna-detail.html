@@ -1,210 +1,169 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title id="page-title">Manajemen Pengguna - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title id="page-title">Manajemen Pengguna - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+  <style>
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      /* PASTIKAN PATH INI BENAR */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
 
-      /* Style untuk membuat background kartu statistik sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Style untuk membuat background kartu statistik sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
+
+    .bg-white-transparent {
+      background-color: rgba(255,
           255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      .bg-white-transparent {
-        background-color: rgba(
           255,
-          255,
-          255,
-          0.85
-        ); /* Slightly transparent white */
-      }
-      .bg-blue-600-transparent {
-        background-color: rgba(
-          37,
+          0.85);
+      /* Slightly transparent white */
+    }
+
+    .bg-blue-600-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.85
-        ); /* Slightly transparent blue */
-      }
-      .table-bg-transparent {
-        background-color: rgba(
+          0.85);
+      /* Slightly transparent blue */
+    }
+
+    .table-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.7
-        ); /* More transparent for table body */
-      }
-      .header-bg-transparent {
-        background-color: rgba(
-          59,
+          0.7);
+      /* More transparent for table body */
+    }
+
+    .header-bg-transparent {
+      background-color: rgba(59,
           130,
           246,
-          0.85
-        ); /* Tailwind's blue-500 equivalent with transparency */
-      }
-    </style>
-  </head>
-  <body class="font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+          0.85);
+      /* Tailwind's blue-500 equivalent with transparency */
+    }
+  </style>
+</head>
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
+<body class="font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside
+      class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
 
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
+
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
+            background-image: linear-gradient(
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0.3)
+              ),
+              url('asset/images/background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+          ">
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold">Detail Pengguna</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="admin-notifikasi.html"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-bell mr-2"></i> Notifikasi</a>
+          <a href="#" id="logoutButton"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
-
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
-          background-image: linear-gradient(
-              rgba(255, 255, 255, 0.3),
-              rgba(255, 255, 255, 0.3)
-            ),
-            url('asset/images/background.png');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-        "
-      >
-        <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-        >
-          <p class="text-lg font-semibold">Detail Pengguna</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="admin-notifikasi.html"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-bell mr-2"></i> Notifikasi</a
-            >
-            <a
-              href="#"
-              id="logoutButton"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
-        </div>
+      </div>
 
       <div class="flex gap-3 mb-6">
         <button
           class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-          id="block-user-button"
-        >
+          id="block-user-button">
           <i class="fas fa-ban mr-2"></i> Blokir Pengguna
         </button>
         <button
           class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm hidden"
-          id="activate-user-button"
-        >
+          id="activate-user-button">
           <i class="fas fa-check-circle mr-2"></i> Aktifkan Pengguna
         </button>
       </div>
@@ -212,19 +171,11 @@
       <nav class="text-sm text-gray-600 mb-6">
         <ol class="list-none p-0 inline-flex">
           <li class="flex items-center">
-            <a
-              href="admin-dashboard.html"
-              class="text-blue-600 hover:text-blue-800"
-              >Dashboard</a
-            >
+            <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
             <i class="fas fa-chevron-right mx-2 text-xs"></i>
           </li>
           <li class="flex items-center">
-            <a
-              href="admin-pengguna.html"
-              class="text-blue-600 hover:text-blue-800"
-              >Manajemen Pengguna</a
-            >
+            <a href="admin-pengguna.html" class="text-blue-600 hover:text-blue-800">Manajemen Pengguna</a>
             <i class="fas fa-chevron-right mx-2 text-xs"></i>
           </li>
           <li class="flex items-center text-gray-500" id="breadcrumb-user-name">
@@ -235,19 +186,15 @@
 
       <div class="flex flex-col space-y-6">
         <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <i class="fas fa-user text-blue-500 mr-2"></i> Data Akun Pengguna
           </h3>
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-          >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
             <p>
               <strong>Nama Lengkap:</strong>
               <span id="nama_pembeli">Memuat...</span>
             </p>
-          
+
             <p>
               <strong>Email:</strong> <span id="email">Memuat...</span>
             </p>
@@ -272,28 +219,17 @@
             </p>
             <p>
               <strong>Status Akun:</strong>
-              <span
-                class="py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-700"
-                id="status_akun"
-                >Memuat...</span
-              >
+              <span class="py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-700" id="status_akun">Memuat...</span>
             </p>
           </div>
         </div>
 
-        <div
-          class="bg-white p-6 rounded-lg shadow-md hidden"
-          id="jastiper-info-section"
-        >
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
+        <div class="bg-white p-6 rounded-lg shadow-md hidden" id="jastiper-info-section">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <i class="fas fa-store text-orange-500 mr-2"></i> Informasi Toko
             Jastiper
           </h3>
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-          >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
             <p>
               <strong>Nama Toko:</strong> <span id="store-name">Memuat...</span>
             </p>
@@ -303,11 +239,8 @@
             </p>
             <p>
               <strong>Status Verifikasi Toko:</strong>
-              <span
-                class="py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-700"
-                id="store-verification-status"
-                >Memuat...</span
-              >
+              <span class="py-1 px-3 rounded-full text-xs bg-gray-200 text-gray-700"
+                id="store-verification-status">Memuat...</span>
             </p>
             <div class="col-span-full">
               <p class="font-semibold text-gray-800 mb-2">Deskripsi Toko:</p>
@@ -319,38 +252,31 @@
           <div class="flex gap-3 mt-4">
             <button
               class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-              id="verify-store-button"
-            >
+              id="verify-store-button">
               <i class="fas fa-check-double mr-2"></i> Verifikasi Toko
             </button>
             <button
               class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-              id="reject-store-button"
-            >
+              id="reject-store-button">
               <i class="fas fa-times mr-2"></i> Tolak Verifikasi
             </button>
             <button
               class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-              id="pending-store-button"
-            >
+              id="pending-store-button">
               <i class="fas fa-hourglass-half mr-2"></i> Pending Verifikasi
             </button>
           </div>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-md">
-          <h3
-            class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-          >
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <i class="fas fa-history text-green-500 mr-2"></i> Riwayat Pesanan
             Terakhir (sebagai Pembeli/Jastiper)
           </h3>
           <div class="overflow-x-auto">
             <table class="min-w-full bg-white rounded-lg">
               <thead>
-                <tr
-                  class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal"
-                >
+                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
                   <th class="py-3 px-6 text-left">ID Pesanan</th>
                   <th class="py-3 px-6 text-left">Produk</th>
                   <th class="py-3 px-6 text-left">Jumlah Item</th>
@@ -359,10 +285,7 @@
                   <th class="py-3 px-6 text-left">Tanggal Pesanan</th>
                 </tr>
               </thead>
-              <tbody
-                class="text-gray-700 text-sm"
-                id="latest-orders-table-body"
-              >
+              <tbody class="text-gray-700 text-sm" id="latest-orders-table-body">
                 <tr>
                   <td colspan="6" class="py-3 px-4 text-center text-gray-500">
                     Memuat pesanan...
@@ -372,11 +295,8 @@
             </table>
           </div>
           <div class="text-center mt-4">
-            <a
-              href="admin-pesanan.html?user_id="
-              class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              id="view-all-orders-link"
-            >
+            <a href="admin-pesanan.html?user_id=" class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              id="view-all-orders-link">
               Lihat Semua Pesanan Pengguna Ini
               <i class="fas fa-angle-right ml-1"></i>
             </a>
@@ -386,504 +306,472 @@
     </main>
 
     <script type="module">
+      // js/admin-pengguna-detail.js
 
-                  // js/admin-pengguna-detail.js
+      // Import Firebase SDKs (menggunakan modular syntax)
+      // Perhatikan: Hapus '-compat' dari URL untuk firebase-app, firebase-firestore, dan firebase-auth
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import { getFirestore, collection, doc, getDoc, updateDoc, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-            // Import Firebase SDKs (menggunakan modular syntax)
-            // Import Firebase SDKs (menggunakan modular syntax)
-// Perhatikan: Hapus '-compat' dari URL untuk firebase-app, firebase-firestore, dan firebase-auth
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, updateDoc, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
+      // PASTIKAN ANDA MENGGANTI INI DENGAN KONFIGURASI PROYEK FIREBASE ANDA!
+      const firebaseConfig = {
+        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+        authDomain: "titipgo-28f84.firebaseapp.com",
+        projectId: "titipgo-28f84",
+        storageBucket: "titipgo-28f84.firebasestorage.app",
+        messagingSenderId: "816687535591",
+        appId: "1:816687535591:web:eaecf2fcc994636a319942",
+        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
+      };
 
-// KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-// PASTIKAN ANDA MENGGANTI INI DENGAN KONFIGURASI PROYEK FIREBASE ANDA!
-const firebaseConfig = {
-    apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-    authDomain: "titipgo-28f84.firebaseapp.com",
-    projectId: "titipgo-28f84",
-    storageBucket: "titipgo-28f84.firebasestorage.app",
-    messagingSenderId: "816687535591",
-    appId: "1:816687535591:web:eaecf2fcc994636a319942",
-    // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
-};
+      // Inisialisasi Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
 
-// Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+      // Helper function untuk memformat mata uang
+      const formatCurrency = (amount) => {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(amount);
+      };
 
-// Helper function untuk memformat mata uang
-const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-    }).format(amount);
-};
+      // Helper function untuk memformat tanggal
+      const formatDate = (timestamp) => {
+        if (!timestamp) return "N/A";
+        let date;
+        // Periksa apakah itu objek Timestamp Firebase atau objek Date/string biasa
+        if (typeof timestamp.toDate === 'function') {
+          date = timestamp.toDate(); // Konversi Timestamp Firebase ke objek Date
+        } else if (timestamp instanceof Date) {
+          date = timestamp; // Sudah berupa objek Date
+        } else {
+          date = new Date(timestamp); // Asumsikan itu string atau angka yang dapat dikonversi ke Date
+        }
 
-// Helper function untuk memformat tanggal
-const formatDate = (timestamp) => {
-    if (!timestamp) return "N/A";
-    let date;
-    // Periksa apakah itu objek Timestamp Firebase atau objek Date/string biasa
-    if (typeof timestamp.toDate === 'function') {
-        date = timestamp.toDate(); // Konversi Timestamp Firebase ke objek Date
-    } else if (timestamp instanceof Date) {
-        date = timestamp; // Sudah berupa objek Date
-    } else {
-        date = new Date(timestamp); // Asumsikan itu string atau angka yang dapat dikonversi ke Date
-    }
+        // Periksa apakah tanggal valid sebelum diformat
+        if (isNaN(date.getTime())) {
+          return "Tanggal Tidak Valid";
+        }
 
-    // Periksa apakah tanggal valid sebelum diformat
-    if (isNaN(date.getTime())) {
-        return "Tanggal Tidak Valid";
-    }
+        return new Intl.DateTimeFormat("id-ID", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
+      };
 
-    return new Intl.DateTimeFormat("id-ID", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(date);
-};
-
-// Helper function untuk kelas status akun pengguna
-function getUserStatusClass(status) {
-    switch (status) {
-        case "active":
+      // Helper function untuk kelas status akun pengguna
+      function getUserStatusClass(status) {
+        switch (status) {
+          case "active":
             return "bg-green-100 text-green-700";
-        case "nonactive":
+          case "nonactive":
             return "bg-yellow-100 text-yellow-700";
-        case "blocked":
+          case "blocked":
             return "bg-red-100 text-red-700";
-        default:
+          default:
             return "bg-gray-100 text-gray-700";
-    }
-}
+        }
+      }
 
-// Helper function untuk kelas status verifikasi toko
-function getStoreVerificationStatusClass(status) {
-    switch (status) {
-        case "verified":
+      // Helper function untuk kelas status verifikasi toko
+      function getStoreVerificationStatusClass(status) {
+        switch (status) {
+          case "verified":
             return "bg-green-200 text-green-800";
-        case "pending":
+          case "pending":
             return "bg-yellow-200 text-yellow-800";
-        case "rejected":
+          case "rejected":
             return "bg-red-200 text-red-800";
-        default:
+          default:
             return "bg-gray-200 text-gray-800";
-    }
-}
+        }
+      }
 
-// Helper function untuk kelas status pesanan
-function getOrderStatusClass(status) {
-    switch (status) {
-        case "completed":
+      // Helper function untuk kelas status pesanan
+      function getOrderStatusClass(status) {
+        switch (status) {
+          case "completed":
             return "bg-green-200 text-green-800";
-        case "processing":
+          case "processing":
             return "bg-yellow-200 text-yellow-800";
-        case "cancelled":
+          case "cancelled":
             return "bg-red-200 text-red-800";
-        case "pending":
+          case "pending":
             return "bg-blue-200 text-blue-800";
-        default:
+          default:
             return "bg-gray-200 text-gray-800";
-    }
-}
-
-
-document.addEventListener("DOMContentLoaded", async function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("id"); // Dapatkan ID pengguna dari URL, misal: admin-pengguna-detail.html?id=USER_ID
-
-    // Mendapatkan referensi ke elemen HTML
-    const pageTitleEl = document.getElementById("page-title");
-    const userDetailTitle = document.getElementById("user-detail-title");
-    const breadcrumbUserName = document.getElementById("breadcrumb-user-name");
-    const jastiperInfoSection = document.getElementById("jastiper-info-section");
-    const latestOrdersTableBody = document.getElementById("latest-orders-table-body");
-    const viewAllOrdersLink = document.getElementById("view-all-orders-link");
-
-    const blockUserButton = document.getElementById("block-user-button");
-    const activateUserButton = document.getElementById("activate-user-button");
-
-    const verifyStoreButton = document.getElementById("verify-store-button");
-    const rejectStoreButton = document.getElementById("reject-store-button");
-    const pendingStoreButton = document.getElementById("pending-store-button");
-
-    // --- LOGIKA AKTIF SIDEBAR ---
-    const currentPath = window.location.pathname.split("/").pop(); // Mengambil nama file HTML (e.g., "admin-pengguna-detail.html")
-    const sidebarLinks = document.querySelectorAll(".sidebar-item"); // Ambil semua link dengan kelas sidebar-item
-
-    sidebarLinks.forEach((link) => {
-        const linkHref = link.getAttribute("href");
-        const linkFileName = linkHref.split("/").pop(); // Mengambil nama file dari href link (e.g., "admin-pengguna.html")
-
-        let isActive = false;
-
-        // Logika untuk admin-pengguna-detail.html agar mengaktifkan link admin-pengguna.html
-        if (currentPath.startsWith("admin-pengguna-detail") && linkFileName === "admin-pengguna.html") {
-            isActive = true;
         }
-        // Logika untuk admin-pengguna.html (jika Anda juga memiliki file ini dan mengaktifkannya sendiri)
-        else if (currentPath === "admin-pengguna.html" && linkFileName === "admin-pengguna.html") {
-            isActive = true;
-        }
-        // Logika umum: jika nama file saat ini cocok persis dengan nama file di href link
-        else if (linkFileName === currentPath) {
-            isActive = true;
-        }
-        // Logika khusus untuk dashboard jika berada di root atau index.html
-        else if ((currentPath === "" || currentPath === "index.html") && linkFileName === "admin-dashboard.html") {
-            isActive = true;
-        }
+      }
 
-        // Terapkan atau hapus kelas aktif
-        if (isActive) {
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("id"); // Dapatkan ID pengguna dari URL, misal: admin-pengguna-detail.html?id=USER_ID
+
+        // Mendapatkan referensi ke elemen HTML
+        const pageTitleEl = document.getElementById("page-title");
+        const userDetailTitle = document.getElementById("user-detail-title");
+        const breadcrumbUserName = document.getElementById("breadcrumb-user-name");
+        const jastiperInfoSection = document.getElementById("jastiper-info-section");
+        const latestOrdersTableBody = document.getElementById("latest-orders-table-body");
+        const viewAllOrdersLink = document.getElementById("view-all-orders-link");
+
+        const blockUserButton = document.getElementById("block-user-button");
+        const activateUserButton = document.getElementById("activate-user-button");
+
+        const verifyStoreButton = document.getElementById("verify-store-button");
+        const rejectStoreButton = document.getElementById("reject-store-button");
+        const pendingStoreButton = document.getElementById("pending-store-button");
+
+        // --- LOGIKA AKTIF SIDEBAR ---
+        const currentPath = window.location.pathname.split("/").pop(); // Mengambil nama file HTML (e.g., "admin-pengguna-detail.html")
+        const sidebarLinks = document.querySelectorAll(".sidebar-item"); // Ambil semua link dengan kelas sidebar-item
+
+        sidebarLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href");
+          const linkFileName = linkHref.split("/").pop(); // Mengambil nama file dari href link (e.g., "admin-pengguna.html")
+
+          let isActive = false;
+
+          // Logika untuk admin-pengguna-detail.html agar mengaktifkan link admin-pengguna.html
+          if (currentPath.startsWith("admin-pengguna-detail") && linkFileName === "admin-pengguna.html") {
+            isActive = true;
+          }
+          // Logika untuk admin-pengguna.html (jika Anda juga memiliki file ini dan mengaktifkannya sendiri)
+          else if (currentPath === "admin-pengguna.html" && linkFileName === "admin-pengguna.html") {
+            isActive = true;
+          }
+          // Logika umum: jika nama file saat ini cocok persis dengan nama file di href link
+          else if (linkFileName === currentPath) {
+            isActive = true;
+          }
+          // Logika khusus untuk dashboard jika berada di root atau index.html
+          else if ((currentPath === "" || currentPath === "index.html") && linkFileName === "admin-dashboard.html") {
+            isActive = true;
+          }
+
+          // Terapkan atau hapus kelas aktif
+          if (isActive) {
             link.classList.remove("text-gray-700", "hover:bg-pink-100", "hover:text-pink-600", "transition", "duration-200", "ease-in-out");
             link.classList.add("bg-pink-600", "text-white", "font-semibold");
-        } else {
+          } else {
             link.classList.remove("bg-pink-600", "text-white", "font-semibold");
             link.classList.add("text-gray-700", "hover:bg-pink-100", "hover:text-pink-600", "transition", "duration-200", "ease-in-out");
+          }
+        });
+        // --- AKHIR LOGIKA AKTIF SIDEBAR ---
+
+
+        if (!userId) {
+          console.error("ID Pengguna tidak ditemukan di URL.");
+          if (pageTitleEl) pageTitleEl.textContent = "Detail Pengguna : Tidak Ditemukan";
+          if (userDetailTitle) userDetailTitle.textContent = "Detail Pengguna : Tidak Ditemukan";
+          if (breadcrumbUserName) breadcrumbUserName.textContent = "Tidak Ditemukan";
+          document.querySelector("main").innerHTML = '<div class="text-center text-red-500 text-xl mt-10">Pengguna tidak ditemukan. Pastikan URL memiliki parameter ID, contoh: admin-pengguna-detail.html?id=YOUR_USER_ID</div>';
+          return;
         }
-    });
-    // --- AKHIR LOGIKA AKTIF SIDEBAR ---
 
-
-    if (!userId) {
-        console.error("ID Pengguna tidak ditemukan di URL.");
-        if (pageTitleEl) pageTitleEl.textContent = "Detail Pengguna : Tidak Ditemukan";
-        if (userDetailTitle) userDetailTitle.textContent = "Detail Pengguna : Tidak Ditemukan";
-        if (breadcrumbUserName) breadcrumbUserName.textContent = "Tidak Ditemukan";
-        document.querySelector("main").innerHTML = '<div class="text-center text-red-500 text-xl mt-10">Pengguna tidak ditemukan. Pastikan URL memiliki parameter ID, contoh: admin-pengguna-detail.html?id=YOUR_USER_ID</div>';
-        return;
-    }
-
-    // Cek autentikasi sebelum memuat data
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
+        // Cek autentikasi sebelum memuat data
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
             console.log("Pengguna terautentikasi:", user.uid);
             await fetchUserDetails(userId);
-        } else {
+          } else {
             console.log("Tidak ada pengguna terautentikasi. Mengarahkan ke login.");
             window.location.href = "admin-login.html";
-        }
-    });
+          }
+        });
 
-    async function fetchUserDetails(id_user) { // id_user di sini adalah userId dari URL
-        console.log(`Mencoba mengambil detail pengguna untuk ID: ${userId}`);
-        try {
-            // 1. Ambil Data Pengguna dari koleksi "user"
-            const userDocRef = doc(db, "user", userId); // <<< PENTING: Menggunakan koleksi "user"
+        async function fetchUserDetails(id_user) { // id_user di sini adalah userId dari URL
+          console.log(`Mencoba mengambil detail pengguna untuk ID: ${userId}`);
+          try {
+            // 1. Ambil Data Pengguna dari koleksi "users"
+            const userDocRef = doc(db, "users", userId);
             const userDoc = await getDoc(userDocRef);
 
             if (userDoc.exists()) {
-                const userData = userDoc.data();
-                console.log("Data Pengguna Ditemukan:", userData);
+              const userData = userDoc.data();
+              console.log("Data Pengguna Ditemukan:", userData);
 
-                // Memperbarui elemen header dan breadcrumb
-                if (pageTitleEl) pageTitleEl.textContent = `Detail Pengguna : ${userData.nama_pembeli || "N/A"}`;
-                if (userDetailTitle) userDetailTitle.textContent = `Detail Pengguna : ${userData.nama_pembeli || "N/A"}`;
-                if (breadcrumbUserName) breadcrumbUserName.textContent = userData.nama_pembeli || "N/A"; // Atau userData.nama_pembeli
+              // Memperbarui elemen header dan breadcrumb
+              // Menggunakan namaLengkap sesuai image_72e80a.png
+              if (pageTitleEl) pageTitleEl.textContent = `Detail Pengguna : ${userData.namaLengkap || "N/A"}`;
+              if (userDetailTitle) userDetailTitle.textContent = `Detail Pengguna : ${userData.namaLengkap || "N/A"}`;
+              if (breadcrumbUserName) breadcrumbUserName.textContent = userData.namaLengkap || "N/A";
 
-                // Mengisi informasi pengguna (ID HTML sesuai dengan yang Anda konfirmasi)
-                const elNamaPembeli = document.getElementById("nama_pembeli");
-                if (elNamaPembeli) elNamaPembeli.textContent = userData.nama_pembeli || "N/A";
+              // Mengisi informasi pengguna (ID HTML sesuai dengan yang Anda konfirmasi)
+              const elNamaPembeli = document.getElementById("nama_pembeli");
+              if (elNamaPembeli) elNamaPembeli.textContent = userData.namaLengkap || "N/A"; // Mapped from namaLengkap
 
-                // Ini adalah BARIS KOREKSI:
-                // Jika Anda punya <span id="id_user"> di HTML untuk menampilkan ID dokumen, gunakan ini:
-                const elUserIdFromUrl = document.getElementById("id_user");
-                if (elUserIdFromUrl) {
-                    elUserIdFromUrl.textContent = userId || "N/A"; // userId adalah ID dokumen dari URL
+              const elUserIdFromUrl = document.getElementById("id_user");
+              if (elUserIdFromUrl) {
+                elUserIdFromUrl.textContent = userId || "N/A";
+              }
+
+              const elEmail = document.getElementById("email");
+              if (elEmail) elEmail.textContent = userData.email || "N/A";
+
+              const elNoTelepon = document.getElementById("no_telepon");
+              if (elNoTelepon) elNoTelepon.textContent = userData.noTelepon || "N/A"; // Mapped from noTelepon
+
+              const elAlamat = document.getElementById("alamat");
+              if (elAlamat) elAlamat.textContent = userData.alamat || "N/A";
+
+              const elJenisKelamin = document.getElementById("jenis_kelamin");
+              if (elJenisKelamin) elJenisKelamin.textContent = userData.jenisKelamin || "N/A"; // Mapped from jenisKelamin
+
+              const elTanggalLahir = document.getElementById("tanggal_lahir");
+              if (elTanggalLahir) elTanggalLahir.textContent = formatDate(userData.tanggalLahir); // Mapped from tanggalLahir
+
+              const elTanggalDaftar = document.getElementById("tanggal_daftar");
+              if (elTanggalDaftar) elTanggalDaftar.textContent = formatDate(userData.tanggalDaftar); // Mapped from tanggalDaftar
+
+              // Perbaikan untuk Status Akun
+              const userStatusElement = document.getElementById("status_akun");
+              let displayStatus = userData.status_akun || "N/A"; // Assuming 'status_akun' exists in Firestore
+              if (displayStatus === "active") displayStatus = "Aktif";
+              if (displayStatus === "nonactive") displayStatus = "Nonaktif";
+              if (displayStatus === "blocked") displayStatus = "Diblokir";
+
+              if (userStatusElement) {
+                userStatusElement.textContent = displayStatus;
+                userStatusElement.className = `py-1 px-3 rounded-full text-xs ${getUserStatusClass(userData.status_akun)}`;
+              }
+
+              // Kontrol tombol blokir/aktifkan
+              if (userData.status_akun === "blocked") {
+                if (blockUserButton) blockUserButton.classList.add("hidden");
+                if (activateUserButton) activateUserButton.classList.remove("hidden");
+              } else {
+                if (blockUserButton) blockUserButton.classList.remove("hidden");
+                if (activateUserButton) activateUserButton.classList.add("hidden");
+              }
+
+              // Event listener untuk aksi status pengguna
+              if (blockUserButton) {
+                blockUserButton.onclick = async () => {
+                  if (confirm("Apakah Anda yakin ingin MEMBLOKIR pengguna ini? Tindakan ini akan menonaktifkan akun mereka.")) {
+                    try {
+                      await updateDoc(userDocRef, { status_akun: "blocked" });
+                      alert("Pengguna berhasil diblokir!");
+                      location.reload();
+                    } catch (err) {
+                      console.error("Error blocking user:", err);
+                      alert("Gagal memblokir pengguna: " + err.message);
+                    }
+                  }
+                };
+              }
+
+              if (activateUserButton) {
+                activateUserButton.onclick = async () => {
+                  if (confirm("Apakah Anda yakin ingin MENGAKTIFKAN pengguna ini?")) {
+                    try {
+                      await updateDoc(userDocRef, { status_akun: "active" });
+                      alert("Pengguna berhasil diaktifkan!");
+                      location.reload();
+                    } catch (err) {
+                      console.error("Error activating user:", err);
+                      alert("Gagal mengaktifkan pengguna: " + err.message);
+                    }
+                  }
+                };
+              }
+
+
+              // 2. Ambil Informasi Jastiper (Toko)
+              const storeDocRef = doc(db, "toko", userId);
+              const storeDoc = await getDoc(storeDocRef);
+
+              if (storeDoc.exists()) {
+                const storeData = storeDoc.data();
+                console.log("Data Toko Ditemukan:", storeData);
+                if (jastiperInfoSection) jastiperInfoSection.classList.remove("hidden"); // Tampilkan bagian jastiper
+
+                // Perbaikan untuk store data (sesuai image_72ec2d.png)
+                const elStoreName = document.getElementById("store-name");
+                if (elStoreName) elStoreName.textContent = storeData.namaToko || "N/A"; // Changed to namaToko
+
+                const elStoreDescription = document.getElementById("store-description");
+                if (elStoreDescription) elStoreDescription.textContent = storeData.deskripsiToko || "N/A"; // Changed to deskripsiToko
+
+                const elStoreRegistrationDate = document.getElementById("store-registration-date");
+                if (elStoreRegistrationDate) elStoreRegistrationDate.textContent = formatDate(storeData.created_at); // Changed to created_at
+
+                const storeVerificationStatusElement = document.getElementById("store-verification-status");
+                let displayStoreStatus = storeData.verificationStatus || "N/A"; // Assuming 'verificationStatus' field exists
+                if (displayStoreStatus === "verified") displayStoreStatus = "Terverifikasi";
+                if (displayStoreStatus === "pending") displayStoreStatus = "Menunggu";
+                if (displayStoreStatus === "rejected") displayStoreStatus = "Ditolak";
+
+                if (storeVerificationStatusElement) {
+                  storeVerificationStatusElement.textContent = displayStoreStatus;
+                  storeVerificationStatusElement.className = `py-1 px-3 rounded-full text-xs ${getStoreVerificationStatusClass(storeData.verificationStatus)}`;
                 }
-                // Jika Anda TIDAK punya <span id="id_user"> di HTML, maka HAPUS baris di atas ini.
 
-                const elEmail = document.getElementById("email");
-                if (elEmail) elEmail.textContent = userData.email || "N/A";
-
-                const elNoTelepon = document.getElementById("no_telepon");
-                if (elNoTelepon) elNoTelepon.textContent = userData.no_telepon || "N/A";
-
-                const elAlamat = document.getElementById("alamat");
-                if (elAlamat) elAlamat.textContent = userData.alamat || "N/A";
-
-                const elJenisKelamin = document.getElementById("jenis_kelamin");
-                if (elJenisKelamin) elJenisKelamin.textContent = userData.jenis_kelamin || "N/A";
-
-                const elTanggalLahir = document.getElementById("tanggal_lahir");
-                if (elTanggalLahir) elTanggalLahir.textContent = formatDate(userData.tanggal_lahir);
-
-                const elTanggalDaftar = document.getElementById("tanggal_daftar");
-                if (elTanggalDaftar) elTanggalDaftar.textContent = formatDate(userData.tanggal_daftar);
-
-                // Perbaikan untuk Status Akun
-                const userStatusElement = document.getElementById("status_akun");
-                let displayStatus = userData.status_akun || "N/A";
-                if (displayStatus === "active") displayStatus = "Aktif";
-                if (displayStatus === "nonactive") displayStatus = "Nonaktif";
-                if (displayStatus === "blocked") displayStatus = "Diblokir";
-
-                if (userStatusElement) {
-                    userStatusElement.textContent = displayStatus;
-                    userStatusElement.className = `py-1 px-3 rounded-full text-xs ${getUserStatusClass(userData.status_akun)}`;
+                // Kontrol tombol verifikasi toko
+                if (storeData.verificationStatus === "verified") {
+                  if (verifyStoreButton) verifyStoreButton.classList.add("hidden");
+                  if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
+                  if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
+                } else if (storeData.verificationStatus === "pending") {
+                  if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
+                  if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
+                  if (pendingStoreButton) pendingStoreButton.classList.add("hidden");
+                } else if (storeData.verificationStatus === "rejected") {
+                  if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
+                  if (rejectStoreButton) rejectStoreButton.classList.add("hidden");
+                  if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
+                } else { // Status default atau tidak diketahui
+                  if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
+                  if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
+                  if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
                 }
 
-                // Kontrol tombol blokir/aktifkan
-                if (userData.status_akun === "blocked") {
-                    if (blockUserButton) blockUserButton.classList.add("hidden");
-                    if (activateUserButton) activateUserButton.classList.remove("hidden");
+                // Event listener untuk aksi verifikasi toko
+                if (verifyStoreButton) {
+                  verifyStoreButton.onclick = async () => {
+                    if (confirm("Apakah Anda yakin ingin MEMVERIFIKASI toko ini?")) {
+                      try {
+                        await updateDoc(storeDocRef, { verificationStatus: "verified" });
+                        alert("Toko berhasil diverifikasi!");
+                        location.reload();
+                      } catch (err) {
+                        console.error("Error verifying store:", err);
+                        alert("Gagal memverifikasi toko: " + err.message);
+                      }
+                    }
+                  };
+                }
+
+                if (rejectStoreButton) {
+                  rejectStoreButton.onclick = async () => {
+                    if (confirm("Apakah Anda yakin ingin MENOLAK verifikasi toko ini?")) {
+                      try {
+                        await updateDoc(storeDocRef, { verificationStatus: "rejected" });
+                        alert("Verifikasi toko berhasil ditolak!");
+                        location.reload();
+                      } catch (err) {
+                        console.error("Error rejecting store:", err);
+                        alert("Gagal menolak verifikasi toko: " + err.message);
+                      }
+                    }
+                  };
+                }
+
+                if (pendingStoreButton) {
+                  pendingStoreButton.onclick = async () => {
+                    if (confirm("Apakah Anda yakin ingin MENGUBAH status verifikasi toko menjadi TERTUNDA?")) {
+                      try {
+                        await updateDoc(storeDocRef, { verificationStatus: "pending" });
+                        alert("Status verifikasi toko berhasil diubah menjadi tertunda!");
+                        location.reload();
+                      } catch (err) {
+                        console.error("Error setting store to pending:", err);
+                        alert("Gagal mengubah status verifikasi toko: " + err.message);
+                      }
+                    }
+                  };
+                }
+
+              } else {
+                console.log("Dokumen toko tidak ditemukan untuk pengguna ini (bukan Jastiper atau toko belum didaftarkan).");
+                if (jastiperInfoSection) jastiperInfoSection.classList.add("hidden"); // Sembunyikan jika tidak ada data toko
+              }
+
+              // 3. Ambil Riwayat Pesanan Terakhir
+              try {
+                const ordersQuery = query(
+                  collection(db, "orders"), // Asumsi koleksi pesanan Anda bernama "orders"
+                  where("pembeliId", "==", userId), // Filter berdasarkan ID pembeli
+                  orderBy("tanggal_pesanan", "desc"),
+                  limit(5) // Ambil 5 pesanan terakhir
+                );
+                const orderSnapshot = await getDocs(ordersQuery);
+
+                if (orderSnapshot.empty) {
+                  latestOrdersTableBody.innerHTML = `
+                                            <tr>
+                                                <td colspan="6" class="py-3 px-4 text-center text-gray-500">
+                                                    Tidak ada riwayat pesanan untuk pengguna ini.
+                                                </td>
+                                            </tr>
+                                        `;
                 } else {
-                    if (blockUserButton) blockUserButton.classList.remove("hidden");
-                    if (activateUserButton) activateUserButton.classList.add("hidden");
+                  latestOrdersTableBody.innerHTML = ""; // Bersihkan konten yang ada
+                  orderSnapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const row = document.createElement("tr");
+                    row.className = "border-b border-gray-200 hover:bg-gray-100";
+                    row.innerHTML = `
+                                            <td class="py-3 px-6 text-left whitespace-nowrap">${doc.id}</td>
+                                            <td class="py-3 px-6 text-left">${order.namaProduk || "N/A"}</td>
+                                            <td class="py-3 px-6 text-left">${order.jumlahItem || "N/A"}</td>
+                                            <td class="py-3 px-6 text-left">${formatCurrency(order.totalHarga || 0)}</td>
+                                            <td class="py-3 px-6 text-center">
+                                                <span class="py-1 px-3 rounded-full text-xs ${getOrderStatusClass(order.status)}">
+                                                    ${order.status || "N/A"}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-6 text-left">${formatDate(order.tanggal_pesanan)}</td>
+                                        `;
+                    latestOrdersTableBody.appendChild(row);
+                  });
                 }
 
-                // Event listener untuk aksi status pengguna
-                if (blockUserButton) {
-                    blockUserButton.onclick = async () => {
-                        if (confirm("Apakah Anda yakin ingin MEMBLOKIR pengguna ini? Tindakan ini akan menonaktifkan akun mereka.")) {
-                            try {
-                                await updateDoc(userDocRef, { status_akun: "blocked" });
-                                alert("Pengguna berhasil diblokir!");
-                                location.reload();
-                            } catch (err) {
-                                console.error("Error blocking user:", err);
-                                alert("Gagal memblokir pengguna: " + err.message);
-                            }
-                        }
-                    };
-                }
-
-                if (activateUserButton) {
-                    activateUserButton.onclick = async () => {
-                        if (confirm("Apakah Anda yakin ingin MENGAKTIFKAN pengguna ini?")) {
-                            try {
-                                await updateDoc(userDocRef, { status_akun: "active" });
-                                alert("Pengguna berhasil diaktifkan!");
-                                location.reload();
-                            } catch (err) {
-                                console.error("Error activating user:", err);
-                                alert("Gagal mengaktifkan pengguna: " + err.message);
-                            }
-                        }
-                    };
-                }
-
-
-                // 2. Ambil Informasi Jastiper (Toko)
-                const storeDocRef = doc(db, "stores", userId);
-                const storeDoc = await getDoc(storeDocRef);
-
-                if (storeDoc.exists()) {
-                    const storeData = storeDoc.data();
-                    console.log("Data Toko Ditemukan:", storeData);
-                    if (jastiperInfoSection) jastiperInfoSection.classList.remove("hidden"); // Tampilkan bagian jastiper
-
-                    // Perbaikan untuk store data (asumsi ID di HTML cocok dengan field nama_toko, deskripsi, dll.)
-                    const elStoreName = document.getElementById("store-name");
-                    if (elStoreName) elStoreName.textContent = storeData.nama_toko || "N/A";
-
-                    const elStoreDescription = document.getElementById("store-description");
-                    if (elStoreDescription) elStoreDescription.textContent = storeData.deskripsi || "N/A";
-
-                    const elStoreRegistrationDate = document.getElementById("store-registration-date");
-                    if (elStoreRegistrationDate) elStoreRegistrationDate.textContent = formatDate(storeData.tanggal_daftar);
-
-                    const storeVerificationStatusElement = document.getElementById("store-verification-status");
-                    let displayStoreStatus = storeData.verificationStatus || "N/A";
-                    if (displayStoreStatus === "verified") displayStoreStatus = "Terverifikasi";
-                    if (displayStoreStatus === "pending") displayStoreStatus = "Menunggu";
-                    if (displayStoreStatus === "rejected") displayStoreStatus = "Ditolak";
-
-                    if (storeVerificationStatusElement) {
-                        storeVerificationStatusElement.textContent = displayStoreStatus;
-                        storeVerificationStatusElement.className = `py-1 px-3 rounded-full text-xs ${getStoreVerificationStatusClass(storeData.verificationStatus)}`;
-                    }
-
-                    // Kontrol tombol verifikasi toko
-                    if (storeData.verificationStatus === "verified") {
-                        if (verifyStoreButton) verifyStoreButton.classList.add("hidden");
-                        if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
-                        if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
-                    } else if (storeData.verificationStatus === "pending") {
-                        if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
-                        if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
-                        if (pendingStoreButton) pendingStoreButton.classList.add("hidden");
-                    } else if (storeData.verificationStatus === "rejected") {
-                        if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
-                        if (rejectStoreButton) rejectStoreButton.classList.add("hidden");
-                        if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
-                    } else { // Status default atau tidak diketahui
-                        if (verifyStoreButton) verifyStoreButton.classList.remove("hidden");
-                        if (rejectStoreButton) rejectStoreButton.classList.remove("hidden");
-                        if (pendingStoreButton) pendingStoreButton.classList.remove("hidden");
-                    }
-
-                    // Event listener untuk aksi verifikasi toko
-                    if (verifyStoreButton) {
-                        verifyStoreButton.onclick = async () => {
-                            if (confirm("Apakah Anda yakin ingin MEMVERIFIKASI toko ini?")) {
-                                try {
-                                    await updateDoc(storeDocRef, { verificationStatus: "verified" });
-                                    alert("Toko berhasil diverifikasi!");
-                                    location.reload();
-                                } catch (err) {
-                                    console.error("Error verifying store:", err);
-                                    alert("Gagal memverifikasi toko: " + err.message);
-                                }
-                            }
-                        };
-                    }
-
-                    if (rejectStoreButton) {
-                        rejectStoreButton.onclick = async () => {
-                            if (confirm("Apakah Anda yakin ingin MENOLAK verifikasi toko ini?")) {
-                                try {
-                                    await updateDoc(storeDocRef, { verificationStatus: "rejected" });
-                                    alert("Verifikasi toko ditolak!");
-                                    location.reload();
-                                } catch (err) {
-                                    console.error("Error rejecting store verification:", err);
-                                    alert("Gagal menolak verifikasi toko: " + err.message);
-                                }
-                            }
-                        };
-                    }
-
-                    if (pendingStoreButton) {
-                        pendingStoreButton.onclick = async () => {
-                            if (confirm("Apakah Anda yakin ingin mengubah status toko menjadi MENUNGGU?")) {
-                                try {
-                                    await updateDoc(storeDocRef, { verificationStatus: "pending" });
-                                    alert("Status toko diubah menjadi menunggu!");
-                                    location.reload();
-                                } catch (err) {
-                                    console.error("Error setting store to pending:", err);
-                                    alert("Gagal mengubah status toko: " + err.message);
-                                }
-                            }
-                        };
-                    }
-
-                } else {
-                    // Pengguna bukan jastiper atau data toko tidak ditemukan untuk ID pengguna ini
-                    if (jastiperInfoSection) jastiperInfoSection.classList.add("hidden");
-                    console.log("Pengguna ini bukan jastiper atau data toko tidak ditemukan untuk ID:", userId);
-                }
-
-                // 3. Ambil Pesanan Terbaru oleh Pengguna ini (Pembeli atau Jastiper)
-                if (latestOrdersTableBody) {
-                    latestOrdersTableBody.innerHTML = '<tr><td colspan="6" class="py-3 px-4 text-center text-gray-500">Memuat pesanan...</td></tr>';
-                }
-
-                const ordersRef = collection(db, "orders");
-                let userOrders = [];
-
-                // Ambil pesanan di mana pengguna ini adalah pembeli
-                console.log("Mencari pesanan sebagai pembeli...");
-                const buyerOrdersQuery = query(ordersRef, where("userId", "==", userId), orderBy("orderDate", "desc"), limit(5));
-                const buyerOrdersSnapshot = await getDocs(buyerOrdersQuery);
-                buyerOrdersSnapshot.forEach(doc => {
-                    userOrders.push({ id: doc.id, ...doc.data(), role: 'pembeli' });
-                });
-                console.log("Pesanan sebagai pembeli ditemukan:", buyerOrdersSnapshot.size);
-
-                // Ambil pesanan di mana pengguna ini adalah jastiper (jika mereka memiliki toko)
-                if (storeDoc.exists()) { // Hanya jika mereka memiliki toko
-                    console.log("Mencari pesanan sebagai jastiper...");
-                    const jastiperOrdersQuery = query(ordersRef, where("jastiperId", "==", userId), orderBy("orderDate", "desc"), limit(5));
-                    const jastiperOrdersSnapshot = await getDocs(jastiperOrdersQuery);
-                    jastiperOrdersSnapshot.forEach(doc => {
-                        // Tambahkan jika belum ada dari pesanan pembeli (deduplikasi berdasarkan ID pesanan)
-                        if (!userOrders.some(order => order.id === doc.id)) {
-                            userOrders.push({ id: doc.id, ...doc.data(), role: 'jastiper' });
-                        }
-                    });
-                    console.log("Pesanan sebagai jastiper ditemukan:", jastiperOrdersSnapshot.size);
-                }
-
-                // Urutkan pesanan gabungan berdasarkan tanggal lagi jika perlu dan ambil 5 teratas
-                userOrders.sort((a, b) => {
-                    const dateA = a.orderDate && typeof a.orderDate.toDate === 'function' ? a.orderDate.toDate() : new Date(0);
-                    const dateB = b.orderDate && typeof b.orderDate.toDate === 'function' ? b.orderDate.toDate() : new Date(0);
-                    return dateB.getTime() - dateA.getTime();
-                });
-                userOrders = userOrders.slice(0, 5); // Batasi hingga 5 teratas setelah digabungkan
-                console.log("Pesanan akhir yang akan ditampilkan:", userOrders);
-
-                if (latestOrdersTableBody) {
-                    latestOrdersTableBody.innerHTML = ""; // Hapus pesan loading
-                }
-
-                if (userOrders.length === 0) {
-                    if (latestOrdersTableBody) {
-                        latestOrdersTableBody.innerHTML = '<tr><td colspan="6" class="py-3 px-4 text-center text-gray-500">Pengguna ini belum memiliki pesanan atau pesanan yang terkait.</td></tr>';
-                    }
-                } else {
-                    for (const order of userOrders) {
-                        let productName = "N/A";
-                        if (order.items && order.items.length > 0) {
-                            productName = order.items[0].productName || "Produk tidak diketahui";
-                            if (order.items.length > 1) {
-                                productName += ` (+${order.items.length - 1} lainnya)`;
-                            }
-                        }
-
-                        const row = `
-                            <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                <td class="py-3 px-6 whitespace-nowrap">
-                                    <a href="admin-pesanan-detail.html?id=${order.id}" class="text-blue-600 hover:underline">${order.id}</a>
-                                </td>
-                                <td class="py-3 px-6 text-sm text-gray-700">${productName}</td>
-                                <td class="py-3 px-6 text-sm text-gray-700">${order.totalQuantity || 'N/A'}</td>
-                                <td class="py-3 px-6 text-sm text-gray-700">${formatCurrency(order.totalPrice || 0)}</td>
-                                <td class="py-3 px-6 text-sm text-center">
-                                    <span class="${getOrderStatusClass(order.status)} py-1 px-2 rounded-full text-xs">${order.status || "N/A"}</span>
-                                </td>
-                                <td class="py-3 px-6 text-sm text-gray-700">${formatDate(order.orderDate)}</td>
-                            </tr>
-                        `;
-                        if (latestOrdersTableBody) {
-                            latestOrdersTableBody.insertAdjacentHTML("beforeend", row);
-                        }
-                    }
-                }
+                // Update link "Lihat Semua Pesanan"
                 if (viewAllOrdersLink) {
-                    viewAllOrdersLink.href = `admin-pesanan.html?user_id=${userId}`; // Tautkan untuk melihat semua pesanan untuk pengguna ini
+                  viewAllOrdersLink.href = `admin-pesanan.html?user_id=${userId}`;
                 }
+
+              } catch (err) {
+                console.error("Terjadi kesalahan saat mengambil riwayat pesanan:", err);
+                latestOrdersTableBody.innerHTML = `
+                                        <tr>
+                                            <td colspan="6" class="py-3 px-4 text-center text-red-500">
+                                                Gagal memuat riwayat pesanan: ${err.message}
+                                            </td>
+                                        </tr>
+                                    `;
+              }
 
             } else {
-                console.error("Dokumen pengguna tidak ada di koleksi 'user' untuk ID:", userId);
-                if (pageTitleEl) pageTitleEl.textContent = "Detail Pengguna : Tidak Ditemukan";
-                if (userDetailTitle) userDetailTitle.textContent = "Detail Pengguna : Tidak Ditemukan";
-                if (breadcrumbUserName) breadcrumbUserName.textContent = "Tidak Ditemukan";
-                document.querySelector("main").innerHTML = '<div class="text-center text-red-500 text-xl mt-10">Pengguna dengan ID ini tidak ditemukan.</div>';
+              console.error("Dokumen pengguna tidak ditemukan.");
+              if (pageTitleEl) pageTitleEl.textContent = "Detail Pengguna : Tidak Ditemukan";
+              if (userDetailTitle) userDetailTitle.textContent = "Detail Pengguna : Tidak Ditemukan";
+              if (breadcrumbUserName) breadcrumbUserName.textContent = "Tidak Ditemukan";
+              document.querySelector("main").innerHTML = '<div class="text-center text-red-500 text-xl mt-10">Pengguna tidak ditemukan. Pastikan ID pengguna di URL benar.</div>';
             }
-        } catch (error) {
+          } catch (error) {
             console.error("Terjadi kesalahan saat mengambil data pengguna:", error);
-            if (pageTitleEl) pageTitleEl.textContent = "Detail Pengguna : Error";
-            if (userDetailTitle) userDetailTitle.textContent = "Detail Pengguna : Error";
-            if (breadcrumbUserName) breadcrumbUserName.textContent = "Error";
+            alert("Terjadi kesalahan saat memuat data pengguna: " + error.message);
             document.querySelector("main").innerHTML = `<div class="text-center text-red-500 text-xl mt-10">Terjadi kesalahan saat memuat data pengguna: ${error.message}</div>`;
+          }
         }
-    }
 
-    // Fungsionalitas Logout
-    const logoutButton = document.getElementById("logoutButton");
-    if (logoutButton) {
-        logoutButton.addEventListener("click", async (e) => {
+        // Logout functionality
+        const logoutButton = document.getElementById("logoutButton");
+        if (logoutButton) {
+          logoutButton.addEventListener("click", async (e) => {
             e.preventDefault();
             try {
-                await signOut(auth);
-                alert("Anda telah logout!");
-                window.location.href = "admin-login.html";
+              await signOut(auth);
+              window.location.href = "admin-login.html";
             } catch (error) {
-                console.error("Error logging out: ", error);
-                alert("Gagal logout: " + error.message);
+              console.error("Error signing out:", error);
+              alert("Gagal logout: " + error.message);
             }
-        });
-    }
-});
+          });
+        }
+      });
     </script>
-  </body>
+</body>
+
 </html>

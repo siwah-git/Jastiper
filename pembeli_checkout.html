@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - TitipGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tambahkan Midtrans Snap JS. GANTI 'YOUR_MIDTRANS_CLIENT_KEY' dengan Client Key Midtrans Anda. -->
-    <!-- Untuk lingkungan produksi, ganti 'app.sandbox.midtrans.com' dengan 'app.midtrans.com' -->
-    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="Mid-client-QhAf34WDf37Fc0Ow"></script>
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="Mid-client-QhAf34WDf37Fc0Ow"></script>
     <style>
-        /* Custom CSS untuk header identik dengan produk-gucci.html */
+        /* Custom CSS (dari kode Anda sebelumnya) */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f5f7fa;
@@ -452,10 +451,12 @@
             background-color: white;
             border-radius: 0.75rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 1px solid #bfdbfe; /* blue-200 */
+            border: 1px solid #bfdbfe;
+            /* blue-200 */
             padding: 1rem;
             width: 100%;
-            max-width: 24rem; /* max-w-xs */
+            max-width: 24rem;
+            /* max-w-xs */
             margin-left: auto;
             margin-right: auto;
             transition: all 0.2s;
@@ -470,15 +471,19 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #1d4ed8; /* blue-700 */
+            color: #1d4ed8;
+            /* blue-700 */
         }
 
         .modal-alamat-input {
             width: 100%;
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db; /* gray-300 */
-            border-radius: 0.375rem; /* rounded-md */
-            font-size: 0.875rem; /* text-sm */
+            border: 1px solid #d1d5db;
+            /* gray-300 */
+            border-radius: 0.375rem;
+            /* rounded-md */
+            font-size: 0.875rem;
+            /* text-sm */
             margin-bottom: 0.75rem;
         }
 
@@ -490,7 +495,8 @@
         }
 
         .modal-alamat-btn-pilih {
-            background-color: #2563eb; /* blue-600 */
+            background-color: #2563eb;
+            /* blue-600 */
             color: white;
             padding: 0.375rem 0.75rem;
             border-radius: 0.25rem;
@@ -499,12 +505,15 @@
         }
 
         .modal-alamat-btn-pilih:hover {
-            background-color: #1e40af; /* blue-700 */
+            background-color: #1e40af;
+            /* blue-700 */
         }
 
         .modal-alamat-btn-batal {
-            background-color: #e5e7eb; /* gray-200 */
-            color: #374151; /* gray-800 */
+            background-color: #e5e7eb;
+            /* gray-200 */
+            color: #374151;
+            /* gray-800 */
             padding: 0.375rem 0.75rem;
             border-radius: 0.25rem;
             font-size: 0.875rem;
@@ -512,7 +521,8 @@
         }
 
         .modal-alamat-btn-batal:hover {
-            background-color: #d1d5db; /* gray-300 */
+            background-color: #d1d5db;
+            /* gray-300 */
         }
     </style>
 </head>
@@ -589,8 +599,8 @@
                         onclick="openAlamatModal()">Ubah</button>
                 </div>
                 <div class="checkout-alamat-detail">
-                    <div id="namaPenerima">Resty (08673732739729)</div>
-                    <div id="alamatLengkap">Jl.Menuju Kesuksesan No.15 Perumahan Maritza, Teras, Boyolali (C10)</div>
+                    <div id="namaPenerima">Memuat...</div>
+                    <div id="alamatLengkap">Memuat...</div>
                 </div>
             </div>
             <div class="checkout-section checkout-produk">
@@ -601,28 +611,35 @@
                     <span class="checkout-produk-total">Total Harga</span>
                 </div>
                 <div class="checkout-produk-box" id="checkoutProdukBox">
+                    <div class="text-center py-4 text-gray-500">Memuat produk...</div>
                 </div>
             </div>
             <div class="checkout-section checkout-pesan">
                 <span>Pesan</span>
-                <input type="text" class="checkout-pesan-input" id="pesanInput" placeholder="Tulis pesan untuk penjual...">
-                <span class="checkout-pengiriman">Pengiriman: <span class="checkout-pengiriman-estimasi">Estimasi Tiba 20-23
+                <input type="text" class="checkout-pesan-input" id="pesanInput"
+                    placeholder="Tulis pesan untuk penjual...">
+                <span class="checkout-pengiriman">Pengiriman: <span class="checkout-pengiriman-estimasi">Estimasi
+                        Tiba
+                        20-23
                         Agustus 2025</span></span>
             </div>
             <div class="checkout-section checkout-voucher">
-                <span class="checkout-metode">Metode Pembayaran: <span class="checkout-metode-bank" id="metodeBank">Transfer
-                        Bank (BCA)</span></span>
-                <button type="button" id="ubahPembayaran"
+                <span class="checkout-metode">Metode Pembayaran: <span class="checkout-metode-bank"
+                        id="metodeBank">Pilih Metode</span></span>
+                <button type="button" id="ubahPembayaranBtn"
                     class="ml-2 px-3 py-1 rounded bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition">Ubah</button>
-                </span>
             </div>
             <div class="checkout-section checkout-rincian">
                 <div class="checkout-rincian-title">Rincian Harga</div>
-                <div class="checkout-rincian-row"><span>Subtotal Pesanan</span><span id="subtotalPesanan">Rp. 0</span></div>
+                <div class="checkout-rincian-row"><span>Subtotal Pesanan</span><span id="subtotalPesanan">Rp.
+                        0</span>
+                </div>
                 <div class="checkout-rincian-row"><span>Subtotal Pengiriman</span><span id="subtotalPengiriman">Rp.
-                        100.000</span></div>
-                <div class="checkout-rincian-row"><span>Biaya Layanan</span><span id="biayaLayanan">Rp. 100.000</span></div>
-                <div class="checkout-rincian-row"><span>Fee Jastiper</span><span id="feeJastiper">Rp. 100.000</span></div>
+                        0</span></div>
+                <div class="checkout-rincian-row"><span>Biaya Layanan</span><span id="biayaLayanan">Rp. 0</span>
+                </div>
+                <div class="checkout-rincian-row"><span>Fee Jastiper</span><span id="feeJastiper">Rp. 0</span>
+                </div>
                 <div class="checkout-rincian-row checkout-rincian-total"><span>Total Harga</span><span
                         class="checkout-total-harga" id="totalHarga">Rp. 0</span></div>
                 <button class="checkout-btn" id="checkoutButton" disabled>Memuat...</button>
@@ -632,8 +649,7 @@
         <div class="modal-bank fixed inset-0 flex items-center justify-center z-[1002]" id="modalBank"
             style="display:none;">
             <div class="modal-bank-backdrop absolute inset-0 bg-black opacity-40 transition-opacity duration-200"></div>
-            <div
-                class="modal-bank-content relative bg-white rounded-xl shadow-2xl border border-blue-200 p-4 w-full max-w-xs mx-auto transition-all duration-200"
+            <div class="modal-bank-content relative bg-white rounded-xl shadow-2xl border border-blue-200 p-4 w-full max-w-xs mx-auto transition-all duration-200"
                 style="min-width:240px;">
                 <div
                     class="modal-bank-title font-bold text-base mb-3 cursor-move select-none flex items-center gap-2 text-blue-700">
@@ -641,45 +657,45 @@
                 </div>
                 <form id="formBank" class="flex flex-col gap-2">
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (BCA)" class="accent-blue-600" checked>
+                        <input type="radio" name="bank" value="bca" class="accent-blue-600">
                         <img src="asset/bca.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BCA">
                         <span class="text-sm">Bank BCA</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (Mandiri)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="mandiri" class="accent-blue-600">
                         <img src="asset/mandiri.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="Mandiri">
                         <span class="text-sm">Bank Mandiri</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (BNI)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="bni" class="accent-blue-600">
                         <img src="asset/bni.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BNI">
                         <span class="text-sm">Bank BNI</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (BRI)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="bri" class="accent-blue-600">
                         <img src="asset/bri.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BRI">
                         <span class="text-sm">Bank BRI</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (CIMB Niaga)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="cimb" class="accent-blue-600">
                         <img src="asset/cimb.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="CIMB Niaga">
                         <span class="text-sm">Bank CIMB Niaga</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (Permata)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="permata" class="accent-blue-600">
                         <img src="asset/permata.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="Permata">
                         <span class="text-sm">Bank Permata</span>
                     </label>
                     <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="Transfer Bank (Syariah Indonesia)" class="accent-blue-600">
+                        <input type="radio" name="bank" value="bsi" class="accent-blue-600">
                         <img src="asset/bsi.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BSI">
                         <span class="text-sm">Bank Syariah Indonesia (BSI)</span>
                     </label>
                 </form>
                 <div class="modal-bank-btn-row flex justify-end gap-2 mt-4">
-                    <button id="modalBankPilih" type="button" onclick="pilihBank()"
+                    <button id="modalBankPilih" type="button"
                         class="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 transition">Pilih</button>
-                    <button id="modalBankBatal" type="button" onclick="batalBank()"
+                    <button id="modalBankBatal" type="button"
                         class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded text-sm hover:bg-gray-300 transition">Batal</button>
                 </div>
             </div>
@@ -687,7 +703,8 @@
 
         <div class="modal-alamat fixed inset-0 flex items-center justify-center z-[1002]" id="modalAlamat"
             style="display:none;">
-            <div class="modal-alamat-backdrop absolute inset-0 bg-black opacity-40 transition-opacity duration-200"></div>
+            <div class="modal-alamat-backdrop absolute inset-0 bg-black opacity-40 transition-opacity duration-200">
+            </div>
             <div
                 class="modal-alamat-content relative bg-white rounded-xl shadow-2xl border border-blue-200 p-4 w-full max-w-xs mx-auto transition-all duration-200">
                 <div
@@ -706,537 +723,16 @@
                         placeholder="Alamat Lengkap"></textarea>
                 </form>
                 <div class="modal-alamat-btn-row flex justify-end gap-2 mt-4">
-                    <button id="modalAlamatSimpan" type="button" onclick="simpanAlamat()"
+                    <button id="modalAlamatSimpan" type="button"
                         class="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 transition">Simpan</button>
-                    <button id="modalAlamatBatal" type="button" onclick="batalAlamat()"
+                    <button id="modalAlamatBatal" type="button"
                         class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded text-sm hover:bg-gray-300 transition">Batal</button>
                 </div>
             </div>
         </div>
 
-        <script>
-            let checkoutData = {
-                products: [],
-                subtotal: 0,
-                shipping: 100000,
-                service: 100000,
-                jastiper: 100000,
-                total: 0
-            };
-
-            // Helper function to format currency
-            function formatRupiah(amount) {
-                return new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0
-                }).format(amount);
-            }
-
-            function loadCheckoutData() {
-                // Load from cart or direct product
-                const cartData = localStorage.getItem('checkoutCart');
-                const productData = localStorage.getItem('checkoutProduct');
-
-                if (cartData) {
-                    checkoutData.products = JSON.parse(cartData);
-                } else if (productData) {
-                    checkoutData.products = [JSON.parse(productData)];
-                } else {
-                    // Default data if nothing in localStorage
-                    checkoutData.products = [{
-                        name: 'Baju Gucci G6000 Man Limited Edition',
-                        color: 'Hitam',
-                        size: 'M',
-                        quantity: 2,
-                        price: 3000000,
-                        store: 'Rifal Store'
-                    }];
-                }
-
-                calculateTotals();
-                displayProducts();
-            }
-
-            function displayProducts() {
-                const container = document.getElementById('checkoutProdukBox');
-
-                // Group products by store
-                const stores = {};
-                checkoutData.products.forEach(product => {
-                    if (!stores[product.store]) {
-                        stores[product.store] = [];
-                    }
-                    stores[product.store].push(product);
-                });
-
-                container.innerHTML = Object.keys(stores).map(storeName => {
-                    const storeProducts = stores[storeName];
-
-                    return `
-                        <div class="checkout-produk-toko">${storeName}</div>
-                        ${storeProducts.map(product => `
-                            <div class="checkout-produk-item">
-                                <img src="asset/images/ootd (1).jpg" alt="${product.name}" class="checkout-produk-img" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
-                                <div class="checkout-produk-info">
-                                    <div class="checkout-produk-nama">${product.name}</div>
-                                    <div class="checkout-produk-varian">${product.color}, ${product.size}</div>
-                                </div>
-                                <div class="checkout-produk-harga">${formatRupiah(product.price)}</div>
-                                <div class="checkout-produk-jumlah">${product.quantity}</div>
-                                <div class="checkout-produk-total">${formatRupiah(product.price * product.quantity)}</div>
-                            </div>
-                        `).join('')}
-                    `;
-                }).join('');
-            }
-
-            function calculateTotals() {
-                checkoutData.subtotal = checkoutData.products.reduce((sum, product) => {
-                    return sum + (product.price * product.quantity);
-                }, 0);
-
-                checkoutData.total = checkoutData.subtotal + checkoutData.shipping + checkoutData.service + checkoutData.jastiper;
-
-                // Update display using formatRupiah
-                document.getElementById('subtotalPesanan').textContent = formatRupiah(checkoutData.subtotal);
-                document.getElementById('subtotalPengiriman').textContent = formatRupiah(checkoutData.shipping);
-                document.getElementById('biayaLayanan').textContent = formatRupiah(checkoutData.service);
-                document.getElementById('feeJastiper').textContent = formatRupiah(checkoutData.jastiper);
-                document.getElementById('totalHarga').textContent = formatRupiah(checkoutData.total);
-            }
-
-            // Modal Alamat
-            const modalAlamat = document.getElementById('modalAlamat');
-            const inputNamaPenerima = document.getElementById('inputNamaPenerima');
-            const inputTeleponPenerima = document.getElementById('inputTeleponPenerima');
-            const inputAlamatLengkap = document.getElementById('inputAlamatLengkap');
-            const alamatModalContent = document.querySelector('#modalAlamat .modal-alamat-content');
-
-            function openAlamatModal() {
-                // Populate current address details into the modal inputs
-                const currentNamaPenerima = document.getElementById('namaPenerima').textContent;
-                const currentAlamatLengkap = document.getElementById('alamatLengkap').textContent;
-
-                const nameMatch = currentNamaPenerima.match(/(.*)\s\((\d+)\)/);
-                if (nameMatch) {
-                    inputNamaPenerima.value = nameMatch[1];
-                    inputTeleponPenerima.value = nameMatch[2];
-                } else {
-                    inputNamaPenerima.value = currentNamaPenerima; // Fallback if format is different
-                    inputTeleponPenerima.value = '';
-                }
-                inputAlamatLengkap.value = currentAlamatLengkap;
-
-                modalAlamat.style.display = 'flex';
-                // Reset posisi modal ke tengah
-                alamatModalContent.style.position = 'absolute';
-                alamatModalContent.style.left = '50%';
-                alamatModalContent.style.top = '50%';
-                alamatModalContent.style.transform = 'translate(-50%, -50%)';
-                alamatModalContent.style.right = 'auto';
-            }
-
-            function simpanAlamat() {
-                const nama = inputNamaPenerima.value.trim();
-                const telepon = inputTeleponPenerima.value.trim();
-                const alamat = inputAlamatLengkap.value.trim();
-
-                if (nama && telepon && alamat) {
-                    document.getElementById('namaPenerima').textContent = `${nama} (${telepon})`;
-                    document.getElementById('alamatLengkap').textContent = alamat;
-                    modalAlamat.style.display = 'none';
-                } else {
-                    alert('Mohon lengkapi semua kolom alamat.');
-                }
-            }
-
-            function batalAlamat() {
-                modalAlamat.style.display = 'none';
-                // Reset posisi modal ke tengah
-                alamatModalContent.style.left = '50%';
-                alamatModalContent.style.top = '50%';
-                alamatModalContent.style.transform = 'translate(-50%, -50%)';
-                alamatModalContent.style.right = 'auto';
-            }
-
-            modalAlamat.querySelector('.modal-alamat-backdrop').onclick = function () {
-                modalAlamat.style.display = 'none';
-                // Reset posisi modal ke tengah
-                alamatModalContent.style.left = '50%';
-                alamatModalContent.style.top = '50%';
-                alamatModalContent.style.transform = 'translate(-50%, -50%)';
-                alamatModalContent.style.right = 'auto';
-            };
-
-            // Drag modal Alamat
-            let isDraggingAlamat = false, startXAlamat, startYAlamat, startLeftAlamat, startTopAlamat;
-            const titleBarAlamat = document.querySelector('.modal-alamat-title');
-            titleBarAlamat.style.cursor = 'move';
-            titleBarAlamat.addEventListener('mousedown', function (e) {
-                isDraggingAlamat = true;
-                startXAlamat = e.clientX;
-                startYAlamat = e.clientY;
-                const rect = alamatModalContent.getBoundingClientRect();
-                startLeftAlamat = rect.left;
-                startTopAlamat = rect.top;
-                document.body.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mousemove', function (e) {
-                if (!isDraggingAlamat) return;
-                let dx = e.clientX - startXAlamat;
-                let dy = e.clientY - startYAlamat;
-                alamatModalContent.style.left = (startLeftAlamat + dx) + 'px';
-                alamatModalContent.style.top = (startTopAlamat + dy) + 'px';
-                alamatModalContent.style.right = 'auto';
-                alamatModalContent.style.transform = 'none';
-            });
-
-            document.addEventListener('mouseup', function () {
-                isDraggingAlamat = false;
-                document.body.style.userSelect = '';
-            });
-
-            // Modal pembayaran
-            const modalBank = document.getElementById('modalBank');
-            const ubahPembayaran = document.getElementById('ubahPembayaran');
-            const metodeBank = document.getElementById('metodeBank');
-            const formBank = document.getElementById('formBank');
-            const modalContent = document.querySelector('.modal-bank-content');
-
-            ubahPembayaran.onclick = function (e) {
-                e.preventDefault();
-                modalBank.style.display = 'flex';
-                // Reset posisi modal ke tengah
-                modalContent.style.position = 'absolute';
-                modalContent.style.left = '50%';
-                modalContent.style.top = '50%';
-                modalContent.style.transform = 'translate(-50%, -50%)';
-                modalContent.style.right = 'auto';
-            };
-
-            function batalBank() {
-                modalBank.style.display = 'none';
-                // Reset posisi modal ke tengah
-                modalContent.style.left = '50%';
-                modalContent.style.top = '50%';
-                modalContent.style.transform = 'translate(-50%, -50%)';
-                modalContent.style.right = 'auto';
-            }
-
-            function pilihBank() {
-                const val = formBank.bank.value;
-                metodeBank.textContent = val;
-                modalBank.style.display = 'none';
-                // Reset posisi modal ke tengah
-                modalContent.style.left = '50%';
-                modalContent.style.top = '50%';
-                modalContent.style.transform = 'translate(-50%, -50%)';
-                modalContent.style.right = 'auto';
-            }
-
-            modalBank.querySelector('.modal-bank-backdrop').onclick = function () {
-                modalBank.style.display = 'none';
-                // Reset posisi modal ke tengah
-                modalContent.style.left = '50%';
-                modalContent.style.top = '50%';
-                modalContent.style.transform = 'translate(-50%, -50%)';
-                modalContent.style.right = 'auto';
-            };
-
-            // Drag modal Bank
-            let isDraggingBank = false, startXBank, startYBank, startLeftBank, startTopBank;
-            const titleBarBank = document.querySelector('.modal-bank-title');
-            titleBarBank.style.cursor = 'move';
-            titleBarBank.addEventListener('mousedown', function (e) {
-                isDraggingBank = true;
-                startXBank = e.clientX;
-                startYBank = e.clientY;
-                const rect = modalContent.getBoundingClientRect();
-                startLeftBank = rect.left;
-                startTopBank = rect.top;
-                document.body.style.userSelect = 'none';
-            });
-
-            document.addEventListener('mousemove', function (e) {
-                if (!isDraggingBank) return;
-                let dx = e.clientX - startXBank;
-                let dy = e.clientY - startYBank;
-                modalContent.style.left = (startLeftBank + dx) + 'px';
-                modalContent.style.top = (startTopBank + dy) + 'px';
-                modalContent.style.right = 'auto';
-                modalContent.style.transform = 'none';
-            });
-
-            document.addEventListener('mouseup', function () {
-                isDraggingBank = false;
-                document.body.style.userSelect = '';
-            });
-
-            // Load data when page loads
-            window.onload = function () {
-                loadCheckoutData();
-                // Event listener for user dropdown
-                const userIcon = document.getElementById('userIcon');
-                const userDropdown = document.getElementById('userDropdown');
-
-                if (userIcon && userDropdown) {
-                    userIcon.addEventListener('click', function () {
-                        userDropdown.classList.toggle('hidden');
-                    });
-
-                    // Close dropdown if clicked outside
-                    document.addEventListener('click', function (event) {
-                        if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
-                            userDropdown.classList.add('hidden');
-                        }
-                    });
-                }
-
-                // Event listener for kategori dropdown
-                const kategoriMenu = document.getElementById('kategoriMenu');
-                const dropdownKategori = document.getElementById('dropdownKategori');
-
-                if (kategoriMenu && dropdownKategori) {
-                    kategoriMenu.addEventListener('click', function (event) {
-                        event.preventDefault(); // Prevent default anchor behavior
-                        dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-                    });
-
-                    // Close dropdown if clicked outside
-                    document.addEventListener('click', function (event) {
-                        if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
-                            dropdownKategori.style.display = 'none';
-                        }
-                    });
-                }
-
-                // Add event listener for the checkout button
-                document.getElementById('checkoutButton').onclick = prosesCheckout;
-            };
-
-
-            // --- Dropdown User Icon Akun ---
-            function logoutUser() {
-                alert('Berhasil logout!');
-                const userDropdown = document.getElementById('userDropdown'); // Ensure userDropdown is defined
-                if (userDropdown) userDropdown.classList.add('hidden');
-                // You might want to add Firebase logout here
-                // auth.signOut().then(() => {
-                //   console.log("User signed out");
-                //   localStorage.removeItem('userId'); // Clear userId on logout
-                //   window.location.href = 'login.html'; // Redirect to login page
-                // }).catch((error) => {
-                //   console.error("Error signing out: ", error);
-                // });
-            }
-            function openChatCS() {
-                alert('Fitur chat CS akan segera hadir!');
-                const userDropdown = document.getElementById('userDropdown'); // Ensure userDropdown is defined
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
-
-            function openTokoSaya() {
-                alert('Fitur Toko Saya akan segera hadir!'); // Placeholder for Toko Saya
-                const userDropdown = document.getElementById('userDropdown');
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
-        </script>
-          <script type="module">
-    import { db, auth } from './js/firebase-config.js';
-    import { collection, getDocs, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
-    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-functions.js';
-
-    // Import the 'functions' object directly for functions.config()
-    // import * as functions from 'firebase-functions'; // BARIS INI DITAMBAHKAN - Ini tidak diperlukan di sisi client
-
-    let isFirebaseReady = false; // Flag untuk melacak apakah Firebase Auth sudah siap
-
-    // Fungsi untuk memanggil Firebase Function
-    const callCreateMidtransTransaction = httpsCallable(getFunctions(), 'createMidtransTransaction');
-
-    // Listener untuk perubahan status otentikasi Firebase
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            console.log("Pengguna terotentikasi:", user.uid);
-            localStorage.setItem('userId', user.uid); // Pastikan userId tersimpan di localStorage
-        } else {
-            console.log("Pengguna tidak terotentikasi.");
-            localStorage.removeItem('userId'); // Hapus userId jika tidak terotentikasi
-        }
-        isFirebaseReady = true; // Set flag menjadi true setelah status otentikasi diketahui
-        // Aktifkan tombol checkout jika Firebase sudah siap
-        const checkoutButton = document.getElementById('checkoutButton');
-        if (checkoutButton) {
-            checkoutButton.disabled = false;
-            checkoutButton.textContent = 'Checkout';
-        }
-    });
-
-    async function debugFirestore() {
-      const collections = ['users', 'products', 'orders', 'ratings', 'chats'];
-      for (const col of collections) {
-        try {
-          const snap = await getDocs(collection(db, col));
-          console.log(`Data koleksi ${col}:`);
-          snap.forEach(doc => console.log(doc.id, doc.data()));
-        } catch (e) {
-          console.error(`Gagal ambil data koleksi ${col}:`, e);
-        }
-      }
-    }
-    debugFirestore();
-
-    window.prosesCheckout = async function() {
-      // Pastikan Firebase Auth sudah siap sebelum melanjutkan
-      if (!isFirebaseReady) {
-          alert('Sistem sedang memuat. Mohon tunggu sebentar.');
-          return;
-      }
-
-      // Ambil data user login dari Firebase Auth
-      const userId = auth.currentUser ? auth.currentUser.uid : null;
-      if (!userId) {
-        alert('Anda harus login untuk melanjutkan checkout.');
-        window.location.href = 'login.html'; // Redirect ke halaman login
-        return;
-      }
-
-      // Dapatkan email pengguna dari Firebase Auth (jika tersedia)
-      let userEmail = auth.currentUser ? auth.currentUser.email : '';
-
-      // Ambil produk dari localStorage
-      const products = JSON.parse(localStorage.getItem('checkoutCart') || localStorage.getItem('checkoutProduct') || '[]');
-      if (products.length === 0) {
-        alert('Keranjang belanja kosong atau tidak ada produk untuk checkout.');
-        return;
-      }
-
-      // Ambil alamat dan metode bayar
-      const namaPenerimaText = document.getElementById('namaPenerima').textContent;
-      const namaPenerimaMatch = namaPenerimaText.match(/(.*)\s\((\d+)\)/);
-      const namaPenerima = namaPenerimaMatch ? namaPenerimaMatch[1] : namaPenerimaText;
-      const teleponPenerima = namaPenerimaMatch ? namaPenerimaMatch[2] : '';
-      const alamatLengkap = document.getElementById('alamatLengkap').textContent;
-      const metodeBayar = document.querySelector('input[name=bank]:checked')?.value || 'Transfer Bank (BCA)';
-      
-      // Hitung total dari checkoutData global
-      const total = checkoutData.total;
-
-      try {
-        // Nonaktifkan tombol checkout sementara proses berlangsung
-        const checkoutButton = document.getElementById('checkoutButton');
-        if (checkoutButton) {
-            checkoutButton.disabled = true;
-            checkoutButton.textContent = 'Memproses...';
-        }
-
-        // Panggil Firebase Function untuk membuat transaksi Midtrans
-        const result = await callCreateMidtransTransaction({
-          products: checkoutData.products, // Kirim produk yang sudah terformat dari checkoutData
-          total: checkoutData.total, // Kirim total yang sudah dihitung
-          namaPenerima: namaPenerima,
-          teleponPenerima: teleponPenerima,
-          alamatLengkap: alamatLengkap,
-          emailPengguna: userEmail // Kirim email pengguna
-        });
-
-        const snapToken = result.data.snapToken;
-        const orderId = result.data.orderId;
-
-        // Simpan orderId ke Firestore lokal sebelum membuka Snap
-        await addDoc(collection(db, "orders"), {
-            userId: userId,
-            products: checkoutData.products,
-            total: checkoutData.total,
-            status: "pending", // Set status awal pending
-            alamat: alamatLengkap,
-            nama_penerima: namaPenerima,
-            telepon_penerima: teleponPenerima,
-            metodeBayar: metodeBayar,
-            orderIdMidtrans: orderId, // Simpan order ID dari Midtrans
-            createdAt: Timestamp.now()
-        });
-
-        // Tampilkan pop-up pembayaran Midtrans Snap
-        window.snap.pay(snapToken, {
-          onSuccess: function(result){
-            /* You may add your own implementation here */
-            alert("Pembayaran berhasil! Order ID: " + result.order_id);
-            // Update status order di Firestore menjadi "success" atau "settlement"
-            // Ini memerlukan fungsi update di Firebase Functions atau di client jika aturan keamanannya memungkinkan
-            console.log("Pembayaran berhasil:", result);
-            window.location.href = "pembeli_pembayaran.html?order_id=" + orderId; // Redirect ke halaman pembayaran dengan orderId
-          },
-          onPending: function(result){
-            /* You may add your own implementation here */
-            alert("Menunggu pembayaran Anda. Order ID: " + result.order_id);
-            // Update status order di Firestore menjadi "pending"
-            console.log("Pembayaran pending:", result);
-            window.location.href = "pembeli_pembayaran.html?order_id=" + orderId; // Redirect ke halaman pembayaran dengan orderId
-          },
-          onError: function(result){
-            /* You may add your own implementation here */
-            alert("Pembayaran gagal! Order ID: " + result.order_id);
-            // Update status order di Firestore menjadi "failed" atau "cancel"
-            console.log("Pembayaran error:", result);
-            window.location.href = "pembeli_pesanan_saya.html"; // Redirect ke halaman pesanan saya
-          },
-          onClose: function(){
-            /* You may add your own implementation here */
-            alert('Anda menutup jendela pembayaran.');
-            console.log("Jendela pembayaran ditutup.");
-            window.location.href = "pembeli_pesanan_saya.html"; // Kembali ke halaman pesanan saya
-          }
-        });
-
-      } catch (error) {
-        console.error("Error saat proses checkout:", error);
-        alert("Terjadi kesalahan saat membuat pesanan. Silakan coba lagi. " + error.message);
-      } finally {
-          // Selalu aktifkan kembali tombol checkout setelah proses selesai (berhasil atau gagal)
-          const checkoutButton = document.getElementById('checkoutButton');
-          if (checkoutButton) {
-              checkoutButton.disabled = false;
-              checkoutButton.textContent = 'Checkout';
-          }
-      }
-    }
-  </script>
-
-
-        <footer class="bg-blue-900 py-8 px-6 mt-8">
-            <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
-                <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-                    <h3 class="font-bold text-white mb-3">INFORMASI</h3>
-                    <ul>
-                        <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                        <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                        <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-                    </ul>
-                </div>
-                <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-                    <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
-                </div>
-                <div class="w-full sm:w-1/3 text-right">
-                    <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
-                    <ul>
-                        <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
-                                href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr"
-                                target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                        <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
-                                href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
-                                class="hover:text-pink-600">Facebook</a></li>
-                        <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
-                                href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
-                                class="hover:text-pink-600">Youtube</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
-            </div>
-        </footer>
+    </main>
+    <script type="module" src="./js/pembeli_checkout.js"></script>
 </body>
 
 </html>

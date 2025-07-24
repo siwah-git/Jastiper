@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="product-page-title">Detail Produk - TitipGo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* Custom CSS untuk overriding atau menambahkan style Tailwind, identik dengan dashboard */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+        }
+
+        .header-search {
+            font-size: 1rem;
+            height: 36px;
+            padding-left: 2.2rem;
+            padding-right: 1rem;
+            border-radius: 9999px;
+            width: 180px;
+            font-weight: 600;
+        }
+
+        @media (min-width: 1024px) {
+            .header-search {
+                width: 220px;
+            }
+        }
+
+        .header-search::placeholder {
+            color: #a0aec0;
+            opacity: 1;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .icon-nav,
+        nav svg {
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px;
+            min-height: 28px;
+        }
+
+        .icon-nav:hover {
+            filter: brightness(0.7);
+        }
+
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-center a,
+        .nav-center .dropdown-kategori>a {
+            padding: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .dropdown-kategori .dropdown-content {
+            min-width: 160px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+            background: #fff;
+            padding: 0;
+            margin-top: 4px;
+            z-index: 50;
+        }
+
+        .dropdown-kategori .dropdown-content a {
+            display: block;
+            padding: 10px 18px;
+            color: #222;
+            text-decoration: none;
+            font-size: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .dropdown-kategori .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-kategori .dropdown-content a:hover {
+            background: #f5f7fa;
+            color: #1976d2;
+        }
+
+        .logo-titipgo {
+            width: 112px !important;
+            min-width: 112px;
+            max-width: 128px;
+        }
+
+        @media (max-width: 900px) {
+
+            .icon-nav,
+            nav svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            .logo-titipgo {
+                width: 90px !important;
+            }
+
+            .header-search {
+                font-size: 1rem;
+                height: 36px;
+                width: 180px;
+            }
+
+            .header-search::placeholder {
+                font-size: 1rem;
+            }
+
+            .nav-center a,
+            .nav-center .dropdown-kategori>a {
+                font-size: 1rem;
+            }
+        }
+
+        /* Custom styles for variant selection */
+        .variant-option {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .variant-option.selected {
+            background-color: #ec4899;
+            color: white;
+            border-color: #ec4899;
+            box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+        }
+
+        .variant-option:hover:not(.selected) {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
+        /* Modal (Popup) Styling for Logout and Custom Alerts */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+
+        .modal-buttons .btn-confirm.success {
+            background-color: #22c55e;
+            /* Green for success */
+            border-color: #22c55e;
+        }
+
+        .modal-buttons .btn-confirm.success:hover {
+            background-color: #16a34a;
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-gray-100 m-0">
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
+        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+            </div>
+
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg
+                    class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" id="tokoSayaLink"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+    <main class="pt-20">
+        <!-- Custom Confirmation/Alert Modal -->
+        <div id="custom-confirm-modal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+                <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+                <div class="modal-buttons">
+                    <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+                    <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chatCSModal"
+            class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
+            <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
+                <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
+                    <span class="font-bold text-lg">Chat dengan CS</span>
+                    <button onclick="document.getElementById('chatCSModal').style.display='none'"
+                        class="bg-none border-none text-2xl cursor-pointer">&times;</button>
+                </div>
+                <div class="px-5 pt-5 min-h-[80px]">
+                    <div id="chatCSMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
+                </div>
+                <div class="flex items-center px-5 pt-2 gap-2">
+                    <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+                        class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
+                    <button onclick="sendCSMessage()"
+                        class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chatJastiperModal"
+            class="hidden fixed z-[1000] left-0 top-0 w-screen h-screen bg-black/20 flex items-center justify-center">
+            <div class="bg-white rounded-xl max-w-md w-[90vw] p-0 pb-4 shadow-2xl">
+                <div class="flex items-center justify-between px-5 pt-4 pb-3 border-b border-gray-200">
+                    <span class="font-bold text-lg">Chat dengan <span id="chat-jastiper-name">Toko</span></span>
+                    <button onclick="document.getElementById('chatJastiperModal').style.display='none'"
+                        class="bg-none border-none text-2xl cursor-pointer">&times;</button>
+                </div>
+                <div class="px-5 pt-5 min-h-[80px]">
+                    <div id="chatJastiperMessages" class="text-sm text-gray-700 min-h-[40px]"></div>
+                </div>
+                <div class="flex items-center px-5 pt-2 gap-2">
+                    <input id="chatJastiperInput" type="text" placeholder="Tulis pesan..."
+                        class="flex-1 px-3 py-2 rounded border border-gray-300 text-sm" />
+                    <button onclick="sendJastiperMessage()"
+                        class="bg-blue-700 text-white border-none px-5 py-2 rounded font-bold cursor-pointer">Kirim</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-spinner"
+            class="hidden fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-[1002]">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-pink-500"></div>
+            <p class="ml-4 text-pink-500 text-lg">Memuat...</p>
+        </div>
+
+
+        <div id="product-detail-container"
+            class="relative max-w-7xl mx-auto rounded-xl shadow-lg flex flex-col md:flex-row gap-8 p-8 mb-8 bg-[#eaf3fb] border border-gray-200 mt-12 items-start min-h-[340px]">
+            <!-- Product detail will be loaded here -->
+            <p id="loading-product-message" class="text-gray-500 text-center w-full">Memuat detail produk...</p>
+            <p id="error-product-message" class="text-red-500 text-center w-full hidden">Gagal memuat produk.</p>
+        </div>
+
+        <div id="store-info-container"
+            class="flex items-center gap-3 bg-[#eaf3fb] border border-gray-200 rounded-xl shadow p-6 max-w-7xl mx-auto mb-8 mt-8 hidden">
+            <span class="text-green-500 text-lg">&#9679;</span>
+            <span class="font-bold text-gray-900" id="store-name-display">Nama Toko</span>
+            <span class="text-gray-500 text-xs" id="store-country-display">Negara: <b
+                    id="store-country-name"></b></span>
+            <span class="text-gray-500 text-xs" id="store-last-active">Aktif ... yang lalu</span>
+            <button
+                class="ml-4 bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
+                onclick="hubungiToko()">Hubungi Toko</button>
+            <button
+                class="bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
+                onclick="kunjungiToko()">Kunjungi Toko</button>
+            <span class="ml-auto text-gray-700 text-xs">Pengikut <b id="store-followers-count">0</b></span>
+            <span class="text-gray-700 text-xs">Produk <b id="store-products-count">0</b></span>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db, auth, doc, getDoc, updateDoc, onAuthStateChanged, collection, query, where, getDocs, addDoc } from './js/firebase-config.js'; // Import addDoc for adding to cart
+
+        // DOM Elements
+        const productPageTitle = document.getElementById('product-page-title');
+        const productDetailContainer = document.getElementById('product-detail-container');
+        const loadingProductMessage = document.getElementById('loading-product-message');
+        const errorProductMessage = document.getElementById('error-product-message');
+        const storeInfoContainer = document.getElementById('store-info-container');
+        const storeNameDisplay = document.getElementById('store-name-display');
+        const storeCountryName = document.getElementById('store-country-name'); // New element for store country
+        const storeLastActive = document.getElementById('store-last-active');
+        const storeFollowersCount = document.getElementById('store-followers-count');
+        const storeProductsCount = document.getElementById('store-products-count');
+        const chatJastiperName = document.getElementById('chat-jastiper-name');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        // Global variables for product and store data
+        let currentProductData = null;
+        let currentStoreData = null;
+        let selectedVariant = null; // To store the currently selected variant object
+        let currentProductId = null; // To store the product ID from the URL
+        let currentUserId = null; // To store the current authenticated user's ID
+
+        // Custom Confirmation/Alert Modal elements
+        const customConfirmModal = document.getElementById('custom-confirm-modal');
+        const customConfirmTitle = document.getElementById('custom-confirm-title');
+        const customConfirmMessage = document.getElementById('custom-confirm-message');
+        const customCancelBtn = document.getElementById('custom-cancel-btn');
+        const customConfirmBtn = document.getElementById('custom-confirm-btn');
+        let customConfirmCallback = null;
+
+        // Function to show custom confirmation/alert modal
+        function showCustomConfirm(message, callback, isConfirmation = false) {
+            customConfirmMessage.textContent = message;
+            customConfirmCallback = callback;
+            customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+            if (isConfirmation) {
+                customConfirmBtn.classList.remove('btn-confirm');
+                customConfirmBtn.classList.add('btn-danger'); // Make confirm button red for delete/logout
+                customCancelBtn.classList.remove('hidden');
+            } else {
+                customConfirmBtn.classList.remove('btn-danger'); // Reset to default if not confirmation
+                customConfirmBtn.classList.add('btn-confirm', 'success'); // Make it green for success/info
+                customCancelBtn.classList.add('hidden');
+            }
+            customConfirmBtn.textContent = isConfirmation ? "Ya" : "OK";
+            customConfirmModal.classList.add('show');
+        }
+
+        customCancelBtn.addEventListener('click', () => {
+            customConfirmModal.classList.remove('show');
+            customConfirmCallback = null;
+        });
+
+        customConfirmBtn.addEventListener('click', () => {
+            customConfirmModal.classList.remove('show');
+            if (customConfirmCallback) {
+                customConfirmCallback();
+            }
+            customConfirmCallback = null;
+        });
+
+        // Function to format price to IDR
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
+        }
+
+        // Function to update product details on the page
+        function renderProductDetails(product) {
+            productPageTitle.textContent = product.namaBarang || "Detail Produk";
+            let variantsHtml = '';
+            // Ensure defaultPrice and defaultStock always have a number value, defaulting to 0 if undefined/null
+            let defaultPrice = product.harga || 0;
+            // Explicitly parse stock to ensure it's a number, defaulting to 0 if invalid
+            let defaultStock = parseInt(product.stok) || 0;
+            let defaultImageUrl = product.imageUrl;
+
+            if (product.variants && product.variants.length > 0) {
+                variantsHtml = `
+                    <div class="flex mb-6">
+                        <div class="w-28 font-semibold text-gray-700">Varian</div>
+                        <div class="flex-1 flex flex-wrap items-center gap-2" id="variant-options-container">
+                            ${product.variants.map((variant, index) => `
+                                <span class="variant-option" data-variant-index="${index}">${variant.name}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                // Set initial selected variant to the first one, or handle based on preference
+                selectedVariant = product.variants[0];
+                defaultPrice = selectedVariant.price !== null ? selectedVariant.price : product.harga || 0;
+                // Explicitly parse variant stock to ensure it's a number, defaulting to product stock or 0
+                defaultStock = parseInt(selectedVariant.stock) || parseInt(product.stok) || 0;
+                defaultImageUrl = selectedVariant.imageUrl || product.imageUrl;
+            } else {
+                selectedVariant = null; // No variants
+            }
+
+            productDetailContainer.innerHTML = `
+                <div class="flex-shrink-0">
+                    <img id="product-main-image" src="${defaultImageUrl || 'https://placehold.co/176x176/E0F2F7/2C3E50?text=No+Image'}" alt="${product.namaBarang}"
+                        class="w-44 h-auto rounded-lg object-cover bg-white border border-gray-200" onerror="this.onerror=null;this.src='https://placehold.co/176x176/E0F2F7/2C3E50?text=No+Image';" />
+                </div>
+                <div class="flex-1 min-w-0 flex flex-col justify-start">
+                    <div class="text-2xl font-bold text-gray-900 mb-2" id="product-name">${product.namaBarang || 'Nama Produk'}</div>
+                    <div class="mb-2 text-sm font-medium flex items-center gap-2">
+                        <span class="text-yellow-400">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 5.0 <span class="text-gray-400">|</span>
+                        1,2 rb Penilaian <span class="text-gray-400">|</span> 5,8 rb Penjualan
+                    </div>
+                    <div class="text-2xl text-red-700 font-bold mb-4" id="product-price">${formatRupiah(defaultPrice)}</div>
+                    <div class="flex flex-col gap-2 mb-2">
+                        <div class="flex mb-6">
+                            <div class="w-28 font-semibold text-gray-700">Pengiriman</div>
+                            <div class="flex-1 text-gray-700">Estimasi Tiba ${product.batasPesan ? new Date(product.batasPesan.toDate()).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Tidak Tersedia'}</div>
+                        </div>
+                        ${variantsHtml}
+                        <div class="flex items-center">
+                            <div class="w-28 font-semibold text-gray-700">Jumlah</div> <!-- Changed 'Kuantitas' to 'Jumlah' -->
+                            <div class="flex-1 flex items-center gap-2">
+                                <button class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button" data-action="decrease">-</button>
+                                <input type="number" value="1" min="1" max="${defaultStock}"
+                                    class="produk-qty-input w-12 px-2 py-1 border border-gray-300 rounded text-center" />
+                                <button class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button" data-action="increase">+</button>
+                                <span class="ml-3 text-gray-500">Stok <span id="product-stock">${defaultStock}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mt-4">
+                        <button class="bg-white text-black border border-gray-400 px-6 py-2 rounded font-semibold shadow hover:bg-gray-100"
+                            onclick="masukkanKeranjang()">Masukkan Keranjang</button>
+                        <button class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800"
+                            onclick="beliSekarang()">Beli Sekarang</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 md:mt-0 flex flex-col md:self-start">
+                    <div class="text-blue-700 font-bold mb-2">Deskripsi Produk</div>
+                    <p class="text-gray-700 text-sm mb-4 whitespace-pre-wrap">${product.deskripsi || 'Tidak ada deskripsi.'}</p>
+                    <div class="text-blue-700 font-bold mb-2">Detail Produk</div>
+                    <ul class="list-disc ml-6 text-gray-700 text-sm">
+                        <li>Merk: ${product.merk || 'Tidak Tersedia'}</li>
+                        <li>Negara Asal: ${product.negara || 'Tidak Tersedia'}</li>
+                        <li>Kategori: ${product.kategori || 'Tidak Tersedia'}</li>
+                        <li>Jenis: ${product.jenis || 'Tidak Tersedia'}</li>
+                        <li>Berat: ${product.berat ? product.berat + ' kg' : 'Tidak Tersedia'}</li>
+                        <li>Status: ${product.status || 'Tidak Tersedia'}</li>
+                    </ul>
+                </div>
+            `;
+
+            // Re-attach event listeners for quantity buttons
+            const qtyInput = productDetailContainer.querySelector('.produk-qty-input');
+            const qtyButtons = productDetailContainer.querySelectorAll('.produk-qty-btn');
+            const productStockSpan = productDetailContainer.querySelector('#product-stock');
+
+            console.log("DEBUG: qtyInput found?", !!qtyInput);
+            console.log("DEBUG: qtyButtons found?", qtyButtons.length > 0, qtyButtons);
+            console.log("DEBUG: productStockSpan found?", !!productStockSpan);
+
+            qtyButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    console.log("DEBUG: Quantity button clicked:", this.dataset.action);
+                    let val = parseInt(qtyInput.value, 10);
+                    // Ensure maxStock is always a number, defaulting to 0
+                    const maxStock = parseInt(productStockSpan.textContent, 10) || 0;
+                    console.log("DEBUG: Current quantity:", val, "Max stock:", maxStock);
+
+                    if (this.dataset.action === 'decrease' && val > 1) {
+                        qtyInput.value = val - 1;
+                        console.log("DEBUG: Decreased quantity to:", qtyInput.value);
+                    }
+                    if (this.dataset.action === 'increase' && val < maxStock) {
+                        qtyInput.value = val + 1;
+                        console.log("DEBUG: Increased quantity to:", qtyInput.value);
+                    }
+                });
+            });
+
+            // Re-attach event listeners for variant options
+            const variantOptionsContainer = document.getElementById('variant-options-container');
+            if (variantOptionsContainer) {
+                variantOptionsContainer.querySelectorAll('.variant-option').forEach((option, index) => {
+                    if (index === 0) { // Select the first variant by default
+                        option.classList.add('selected');
+                    }
+                    option.addEventListener('click', function () {
+                        // Remove 'selected' from all
+                        variantOptionsContainer.querySelectorAll('.variant-option').forEach(opt => opt.classList.remove('selected'));
+                        // Add 'selected' to clicked one
+                        this.classList.add('selected');
+
+                        const variantIndex = parseInt(this.dataset.variantIndex);
+                        selectedVariant = product.variants[variantIndex];
+                        console.log("Selected variant:", selectedVariant);
+
+                        // Update displayed price, stock, and image based on selected variant
+                        productDetailContainer.querySelector('#product-price').textContent = formatRupiah(selectedVariant.price !== null ? selectedVariant.price : product.harga || 0);
+                        // Explicitly parse variant stock to ensure it's a number, defaulting to product stock or 0
+                        productStockSpan.textContent = parseInt(selectedVariant.stock) || parseInt(product.stok) || 0;
+                        qtyInput.max = parseInt(selectedVariant.stock) || parseInt(product.stok) || 0;
+                        productDetailContainer.querySelector('#product-main-image').src = selectedVariant.imageUrl || product.imageUrl || 'https://placehold.co/176x176/E0F2F7/2C3E50?text=No+Image';
+                        console.log("DEBUG: Updated stock after variant selection:", productStockSpan.textContent);
+                        // Reset quantity to 1 when variant changes
+                        qtyInput.value = 1;
+                    });
+                });
+            }
+        }
+
+        // Function to load product and store data
+        async function loadProductAndStoreData() {
+            loadingSpinner.classList.remove('hidden');
+            loadingProductMessage.classList.remove('hidden');
+            errorProductMessage.classList.add('hidden');
+            productDetailContainer.innerHTML = `<p id="loading-product-message" class="text-gray-500 text-center w-full">Memuat detail produk...</p>`;
+            storeInfoContainer.classList.add('hidden');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            currentProductId = urlParams.get('id');
+
+            if (!currentProductId) {
+                loadingProductMessage.classList.add('hidden');
+                errorProductMessage.textContent = "ID Produk tidak ditemukan di URL.";
+                errorProductMessage.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
+                showCustomConfirm("ID Produk tidak ditemukan. Kembali ke beranda.", () => {
+                    window.location.href = 'pembeli_dashboard.html';
+                });
+                return;
+            }
+
+            try {
+                // Fetch product data
+                const productRef = doc(db, "produk", currentProductId);
+                const productSnap = await getDoc(productRef);
+
+                if (productSnap.exists()) {
+                    currentProductData = { id: productSnap.id, ...productSnap.data() };
+                    console.log("Product data loaded:", currentProductData);
+                    renderProductDetails(currentProductData);
+
+                    // Fetch store data using tokoId from product
+                    if (currentProductData.tokoId) {
+                        const storeRef = doc(db, "toko", currentProductData.tokoId);
+                        const storeSnap = await getDoc(storeRef);
+
+                        if (storeSnap.exists()) {
+                            currentStoreData = { id: storeSnap.id, ...storeSnap.data() };
+                            console.log("Store data loaded:", currentStoreData);
+                            storeNameDisplay.textContent = currentStoreData.namaToko || 'Nama Toko';
+                            storeCountryName.textContent = currentStoreData.negaraToko || 'Tidak Tersedia'; // Display store country
+                            chatJastiperName.textContent = currentStoreData.namaToko || 'Toko'; // Set Jastiper chat name
+                            storeLastActive.textContent = `Aktif ${currentStoreData.lastActive ? timeSince(currentStoreData.lastActive.toDate()) : 'Tidak diketahui'}`;
+
+                            // Fetch product count for the store
+                            const productsQuery = query(collection(db, "produk"), where("tokoId", "==", currentStoreData.id));
+                            const productsSnapshot = await getDocs(productsQuery);
+                            storeProductsCount.textContent = productsSnapshot.size;
+
+                            // Fetch follower count for the store (assuming 'pengikut' is an array of UIDs)
+                            storeFollowersCount.textContent = currentStoreData.pengikut ? currentStoreData.pengikut.length : 0;
+
+                            storeInfoContainer.classList.remove('hidden');
+                        } else {
+                            console.warn("Store not found for tokoId:", currentProductData.tokoId);
+                            storeInfoContainer.classList.add('hidden'); // Hide store info if not found
+                        }
+                    } else {
+                        console.warn("Product has no tokoId.");
+                        storeInfoContainer.classList.add('hidden');
+                    }
+                } else {
+                    loadingProductMessage.classList.add('hidden');
+                    errorProductMessage.textContent = "Produk tidak ditemukan.";
+                    errorProductMessage.classList.remove('hidden');
+                    showCustomConfirm("Produk tidak ditemukan. Kembali ke beranda.", () => {
+                        window.location.href = 'pembeli_dashboard.html';
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading product or store data:", error);
+                loadingProductMessage.classList.add('hidden');
+                errorProductMessage.textContent = "Terjadi kesalahan: " + error.message;
+                errorProductMessage.classList.remove('hidden');
+                showCustomConfirm("Terjadi kesalahan saat memuat data: " + error.message, null);
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        // Helper function for time since calculation
+        function timeSince(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " tahun";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " bulan";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " hari";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " jam";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " menit";
+            return Math.floor(seconds) + " detik";
+        }
+
+        // Fungsi untuk mengurangi stok produk di Firebase
+        async function decreaseProductStock(productId, quantity, variantName = null) {
+            try {
+                const productRef = doc(db, "produk", productId);
+                const productSnap = await getDoc(productRef);
+
+                if (productSnap.exists()) {
+                    const productData = productSnap.data();
+                    let newStock = parseInt(productData.stok) || 0; // Ensure it's a number
+                    let updatedVariants = productData.variants;
+
+                    if (variantName && updatedVariants && updatedVariants.length > 0) {
+                        // Find and update the stock of the specific variant
+                        const variantIndex = updatedVariants.findIndex(v => v.name === variantName);
+                        if (variantIndex > -1) {
+                            // Ensure variant stock is parsed as number
+                            if ((parseInt(updatedVariants[variantIndex].stock) || 0) >= quantity) {
+                                updatedVariants[variantIndex].stock = (parseInt(updatedVariants[variantIndex].stock) || 0) - quantity;
+                            } else {
+                                throw new Error("Stok varian tidak mencukupi atau tidak valid.");
+                            }
+                        } else {
+                            throw new Error("Varian tidak ditemukan.");
+                        }
+                    } else {
+                        // Update the main product stock if no variant or variant stock is not managed
+                        if (newStock >= quantity) {
+                            newStock -= quantity;
+                        } else {
+                            throw new Error("Stok produk tidak mencukupi.");
+                        }
+                    }
+
+                    // Update the product document in Firestore
+                    await updateDoc(productRef, {
+                        stok: newStock,
+                        variants: updatedVariants // Update variants array if it was modified
+                    });
+                    console.log(`Stok produk ${productId} (varian: ${variantName || 'N/A'}) berhasil dikurangi sebanyak ${quantity}.`);
+                    return true;
+                } else {
+                    console.error("Produk tidak ditemukan untuk pengurangan stok.");
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error mengurangi stok produk:", error);
+                showCustomConfirm("Gagal mengurangi stok: " + error.message, null);
+                return false;
+            }
+        }
+
+        // --- Fungsi untuk Keranjang dan Pembelian ---
+        window.masukkanKeranjang = async function () { // Made async
+            if (!currentUserId) {
+                showCustomConfirm("Anda harus login untuk menambahkan produk ke keranjang.", () => {
+                    window.location.href = 'index.html'; // Redirect ke halaman login
+                });
+                return;
+            }
+
+            if (!currentProductData) {
+                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Mohon tunggu.", null);
+                return;
+            }
+            const qtyInput = productDetailContainer.querySelector('.produk-qty-input');
+            const quantity = parseInt(qtyInput.value, 10);
+
+            if (quantity <= 0) {
+                showCustomConfirm("Jumlah harus lebih dari 0.", null);
+                return;
+            }
+
+            // Check stock before adding to cart
+            const currentStock = selectedVariant ? (parseInt(selectedVariant.stock) || parseInt(currentProductData.stok) || 0) : parseInt(currentProductData.stok) || 0;
+            if (quantity > currentStock) {
+                showCustomConfirm(`Stok tidak mencukupi. Tersedia: ${currentStock}`, null);
+                return;
+            }
+
+            // Decrease stock in Firebase
+            const stockDecreased = await decreaseProductStock(currentProductData.id, quantity, selectedVariant ? selectedVariant.name : null);
+            if (!stockDecreased) {
+                return; // Stop if stock update failed
+            }
+
+            const itemToAdd = {
+                productId: currentProductData.id,
+                productName: currentProductData.namaBarang,
+                productImageUrl: selectedVariant ? selectedVariant.imageUrl || currentProductData.imageUrl : currentProductData.imageUrl,
+                price: selectedVariant ? (selectedVariant.price !== null ? selectedVariant.price : currentProductData.harga) : currentProductData.harga,
+                quantity: quantity,
+                storeId: currentProductData.tokoId,
+                storeName: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
+                variant: selectedVariant ? selectedVariant.name : null, // Store selected variant name
+                addedAt: new Date(), // Timestamp when added to cart
+            };
+
+            try {
+                const cartRef = collection(db, "users", currentUserId, "keranjang");
+                const q = query(cartRef,
+                    where("productId", "==", itemToAdd.productId),
+                    where("variant", "==", itemToAdd.variant)
+                );
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    // Item already exists in cart, update quantity
+                    const existingCartItemDoc = querySnapshot.docs[0];
+                    const existingQuantity = existingCartItemDoc.data().quantity;
+                    await updateDoc(doc(db, "users", currentUserId, "keranjang", existingCartItemDoc.id), {
+                        quantity: existingQuantity + itemToAdd.quantity,
+                        addedAt: new Date() // Update timestamp
+                    });
+                    console.log("Cart item updated in Firebase:", existingCartItemDoc.id);
+                } else {
+                    // Add new item to cart
+                    await addDoc(cartRef, itemToAdd);
+                    console.log("New cart item added to Firebase.");
+                }
+
+                showCustomConfirm("Produk berhasil ditambahkan ke keranjang!", () => {
+                    window.location.href = 'pembeli_keranjang.html';
+                }, false);
+
+            } catch (error) {
+                console.error("Error adding/updating cart item in Firebase:", error);
+                showCustomConfirm("Gagal menambahkan produk ke keranjang: " + error.message, null);
+                // Revert stock if adding to cart failed (optional, but good for consistency)
+                await decreaseProductStock(currentProductData.id, -quantity, selectedVariant ? selectedVariant.name : null); // Add back stock
+            }
+        };
+
+        window.beliSekarang = async function () { // Made async
+            if (!currentUserId) {
+                showCustomConfirm("Anda harus login untuk melakukan pembelian.", () => {
+                    window.location.href = 'index.html'; // Redirect ke halaman login
+                });
+                return;
+            }
+
+            if (!currentProductData) {
+                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Mohon tunggu.", null);
+                return;
+            }
+            const qtyInput = productDetailContainer.querySelector('.produk-qty-input');
+            const quantity = parseInt(qtyInput.value, 10);
+
+            if (quantity <= 0) {
+                showCustomConfirm("Jumlah harus lebih dari 0.", null);
+                return;
+            }
+
+            // Check stock before buying
+            const currentStock = selectedVariant ? (parseInt(selectedVariant.stock) || parseInt(currentProductData.stok) || 0) : parseInt(currentProductData.stok) || 0;
+            if (quantity > currentStock) {
+                showCustomConfirm(`Stok tidak mencukupi. Tersedia: ${currentStock}`, null);
+                return;
+            }
+
+            // Decrease stock in Firebase
+            const stockDecreased = await decreaseProductStock(currentProductData.id, quantity, selectedVariant ? selectedVariant.name : null);
+            if (!stockDecreased) {
+                return; // Stop if stock update failed
+            }
+
+            const productToBuy = {
+                productId: currentProductData.id,
+                productName: currentProductData.namaBarang,
+                productImageUrl: selectedVariant ? selectedVariant.imageUrl || currentProductData.imageUrl : currentProductData.imageUrl,
+                price: selectedVariant ? (selectedVariant.price !== null ? selectedVariant.price : currentProductData.harga) : currentProductData.harga,
+                quantity: quantity,
+                storeId: currentProductData.tokoId,
+                storeName: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
+                variant: selectedVariant ? selectedVariant.name : null, // Store selected variant name
+                // You might want to add more details like category, merk, etc.
+            };
+
+            // For "Beli Sekarang", we still use localStorage for a direct checkout flow,
+            // as it's typically a single item purchase bypasses the full cart experience.
+            localStorage.setItem('checkoutProduct', JSON.stringify(productToBuy));
+            window.location.href = 'pembeli_checkout.html';
+        };
+
+        // --- Fungsi Chat Jastiper ---
+        window.hubungiToko = function () {
+            if (!currentStoreData) {
+                showCustomConfirm("Informasi toko belum dimuat.", null);
+                return;
+            }
+            document.getElementById('chatJastiperModal').style.display = 'flex';
+            document.getElementById('chatJastiperMessages').innerHTML = `<b>${currentStoreData.namaToko || 'Toko'}:</b> Halo, ada yang bisa saya bantu terkait produk ini?`;
+            document.getElementById('chatJastiperInput').value = '';
+        };
+
+        window.sendJastiperMessage = function () {
+            var input = document.getElementById('chatJastiperInput');
+            var messages = document.getElementById('chatJastiperMessages');
+            if (input.value.trim() !== '') {
+                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+                setTimeout(function () {
+                    messages.innerHTML += '<br><b>' + (currentStoreData ? currentStoreData.namaToko : 'Toko') + ':</b> Oke, terima kasih pesan Anda sudah kami terima!';
+                }, 800);
+                input.value = '';
+            }
+        };
+
+        // --- Fungsi Kunjungi Toko ---
+        window.kunjungiToko = function () {
+            if (currentStoreData && currentStoreData.id) {
+                window.location.href = `pembeli_toko.html?id=${currentStoreData.id}`;
+            } else {
+                showCustomConfirm("ID Toko tidak tersedia untuk dikunjungi.", null);
+            }
+        };
+
+        // --- Fungsi Chat CS (tetap sama) ---
+        function openChatCS() {
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = '<b>CS:</b> Ada yang bisa kami bantu?';
+        }
+
+        function sendCSMessage() {
+            var input = document.getElementById('chatCSInput');
+            var messages = document.getElementById('chatCSMessages');
+            if (input.value.trim() !== '') {
+                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+                setTimeout(function () {
+                    messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
+                }, 800);
+                input.value = '';
+            }
+        }
+
+        // --- Dropdown User (tetap sama) ---
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+        const tokoSayaLink = document.getElementById('tokoSayaLink'); // Get the "Toko Saya" link
+
+        // Hide user dropdown by default
+        userDropdown.classList.add('hidden');
+
+        userIcon.addEventListener('click', function (event) {
+            event.preventDefault(); // Mencegah link default action
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Tutup dropdown jika klik di luar area dropdown
+        document.addEventListener('click', function (event) {
+            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+
+        // Fungsi Logout
+        async function logoutUser() {
+            try {
+                await signOut(auth); // Perform Firebase logout
+                showCustomConfirm("Anda telah logout!", () => {
+                    window.location.href = "index.html"; // Redirect to login page after logout
+                }, false);
+            } catch (error) {
+                console.error("Error logging out: ", error);
+                showCustomConfirm("Gagal logout. Silakan coba lagi: " + error.message, null);
+            }
+        }
+
+        // Expose functions to global scope for onclick attributes
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+        window.logoutUser = logoutUser;
+
+        // Auth state listener to handle user session and load data
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid; // Set the current user ID
+                console.log("User is logged in:", currentUserId);
+                // Optionally fetch user role to adjust UI, e.g., for "Toko Saya" link
+                const userDocRef = doc(db, "users", user.uid);
+                getDoc(userDocRef).then(docSnap => {
+                    if (docSnap.exists() && docSnap.data().role === 'jastiper') {
+                        tokoSayaLink.href = "jastiper_dashboard.html"; // Change link for jastiper
+                    } else {
+                        // Default for pembeli or other roles
+                        tokoSayaLink.href = "pembeli_toko_saya.html"; // Assume this is a page for pembeli to manage their own 'toko' or create one
+                    }
+                }).catch(error => {
+                    console.error("Error fetching user role:", error);
+                    tokoSayaLink.href = "pembeli_toko_saya.html"; // Fallback
+                });
+                loadProductAndStoreData(); // Load data after user is authenticated
+            } else {
+                currentUserId = null; // Clear user ID if not logged in
+                console.log("No user logged in, redirecting to index.html");
+                // Redirect to index.html if no user is logged in
+                window.location.href = "index.html";
+            }
+        });
+
+        // Dropdown Kategori (assuming this is for a dynamic dropdown, but currently not implemented)
+        // const kategoriMenu = document.getElementById('kategoriMenu');
+        // const dropdownKategori = document.getElementById('dropdownKategori');
+
+        // if (kategoriMenu && dropdownKategori) {
+        //     kategoriMenu.addEventListener('click', function (event) {
+        //         event.preventDefault();
+        //         dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
+        //     });
+
+        //     document.addEventListener('click', function (event) {
+        //         if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
+        //             dropdownKategori.style.display = 'none';
+        //         }
+        //     });
+        // }
+    </script>
+</body>
+
+</html>

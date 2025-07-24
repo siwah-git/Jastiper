@@ -487,11 +487,9 @@
                     </option>
                   </select>
                 </div>
-                <!-- New Varian Section -->
                 <div class="mt-4">
                   <h3 class="text-md font-semibold text-gray-700 mb-2">Varian Produk (Opsional)</h3>
                   <div id="variants-container">
-                    <!-- Variant rows will be added here by JavaScript -->
                   </div>
                   <button type="button" id="add-variant-button" class="btn-secondary mt-2 w-full">Tambah Varian</button>
                 </div>
@@ -524,7 +522,6 @@
     </div>
   </div>
 
-  <!-- Logout Modal -->
   <div id="logout-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
@@ -538,11 +535,10 @@
     </div>
   </div>
 
-  <!-- Success Modal -->
   <div id="success-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 class="text-xl font-semibold mb-4" id="success-modal-title">Berhasil!</h3>
-      <p class="text-gray-700" id="success-modal-message">Produk baru berhasil ditambahkan!</p>
+      <p class="text-gray-700" id="success-modal-message"></p>
       <div class="modal-buttons">
         <button id="close-success-modal" class="btn-confirm success">OK</button>
       </div>
@@ -586,7 +582,7 @@
     const negaraInput = document.getElementById("negara");
     const kategoriSelect = document.getElementById("kategori");
     const hargaInput = document.getElementById("harga");
-    const stokInput = document.getElementById("stok");
+    const stokInput = document.getElementById("stok"); // Input stok produk utama
     const statusSelect = document.getElementById("status");
     const imageUrlInput = document.getElementById("imageUrl");
     const imagePreview = document.getElementById("product-image-preview");
@@ -756,6 +752,31 @@
       }
     }
 
+    // *** FUNGSI BARU: Hitung total stok dari varian ***
+    function calculateTotalVariantStock() {
+      let totalStock = 0;
+      document.querySelectorAll(".variant-stock-input").forEach(input => {
+        const stockValue = parseInt(input.value) || 0;
+        totalStock += stockValue;
+      });
+      stokInput.value = totalStock;
+      return totalStock;
+    }
+
+    // *** FUNGSI BARU: Atur status input stok produk utama ***
+    function updateMainStockInputStatus() {
+      const hasVariants = variantsContainer.children.length > 0;
+      if (hasVariants) {
+        stokInput.readOnly = true; // Nonaktifkan input
+        stokInput.classList.add("bg-gray-100", "cursor-not-allowed");
+        calculateTotalVariantStock(); // Hitung ulang stok total jika ada varian
+      } else {
+        stokInput.readOnly = false; // Aktifkan input
+        stokInput.classList.remove("bg-gray-100", "cursor-not-allowed");
+        stokInput.value = ""; // Kosongkan jika tidak ada varian dan siap diisi manual
+      }
+    }
+
     // Fungsi untuk menambahkan baris varian baru
     function addVariantRow() {
       const variantEntryDiv = document.createElement("div");
@@ -770,6 +791,10 @@
                     <div class="input-group">
                         <label>Nilai Varian (pisahkan dengan koma):</label>
                         <input type="text" class="variant-values-input" placeholder="Contoh: Merah, Biru" />
+                    </div>
+                    <div class="input-group">
+                        <label>Stok Varian:</label>
+                        <input type="number" class="variant-stock-input" value="0" min="0" />
                     </div>
                     <button type="button" class="remove-variant-btn">
                         <i class="fas fa-times"></i>
@@ -786,6 +811,7 @@
       variantEntryDiv.querySelector(".remove-variant-btn").addEventListener("click", () => {
         console.log("Remove button clicked for variant row."); // Debugging line
         variantEntryDiv.remove();
+        updateMainStockInputStatus(); // Update status stok utama setelah varian dihapus
       });
 
       // Add event listener for the variant image URL input
@@ -801,7 +827,13 @@
         }
       });
 
+      // Add event listener for variant stock input to trigger recalculation
+      const variantStockInput = variantEntryDiv.querySelector(".variant-stock-input");
+      variantStockInput.addEventListener("input", calculateTotalVariantStock);
+
+
       variantsContainer.appendChild(variantEntryDiv);
+      updateMainStockInputStatus(); // Update status stok utama setelah varian ditambahkan
     }
 
     // Event listener untuk tombol "Tambah Varian"
@@ -818,7 +850,8 @@
       fetchStoreFee();
       activateTab("info-produk"); // Kembali ke tab pertama
       variantsContainer.innerHTML = ''; // Clear all variant rows
-      addVariantRow(); // Add an empty variant row
+      // addVariantRow(); // Initial variant row is no longer added by default on reset
+      updateMainStockInputStatus(); // Ensure stock input is re-enabled on reset
     }
 
     // Function to show success modal
@@ -830,6 +863,8 @@
     // Event listener for close success modal button
     closeSuccessModalButton.addEventListener("click", () => {
       successModal.classList.remove("show");
+      // Optionally redirect after success, e.g., back to product list
+      // window.location.href = "jastiper_toko_kita.html"; 
     });
 
 
@@ -840,7 +875,7 @@
       if (!currentTokoId) {
         // Menggunakan modal kustom untuk pesan error
         showCustomConfirm("Anda belum login sebagai Jastiper. Silakan login terlebih dahulu.", () => {
-          window.location.href = "halaman_login_anda.html"; // Redirect ke halaman login
+          window.location.href = "jastiper_login.html"; // Redirect ke halaman login
         });
         return;
       }
@@ -850,13 +885,32 @@
         !namaBarangInput.value ||
         !kategoriSelect.value ||
         !hargaInput.value ||
-        !stokInput.value ||
         !statusSelect.value ||
         !jenisSelect.value
       ) {
-        showCustomConfirm("Mohon isi semua bidang yang wajib.", () => { }); // Menggunakan modal kustom
+        showCustomConfirm("Mohon isi semua bidang yang wajib (Nama Barang, Kategori, Harga, Keterangan, Jenis).", () => { }); // Menggunakan modal kustom
         return;
       }
+
+      // Validasi stok: Jika ada varian, stok utama tidak boleh kosong dan harus dihitung otomatis.
+      // Jika tidak ada varian, stok utama harus diisi manual.
+      const hasVariants = variantsContainer.children.length > 0;
+      let finalStock;
+
+      if (hasVariants) {
+        finalStock = calculateTotalVariantStock(); // Gunakan stok total dari varian
+        if (finalStock <= 0) {
+          showCustomConfirm("Total stok dari varian harus lebih besar dari 0.", () => { });
+          return;
+        }
+      } else {
+        finalStock = parseInt(stokInput.value) || 0; // Gunakan input manual jika tidak ada varian
+        if (finalStock <= 0) {
+          showCustomConfirm("Jika tidak ada varian, stok produk harus diisi dan lebih besar dari 0.", () => { });
+          return;
+        }
+      }
+
 
       // Collect variant data
       const variants = [];
@@ -864,14 +918,16 @@
         const typeInput = entryDiv.querySelector(".variant-type-input");
         const valuesInput = entryDiv.querySelector(".variant-values-input");
         const imageUrlInputVariant = entryDiv.querySelector(".variant-image-url-input");
+        const stockInputVariant = entryDiv.querySelector(".variant-stock-input"); // Get variant stock
 
         if (typeInput.value && valuesInput.value) {
           const type = typeInput.value.trim();
           const values = valuesInput.value.split(',').map(v => v.trim()).filter(v => v !== '');
           const imageUrl = imageUrlInputVariant.value.trim();
+          const stock = parseInt(stockInputVariant.value) || 0; // Get variant stock
 
           if (type && values.length > 0) {
-            variants.push({ type, values, imageUrl });
+            variants.push({ type, values, imageUrl, stock }); // Add stock to variant
           }
         }
       });
@@ -883,7 +939,7 @@
         negara: negaraInput.value || "",
         kategori: kategoriSelect.value,
         harga: parseFloat(hargaInput.value),
-        stok: parseInt(stokInput.value),
+        stok: finalStock, // Use finalStock (either manual or calculated)
         status: statusSelect.value,
         imageUrl: imageUrlInput.value || "",
         deskripsi: deskripsiInput.value || "",
@@ -927,12 +983,12 @@
         populateKategoriOptions(); // Isi dropdown kategori saat halaman dimuat
         updateJenisOptions(); // Panggil pertama kali untuk mengisi dropdown "Jenis" (akan menampilkan placeholder)
         fetchStoreFee(); // Ambil dan tampilkan fee toko
-        addVariantRow(); // Add initial empty variant row
+        updateMainStockInputStatus(); // Set initial status of main stock input
       } else {
         // User tidak login, arahkan ke halaman login
         console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
         showCustomConfirm("User tidak terautentikasi. Mengarahkan ke halaman login.", () => {
-          window.location.href = "halaman_login_anda.html";
+          window.location.href = "jastiper_login.html";
         });
       }
     });
@@ -985,64 +1041,40 @@
     confirmLogoutButton.addEventListener("click", async () => {
       try {
         await signOut(auth);
-        console.log("Berhasil logout dari Firebase.");
-        localStorage.removeItem("tokoId"); // Hapus tokoId dari local storage
-        showSuccessModal("Anda telah logout."); // Menggunakan modal sukses kustom
-        logoutModal.classList.remove("show");
-        window.location.href = "halaman_login_anda.html"; // Arahkan ke halaman login
+        window.location.href = "jastiper_login.html"; // Redirect to login page after logout
       } catch (error) {
-        console.error("Error saat logout:", error);
-        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi.", () => { }); // Menggunakan modal kustom
+        console.error("Error signing out: ", error);
+        alert("Gagal logout. Silakan coba lagi.");
       }
     });
 
-    // Custom Confirmation Modal Logic (reused for general alerts/errors)
-    const customConfirmModal = document.createElement('div');
-    customConfirmModal.id = 'custom-confirm-modal';
-    customConfirmModal.classList.add('modal-overlay');
-    customConfirmModal.innerHTML = `
-            <div class="modal-content">
-                <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
-                <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
-                <div class="modal-buttons">
-                    <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
-                    <button id="custom-confirm-btn" class="btn-confirm">OK</button>
-                </div>
-            </div>
-        `;
-    document.body.appendChild(customConfirmModal);
+    // Custom Confirm/Alert Modal (reusing logout modal structure)
+    function showCustomConfirm(message, onConfirm) {
+      const modal = document.getElementById("logout-modal"); // Reusing this modal structure
+      const title = modal.querySelector("h3");
+      const msgParagraph = modal.querySelector("p");
+      const confirmBtn = modal.querySelector("#confirm-logout");
+      const cancelBtn = modal.querySelector("#cancel-logout");
 
-    const customConfirmTitle = document.getElementById('custom-confirm-title');
-    const customConfirmMessage = document.getElementById('custom-confirm-message');
-    const customCancelBtn = document.getElementById('custom-cancel-btn');
-    const customConfirmBtn = document.getElementById('custom-confirm-btn');
-    let customConfirmCallback = null;
+      title.textContent = "Peringatan!";
+      msgParagraph.textContent = message;
+      confirmBtn.textContent = "Oke";
+      confirmBtn.classList.remove("btn-confirm");
+      confirmBtn.classList.add("btn-primary"); // Change to a primary style for 'OK'
+      cancelBtn.classList.add("hidden"); // Hide cancel button for a simple alert
 
-    function showCustomConfirm(message, callback, isConfirmation = false) {
-      customConfirmMessage.textContent = message;
-      customConfirmCallback = callback;
-      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
-      if (isConfirmation) {
-        customCancelBtn.classList.remove('hidden');
-      } else {
-        customCancelBtn.classList.add('hidden');
-      }
-      customConfirmModal.classList.add('show');
+      confirmBtn.onclick = () => {
+        modal.classList.remove("show");
+        cancelBtn.classList.remove("hidden"); // Show it again for next use
+        confirmBtn.classList.remove("btn-primary"); // Reset style
+        confirmBtn.classList.add("btn-confirm"); // Reset style
+        if (onConfirm) onConfirm();
+      };
+
+      // If the modal is dismissed (e.g., clicking outside if it were enabled), ensure buttons reset
+      // For now, only confirmBtn handles closing.
+      modal.classList.add("show");
     }
-
-    customCancelBtn.addEventListener('click', () => {
-      customConfirmModal.classList.remove('show');
-      customConfirmCallback = null; // Clear callback if cancelled
-    });
-
-    customConfirmBtn.addEventListener('click', () => {
-      customConfirmModal.classList.remove('show');
-      if (customConfirmCallback) {
-        customConfirmCallback();
-      }
-      customConfirmCallback = null; // Clear callback after execution
-    });
-
   </script>
 </body>
 

@@ -12,11 +12,10 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-
-    <script type="module" src="./js/firebase-config.js"></script>
+    <!-- Hapus baris ini karena sudah diimpor secara modular di firebase-config.js -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script> -->
 
     <style>
         body {
@@ -230,6 +229,86 @@
             text-decoration: underline;
             color: #7e22ce;
         }
+
+        /* Modal (Popup) Styling for Auth Errors and Success */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            /* Center buttons */
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-ok {
+            background-color: #9333ea;
+            /* Purple color for OK */
+            color: white;
+            border: 1px solid #9333ea;
+        }
+
+        .modal-buttons .btn-ok:hover {
+            background-color: #7e22ce;
+            border-color: #7e22ce;
+        }
+
+        .modal-buttons .btn-success {
+            background-color: #22c55e;
+            /* Green for success */
+            color: white;
+            border: 1px solid #22c55e;
+        }
+
+        .modal-buttons .btn-success:hover {
+            background-color: #16a34a;
+            border-color: #16a34a;
+        }
     </style>
 </head>
 
@@ -343,7 +422,7 @@
                     </div>
                 </div>
 
-                <p id="errorMessage" class="text-red-300 text-sm mt-4 hidden"></p>
+                <!-- <p id="errorMessage" class="text-red-300 text-sm mt-4 hidden"></p> Removed this paragraph -->
             </form>
         </div>
 
@@ -352,8 +431,19 @@
                 <i class="fas fa-user-plus mr-2"></i> Daftar
             </button>
             <p class="text-white text-opacity-80">
-                Sudah punya akun? <a href="admin-login.html" class="font-medium text-link-custom">Log in</a>
+                Sudah punya akun? <a href="login_user.html" class="font-medium text-link-custom">Log in</a>
             </p>
+        </div>
+    </div>
+
+    <!-- New Auth Error/Success Modal -->
+    <div id="authResponseModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4" id="authResponseTitle"></h3>
+            <p class="text-gray-700 mb-4" id="authResponseMessage"></p>
+            <div class="modal-buttons">
+                <button id="authResponseOkButton" class="btn-ok">OK</button>
+            </div>
         </div>
     </div>
 
@@ -361,10 +451,7 @@
         console.log("Memulai loading skrip modul utama...");
 
         // Import modul Firebase Auth dan Firestore dari firebase-config.js
-        import { auth, db } from "./js/firebase-config.js";
-        // Import fungsi spesifik dari Firebase SDK modular
-        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+        import { auth, db, createUserWithEmailAndPassword, doc, setDoc } from "./js/firebase-config.js";
 
         console.log("Import Firebase Auth dan Firestore berhasil.");
         console.log("Objek 'auth' setelah import:", auth);
@@ -397,8 +484,45 @@
         const dobInput = document.getElementById("dob");
         const genderInput = document.getElementById("gender");
         const addressInput = document.getElementById("address");
-        const errorMessageDisplay = document.getElementById("errorMessage");
+        // const errorMessageDisplay = document.getElementById("errorMessage"); // Removed
         const loadingOverlay = document.getElementById("loading-overlay");
+
+        // Auth Response Modal elements
+        const authResponseModal = document.getElementById('authResponseModal');
+        const authResponseTitle = document.getElementById('authResponseTitle');
+        const authResponseMessage = document.getElementById('authResponseMessage');
+        const authResponseOkButton = document.getElementById('authResponseOkButton');
+
+        // Function to show auth response modal (for both success and error)
+        function showAuthResponseModal(message, title, isSuccess = false) {
+            authResponseTitle.textContent = title;
+            authResponseMessage.textContent = message;
+
+            // Set title color
+            if (isSuccess) {
+                authResponseTitle.classList.remove('text-red-600');
+                authResponseTitle.classList.add('text-green-600');
+                authResponseOkButton.classList.remove('btn-ok');
+                authResponseOkButton.classList.add('btn-success');
+            } else {
+                authResponseTitle.classList.remove('text-green-600');
+                authResponseTitle.classList.add('text-red-600');
+                authResponseOkButton.classList.remove('btn-success');
+                authResponseOkButton.classList.add('btn-ok');
+            }
+
+            authResponseModal.classList.add('show');
+        }
+
+        // Event listener for auth response modal's OK button
+        authResponseOkButton.addEventListener('click', () => {
+            authResponseModal.classList.remove('show');
+            // If it was a success message, redirect after closing modal
+            if (authResponseTitle.classList.contains('text-green-600')) {
+                window.location.href = "login_user.html";
+            }
+        });
+
 
         // Log untuk debugging, memastikan elemen ditemukan
         if (registerForm) console.log("registerForm ditemukan."); else console.error("Error FATAL: registerForm tidak ditemukan!");
@@ -409,7 +533,7 @@
         if (dobInput) console.log("dobInput ditemukan.");
         if (genderInput) console.log("genderInput ditemukan.");
         if (addressInput) console.log("addressInput ditemukan.");
-        if (errorMessageDisplay) console.log("errorMessageDisplay ditemukan.");
+        // if (errorMessageDisplay) console.log("errorMessageDisplay ditemukan."); // Removed
         if (loadingOverlay) console.log("loadingOverlay ditemukan.");
 
         // Event listener untuk submit formulir
@@ -429,20 +553,17 @@
 
             // Validasi sederhana
             if (!fullName || !phoneNumber || !email || !password || !dob || !gender || !address) {
-                errorMessageDisplay.textContent = "Semua field harus diisi.";
-                errorMessageDisplay.classList.remove("hidden");
+                showAuthResponseModal("Semua field harus diisi.", "Pendaftaran Gagal", false);
                 return;
             }
 
             if (password.length < 6) {
-                errorMessageDisplay.textContent = "Password harus minimal 6 karakter.";
-                errorMessageDisplay.classList.remove("hidden");
+                showAuthResponseModal("Password harus minimal 6 karakter.", "Pendaftaran Gagal", false);
                 return;
             }
 
-            // Tampilkan loading overlay dan sembunyikan pesan error sebelumnya
+            // Tampilkan loading overlay
             loadingOverlay.classList.remove("hidden");
-            errorMessageDisplay.classList.add("hidden");
 
             try {
                 console.log("Mencoba membuat user baru dengan Firebase Authentication...");
@@ -452,23 +573,23 @@
                 console.log("User berhasil terdaftar di Firebase Auth:", user);
 
                 console.log("Mencoba menyimpan data tambahan ke Firestore...");
-                // Simpan data tambahan user ke Firestore dalam koleksi 'user'
-                await setDoc(doc(db, "user", user.uid), {
-                    nama_pembeli: fullName,
-                    no_telepon: phoneNumber,
+                // Simpan data tambahan user ke Firestore dalam koleksi 'users' (sesuai dengan login_user.html)
+                await setDoc(doc(db, "users", user.uid), { // Changed collection from "user" to "users"
+                    namaLengkap: fullName, // Changed field name to namaLengkap for consistency
+                    noTelepon: phoneNumber, // Changed field name to noTelepon for consistency
                     email: email,
-                    tanggal_lahir: dob,
-                    jenis_kelamin: gender,
+                    tanggalLahir: dob, // Changed field name to tanggalLahir for consistency
+                    jenisKelamin: gender,
                     alamat: address,
-                    tanggal_daftar: new Date(),
-                    status_akun: "active",
-                    role: "pembeli" // <-- Ini adalah baris yang ditambahkan/diubah!
+                    tanggalDaftar: new Date(), // Using native Date object, Firebase will convert to Timestamp
+                    role: "pembeli"
                 });
                 console.log("Data user berhasil disimpan di Firestore dengan UID:", user.uid);
 
-                // Beri notifikasi dan redirect
-                alert("Pendaftaran berhasil! Silakan login untuk melanjutkan.");
-                window.location.href = "login_user.html"; // Redirect ke halaman login_user.html
+                // Beri notifikasi sukses menggunakan modal
+                showAuthResponseModal("Pendaftaran berhasil! Silakan login untuk melanjutkan.", "Pendaftaran Berhasil", true);
+                // Redirect akan dilakukan setelah modal ditutup oleh user
+
             } catch (error) {
                 // Sembunyikan loading overlay jika ada error
                 loadingOverlay.classList.add("hidden");
@@ -484,17 +605,19 @@
                         message = "Format email tidak valid.";
                         break;
                     case "auth/operation-not-allowed":
-                        message = "Pendaftaran dengan email/password tidak diaktifkan.";
+                        message = "Pendaftaran dengan email/password tidak diaktifkan di proyek Firebase Anda.";
                         break;
                     case "auth/weak-password":
                         message = "Password terlalu lemah. Harap gunakan password yang lebih kuat.";
+                        break;
+                    case "auth/network-request-failed":
+                        message = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
                         break;
                     default:
                         message = "Pendaftaran gagal: " + error.message;
                         break;
                 }
-                errorMessageDisplay.textContent = message;
-                errorMessageDisplay.classList.remove("hidden");
+                showAuthResponseModal(message, "Pendaftaran Gagal", false);
             }
         });
     </script>

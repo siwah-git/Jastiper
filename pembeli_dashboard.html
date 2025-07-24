@@ -8,10 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
     <style>
         /* Custom CSS untuk overriding atau menambahkan style Tailwind */
@@ -37,8 +35,8 @@
             you might combine with the existing h-[80vh] like this:
             height: 80vh; /* This sets its height relative to viewport height */
         /* But if you want it to fill the remaining space after header, min-height: calc() is better.
-             For fixed header and content starting right after, you typically make the first section
-             take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
+            For fixed header and content starting right after, you typically make the first section
+            take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
 
         /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
@@ -51,6 +49,8 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             /* shadow-md */
             transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+            /* Add cursor pointer for clickable cards */
         }
 
         .product-card:hover,
@@ -61,8 +61,8 @@
         .product-card img,
         .country-card img {
             width: 100%;
-            height: 128px;
-            /* h-32 */
+            height: 160px;
+            /* Increased height for better flag display */
             object-fit: cover;
             border-bottom: 1px solid #eee;
             /* Sedikit pemisah visual */
@@ -209,64 +209,66 @@
 </head>
 
 <body class="font-sans bg-white text-gray-800">
-   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-    <div class="flex items-center space-x-3">
-        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Cari Barang..."
-                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-            </svg>
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
         </div>
-    </div>
-    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-    </nav>
-    <nav class="flex items-center space-x-4 sm:space-x-6">
-        <a href="pembeli_dashboard.html"
-            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-        <div class="dropdown-kategori relative inline-block hidden md:block">
-            <a href="pembeli_kategori.html" 
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
-        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+            </div>
 
-        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-            </svg>
-        </a>
-        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-        </a>
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-            id="userIcon" style="cursor:pointer;">
-        <div id="userDropdown"
-            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-            <a href="pembeli_akun.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-            <a href="pembeli_pesanan_saya.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                CS</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-            <a href="#" onclick="logoutUser();return false;"
-                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-        </div>
-    </nav>
-</header>
-    <main class="">
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg
+                    class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" id="tokoSayaLink"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
+    <main class="mt-16">
+        <!-- Added mt-16 to push content below fixed header -->
         <section id="hero-section"
             class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
@@ -306,59 +308,14 @@
 
         <section id="produk-best-seller-section" class="relative py-12 text-center">
             <div class="relative z-10 p-4">
-                <h2 class="text-3xl font-bold mb-10">Produk</h2>
+                <h2 class="text-3xl font-bold mb-10" id="produk-section-title">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk1.jpeg" alt="Produk Gucci"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Gucci Dionysus Bag</p>
-                        <span class="text-sm text-gray-500">Italy</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk2.jpeg" alt="Produk LV Capucines"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">LV Capucines BB</p>
-                        <span class="text-sm text-gray-500">France</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk3.jpeg" alt="Produk Nike Air Force"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Nike Air Force 1 '07</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk4.jpeg" alt="Produk iPhone 15 Pro Max"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">iPhone 15 Pro Max</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk5.jpeg" alt="Produk Dior Saddle Bag"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Dior Saddle Bag</p>
-                        <span class="text-sm text-gray-500">France</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk6.jpeg" alt="Produk Prada Re-Edition"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Prada Re-Edition</p>
-                        <span class="text-sm text-gray-500">Italy</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk7.jpeg" alt="Produk Adidas Samba OG"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">Adidas Samba OG</p>
-                        <span class="text-sm text-gray-500">Germany</span>
-                    </div>
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                        <img src="asset/images/produk8.jpeg" alt="Produk iPad Air 5"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">iPad Air 5</p>
-                        <span class="text-sm text-gray-500">USA</span>
-                    </div>
+                    <!-- Produk akan dimuat di sini secara dinamis -->
+                    <p id="loading-products" class="col-span-full text-gray-500">Memuat produk...</p>
+                    <p id="no-products-found" class="col-span-full text-gray-500 hidden">Tidak ada produk ditemukan.</p>
                 </div>
-                <button
+                <button id="lihat-semua-produk-button"
                     class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
                     Lihat Semua
                 </button>
@@ -369,75 +326,51 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
             <div id="negara-terpopuler"
                 class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
-                <div class="country-card">
-                    <img src="asset/images/negara1.jpeg" alt="Japan">
-                    <div class="country-name-overlay">Japan</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara2.jpeg" alt="France">
-                    <div class="country-name-overlay">France</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara3.jpeg" alt="South Korea">
-                    <div class="country-name-overlay">South Korea</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara4.jpeg" alt="USA">
-                    <div class="country-name-overlay">USA</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara5.jpeg" alt="Malaysia">
-                    <div class="country-name-overlay">Malaysia</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara6.jpeg" alt="UK">
-                    <div class="country-name-overlay">UK</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara7.jpeg" alt="Australia">
-                    <div class="country-name-overlay">Australia</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara8.jpeg" alt="Singapore">
-                    <div class="country-name-overlay">Singapore</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara9.jpeg" alt="Thailand">
-                    <div class="country-name-overlay">Thailand</div>
-                </div>
-                <div class="country-card">
-                    <img src="asset/images/negara10.jpeg" alt="Germany">
-                    <div class="country-name-overlay">Germany</div>
-                </div>
+                <!-- Negara akan dimuat di sini secara dinamis -->
+                <p id="loading-countries" class="col-span-full text-gray-500">Memuat negara...</p>
+                <p id="no-countries-found" class="col-span-full text-gray-500 hidden">Tidak ada negara ditemukan.</p>
             </div>
-            <button
+            <button id="lihat-semua-negara-button"
                 class="mt-10 bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md">
                 Lihat Semua
             </button>
         </section>
     </main>
 
-     <footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
-                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-            </ul>
+    <footer class="bg-blue-900 py-8 px-6 mt-8">
+        <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
+            <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+                <h3 class="font-bold text-white mb-3">INFORMASI</h3>
+                <ul>
+                    <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a>
+                    </li>
+                    <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan
+                            Umum</a></li>
+                    <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+            </div>
+            <div class="w-full sm:w-1/3 text-right">
+                <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
+                <ul>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
+                            href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr"
+                            target="_blank" class="hover:text-pink-600">Instagram</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
+                            href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
+                            class="hover:text-pink-600">Facebook</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
+                            href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
+                            class="hover:text-pink-600">Youtube</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+        <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
         </div>
-        <div class="w-full sm:w-1/3 text-right">
-            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
-    </div>
-</footer>
+    </footer>
     <div id="chatCSModal"
         style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
         <div
@@ -460,20 +393,24 @@
         </div>
     </div>
     <script type="module">
-        // --- KONFIGURASI FIREBASE ANDA ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCAEVRX88dod-9BWHPCQ_RTIIHWtws-29RQ", // Ini API Key dari gambar image_9696fc.jpg
-            authDomain: "tittpgo-28f84.firebaseapp.com",
-            projectId: "tittpgo-28f84",
-            storageBucket: "tittpgo-28f84.appspot.com",
-            messagingSenderId: "816687553591",
-            appId: "1:816687553591:web:MjlMJMTVJOWEINThIY0dYjllJWlOWlOWF"
-        };
+        // Import Firebase modules from your firebase-config.js
+        import { db, auth, collection, getDocs, query, where, doc, getDoc, onAuthStateChanged, signOut } from "/js/firebase-config.js";
 
-        // Inisialisasi Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(); // Dapatkan instance Firestore
-        const auth = firebase.auth(); // Dapatkan instance Auth
+        // Global variable to store all products for filtering
+        let allProducts = [];
+        const produkSectionTitle = document.getElementById('produk-section-title');
+        const lihatSemuaProdukButton = document.getElementById('lihat-semua-produk-button');
+        const lihatSemuaNegaraButton = document.getElementById('lihat-semua-negara-button'); // Added this line
+        // Global map to store country images fetched from Firestore
+        const firestoreCountryImagesMap = new Map();
+
+        // Helper function to convert string to Title Case
+        function toTitleCase(str) {
+            if (!str) return '';
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
 
         // --- PENGATURAN SLIDER HERO SECTION ---
         const heroImages = [
@@ -497,6 +434,10 @@
         // --- FUNGSI DROPDOWN MENU ---
         const userIcon = document.getElementById('userIcon');
         const userDropdown = document.getElementById('userDropdown');
+        const tokoSayaLink = document.getElementById('tokoSayaLink'); // Get the "Toko Saya" link
+
+        // Hide user dropdown by default
+        userDropdown.classList.add('hidden');
 
         userIcon.addEventListener('click', function (event) {
             event.preventDefault(); // Mencegah link default action
@@ -510,32 +451,16 @@
             }
         });
 
-        // Dropdown Kategori
-        const kategoriMenu = document.getElementById('kategoriMenu');
-        const dropdownKategori = document.getElementById('dropdownKategori');
-
-        kategoriMenu.addEventListener('click', function (event) {
-            event.preventDefault();
-            dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.addEventListener('click', function (event) {
-            if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
-                dropdownKategori.style.display = 'none';
-            }
-        });
-
-
-        // Fungsi Logout (contoh sederhana, perlu implementasi Firebase Auth)
-        function logoutUser() {
-            // Implementasi logout Firebase Authentication
-            auth.signOut().then(() => {
-                alert("Anda telah logout!");
-                window.location.href = "index.html"; // Redirect ke halaman login setelah logout
-            }).catch((error) => {
+        // Fungsi Logout
+        async function logoutUser() {
+            try {
+                await signOut(auth); // Perform Firebase logout
+                alert("Anda telah logout!"); // Use custom modal for alerts later
+                window.location.href = "index.html"; // Redirect to login page after logout
+            } catch (error) {
                 console.error("Error logging out: ", error);
-                alert("Gagal logout. Silakan coba lagi.");
-            });
+                alert("Gagal logout. Silakan coba lagi."); // Use custom modal for alerts later
+            }
         }
 
         // Fungsi untuk membuka modal chat CS
@@ -568,6 +493,188 @@
         window.openChatCS = openChatCS;
         window.sendCSMessage = sendCSMessage;
 
+        // --- Firebase Data Fetching and Rendering ---
+        const produkBestSellerContainer = document.getElementById('produk-best-seller');
+        const negaraTerpopulerContainer = document.getElementById('negara-terpopuler');
+        const loadingProductsMessage = document.getElementById('loading-products');
+        const noProductsFoundMessage = document.getElementById('no-products-found');
+        const loadingCountriesMessage = document.getElementById('loading-countries');
+        const noCountriesFoundMessage = document.getElementById('no-countries-found');
+
+        async function fetchProductsAndCountries() {
+            produkBestSellerContainer.innerHTML = ''; // Clear existing content
+            negaraTerpopulerContainer.innerHTML = ''; // Clear existing content
+            loadingProductsMessage.classList.remove('hidden');
+            noProductsFoundMessage.classList.add('hidden');
+            loadingCountriesMessage.classList.remove('hidden');
+            noCountriesFoundMessage.classList.add('hidden');
+
+            try {
+                // Fetch products
+                const productsCollectionRef = collection(db, "produk");
+                const productsSnapshot = await getDocs(productsCollectionRef);
+                const products = [];
+                const countriesFromProducts = new Set();
+
+                if (!productsSnapshot.empty) {
+                    productsSnapshot.forEach((doc) => {
+                        const productData = doc.data();
+                        // Normalize country name from product data
+                        const normalizedCountry = toTitleCase(productData.negara);
+                        products.push({ id: doc.id, ...productData, negara: normalizedCountry });
+                        if (normalizedCountry) {
+                            countriesFromProducts.add(normalizedCountry);
+                        }
+                    });
+                }
+
+                allProducts = products; // Store all fetched products globally
+                renderProducts(allProducts); // Render all products initially
+
+                // Fetch countries from 'negara' collection (if it exists)
+                const allCountries = new Set();
+                firestoreCountryImagesMap.clear(); // Clear previous data
+
+                try {
+                    const negaraCollectionRef = collection(db, "negara");
+                    const negaraSnapshot = await getDocs(negaraCollectionRef);
+                    if (!negaraSnapshot.empty) {
+                        negaraSnapshot.forEach((doc) => {
+                            const countryData = doc.data();
+                            // Use 'nama' field for country name as requested
+                            if (countryData.nama) {
+                                // Normalize country name from negara collection
+                                const normalizedCountryName = toTitleCase(countryData.nama);
+                                allCountries.add(normalizedCountryName);
+                                if (countryData.imageUrl) { // Check if imageUrl exists
+                                    firestoreCountryImagesMap.set(normalizedCountryName, countryData.imageUrl);
+                                }
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.warn("Koleksi 'negara' tidak ditemukan atau error saat mengambil data:", error);
+                    // Jika koleksi 'negara' tidak ada atau ada error, kita akan tetap menggunakan negara dari produk
+                }
+
+                // Combine countries from 'negara' collection and 'produk' collection
+                const finalCountries = Array.from(new Set([...allCountries, ...countriesFromProducts]));
+                renderCountries(finalCountries);
+
+            } catch (error) {
+                console.error("Error fetching products or countries:", error);
+                loadingProductsMessage.classList.add('hidden');
+                noProductsFoundMessage.textContent = "Gagal memuat produk: " + error.message;
+                noProductsFoundMessage.classList.remove('hidden');
+                loadingCountriesMessage.classList.add('hidden');
+                noCountriesFoundMessage.textContent = "Gagal memuat negara: " + error.message;
+                noCountriesFoundMessage.classList.remove('hidden');
+            }
+        }
+
+        function renderProducts(productsToRender) {
+            loadingProductsMessage.classList.add('hidden');
+            produkBestSellerContainer.innerHTML = ''; // Clear again before rendering
+
+            if (productsToRender.length === 0) {
+                noProductsFoundMessage.classList.remove('hidden');
+                return;
+            }
+
+            productsToRender.forEach(product => {
+                const productCard = `
+                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3" onclick="viewProductDetail('${product.id}')">
+                        <img src="${product.imageUrl || 'https://placehold.co/128x128/E0F2F7/2C3E50?text=No+Image'}" alt="${product.namaBarang}"
+                            class="w-full h-32 object-cover rounded mb-2">
+                        <p class="font-semibold text-lg">${product.namaBarang || 'Nama Produk'}</p>
+                        <span class="text-sm text-gray-500">${product.merk || ''} - ${product.negara || 'Negara Asal'}</span>
+                    </div>
+                `;
+                produkBestSellerContainer.innerHTML += productCard;
+            });
+        }
+
+        function renderCountries(countries) {
+            loadingCountriesMessage.classList.add('hidden');
+            negaraTerpopulerContainer.innerHTML = ''; // Clear again before rendering
+
+            if (countries.length === 0) {
+                noCountriesFoundMessage.classList.remove('hidden');
+                return;
+            }
+
+            countries.forEach(country => {
+                // Strictly prioritize imageUrl from Firestore, then generic placeholder
+                const imageUrl = firestoreCountryImagesMap.get(country) || 'https://placehold.co/160x160/F7FAFC/1A202C?text=No+Flag';
+
+                // Log the country name and image URL being used for debugging
+                console.log(`Rendering country: ${country}, Image URL: ${imageUrl}`);
+
+                const countryCard = `
+                    <div class="country-card" onclick="filterProductsByCountry('${country}')">
+                        <img src="${imageUrl}" alt="${country}" onerror="this.onerror=null;this.src='https://placehold.co/160x160/F7FAFC/1A202C?text=Error+Loading+Flag';" />
+                        <div class="country-name-overlay">${country}</div>
+                    </div>
+                `;
+                negaraTerpopulerContainer.innerHTML += countryCard;
+            });
+        }
+
+        // New function to filter products by country
+        function filterProductsByCountry(countryName) {
+            const filtered = allProducts.filter(product => product.negara === countryName);
+            produkSectionTitle.textContent = `Produk dari ${countryName}`;
+            renderProducts(filtered);
+            lihatSemuaProdukButton.classList.remove('hidden'); // Ensure "Lihat Semua" button is visible
+        }
+
+        // New function to navigate to product detail page
+        function viewProductDetail(productId) {
+            window.location.href = `pembeli_produk.html?id=${productId}`; // Changed to pembeli_produk.html
+        }
+
+        // Expose viewProductDetail globally
+        window.viewProductDetail = viewProductDetail;
+        window.filterProductsByCountry = filterProductsByCountry; // Expose this too for onclick in country cards
+
+        // Event listener for "Lihat Semua Produk" button
+        lihatSemuaProdukButton.addEventListener('click', () => { // Corrected typo here
+            produkSectionTitle.textContent = "Produk"; // Reset title
+            renderProducts(allProducts); // Show all products
+            lihatSemuaProdukButton.classList.add('hidden'); // Hide the button after showing all
+        });
+
+        // Event listener for "Lihat Semua Negara" button (if you want to implement a separate page for all countries)
+        // For now, it just re-renders all countries
+        lihatSemuaNegaraButton.addEventListener('click', () => {
+            // You might want to navigate to a dedicated 'all countries' page here
+            renderCountries(Array.from(firestoreCountryImagesMap.keys())); // Re-render all countries from map
+        });
+
+        // Auth state listener to handle user session and load data
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User is logged in:", user.uid);
+                // Optionally fetch user role to adjust UI, e.g., for "Toko Saya" link
+                const userDocRef = doc(db, "users", user.uid);
+                getDoc(userDocRef).then(docSnap => {
+                    if (docSnap.exists() && docSnap.data().role === 'jastiper') {
+                        tokoSayaLink.href = "jastiper_dashboard.html"; // Change link for jastiper
+                    } else {
+                        // Default for pembeli or other roles
+                        tokoSayaLink.href = "pembeli_toko_saya.html"; // Assume this is a page for pembeli to manage their own 'toko' or create one
+                    }
+                }).catch(error => {
+                    console.error("Error fetching user role:", error);
+                    tokoSayaLink.href = "pembeli_toko_saya.html"; // Fallback
+                });
+                fetchProductsAndCountries(); // Load data after user is authenticated
+            } else {
+                console.log("No user logged in, redirecting to index.html");
+                // Redirect to index.html if no user is logged in
+                window.location.href = "index.html";
+            }
+        });
     </script>
 </body>
 

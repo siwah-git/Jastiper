@@ -4,15 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beranda - TitipGo</title>
+    <title>Selamat Datang di TitipGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome untuk ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Firebase SDKs (Tidak perlu lagi memuat file compat secara terpisah di sini karena sudah diimpor modular dari firebase-config.js) -->
 
     <style>
         /* Custom CSS untuk overriding atau menambahkan style Tailwind */
@@ -49,7 +47,7 @@
         .product-card img,
         .country-card img {
             width: 100%;
-            height: 128px;
+            height: 160px;
             /* Tinggi produk card */
             object-fit: cover;
             border-bottom: 1px solid #eee;
@@ -133,17 +131,13 @@
         }
 
         /* Kelas untuk menengahkan navigasi dan menambahkan jarak */
-        /* Nav center ini tidak lagi digunakan untuk menengahkan secara global, tetapi untuk mengatur gap antara elemen nav */
         .nav-items-group {
-            /* Kelas baru untuk menampung nav dan auth buttons */
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            /* Jarak antara Kategori dan Masuk */
         }
 
         .nav-items-group .nav-link {
-            /* Style untuk link navigasi di dalam grup baru */
             font-weight: 600;
             color: #4a5568;
             transition: color 0.2s ease-in-out;
@@ -151,9 +145,7 @@
 
         .nav-items-group .nav-link:hover {
             color: #e53e3e;
-            /* Pink on hover */
         }
-
 
         .country-card {
             position: relative;
@@ -166,7 +158,6 @@
         .country-card img {
             width: 100%;
             height: 160px;
-            /* Tinggi negara card */
             object-fit: cover;
             display: block;
         }
@@ -226,7 +217,7 @@
             border-color: #db2777;
         }
 
-        /* Style for user profile icon/name (hidden by default in this context) */
+        /* Style for user profile icon/name */
         .user-profile-menu {
             position: relative;
             cursor: pointer;
@@ -237,7 +228,6 @@
 
         .user-profile-menu:hover .user-name {
             color: #e53e3e;
-            /* Pink on hover */
         }
     </style>
 </head>
@@ -248,7 +238,7 @@
             <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
             <div class="relative hidden md:block">
                 <input type="text" placeholder="Cari Barang..."
-                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:ring-pink-500 focus:border-pink-500">
                 <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
                     viewBox="0 0 20 20">
                     <path
@@ -274,13 +264,13 @@
                 </div>
             </nav>
 
-            <!-- Authentication buttons - ALWAYS VISIBLE IN PRE-LOGIN STATE -->
+            <!-- Authentication buttons - HIDDEN by default, shown if not logged in -->
             <div id="authContainer" class="auth-button-container">
                 <a href="login_user.html" class="auth-button masuk">Masuk</a>
                 <a href="daftar_login.html" class="auth-button daftar">Daftar</a>
             </div>
 
-            <!-- User profile (HIDDEN by default, shown via JS after login on other pages if implemented) -->
+            <!-- User profile (HIDDEN by default, shown via JS after login) -->
             <div id="userProfileContainer" class="hidden user-profile-menu">
                 <img id="userAvatar" src="asset/images/default_avatar.png" alt="User Avatar"
                     class="w-10 h-10 rounded-full object-cover border-2 border-pink-500">
@@ -350,7 +340,7 @@
 
         <section id="produk-best-seller-section" class="relative py-12 text-center">
             <div class="relative z-10 p-4">
-                <h2 class="text-3xl font-bold mb-10">Produk</h2>
+                <h2 class="text-3xl font-bold mb-10" id="produk-section-title">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
                     <p id="loadingProducts" class="col-span-full text-center text-gray-500">Memuat produk...</p>
@@ -358,7 +348,7 @@
                         Silakan coba lagi nanti.</p>
                     <!-- Produk akan dimuat di sini oleh JavaScript -->
                 </div>
-                <button onclick="window.location.href='pembeli_kategori.html'"
+                <button id="lihat-semua-produk-button"
                     class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
                     Lihat Semua
                 </button>
@@ -374,50 +364,45 @@
                     Silakan coba lagi nanti.</p>
                 <!-- Negara akan dimuat di sini oleh JavaScript -->
             </div>
-            <button onclick="window.location.href='pembeli_kategori.html'"
+            <button id="lihat-semua-negara-button"
                 class="mt-10 bg-gray-900 text-white font-bold px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md">
                 Lihat Semua
             </button>
         </section>
     </main>
 
-    <footer class="bg-gray-200 text-gray-700 py-8 text-sm">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start md:items-center">
-            <div class="mb-6 md:mb-0 text-left">
-                <p class="font-bold text-gray-800 mb-2">INFORMASI</p>
-                <a href="#" class="block hover:text-pink-600 mb-1">Tentang Kami</a>
-                <a href="#" class="block hover:text-pink-600 mb-1">Pertanyaan Umum</a>
-                <a href="#" class="block hover:text-pink-600">Hubungi Kami</a>
+    <footer class="bg-blue-900 py-8 px-6 mt-8">
+        <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
+            <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+                <h3 class="font-bold text-white mb-3">INFORMASI</h3>
+                <ul>
+                    <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a>
+                    </li>
+                    <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan
+                            Umum</a></li>
+                    <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a>
+                    </li>
+                </ul>
             </div>
-            <div class="text-center mb-6 md:mb-0">
-                <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo"
-                    class="mx-auto w-32 mb-2 footer-logo">
-                <p class="text-xs text-gray-600">Aman, Nyata, Amanah</p>
+            <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
             </div>
-            <div class="text-left md:text-right">
-                <p class="font-bold text-gray-800 mb-2">IKUTI SOSIAL MEDIA KAMI</p>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.35C0 23.407.593 24 1.325 24h11.493v-9.294H9.692V11.23h3.155V8.2c0-3.136 1.91-4.847 4.704-4.847 1.336 0 2.607.238 2.95.34v3.218h-1.921c-1.505 0-1.795.716-1.795 1.76V11.23h3.587l-.467 3.476h-3.12V24h6.115c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z" />
-                    </svg>
-                    Facebook
-                </a>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600 mb-1">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M21.581 6.184a2.953 2.953 0 00-2.122-2.122C17.388 3 12 3 12 3s-5.388 0-7.459 1.062a2.953 2.953 0 00-2.122 2.122C0 8.012 0 12 0 12s0 3.988 1.062 6.059a2.953 2.953 0 002.122 2.122C4.612 21 12 21 12 21s5.388 0 7.459-1.062a2.953 2.953 0 002.122-2.122C24 15.988 24 12 24 12s0-3.988-1.062-6.059zM9.545 15.545V8.455L15.545 12l-6 3.545z" />
-                    </svg>
-                    Youtube
-                </a>
-                <a href="#" class="flex items-center justify-start md:justify-end hover:text-pink-600">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.979 4.979.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.667 4.772-4.979 4.979-1.265.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.772-1.667-4.979-4.979-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.667-4.772 4.979-4.979 1.265-.058 1.645-.07 4.85-.07zm0-2.163C8.756 0 8.356.014 7.037.069 3.543.225 1.777 1.99 1.621 5.485.066 6.804.052 7.204.052 10.518s.014 3.314.069 4.633c.156 3.495 1.922 5.26 5.417 5.417 1.319.055 1.719.069 5.033.069s3.314-.014 4.633-.069c3.495-.156 5.26-1.922 5.417-5.417.055-1.319.069-1.719.069-5.033s-.014-3.314-.069-4.633c-.156-3.495-1.922-5.26-5.417-5.417-1.319-.055-1.719-.069-5.033-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.5-11.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
-                    </svg>
-                    Instagram
-                </a>
+            <div class="w-full sm:w-1/3 text-right">
+                <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
+                <ul>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
+                            href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr"
+                            target="_blank" class="hover:text-pink-600">Instagram</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
+                            href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
+                            class="hover:text-pink-600">Facebook</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
+                            href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
+                            class="hover:text-pink-600">Youtube</a></li>
+                </ul>
             </div>
+        </div>
+        <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
         </div>
     </footer>
     <div id="chatCSModal"
@@ -441,9 +426,42 @@
             </div>
         </div>
     </div>
+
+    <!-- New Login Prompt Modal -->
+    <div id="loginPromptModal"
+        style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;max-width:400px;width:90vw;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,0.12);text-align:center;">
+            <h3 style="font-weight:bold;font-size:18px;margin-bottom:15px;">Anda Harus Login Dulu!</h3>
+            <p style="font-size:15px;color:#444;margin-bottom:20px;">Silakan login untuk melihat detail atau memfilter.
+            </p>
+            <button onclick="window.location.href='login_user.html'"
+                style="background:#ec4899;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;transition:background-color 0.2s;">Login
+                Sekarang</button>
+            <button onclick="document.getElementById('loginPromptModal').style.display='none'"
+                style="background:#f0f0f0;color:#333;border:1px solid #ccc;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;margin-left:10px;transition:background-color 0.2s;">Batal</button>
+        </div>
+    </div>
+
     <script type="module">
         // Import db dan fungsi-fungsi Firestore dari firebase-config.js
-        import { db, collection, getDocs } from "./js/firebase-config.js";
+        import { db, auth, collection, getDocs, doc, getDoc, onAuthStateChanged, signOut } from "./js/firebase-config.js";
+
+        // Global variable to store all products for filtering
+        let allProducts = [];
+        const produkSectionTitle = document.getElementById('produk-section-title');
+        const lihatSemuaProdukButton = document.getElementById('lihat-semua-produk-button');
+        const lihatSemuaNegaraButton = document.getElementById('lihat-semua-negara-button');
+
+        let isLoggedIn = false; // Global flag for login status
+
+        // Helper function to convert string to Title Case
+        function toTitleCase(str) {
+            if (!str) return '';
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
 
         // --- PENGATURAN SLIDER HERO SECTION ---
         const heroImages = [
@@ -468,14 +486,6 @@
         const dropdownKategori = document.getElementById('dropdownKategori');
 
         kategoriMenu.addEventListener('click', function (event) {
-            // Jika dropdown hanya berisi satu item yang sama dengan link utama,
-            // maka kita bisa mencegah default dan langsung navigasi.
-            // Namun, karena ada kemungkinan dropdown akan berisi lebih banyak item di masa depan,
-            // kita biarkan perilaku default link dan dropdown terbuka.
-            // Jika Anda ingin klik Kategori langsung navigasi tanpa membuka dropdown,
-            // Anda bisa menambahkan event.preventDefault() di sini dan window.location.href.
-            // Untuk saat ini, link sudah mengarah ke pembeli_kategori.html, jadi tidak perlu perubahan di sini.
-            // Cukup tampilkan/sembunyikan dropdown seperti biasa.
             dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
         });
 
@@ -508,6 +518,36 @@
             }
         }
 
+        // --- New Login Prompt Modal Functions ---
+        const loginPromptModal = document.getElementById('loginPromptModal');
+
+        function showLoginPrompt() {
+            loginPromptModal.style.display = 'flex';
+        }
+
+        // --- Handlers for Product and Country Clicks ---
+        function handleProductClick(productId) {
+            if (isLoggedIn) {
+                window.location.href = `pembeli_detail_produk.html?id=${productId}`;
+            } else {
+                showLoginPrompt();
+            }
+        }
+
+        function handleCountryClick(countryName) {
+            if (isLoggedIn) {
+                filterProductsByCountry(countryName);
+            } else {
+                showLoginPrompt();
+            }
+        }
+
+        // Expose handlers to global scope
+        window.handleProductClick = handleProductClick;
+        window.handleCountryClick = handleCountryClick;
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+
         // --- FUNGSI UNTUK MEMUAT PRODUK DARI FIRESTORE ---
         async function loadProducts() {
             const produkContainer = document.getElementById('produk-best-seller');
@@ -519,9 +559,9 @@
             errorMessage.classList.add('hidden'); // Sembunyikan pesan error
 
             try {
-                // Menggunakan fungsi collection() dari Modular SDK
                 const productsCollectionRef = collection(db, "produk");
-                const snapshot = await getDocs(productsCollectionRef); // Menggunakan getDocs() dari Modular SDK
+                const snapshot = await getDocs(productsCollectionRef);
+                const products = [];
 
                 if (snapshot.empty) {
                     produkContainer.innerHTML = '<p class="col-span-full text-center text-gray-600">Belum ada produk yang tersedia.</p>';
@@ -529,18 +569,15 @@
                     return;
                 }
 
-                // Ambil hingga 8 produk teratas
-                const productsToDisplay = snapshot.docs.slice(0, 8);
-
-                productsToDisplay.forEach(doc => {
+                snapshot.docs.slice(0, 8).forEach(doc => { // Ambil hingga 8 produk teratas
                     const product = doc.data();
                     const productCard = `
-                        <a href="pembeli_detail_produk.html?id=${doc.id}" class="product-card text-black rounded-lg overflow-hidden shadow-md p-3">
-                            <img src="${product.imageUrl || 'asset/images/default_product.jpeg'}" alt="Produk ${product.namaBarang}"
+                        <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3" onclick="handleProductClick('${doc.id}')">
+                            <img src="${product.imageUrl || 'https://placehold.co/160x160/E0F2F7/2C3E50?text=No+Image'}" alt="Produk ${product.namaBarang}"
                                 class="w-full h-32 object-cover rounded mb-2">
                             <p class="font-semibold text-lg">${product.namaBarang}</p>
                             <span class="text-sm text-gray-500">${product.negara || 'Negara Asal'}</span>
-                        </a>
+                        </div>
                     `;
                     produkContainer.innerHTML += productCard;
                 });
@@ -549,12 +586,12 @@
             } catch (error) {
                 console.error("Error fetching products: ", error);
                 loadingMessage.classList.add('hidden');
-                errorMessage.classList.remove('hidden'); // Tampilkan pesan error
+                errorMessage.classList.remove('hidden');
                 errorMessage.textContent = `Gagal memuat produk: ${error.message}. Silakan cek konsol browser untuk detail.`;
             }
         }
 
-        // --- FUNGSI UNTUK MEMUAT NEGARA DARI FIRESTORE (dari koleksi produk) ---
+        // --- FUNGSI UNTUK MEMUAT NEGARA DARI FIRESTORE (dari koleksi 'negara') ---
         async function loadCountries() {
             const negaraContainer = document.getElementById('negara-terpopuler');
             const loadingMessage = document.getElementById('loadingCountries');
@@ -565,36 +602,44 @@
             errorMessage.classList.add('hidden'); // Sembunyikan pesan error
 
             try {
-                // Menggunakan fungsi collection() dari Modular SDK
-                const productsCollectionRef = collection(db, "produk");
-                const snapshot = await getDocs(productsCollectionRef); // Menggunakan getDocs() dari Modular SDK
+                // Mengambil data dari koleksi 'negara'
+                const negaraCollectionRef = collection(db, "negara");
+                const snapshot = await getDocs(negaraCollectionRef);
 
-                const countries = new Set();
-                snapshot.forEach(doc => {
-                    const product = doc.data();
-                    if (product.negara && product.negara.trim() !== '') {
-                        countries.add(product.negara.trim());
-                    }
-                });
+                const countriesToDisplay = [];
+                if (!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const countryData = doc.data();
+                        // Pastikan 'nama' dan 'imageUrl' fields ada dan tidak kosong
+                        if (countryData.nama && countryData.nama.trim() !== '') {
+                            const normalizedCountryName = toTitleCase(countryData.nama);
+                            // Gunakan imageUrl dari Firestore, jika tidak ada, gunakan placeholder "No Flag"
+                            const imageUrl = countryData.imageUrl || 'https://placehold.co/160x160/F7FAFC/1A202C?text=No+Flag';
+                            countriesToDisplay.push({
+                                name: normalizedCountryName,
+                                imageUrl: imageUrl
+                            });
+                        }
+                    });
+                }
 
-                if (countries.size === 0) {
-                    negaraContainer.innerHTML = '<p class="col-span-full text-center text-gray-600">Belum ada negara yang tersedia.</p>';
+                // Sort countries by name (optional, but good for display)
+                countriesToDisplay.sort((a, b) => a.name.localeCompare(b.name));
+
+                // Limit to 10 countries if there are more
+                const limitedCountries = countriesToDisplay.slice(0, 10);
+
+                if (limitedCountries.length === 0) {
+                    negaraContainer.innerHTML = '<p class="col-span-full text-center text-gray-600">Belum ada negara yang tersedia di koleksi negara.</p>';
                     loadingMessage.classList.add('hidden');
                     return;
                 }
 
-                const sortedCountries = Array.from(countries).sort();
-                const countriesToDisplay = sortedCountries.slice(0, 10); // Ambil hingga 10 negara teratas
-
-                countriesToDisplay.forEach(countryName => {
-                    const countryFlagFileName = countryName.toLowerCase().replace(/\s/g, '_').replace(/[^a-z0-9_]/g, '');
-                    const countryImageUrl = `asset/images/flag_${countryFlagFileName}.jpeg`;
-                    const fallbackImageUrl = 'asset/images/default_country.jpeg';
-
+                limitedCountries.forEach(country => {
                     const countryCard = `
-                        <div class="country-card" onclick="window.location.href='pembeli_kategori.html?negara=${encodeURIComponent(countryName)}'">
-                            <img src="${countryImageUrl}" alt="Bendera ${countryName}" onerror="this.onerror=null;this.src='${fallbackImageUrl}';">
-                            <div class="country-name-overlay">${countryName}</div>
+                        <div class="country-card" onclick="handleCountryClick('${country.name}')">
+                            <img src="${country.imageUrl}" alt="Bendera ${country.name}" onerror="this.onerror=null;this.src='https://placehold.co/160x160/F7FAFC/1A202C?text=Error+Loading+Flag';" />
+                            <div class="country-name-overlay">${country.name}</div>
                         </div>
                     `;
                     negaraContainer.innerHTML += countryCard;
@@ -602,23 +647,140 @@
                 loadingMessage.classList.add('hidden');
 
             } catch (error) {
-                console.error("Error fetching countries: ", error);
+                console.error("Error fetching countries from 'negara' collection: ", error);
                 loadingMessage.classList.add('hidden');
                 errorMessage.classList.remove('hidden');
-                errorMessage.textContent = `Gagal memuat negara: ${error.message}. Silakan cek konsol browser untuk detail.`;
+                errorMessage.textContent = `Gagal memuat negara: ${error.message}. Pastikan URL gambar di Firestore valid.`;
             }
         }
 
-        // Expose functions to global scope for onclick attributes
-        window.openChatCS = openChatCS;
-        window.sendCSMessage = sendCSMessage;
+        // New function to filter products by country (called after login)
+        function filterProductsByCountry(countryName) {
+            // This function would typically navigate to a category page with the country filter applied
+            window.location.href = `pembeli_kategori.html?negara=${encodeURIComponent(countryName)}`;
+        }
 
-        // Panggil fungsi untuk memuat data saat DOMContentLoaded
+        // Event listener for "Lihat Semua" products button
+        lihatSemuaProdukButton.addEventListener('click', () => {
+            if (isLoggedIn) {
+                window.location.href = 'pembeli_kategori.html'; // Redirect to category page
+            } else {
+                showLoginPrompt();
+            }
+        });
+
+        // Event listener for "Lihat Semua" countries button
+        lihatSemuaNegaraButton.addEventListener('click', () => {
+            if (isLoggedIn) {
+                window.location.href = 'pembeli_kategori.html'; // Redirect to category page
+            } else {
+                showLoginPrompt();
+            }
+        });
+
+        // --- User Authentication and UI Updates ---
+        onAuthStateChanged(auth, async (user) => {
+            const authContainer = document.getElementById('authContainer');
+            const userProfileContainer = document.getElementById('userProfileContainer');
+            const userNameSpan = document.getElementById('userName');
+            const userAvatarImg = document.getElementById('userAvatar');
+            const tokoSayaLink = document.getElementById('tokoSayaLink');
+
+            if (user) {
+                isLoggedIn = true; // Set global flag
+                console.log("User logged in. isLoggedIn:", isLoggedIn, "UID:", user.uid);
+
+                // Hide auth buttons, show user profile
+                if (authContainer) authContainer.classList.add('hidden');
+                if (userProfileContainer) userProfileContainer.classList.remove('hidden');
+
+                // Fetch user display name and photo from Firestore 'users' collection
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        userNameSpan.textContent = userData.namaLengkap || user.email;
+                        if (userData.profileImageUrl) {
+                            userAvatarImg.src = userData.profileImageUrl;
+                        } else {
+                            userAvatarImg.src = 'asset/images/default_avatar.png'; // Fallback default avatar
+                        }
+                    } else {
+                        userNameSpan.textContent = user.email; // Fallback to email if no user doc
+                        userAvatarImg.src = 'asset/images/default_avatar.png';
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                    userNameSpan.textContent = user.email; // Fallback
+                    userAvatarImg.src = 'asset/images/default_avatar.png';
+                }
+
+                // Check if the user is a jastiper (has a document in 'toko' collection)
+                try {
+                    const tokoDocRef = doc(db, "toko", user.uid);
+                    const tokoDocSnap = await getDoc(tokoDocRef);
+                    if (tokoDocSnap.exists()) {
+                        tokoSayaLink.href = "jastiper_dashboard.html"; // Link to jastiper dashboard
+                        tokoSayaLink.textContent = "Dashboard Toko";
+                    } else {
+                        tokoSayaLink.href = "jastiper_register_toko.html"; // Link to register as jastiper
+                        tokoSayaLink.textContent = "Daftar Toko";
+                    }
+                    tokoSayaLink.classList.remove('hidden'); // Ensure "Toko Saya" link is visible
+                } catch (error) {
+                    console.error("Error checking toko status:", error);
+                    tokoSayaLink.href = "#"; // Fallback
+                    tokoSayaLink.textContent = "Error Toko";
+                }
+
+            } else {
+                isLoggedIn = false; // Set global flag
+                console.log("User logged out. isLoggedIn:", isLoggedIn);
+
+                // Show auth buttons, hide user profile
+                if (authContainer) authContainer.classList.remove('hidden');
+                if (userProfileContainer) userProfileContainer.classList.add('hidden');
+            }
+        });
+
+        // Logout function for user dropdown
+        async function logoutUser() {
+            try {
+                await signOut(auth);
+                console.log("Logged out from Firebase.");
+                // No redirect here, onAuthStateChanged will handle the UI update
+            } catch (error) {
+                console.error("Error during logout:", error);
+                // You might want a custom modal here too for error
+            }
+        }
+        window.logoutUser = logoutUser; // Expose to global scope
+
+        // Event listener for user profile menu to toggle dropdown
+        const userProfileMenu = document.getElementById('userProfileContainer');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (userProfileMenu) {
+            userProfileMenu.addEventListener('click', (event) => {
+                // Prevent click from propagating to document and closing immediately
+                event.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
+        }
+
+        // Close dropdown if clicked outside
+        document.addEventListener('click', (event) => {
+            if (userDropdown && !userDropdown.contains(event.target) && !userProfileMenu.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+
+        // Initial data fetch when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
             loadCountries();
         });
-
     </script>
 </body>
 

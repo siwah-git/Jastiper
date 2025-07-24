@@ -4,18 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - TitipGo</title>
+    <title>Daftar Akun - TitipGo</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Hapus baris ini karena sudah diimpor secara modular di firebase-config.js -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script> -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script> -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script> -->
 
     <style>
         body {
@@ -47,6 +42,7 @@
             width: 100%;
             max-width: 320px;
             background-color: rgba(0, 0, 0, 0.3);
+            /* Latar belakang transparan seperti sebelumnya */
             border-radius: 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -129,14 +125,6 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
-        input[type="date"].form-input-custom {
-            color: #cccccc;
-        }
-
-        input[type="date"].form-input-custom::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-        }
-
         /* Styling untuk ikon di dalam input */
         .input-icon {
             color: rgba(255, 255, 255, 0.5) !important;
@@ -149,27 +137,6 @@
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
-
-        /* Styling untuk dropdown (select) dan opsinya */
-        select.form-input-custom {
-            color: #cccccc;
-            /* Warna teks default untuk select */
-        }
-
-        /* BARU: Styling untuk opsi di dalam dropdown */
-        select.form-input-custom option {
-            background-color: #333;
-            /* Latar belakang gelap untuk opsi */
-            color: #cccccc;
-            /* Warna teks terang untuk opsi */
-        }
-
-        /* BARU: Styling untuk opsi yang disabled/placeholder */
-        select.form-input-custom option[disabled] {
-            color: rgba(255, 255, 255, 0.5);
-            /* Warna placeholder yang lebih terang */
-        }
-
 
         #loading-overlay {
             background-color: rgba(0, 0, 0, 0.8);
@@ -273,7 +240,6 @@
         .modal-buttons {
             display: flex;
             justify-content: center;
-            /* Center buttons */
             margin-top: 1.5rem;
             gap: 1rem;
         }
@@ -288,7 +254,6 @@
 
         .modal-buttons .btn-ok {
             background-color: #9333ea;
-            /* Purple color for OK */
             color: white;
             border: 1px solid #9333ea;
         }
@@ -300,7 +265,6 @@
 
         .modal-buttons .btn-success {
             background-color: #22c55e;
-            /* Green for success */
             color: white;
             border: 1px solid #22c55e;
         }
@@ -321,35 +285,11 @@
     <div class="register-container">
         <div class="register-header">
             <img src="asset/images/logosiwah.png" alt="TitipGo Logo" class="register-logo" />
-            <h2 class="text-3xl font-extrabold text-white">Daftar</h2>
+            <h2 class="text-3xl font-extrabold text-white">Daftar Akun</h2>
         </div>
 
         <div class="form-scroll-container">
             <form id="registerForm" class="space-y-4">
-                <div>
-                    <label for="fullName" class="sr-only">Nama Lengkap</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-user input-icon"></i>
-                        </div>
-                        <input id="fullName" name="fullName" type="text" required
-                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Nama Lengkap" />
-                    </div>
-                </div>
-
-                <div>
-                    <label for="phoneNumber" class="sr-only">No Handphone</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-phone input-icon"></i>
-                        </div>
-                        <input id="phoneNumber" name="phoneNumber" type="tel" required
-                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="No Handphone" />
-                    </div>
-                </div>
-
                 <div>
                     <label for="email" class="sr-only">E-mail</label>
                     <div class="relative">
@@ -377,52 +317,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div>
-                    <label for="dob" class="sr-only">Tanggal Lahir</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-calendar-alt input-icon"></i>
-                        </div>
-                        <input id="dob" name="dob" type="date" required
-                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-                    </div>
-                </div>
-
-                <div>
-                    <label for="gender" class="sr-only">Jenis Kelamin</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-venus-mars input-icon"></i>
-                        </div>
-                        <select id="gender" name="gender" required
-                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="" disabled selected class="text-gray-400">Jenis Kelamin</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="address" class="sr-only">Alamat Lengkap</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-map-marker-alt input-icon"></i>
-                        </div>
-                        <textarea id="address" name="address" rows="3" required
-                            class="appearance-none block w-full pl-10 pr-3 py-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Alamat Lengkap"></textarea>
-                    </div>
-                </div>
-
-                <!-- <p id="errorMessage" class="text-red-300 text-sm mt-4 hidden"></p> Removed this paragraph -->
             </form>
         </div>
 
@@ -431,12 +325,11 @@
                 <i class="fas fa-user-plus mr-2"></i> Daftar
             </button>
             <p class="text-white text-opacity-80">
-                Sudah punya akun? <a href="login_user.html" class="font-medium text-link-custom">Log in</a>
+                Sudah punya akun? <a href="admin-login.html" class="font-medium text-link-custom">Log in</a>
             </p>
         </div>
     </div>
 
-    <!-- New Auth Error/Success Modal -->
     <div id="authResponseModal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-xl font-semibold mb-4" id="authResponseTitle"></h3>
@@ -448,7 +341,7 @@
     </div>
 
     <script type="module">
-        console.log("Memulai loading skrip modul utama...");
+        console.log("Memulai loading skrip modul utama registrasi...");
 
         // Import modul Firebase Auth dan Firestore dari firebase-config.js
         import { auth, db, createUserWithEmailAndPassword, doc, setDoc } from "./js/firebase-config.js";
@@ -472,7 +365,6 @@
                 toggleIcon.classList.add("fa-eye");
             }
         }
-        // window.togglePasswordVisibility = togglePasswordVisibility; // Hapus baris ini
 
         // Dapatkan elemen tombol toggle password
         const togglePasswordVisibilityButton = document.getElementById("togglePasswordVisibilityButton");
@@ -483,17 +375,10 @@
             console.error("Error: Tombol toggle password visibility tidak ditemukan!");
         }
 
-
         // Dapatkan elemen-elemen form
         const registerForm = document.getElementById("registerForm");
-        const fullNameInput = document.getElementById("fullName");
-        const phoneNumberInput = document.getElementById("phoneNumber");
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
-        const dobInput = document.getElementById("dob");
-        const genderInput = document.getElementById("gender");
-        const addressInput = document.getElementById("address");
-        // const errorMessageDisplay = document.getElementById("errorMessage"); // Removed
         const loadingOverlay = document.getElementById("loading-overlay");
 
         // Auth Response Modal elements
@@ -507,7 +392,7 @@
             authResponseTitle.textContent = title;
             authResponseMessage.textContent = message;
 
-            // Set title color
+            // Set title color and button style
             if (isSuccess) {
                 authResponseTitle.classList.remove('text-red-600');
                 authResponseTitle.classList.add('text-green-600');
@@ -526,23 +411,17 @@
         // Event listener for auth response modal's OK button
         authResponseOkButton.addEventListener('click', () => {
             authResponseModal.classList.remove('show');
-            // If it was a success message, redirect after closing modal
+            // Jika pesan sukses, arahkan ke halaman login (misalnya admin-login.html atau login_user.html)
             if (authResponseTitle.classList.contains('text-green-600')) {
-                window.location.href = "login_user.html";
+                // Anda bisa arahkan ke admin-login.html jika ini memang khusus pendaftaran admin
+                window.location.href = "admin-login.html";
             }
         });
 
-
         // Log untuk debugging, memastikan elemen ditemukan
         if (registerForm) console.log("registerForm ditemukan."); else console.error("Error FATAL: registerForm tidak ditemukan!");
-        if (fullNameInput) console.log("fullNameInput ditemukan.");
-        if (phoneNumberInput) console.log("phoneNumberInput ditemukan.");
         if (emailInput) console.log("emailInput ditemukan.");
         if (passwordInput) console.log("passwordInput ditemukan.");
-        if (dobInput) console.log("dobInput ditemukan.");
-        if (genderInput) console.log("genderInput ditemukan.");
-        if (addressInput) console.log("addressInput ditemukan.");
-        // if (errorMessageDisplay) console.log("errorMessageDisplay ditemukan."); // Removed
         if (loadingOverlay) console.log("loadingOverlay ditemukan.");
 
         // Event listener untuk submit formulir
@@ -551,23 +430,18 @@
             e.preventDefault(); // Mencegah refresh halaman
             console.log("Default form submit telah dicegah.");
 
-            // Ambil nilai dari setiap input
-            const fullName = fullNameInput.value.trim();
-            const phoneNumber = phoneNumberInput.value.trim();
+            // Ambil nilai dari input
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
-            const dob = dobInput.value;
-            const gender = genderInput.value;
-            const address = addressInput.value.trim();
 
             // Validasi sederhana
-            if (!fullName || !phoneNumber || !email || !password || !dob || !gender || !address) {
-                showAuthResponseModal("Semua field harus diisi.", "Pendaftaran Gagal", false);
+            if (!email || !password) {
+                showAuthResponseModal("Email dan password harus diisi.", "Pendaftaran Gagal", false);
                 return;
             }
 
             if (password.length < 6) {
-                showAuthResponseModal("Password harus minimal 6 karakter.", "Pendaftaran Gagal", false);
+                showAuthResponseModal("Password minimal 6 karakter.", "Pendaftaran Gagal", false);
                 return;
             }
 
@@ -581,24 +455,17 @@
                 const user = userCredential.user;
                 console.log("User berhasil terdaftar di Firebase Auth:", user);
 
-                console.log("Mencoba menyimpan data tambahan ke Firestore...");
-                // Simpan data tambahan user ke Firestore dalam koleksi 'users' (sesuai dengan login_user.html)
-                await setDoc(doc(db, "users", user.uid), { // Changed collection from "user" to "users"
-                    namaLengkap: fullName, // Changed field name to namaLengkap for consistency
-                    noTelepon: phoneNumber, // Changed field name to noTelepon for consistency
+                console.log("Mencoba menyimpan data tambahan ke Firestore dalam koleksi 'admin'...");
+                // Simpan data tambahan user ke Firestore dalam koleksi 'admin' dengan role 'admin'
+                await setDoc(doc(db, "admin", user.uid), { // <-- PERUBAHAN DI SINI: Menyimpan ke koleksi "admin"
                     email: email,
-                    tanggalLahir: dob, // Changed field name to tanggalLahir for consistency
-                    jenisKelamin: gender,
-                    alamat: address,
-                    tanggalDaftar: new Date(), // Using native Date object, Firebase will convert to Timestamp
-                    role: "pembeli"
+                    tanggalDaftar: new Date(),
+                    role: "admin" // <-- PERUBAHAN DI SINI: Menyimpan role "admin"
                 });
-                console.log("Data user berhasil disimpan di Firestore dengan UID:", user.uid);
+                console.log("Data user berhasil disimpan di Firestore dengan UID:", user.uid + " dan role: admin.");
 
                 // Beri notifikasi sukses menggunakan modal
-                showAuthResponseModal("Pendaftaran berhasil! Silakan login untuk melanjutkan.", "Pendaftaran Berhasil", true);
-                // Redirect akan dilakukan setelah modal ditutup oleh user
-
+                showAuthResponseModal("Pendaftaran admin berhasil! Silakan login untuk melanjutkan.", "Pendaftaran Berhasil", true);
             } catch (error) {
                 // Sembunyikan loading overlay jika ada error
                 loadingOverlay.classList.add("hidden");
@@ -617,16 +484,21 @@
                         message = "Pendaftaran dengan email/password tidak diaktifkan di proyek Firebase Anda.";
                         break;
                     case "auth/weak-password":
-                        message = "Password terlalu lemah. Harap gunakan password yang lebih kuat.";
+                        message = "Password terlalu lemah. Harap gunakan password yang lebih kuat (minimal 6 karakter).";
                         break;
                     case "auth/network-request-failed":
-                        message = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+                        message = "Pendaftaran gagal: Tidak ada koneksi internet atau masalah jaringan.";
+                        break;
+                    case "auth/timeout":
+                        message = "Pendaftaran gagal: Waktu koneksi habis. Coba lagi.";
                         break;
                     default:
                         message = "Pendaftaran gagal: " + error.message;
                         break;
                 }
                 showAuthResponseModal(message, "Pendaftaran Gagal", false);
+            } finally {
+                loadingOverlay.classList.add("hidden"); // Pastikan overlay tersembunyi
             }
         });
     </script>

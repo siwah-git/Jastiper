@@ -1,170 +1,139 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Manajemen Toko - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Manajemen Toko - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+  <style>
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      /* PASTIKAN PATH INI BENAR */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
 
-      /* Style untuk membuat background kartu statistik sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Style untuk membuat background kartu statistik sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
+
+    .bg-white-transparent {
+      background-color: rgba(255,
           255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      .bg-white-transparent {
-        background-color: rgba(
           255,
-          255,
-          255,
-          0.85
-        ); /* Slightly transparent white */
-      }
-      .bg-blue-600-transparent {
-        background-color: rgba(
-          37,
+          0.85);
+      /* Slightly transparent white */
+    }
+
+    .bg-blue-600-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.85
-        ); /* Slightly transparent blue */
-      }
-      .table-bg-transparent {
-        background-color: rgba(
+          0.85);
+      /* Slightly transparent blue */
+    }
+
+    .table-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.7
-        ); /* More transparent for table body */
-      }
-      .header-bg-transparent {
-        background-color: rgba(
-          59,
+          0.7);
+      /* More transparent for table body */
+    }
+
+    .header-bg-transparent {
+      background-color: rgba(59,
           130,
           246,
-          0.85
-        ); /* Tailwind's blue-500 equivalent with transparency */
-      }
-    </style>
-  </head>
-  <body class="font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+          0.85);
+      /* Tailwind's blue-500 equivalent with transparency */
+    }
+  </style>
+</head>
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
+<body class="font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside
+      class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
 
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
-        </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
 
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
           background-image: linear-gradient(
               rgba(255, 255, 255, 0.3),
               rgba(255, 255, 255, 0.3)
@@ -173,500 +142,456 @@
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-        "
-      >
-        <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-        >
-          <p class="text-lg font-semibold">Manajemen Toko</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="#"
-              id="logoutButton"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+        ">
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold">Manajemen Toko</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="#" id="logoutButton"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-          <div class="md:col-span-2 lg:col-span-3">
-            <label for="search" class="sr-only">Cari</label>
-            <div class="relative">
-              <input
-                type="text"
-                id="search"
-                placeholder="Cari..."
-                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
-              />
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <i class="fas fa-search text-gray-400"></i>
-              </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+        <div class="md:col-span-2 lg:col-span-3">
+          <label for="search" class="sr-only">Cari</label>
+          <div class="relative">
+            <input type="text" id="search" placeholder="Cari..."
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent" />
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
             </div>
           </div>
-          <div class="md:col-span-1 lg:col-span-1">
-            <label for="statusFilter" class="sr-only">Status</label>
-            <select
-              id="statusFilter"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
-            >
-              <option value="">Semua Status</option>
-              <option value="Aktif">Aktif</option>
-              <option value="Nonaktif">Nonaktif</option>
-            </select>
-          </div>
         </div>
-
-        <div class="overflow-x-auto rounded-md border border-gray-200">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-blue-600 text-white">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  No
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Nama Toko
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Fee Toko
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Pemilik Toko
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Alamat
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              id="storeTableBody"
-              class="divide-y divide-gray-200 table-bg-transparent"
-            ></tbody>
-          </table>
+        <div class="md:col-span-1 lg:col-span-1">
+          <label for="statusFilter" class="sr-only">Status</label>
+          <select id="statusFilter"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent">
+            <option value="">Semua Status</option>
+            <option value="Aktif">Aktif</option>
+            <option value="Nonaktif">Nonaktif</option>
+            <option value="Menunggu">Menunggu Verifikasi</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
         </div>
+      </div>
 
-        <div class="mt-6 flex justify-between items-center">
-          <div id="paginationInfo" class="text-sm text-gray-700"></div>
-          <div id="paginationControls" class="flex"></div>
-        </div>
-      </main>
-    </div>
+      <div class="overflow-x-auto rounded-md border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                No
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Nama Toko
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Fee Toko
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Pemilik Toko
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Alamat
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Rating
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody id="storeTableBody" class="divide-y divide-gray-200 table-bg-transparent"></tbody>
+        </table>
+      </div>
 
-    <script type="module">
-      // Pastikan PATH ini benar sesuai struktur folder Anda
-      // Pastikan PATH ini benar sesuai struktur folder Anda
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        doc,
-        getDoc,
-        query,
-        where,
-        orderBy,
-      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-      import {
-        getAuth,
-        onAuthStateChanged,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+      <div class="mt-6 flex justify-between items-center">
+        <div id="paginationInfo" class="text-sm text-gray-700"></div>
+        <div id="paginationControls" class="flex"></div>
+      </div>
+    </main>
+  </div>
 
-      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-      // PASTIKAN ANDA MENGGANTI INI DENGAN KONFIGURASI PROYEK FIREBASE ANDA!
-      const firebaseConfig = {
-        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-        authDomain: "titipgo-28f84.firebaseapp.com",
-        projectId: "titipgo-28f84",
-        storageBucket: "titipgo-28f84.firebasestorage.app",
-        messagingSenderId: "816687535591",
-        appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
-      };
+  <script type="module">
+    // Pastikan PATH ini benar sesuai struktur folder Anda
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      query,
+      where,
+      orderBy,
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-      // Inisialisasi Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const auth = getAuth(app);
+    // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
+    // PASTIKAN ANDA MENGGANTI INI DENGAN KONFIGURASI PROYEK FIREBASE ANDA!
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+      authDomain: "titipgo-28f84.firebaseapp.com",
+      projectId: "titipgo-28f84",
+      storageBucket: "titipgo-28f84.firebasestorage.app",
+      messagingSenderId: "816687535591",
+      appId: "1:816687535591:web:eaecf2fcc994636a319942",
+      // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
+    };
 
-      // Get references to HTML elements
-      const storeTableBody = document.getElementById("storeTableBody");
-      const searchInput = document.getElementById("search");
-      const statusFilter = document.getElementById("statusFilter"); // Asumsi ini untuk status verifikasi toko
-      const paginationInfo = document.getElementById("paginationInfo");
-      const paginationControls = document.getElementById("paginationControls");
-      const logoutButton = document.getElementById("logoutButton");
+    // Inisialisasi Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-      let allStores = []; // To store all stores fetched from Firebase
-      let filteredStores = []; // To store stores after search and filter
-      const itemsPerPage = 10;
-      let currentPage = 1;
+    // Get references to HTML elements
+    const storeTableBody = document.getElementById("storeTableBody");
+    const searchInput = document.getElementById("search");
+    const statusFilter = document.getElementById("statusFilter");
+    const paginationInfo = document.getElementById("paginationInfo");
+    const paginationControls = document.getElementById("paginationControls");
+    const logoutButton = document.getElementById("logoutButton");
 
-      // Helper function to get status class (for verificationStatus or general status)
-      function getStoreStatusClass(status) {
-        // Sesuaikan kelas ini berdasarkan nilai status yang ada di data toko Anda
-        // Misalnya, jika status di toko bisa 'active', 'inactive', 'pending', dll.
-        switch (status) {
-          case "active": // Contoh status aktif
-            return "bg-green-100 text-green-800";
-          case "pending": // Contoh status menunggu verifikasi
-            return "bg-yellow-100 text-yellow-800";
-          case "rejected": // Contoh status ditolak
-            return "bg-red-100 text-red-800";
-          case "inactive": // Contoh status tidak aktif
-            return "bg-gray-100 text-gray-800";
-          default:
-            return "bg-gray-100 text-gray-800"; // Default jika tidak diketahui
-        }
+    let allStores = []; // To store all stores fetched from Firebase
+    let filteredStores = []; // To store stores after search and filter
+    const itemsPerPage = 10;
+    let currentPage = 1;
+
+    // Helper function to get status class (for verificationStatus or general status)
+    function getStoreStatusClass(status) {
+      // Sesuaikan kelas ini berdasarkan nilai status yang ada di data toko Anda
+      switch (status) {
+        case "active":
+        case "aktif":
+          return "bg-green-100 text-green-800";
+        case "pending":
+        case "menunggu":
+          return "bg-yellow-100 text-yellow-800";
+        case "rejected":
+        case "ditolak":
+          return "bg-red-100 text-red-800";
+        case "inactive":
+        case "nonaktif":
+          return "bg-gray-100 text-gray-800";
+        default:
+          return "bg-gray-100 text-gray-800"; // Default jika tidak diketahui
+      }
+    }
+
+    // Helper function to calculate average rating based on your 'bintang' map structure
+    async function getAverageRating(storeId) {
+      // Assuming your 'rating' collection has documents with 'id_toko' and 'nilai_bintang' fields.
+      const ratingsRef = collection(db, "rating");
+      const q = query(ratingsRef, where("id_toko", "==", storeId));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return { average: 0, count: 0 };
       }
 
-      // Helper function to calculate average rating based on your 'bintang' map structure
-      async function getAverageRating(storeId) {
-        const ratingsRef = collection(db, "rating"); // Menggunakan nama koleksi "rating"
-        // Kueri ini akan mencari rating yang terkait dengan `storeId`
-        // ASUMSI: Setiap dokumen rating memiliki field 'id_toko' (string) yang merujuk ke ID dokumen toko
-        // ASUMSI: Setiap dokumen rating memiliki field 'nilai_bintang' (number) yang menyimpan nilai bintang (1-5)
+      let totalRating = 0;
+      querySnapshot.forEach((doc) => {
+        totalRating += doc.data().nilai_bintang || 0;
+      });
 
-        // Jika koleksi `rating` Anda berisi dokumen ulasan INDIVIDUAL, maka seharusnya ada field `id_toko` dan `nilai_bintang`.
-        // Jika tidak ada `id_toko` di dokumen rating Anda, kita tidak bisa menghitung rating per toko secara langsung dari koleksi `rating` ini.
-        // Jika field `bintang` Anda adalah map frekuensi (misal: { "1": 5, "2": 3, ...}), ini perlu logika penghitungan yang berbeda.
-        // Untuk saat ini, saya tetap pada asumsi rating individu per dokumen dengan field `nilai_bintang`.
-        const q = query(ratingsRef, where("id_toko", "==", storeId));
-        const querySnapshot = await getDocs(q);
+      const count = querySnapshot.size;
+      return { average: (totalRating / count).toFixed(1), count: count };
+    }
 
-        if (querySnapshot.empty) {
-          return { average: 0, count: 0 };
-        }
+    // Function to fetch stores from Firebase
+    async function fetchStores() {
+      try {
+        const storesRef = collection(db, "toko");
+        const snapshot = await getDocs(storesRef);
 
-        let totalRating = 0;
-        querySnapshot.forEach((doc) => {
-          // ASUMSI: Setiap dokumen rating memiliki field 'nilai_bintang' (contoh: 4)
-          // JIKA TIDAK ADA FIELD INI, INI AKAN GAGAL.
-          totalRating += doc.data().nilai_bintang || 0;
-        });
+        const fetchedStores = [];
+        for (const storeDoc of snapshot.docs) {
+          const storeData = storeDoc.data();
+          const storeId = storeDoc.id; // This is the Firebase document ID for the store.
 
-        const count = querySnapshot.size;
-        return { average: (totalRating / count).toFixed(1), count: count };
-      }
-
-      // Function to fetch stores from Firebase
-      async function fetchStores() {
-        try {
-          const storesRef = collection(db, "toko"); // MENGGANTI 'stores' menjadi 'toko'
-          const snapshot = await getDocs(storesRef);
-
-          const fetchedStores = [];
-          for (const storeDoc of snapshot.docs) {
-            const storeData = storeDoc.data();
-            const storeId = storeDoc.id; // Ini adalah ID dokumen toko
-
-            // 1. Ambil Nama Pemilik Toko dari koleksi 'user'
-            let pemilikTokoNama = "N/A";
-            // Kritis: `id_user` di koleksi `toko` Anda adalah NUMBER (1000),
-            // sedangkan ID dokumen di koleksi `user` adalah STRING (contoh: mWSuPs89pUXwpENwNXyV4KAAcc93).
-            // Anda HARUS mengubah `id_user` di koleksi `toko` menjadi STRING ID DOKUMEN `user` yang sebenarnya.
-            // Workaround ini mungkin TIDAK BERHASIL jika angka 1000 tidak sesuai ID dokumen string.
-            if (storeData.id_user) {
-              const userIdAsString = String(storeData.id_user); // Coba konversi ke string
-              const userDocRef = doc(db, "user", userIdAsString); // MENGGANTI 'user' menjadi 'user'
-              const userDoc = await getDoc(userDocRef);
-              if (userDoc.exists()) {
-                pemilikTokoNama = userDoc.data().nama_pembeli || "N/A";
-              }
+          // 1. Ambil Nama Pemilik Toko dari koleksi 'users' (PLURAL)
+          let pemilikTokoNama = "N/A";
+          if (storeData.ownerId) {
+            // *** CRITICAL FIX: Changed "user" to "users" here ***
+            const userDocRef = doc(db, "users", storeData.ownerId);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+              // Assuming 'namaLengkap' from image_72e80a.png for user's full name
+              pemilikTokoNama = userDoc.data().namaLengkap || "N/A";
             }
-
-            // 2. Ambil Rata-rata Rating Toko
-            const { average: avgRating, count: ratingCount } =
-              await getAverageRating(storeId);
-
-            fetchedStores.push({
-              id: storeId, // ID dokumen toko Firebase
-              ...storeData, // Semua data dari dokumen toko
-              pemilikToko: pemilikTokoNama, // Nama pemilik dari koleksi user
-              averageRating: avgRating,
-              ratingCount: ratingCount,
-              // Asumsi ada field 'status' di koleksi 'toko' yang merepresentasikan status verifikasi toko
-              // Jika tidak ada, ini akan menjadi "Tidak Ditetapkan"
-              status_toko_display: storeData.status || "Tidak Ditetapkan",
-            });
           }
 
-          allStores = fetchedStores;
-          applyFiltersAndSearch();
-        } catch (error) {
-          console.error("Error fetching stores: ", error);
-          alert(
-            "Gagal memuat data toko. Periksa koneksi internet Anda, hak akses Firebase, atau struktur data."
-          );
+          // 2. Ambil Rata-rata Rating Toko
+          const { average: avgRating, count: ratingCount } =
+            await getAverageRating(storeId);
+
+          fetchedStores.push({
+            id: storeId, // Firebase document ID
+            ...storeData, // All data from the store document
+            pemilikToko: pemilikTokoNama, // Owner name from 'users' collection
+            averageRating: avgRating,
+            ratingCount: ratingCount,
+            // Use 'status' field from 'toko' document, default to 'inactive' if not present
+            // You MUST ensure your 'toko' documents have a 'status' field (e.g., 'active', 'pending', 'inactive').
+            status_toko_display: storeData.status || "inactive",
+          });
         }
+
+        allStores = fetchedStores;
+        applyFiltersAndSearch();
+      } catch (error) {
+        console.error("Error fetching stores: ", error); // This is where FirebaseError will be logged
+        alert(
+          "Gagal memuat data toko. Periksa koneksi internet Anda, hak akses Firebase, atau struktur data."
+        );
+      }
+    }
+
+    // Function to render table rows
+    function renderTable(storesToDisplay) {
+      if (!storeTableBody) {
+        console.error("Elemen storeTableBody tidak ditemukan!");
+        return;
+      }
+      storeTableBody.innerHTML = ""; // Clear existing rows
+
+      if (storesToDisplay.length === 0) {
+        storeTableBody.innerHTML = `<tr><td colspan="8" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data toko.</td></tr>`;
+        if (paginationInfo)
+          paginationInfo.textContent = "Menampilkan 0 dari 0 data";
+        if (paginationControls) paginationControls.innerHTML = "";
+        return;
       }
 
-      // Function to render table rows
-      function renderTable(storesToDisplay) {
-        if (!storeTableBody) {
-          console.error("Elemen storeTableBody tidak ditemukan!");
-          return;
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedStores = storesToDisplay.slice(startIndex, endIndex);
+
+      paginatedStores.forEach((store, index) => {
+        const row = storeTableBody.insertRow();
+        const displayIndex = startIndex + index + 1;
+
+        // Normalize status for class and display
+        const currentStoreStatus = (store.status_toko_display || "unknown").toLowerCase();
+        const statusClass = getStoreStatusClass(currentStoreStatus);
+
+        let displayStatusText = "Tidak Ditetapkan";
+        if (currentStoreStatus === "active" || currentStoreStatus === "aktif") {
+          displayStatusText = "Aktif";
+        } else if (currentStoreStatus === "pending" || currentStoreStatus === "menunggu") {
+          displayStatusText = "Menunggu";
+        } else if (currentStoreStatus === "rejected" || currentStoreStatus === "ditolak") {
+          displayStatusText = "Ditolak";
+        } else if (currentStoreStatus === "inactive" || currentStoreStatus === "nonaktif") {
+          displayStatusText = "Nonaktif";
         }
-        storeTableBody.innerHTML = ""; // Clear existing rows
 
-        if (storesToDisplay.length === 0) {
-          storeTableBody.innerHTML = `<tr><td colspan="8" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data toko.</td></tr>`;
-          if (paginationInfo)
-            paginationInfo.textContent = "Menampilkan 0 dari 0 data";
-          if (paginationControls) paginationControls.innerHTML = "";
-          return;
-        }
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedStores = storesToDisplay.slice(startIndex, endIndex);
-
-        paginatedStores.forEach((store, index) => {
-          const row = storeTableBody.insertRow();
-          const displayIndex = startIndex + index + 1;
-
-          const currentStoreStatus = store.status_toko_display || "unknown";
-          const statusClass = getStoreStatusClass(
-            currentStoreStatus.toLowerCase()
-          );
-
-          let displayStatusText = currentStoreStatus;
-          if (currentStoreStatus === "active") displayStatusText = "Aktif";
-          if (currentStoreStatus === "pending") displayStatusText = "Menunggu";
-          if (currentStoreStatus === "rejected") displayStatusText = "Ditolak";
-
-          row.innerHTML = `
+        row.innerHTML = `
             <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              store.nama_toko || "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              store.fee !== undefined ? store.fee + "%" : "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              store.pemilikToko || "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              store.alamat_lengkap || "-"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              store.averageRating || "0.0"
-            } (${store.ratingCount || "0"} ulasan)</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${store.namaToko || store.nama_toko || "-" // Prioritize 'namaToko', fallback to 'nama_toko'
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${store.fee !== undefined ? store.fee + "%" : "-"
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${store.pemilikToko || "-"
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${store.alamatToko || store.alamat_lengkap || "-" // Prioritize 'alamatToko', fallback to 'alamat_lengkap'
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${store.averageRating || "0.0"
+          } (${store.ratingCount || "0"} ulasan)</td>
             <td class="py-3 px-4 text-sm text-center">
                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
                     ${displayStatusText}
                 </span>
             </td>
             <td class="py-3 px-4 text-sm text-center">
-                <a href="admin-toko-detail.html?id=${
-                  store.id
-                }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
+                <a href="admin-toko-detail.html?id=${store.id
+          }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-info-circle"></i></a>
             </td>
         `;
-        });
-        updatePagination(storesToDisplay.length);
-      }
-
-      // Function to apply search and filter
-      function applyFiltersAndSearch() {
-        const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
-        const selectedStatus = statusFilter ? statusFilter.value : "";
-
-        filteredStores = allStores.filter((store) => {
-          const namaToko = store.nama_toko ? store.nama_toko.toLowerCase() : "";
-          const pemilikToko = store.pemilikToko
-            ? store.pemilikToko.toLowerCase()
-            : "";
-          const alamatToko = store.alamat_lengkap
-            ? store.alamat_lengkap.toLowerCase()
-            : "";
-
-          const matchesSearch =
-            namaToko.includes(searchTerm) ||
-            pemilikToko.includes(searchTerm) ||
-            alamatToko.includes(searchTerm);
-
-          const matchesStatus =
-            selectedStatus === "" ||
-            (store.status_toko_display &&
-              store.status_toko_display.toLowerCase() ===
-                selectedStatus.toLowerCase());
-
-          return matchesSearch && matchesStatus;
-        });
-
-        currentPage = 1;
-        renderTable(filteredStores);
-      }
-
-      // Pagination functions (tidak ada perubahan signifikan di sini)
-      function updatePagination(totalItems) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        if (paginationInfo) {
-          paginationInfo.textContent = `Menampilkan ${Math.min(
-            (currentPage - 1) * itemsPerPage + 1,
-            totalItems
-          )} sampai ${Math.min(
-            currentPage * itemsPerPage,
-            totalItems
-          )} dari ${totalItems} data`;
-        }
-
-        if (paginationControls) {
-          paginationControls.innerHTML = "";
-
-          const prevButton = document.createElement("button");
-          prevButton.className =
-            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
-          prevButton.textContent = "Previous";
-          prevButton.disabled = currentPage === 1;
-          prevButton.addEventListener("click", () => {
-            if (currentPage > 1) {
-              currentPage--;
-              renderTable(filteredStores);
-            }
-          });
-          paginationControls.appendChild(prevButton);
-
-          for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.className = `px-4 py-2 text-sm font-medium ${
-              i === currentPage
-                ? "text-pink-600 bg-pink-100"
-                : "text-gray-700 bg-white hover:bg-gray-50"
-            } border border-gray-300`;
-            pageButton.textContent = i;
-            pageButton.addEventListener("click", () => {
-              currentPage = i;
-              renderTable(filteredStores);
-            });
-            paginationControls.appendChild(pageButton);
-          }
-
-          const nextButton = document.createElement("button");
-          nextButton.className =
-            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
-          nextButton.textContent = "Next";
-          nextButton.disabled = currentPage === totalPages || totalPages === 0;
-          nextButton.addEventListener("click", () => {
-            if (currentPage < totalPages) {
-              currentPage++;
-              renderTable(filteredStores);
-            }
-          });
-          paginationControls.appendChild(nextButton);
-        }
-      }
-
-      // Event listeners for search and filter (dengan null checks)
-      if (searchInput)
-        searchInput.addEventListener("keyup", applyFiltersAndSearch);
-      if (statusFilter)
-        statusFilter.addEventListener("change", applyFiltersAndSearch);
-
-      // Logout Functionality (dengan null checks)
-      if (logoutButton) {
-        logoutButton.addEventListener("click", async (e) => {
-          e.preventDefault();
-          try {
-            await signOut(auth);
-            alert("Anda telah logout!");
-            window.location.href = "admin-login.html"; // Redirect to login page after logout
-          } catch (error) {
-            console.error("Error logging out: ", error);
-            alert("Gagal logout. Silakan coba lagi.");
-          }
-        });
-      }
-
-      // Initial fetch of stores when the page loads
-      document.addEventListener("DOMContentLoaded", () => {
-        // Cek autentikasi sebelum memuat data
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            console.log("Admin terautentikasi:", user.uid);
-            fetchStores(); // Ambil data toko setelah admin terautentikasi
-          } else {
-            console.log(
-              "Tidak ada admin terautentikasi. Mengarahkan ke halaman login."
-            );
-            window.location.href = "admin-login.html";
-          }
-        });
-
-        // Sidebar active link logic
-        const currentPath = window.location.pathname;
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const currentFilename = currentPath.substring(
-            currentPath.lastIndexOf("/") + 1
-          );
-
-          let isLinkActive = false;
-
-          if (linkHref === currentFilename) {
-            isLinkActive = true;
-          } else if (
-            currentFilename === "" &&
-            linkHref === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          } else if (
-            currentFilename.startsWith("admin-toko-detail") &&
-            linkHref === "admin-toko.html"
-          ) {
-            // Khusus untuk halaman detail, aktifkan link master
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-          }
-        });
       });
-    </script>
-  </body>
+      updatePagination(storesToDisplay.length);
+    }
+
+    // Function to apply search and filter
+    function applyFiltersAndSearch() {
+      const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+      const selectedStatus = statusFilter ? statusFilter.value : "";
+
+      filteredStores = allStores.filter((store) => {
+        const namaToko = store.namaToko ? store.namaToko.toLowerCase() : "";
+        const pemilikToko = store.pemilikToko
+          ? store.pemilikToko.toLowerCase()
+          : "";
+        const alamatToko = store.alamatToko
+          ? store.alamatToko.toLowerCase()
+          : "";
+
+        const matchesSearch =
+          namaToko.includes(searchTerm) ||
+          pemilikToko.includes(searchTerm) ||
+          alamatToko.includes(searchTerm);
+
+        const matchesStatus =
+          selectedStatus === "" ||
+          (store.status_toko_display &&
+            store.status_toko_display.toLowerCase() ===
+            selectedStatus.toLowerCase());
+
+        return matchesSearch && matchesStatus;
+      });
+
+      currentPage = 1;
+      renderTable(filteredStores);
+    }
+
+    // Pagination functions (no significant changes here)
+    function updatePagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (paginationInfo) {
+        paginationInfo.textContent = `Menampilkan ${Math.min(
+          (currentPage - 1) * itemsPerPage + 1,
+          totalItems
+        )} sampai ${Math.min(
+          currentPage * itemsPerPage,
+          totalItems
+        )} dari ${totalItems} data`;
+      }
+
+      if (paginationControls) {
+        paginationControls.innerHTML = "";
+
+        const prevButton = document.createElement("button");
+        prevButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTable(filteredStores);
+          }
+        });
+        paginationControls.appendChild(prevButton);
+
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.className = `px-4 py-2 text-sm font-medium ${i === currentPage
+            ? "text-pink-600 bg-pink-100"
+            : "text-gray-700 bg-white hover:bg-gray-50"
+            } border border-gray-300`;
+          pageButton.textContent = i;
+          pageButton.addEventListener("click", () => {
+            currentPage = i;
+            renderTable(filteredStores);
+          });
+          paginationControls.appendChild(pageButton);
+        }
+
+        const nextButton = document.createElement("button");
+        nextButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages || totalPages === 0;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTable(filteredStores);
+          }
+        });
+        paginationControls.appendChild(nextButton);
+      }
+    }
+
+    // Event listeners for search and filter (dengan null checks)
+    if (searchInput)
+      searchInput.addEventListener("keyup", applyFiltersAndSearch);
+    if (statusFilter)
+      statusFilter.addEventListener("change", applyFiltersAndSearch);
+
+    // Logout Functionality (dengan null checks)
+    if (logoutButton) {
+      logoutButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await signOut(auth);
+          alert("Anda telah logout!");
+          window.location.href = "admin-login.html"; // Redirect to login page after logout
+        } catch (error) {
+          console.error("Error logging out: ", error);
+          alert("Gagal logout. Silakan coba lagi.");
+        }
+      });
+    }
+
+    // Initial fetch of stores when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      // Cek autentikasi sebelum memuat data
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("Admin terautentikasi:", user.uid);
+          fetchStores(); // Ambil data toko setelah admin terautentikasi
+        } else {
+          console.log(
+            "Tidak ada admin terautentikasi. Mengarahkan ke halaman login."
+          );
+          window.location.href = "admin-login.html";
+        }
+      });
+
+      // Sidebar active link logic
+      const currentPath = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const currentFilename = currentPath.substring(
+          currentPath.lastIndexOf("/") + 1
+        );
+
+        let isLinkActive = false;
+
+        if (linkHref === currentFilename) {
+          isLinkActive = true;
+        } else if (
+          currentFilename === "" &&
+          linkHref === "admin-dashboard.html"
+        ) {
+          isLinkActive = true;
+        } else if (
+          currentFilename.startsWith("admin-toko-detail") &&
+          linkHref === "admin-toko.html"
+        ) {
+          // Khusus untuk halaman detail, aktifkan link master
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
