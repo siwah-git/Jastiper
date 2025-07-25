@@ -5,10 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesanan Saya - TitipGo</title>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome untuk ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -336,70 +335,157 @@
     .btn-belanja:hover {
       background: #a31267;
     }
+
+    /* Custom Modal Styling (for rating and chat) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .modal-buttons .btn-cancel {
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+    }
+
+    .modal-buttons .btn-cancel:hover {
+      background-color: #e0e0e0;
+    }
+
+    .modal-buttons .btn-confirm {
+      background-color: #ef4444;
+      /* Red color for confirm */
+      color: white;
+      border: 1px solid #ef4444;
+    }
+
+    .modal-buttons .btn-confirm:hover {
+      background-color: #dc2626;
+    }
+
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
+
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
   </style>
 </head>
 
 <body class="font-sans bg-gray-100 m-0">
   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
     <div class="flex items-center space-x-3">
-        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Cari Barang..."
-                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-            </svg>
-        </div>
+      <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Cari Barang..."
+          class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+        <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+          viewBox="0 0 20 20">
+          <path d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+        </svg>
+      </div>
     </div>
     <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
     </nav>
     <nav class="flex items-center space-x-4 sm:space-x-6">
-        <a href="pembeli_dashboard.html"
-            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-        <div class="dropdown-kategori relative inline-block hidden md:block">
-            <a href="pembeli_kategori.html" 
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
-        </div>
+      <a href="pembeli_dashboard.html"
+        class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+      <div class="dropdown-kategori relative inline-block hidden md:block">
+        <a href="pembeli_kategori.html"
+          class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+      </div>
 
-        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-            </svg>
-        </a>
-        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-        </a>
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-            id="userIcon" style="cursor:pointer;">
-        <div id="userDropdown"
-            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-            <a href="pembeli_akun.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-            <a href="pembeli_pesanan_saya.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                CS</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-            <a href="#" onclick="logoutUser();return false;"
-                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-        </div>
+      <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+        <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+          </path>
+        </svg>
+      </a>
+      <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg
+          class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
+        </svg>
+      </a>
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6" id="userIcon"
+        style="cursor:pointer;">
+      <div id="userDropdown"
+        class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+        <a href="pembeli_akun.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+        <a href="pembeli_pesanan_saya.html"
+          class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+          CS</a>
+        <a href="#" onclick="openChatCS();return false;"
+          class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+        <a href="#" onclick="logoutUser();return false;"
+          class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+      </div>
     </nav>
-</header>
+  </header>
   <main class="pt-32">
     <h1 class="page-title"
-      style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">PESANAN SAYA
+      style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">PESANAN
+      SAYA
     </h1>
 
     <!-- Main Content -->
@@ -409,7 +495,7 @@
         <div class="akun-user-info">
           <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="akun-user-icon">
           <div class="akun-user-details">
-            <div class="akun-username">dwirestykartika</div>
+            <div class="akun-username" id="sidebar-username">Memuat...</div>
           </div>
         </div>
 
@@ -424,34 +510,37 @@
       <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full mx-auto p-6 mt-6">
         <!-- Order Status Tabs -->
         <div class="pesanan-tabs">
-          <a href="#" class="pesanan-tab">Semua</a>
-          <a href="#" class="pesanan-tab">Belum Dibayar</a>
-          <a href="#" class="pesanan-tab">Sedang Dikemas <span class="pesanan-count">(1)</span></a>
-          <a href="#" class="pesanan-tab">Dikirim</a>
-          <a href="#" class="pesanan-tab active">Selesai</a>
-          <a href="#" class="pesanan-tab">Dibatalkan</a>
+          <a href="#" class="pesanan-tab active" data-status="Semua">Semua</a>
+          <a href="#" class="pesanan-tab" data-status="Belum Dibayar">Belum Dibayar</a>
+          <a href="#" class="pesanan-tab" data-status="Sedang Dikemas">Sedang Dikemas <span
+              class="pesanan-count hidden">(0)</span></a>
+          <a href="#" class="pesanan-tab" data-status="Dikirim">Dikirim</a>
+          <a href="#" class="pesanan-tab" data-status="Selesai">Selesai</a>
+          <a href="#" class="pesanan-tab" data-status="Dibatalkan">Dibatalkan</a>
         </div>
 
         <!-- Section Title -->
-        <h2 class="pesanan-section-title">Pesanan Selesai</h2>
+        <h2 class="pesanan-section-title">Semua Pesanan</h2>
 
         <!-- Semua box pesanan hanya render dari JS -->
-        <div class="pesanan-content"></div>
+        <div id="orders-list" class="mt-6">
+          <div class="text-gray-500 text-center py-8">Memuat pesanan...</div>
+        </div>
       </div>
     </div>
 
     <!-- Modal Rating Pop-up -->
-    <div id="ratingModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 hidden">
-      <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-8 mx-auto">
+    <div id="ratingModal" class="modal-overlay">
+      <div class="modal-content">
         <h2 class="text-2xl font-bold text-center mb-6">Nilai Produk</h2>
         <!-- Preview Produk -->
         <div class="flex items-center gap-4 bg-gray-100 rounded p-4 mb-6">
-          <img src="asset/images/ootd (1).jpg" alt="Produk"
+          <img id="rating-product-image" src="https://placehold.co/60x60/E0E0E0/333333?text=Produk" alt="Produk"
             class="w-16 h-16 rounded object-cover border border-gray-300">
           <div>
-            <div class="font-semibold text-base">Baju Gucci G6000 Man Limited Edition</div>
-            <div class="text-xs text-gray-500">No Pesanan 7262726G22</div>
-            <div class="text-xs text-pink-600 font-semibold">Selesai</div>
+            <div id="rating-product-name" class="font-semibold text-base"></div>
+            <div id="rating-order-number" class="text-xs text-gray-500"></div>
+            <div id="rating-order-status" class="text-xs text-pink-600 font-semibold"></div>
           </div>
         </div>
         <!-- Rating Bintang -->
@@ -497,93 +586,619 @@
     </div>
 
     <!-- Chat Modal -->
-    <div id="chatModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 hidden">
-      <div class="bg-white rounded shadow-lg w-[600px] max-w-full border border-gray-400">
+    <div id="chatModal" class="modal-overlay">
+      <div class="modal-content">
         <div class="flex border-b border-gray-300 items-center justify-between px-4 py-2">
           <span class="font-bold text-lg">Chat</span>
           <button onclick="hideChatModal()"
             class="text-gray-500 hover:text-pink-600 text-2xl leading-none">&times;</button>
         </div>
         <div class="flex h-[320px]">
-          <!-- Sidebar Kontak -->
-          <div class="w-1/3 border-r border-gray-200 p-3 flex flex-col gap-2 bg-gray-50">
-            <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
-              <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" class="w-7 h-7 rounded-full" />
-              <div>
-                <div class="font-semibold text-sm">Dwi Store</div>
-                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
-              <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" class="w-7 h-7 rounded-full" />
-              <div>
-                <div class="font-semibold text-sm">Resty Store</div>
-                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-pink-50">
-              <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" class="w-7 h-7 rounded-full" />
-              <div>
-                <div class="font-semibold text-sm">Kartika Store</div>
-                <div class="text-xs text-gray-500">Kak pesanannya kapan?</div>
-              </div>
-            </div>
+          <!-- Sidebar Kontak Chat -->
+          <div class="w-1/3 border-r border-gray-200 p-3 flex flex-col gap-2 bg-gray-50 overflow-y-auto">
+            <div class="text-sm text-gray-500 text-center py-2">Memuat kontak...</div>
           </div>
           <!-- Panel Chat Kanan -->
           <div class="flex-1 flex flex-col">
-            <div class="p-3 border-b border-gray-200 font-semibold">Apa yang ingin kamu tanyakan?</div>
-            <div class="p-3 flex items-center gap-3 border-b border-gray-200">
-              <img src="asset/images/ootd (1).jpg" class="w-12 h-12 rounded border border-gray-300" />
+            <div class="p-3 border-b border-gray-200 font-semibold" id="chat-header-title">Pilih kontak untuk memulai
+              chat</div>
+            <div class="p-3 flex items-center gap-3 border-b border-gray-200 hidden" id="chat-product-info">
+              <img id="chat-product-image" src="https://placehold.co/48x48/E0E0E0/333333?text=Produk"
+                class="w-12 h-12 rounded border border-gray-300" />
               <div>
-                <div class="font-medium text-sm">Baju Gucci G6000 Man Limited Edition</div>
-                <div class="text-xs text-gray-500">No Pesanan 7262726G22</div>
-                <div class="text-xs text-pink-600 font-semibold">Sedang Dikemas</div>
+                <div id="chat-product-name" class="font-medium text-sm"></div>
+                <div id="chat-order-number" class="text-xs text-gray-500"></div>
+                <div id="chat-order-status" class="text-xs text-pink-600 font-semibold"></div>
               </div>
             </div>
-            <div class="flex-1"></div>
+            <div class="flex-1 p-3 overflow-y-auto" id="chat-messages-container">
+              <!-- Pesan chat akan dimuat di sini -->
+              <div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>
+            </div>
             <div class="border-t border-gray-200 p-2 flex items-center">
-              <input type="text" class="flex-1 border-none focus:ring-0 text-sm" placeholder="Tulis Pesan" />
+              <input type="text" id="chat-input" class="flex-1 border-none focus:ring-0 text-sm"
+                placeholder="Tulis Pesan" />
               <button class="ml-2 text-pink-600 font-semibold hover:underline" onclick="sendMessage()">Kirim</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </main>
 
-    <!-- ====== DAFTAR PESANAN DARI FIRESTORE ====== -->
-    <div id="orders-list" class="mt-6"></div>
+  <footer class="bg-blue-900 py-8 px-6 mt-8">
+    <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
+      <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+        <h3 class="font-bold text-white mb-3">INFORMASI</h3>
+        <ul>
+          <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
+          <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
+          <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
+        </ul>
+      </div>
+      <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+        <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+      </div>
+      <div class="w-full sm:w-1/3 text-right">
+        <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
+        <ul>
+          <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
+              href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank"
+              class="hover:text-pink-600">Instagram</a></li>
+          <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
+              href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
+              class="hover:text-pink-600">Facebook</a></li>
+          <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
+              href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
+              class="hover:text-pink-600">Youtube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
+    </div>
+  </footer>
 
-    <script>
-      // Dropdown Kategori
-      const kategoriMenu = document.getElementById('kategoriMenu');
-      const dropdownKategori = document.getElementById('dropdownKategori');
-      if (kategoriMenu && dropdownKategori) {
-        kategoriMenu.addEventListener('click', function (e) {
-          e.preventDefault();
-          dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', function (e) {
-          if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-            dropdownKategori.style.display = 'none';
+  <script type="module">
+    // Import Firebase functions from firebase-config.js
+    import {
+      auth,
+      db,
+      onAuthStateChanged,
+      doc,
+      getDoc,
+      updateDoc, // Added for updating order status
+      signOut,
+      collection,
+      query,
+      where,
+      getDocs,
+      addDoc, // For sending chat messages
+      serverTimestamp // For chat messages timestamp
+    } from './js/firebase-config.js'; // Corrected path to firebase-config.js
+
+    let currentUserId = null;
+    let allOrders = []; // To store all fetched orders
+    let currentTab = 'Semua'; // Default active tab
+    let currentChatPartnerId = null; // Store the UID of the person being chatted with
+    let currentChatOrderId = null; // Store the order ID associated with the current chat
+
+    // DOM Elements
+    const sidebarUsername = document.getElementById('sidebar-username');
+    const ordersListContainer = document.getElementById('orders-list');
+    const pesananTabs = document.querySelectorAll('.pesanan-tab');
+    const pesananSectionTitle = document.querySelector('.pesanan-section-title');
+    const pendingOrdersCountSpan = document.querySelector('.pesanan-tab[data-status="Sedang Dikemas"] .pesanan-count');
+
+    // Header dropdown elements
+    const userIcon = document.getElementById('userIcon');
+    const userDropdown = document.getElementById('userDropdown');
+
+    // Rating Modal Elements
+    const ratingModal = document.getElementById('ratingModal');
+    const ratingProductImage = document.getElementById('rating-product-image');
+    const ratingProductName = document.getElementById('rating-product-name');
+    const ratingOrderNumber = document.getElementById('rating-order-number');
+    const ratingOrderStatus = document.getElementById('rating-order-status');
+    const ratingForm = document.getElementById('ratingForm');
+    let currentRatingOrderId = null; // To store the order ID for rating
+
+    // Chat Modal Elements
+    const chatModal = document.getElementById('chatModal');
+    const chatContactsSidebar = chatModal.querySelector('.w-1/3');
+    const chatHeaderTitle = document.getElementById('chat-header-title');
+    const chatProductInfo = document.getElementById('chat-product-info');
+    const chatProductImage = document.getElementById('chat-product-image');
+    const chatProductName = document.getElementById('chat-product-name');
+    const chatOrderNumber = document.getElementById('chat-order-number');
+    const chatOrderStatus = document.getElementById('chat-order-status');
+    const chatMessagesContainer = document.getElementById('chat-messages-container');
+    const chatInput = document.getElementById('chat-input');
+
+
+    // --- Helper Functions ---
+
+    // Function to format currency to IDR
+    function formatRupiah(amount) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    }
+
+    // Function to show custom confirmation/alert modal (re-used from admin-katalog.html for consistency)
+    // Note: This modal is not present in the provided HTML, so it needs to be added or replaced with standard alert.
+    // For now, I'll use standard alert for simplicity. If you want a custom modal, you need to add its HTML structure.
+    function showCustomAlert(message) {
+      alert(message);
+    }
+
+    // --- Firebase Data Fetching ---
+
+    // Fetch user data for sidebar
+    async function fetchUserData(uid) {
+      try {
+        const userDocRef = doc(db, "users", uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          sidebarUsername.textContent = userData.username || userData.namaLengkap || 'Pengguna';
+        } else {
+          console.warn("Dokumen pengguna tidak ditemukan di Firestore.");
+          showCustomAlert("Data profil Anda tidak ditemukan. Silakan lengkapi profil Anda.");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        showCustomAlert("Gagal memuat data profil: " + error.message);
+      }
+    }
+
+    // Fetch orders based on status filter
+    async function fetchOrdersFromFirestore(statusFilter = 'Semua') {
+      if (!currentUserId) {
+        ordersListContainer.innerHTML = '<div class="text-gray-500 text-center py-8">Silakan login untuk melihat pesanan Anda.</div>';
+        return;
+      }
+
+      ordersListContainer.innerHTML = '<div class="text-gray-500 text-center py-8">Memuat pesanan...</div>';
+      pesananSectionTitle.textContent = `Pesanan ${statusFilter}`;
+
+      try {
+        let q;
+        if (statusFilter === 'Semua') {
+          q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId));
+        } else {
+          q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId), where("status", "==", statusFilter));
+        }
+
+        const querySnapshot = await getDocs(q);
+        allOrders = []; // Clear previous orders
+        let pendingCount = 0;
+
+        querySnapshot.forEach((doc) => {
+          const orderData = { id: doc.id, ...doc.data() };
+          allOrders.push(orderData);
+          if (orderData.status === 'Sedang Dikemas') {
+            pendingCount++;
           }
         });
+
+        // Sort orders by creation date (newest first)
+        allOrders.sort((a, b) => (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0));
+
+        renderOrders(); // Render filtered orders
+        updatePendingOrdersCount(pendingCount);
+
+      } catch (error) {
+        console.error("Error loading orders from Firestore:", error);
+        ordersListContainer.innerHTML = `<div class="text-red-500 text-center py-8">Gagal memuat pesanan: ${error.message}</div>`;
       }
-      // Dropdown User
-      const userIcon = document.getElementById('userIcon');
-      const userDropdown = document.getElementById('userDropdown');
-      if (userIcon && userDropdown) {
-        userIcon.onclick = function (e) {
-          e.stopPropagation();
-          userDropdown.classList.toggle('hidden');
+    }
+
+    // Fetch store name for a given storeId
+    async function getStoreName(storeId) {
+      if (!storeId) return "Toko Tidak Diketahui";
+      try {
+        const storeDocRef = doc(db, "toko", storeId);
+        const storeDocSnap = await getDoc(storeDocRef);
+        if (storeDocSnap.exists()) {
+          return storeDocSnap.data().namaToko || "Toko Tidak Diketahui";
+        }
+        return "Toko Tidak Ditemukan";
+      } catch (error) {
+        console.error("Error fetching store name:", error);
+        return "Error Memuat Toko";
+      }
+    }
+
+    // --- Rendering Functions ---
+
+    async function renderOrders() {
+      if (allOrders.length === 0) {
+        ordersListContainer.innerHTML = `<div class="pesanan-kosong">
+                    <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="No Orders" class="no-orders-icon">
+                    <h3>Tidak ada pesanan</h3>
+                    <p>Belum ada pesanan dengan status ini.</p>
+                    <button class="btn-belanja" onclick="window.location.href='pembeli_dashboard.html'">Mulai Belanja</button>
+                </div>`;
+        return;
+      }
+
+      const orderHtmlPromises = allOrders.map(async (order) => {
+        const storeName = await getStoreName(order.tokoId); // Assuming tokoId is present in order
+        let actionButtons = '';
+        const orderIndex = allOrders.indexOf(order); // Get current index for local array manipulation (if needed)
+
+        if (order.status === 'Sedang Dikemas' || order.status === 'Dikirim') {
+          actionButtons = `
+                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="markOrderCompleted('${order.id}')">Pesanan Selesai</button>
+                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>
+                    `;
+        } else if (order.status === 'Selesai') {
+          actionButtons = `
+                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="showRatingModalWithOrder('${order.id}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Nilai</button>
+                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>
+                    `;
+        } else {
+          actionButtons = `<button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>`;
+        }
+
+        // Calculate total price for all products in the order
+        const totalOrderPrice = order.products.reduce((sum, product) => {
+          return sum + (product.harga || 0) * (product.qty || 1);
+        }, 0);
+
+        return `
+                    <div class="border border-gray-300 rounded bg-white mt-2 mb-8">
+                        <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-base">${storeName}</span>
+                                <button class="px-2 py-1 border border-pink-600 rounded bg-pink-600 text-white text-xs hover:bg-pink-700 hover:border-pink-700 ml-2" onclick="kunjungiToko('${order.tokoId}')">Kunjungi Toko</button>
+                            </div>
+                            <span class="text-sm text-gray-700">Pesanan ${order.status}</span>
+                        </div>
+                        ${order.products.map(product => `
+                            <div class="flex flex-row gap-4 px-4 py-4 items-center">
+                                <img src="${product.imageUrl || 'https://placehold.co/60x60/E0E0E0/333333?text=Produk'}" alt="${product.namaBarang || 'Produk'}" class="w-20 h-20 object-cover rounded border border-gray-200">
+                                <div class="flex-1">
+                                    <div class="font-semibold text-base mb-1">${product.namaBarang || 'Nama Produk Tidak Diketahui'}</div>
+                                    <div class="text-gray-600 text-sm mb-1">${product.varian ? `${product.varian}, ` : ''}Jumlah: ${product.qty || 1}</div>
+                                </div>
+                                <div class="text-right min-w-[120px]">
+                                    <div class="text-red-600 font-semibold text-base">${formatRupiah(product.harga || 0)}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div class="flex justify-end items-center px-4 pb-4">
+                            <div class="mr-8 text-base">Total Pesanan: <span class="text-red-600 font-semibold">${formatRupiah(totalOrderPrice)}</span></div>
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `;
+      });
+
+      ordersListContainer.innerHTML = (await Promise.all(orderHtmlPromises)).join('');
+    }
+
+    function updatePendingOrdersCount(count) {
+      if (pendingOrdersCountSpan) {
+        pendingOrdersCountSpan.textContent = `(${count})`;
+        if (count > 0) {
+          pendingOrdersCountSpan.classList.remove('hidden');
+        } else {
+          pendingOrdersCountSpan.classList.add('hidden');
+        }
+      }
+    }
+
+    // --- Order Actions ---
+
+    // Mark order as completed
+    window.markOrderCompleted = async function (orderId) {
+      const confirmed = confirm('Apakah Anda yakin pesanan sudah selesai?'); // Using standard confirm for now
+      if (confirmed) {
+        try {
+          const orderRef = doc(db, "orders", orderId);
+          await updateDoc(orderRef, {
+            status: "Selesai",
+            completedAt: serverTimestamp() // Add a timestamp for completion
+          });
+          showCustomAlert("Pesanan berhasil ditandai sebagai Selesai!");
+          fetchOrdersFromFirestore(currentTab); // Re-fetch orders for current tab
+        } catch (error) {
+          console.error("Error updating order status:", error);
+          showCustomAlert("Gagal menandai pesanan sebagai Selesai: " + error.message);
+        }
+      }
+    }
+
+    // --- Rating Modal Functions ---
+    window.showRatingModalWithOrder = function (orderId, productName, productImage, orderStatus) {
+      currentRatingOrderId = orderId;
+      ratingProductImage.src = productImage || 'https://placehold.co/60x60/E0E0E0/333333?text=Produk';
+      ratingProductName.textContent = productName;
+      ratingOrderNumber.textContent = `No Pesanan ${orderId.substring(0, 8)}`; // Shorten ID for display
+      ratingOrderStatus.textContent = orderStatus;
+
+      // Reset stars
+      document.querySelectorAll('#stars-produk .star').forEach(s => s.textContent = '☆');
+      document.querySelectorAll('#stars-jastiper .star').forEach(s => s.textContent = '☆');
+      document.querySelectorAll('#stars-kirim .star').forEach(s => s.textContent = '☆');
+      document.getElementById('stars-produk').dataset.rating = 0;
+      document.getElementById('stars-jastiper').dataset.rating = 0;
+      document.getElementById('stars-kirim').dataset.rating = 0;
+
+      ratingModal.classList.add('show');
+    }
+
+    window.hideRatingModal = function () {
+      ratingModal.classList.remove('show');
+      currentRatingOrderId = null;
+    }
+
+    function makeStarRating(containerId) {
+      const container = document.getElementById(containerId);
+      const stars = container.querySelectorAll('.star');
+      let rating = 0;
+
+      stars.forEach((star, idx) => {
+        star.addEventListener('mouseenter', () => {
+          stars.forEach((s, i) => s.textContent = i <= idx ? '★' : '☆');
+        });
+        star.addEventListener('mouseleave', () => {
+          stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+        });
+        star.addEventListener('click', () => {
+          rating = idx + 1;
+          stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
+          container.dataset.rating = rating; // Store rating in dataset
+        });
+      });
+    }
+
+    // Apply star rating functionality
+    makeStarRating('stars-produk');
+    makeStarRating('stars-jastiper');
+    makeStarRating('stars-kirim');
+
+    ratingForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const produkRating = parseInt(document.getElementById('stars-produk').dataset.rating || 0);
+      const jastiperRating = parseInt(document.getElementById('stars-jastiper').dataset.rating || 0);
+      const kirimRating = parseInt(document.getElementById('stars-kirim').dataset.rating || 0);
+
+      if (produkRating === 0 || jastiperRating === 0 || kirimRating === 0) {
+        showCustomAlert("Mohon berikan semua rating (produk, jastiper, jasa kirim) sebelum mengirim.");
+        return;
+      }
+
+      try {
+        // Add rating to 'ratings' collection
+        await addDoc(collection(db, "ratings"), {
+          orderId: currentRatingOrderId,
+          userId: currentUserId,
+          produkRating: produkRating,
+          jastiperRating: jastiperRating,
+          jasaKirimRating: kirimRating,
+          timestamp: serverTimestamp()
+        });
+
+        // Optionally, update the order document to mark it as rated
+        await updateDoc(doc(db, "orders", currentRatingOrderId), {
+          isRated: true
+        });
+
+        showCustomAlert("Terima kasih atas rating Anda!");
+        hideRatingModal();
+        fetchOrdersFromFirestore(currentTab); // Re-fetch orders to update UI
+      } catch (error) {
+        console.error("Error submitting rating:", error);
+        showCustomAlert("Gagal mengirim rating: " + error.message);
+      }
+    });
+
+    // --- Chat Modal Functions ---
+    window.showChatModalWithOrder = async function (orderId, jastiperId, productName, productImage, orderStatus) {
+      currentChatOrderId = orderId;
+      currentChatPartnerId = jastiperId; // The jastiper is the chat partner
+
+      chatProductImage.src = productImage || 'https://placehold.co/48x48/E0E0E0/333333?text=Produk';
+      chatProductName.textContent = productName;
+      chatOrderNumber.textContent = `No Pesanan ${orderId ? orderId.substring(0, 8) : 'N/A'}`; // Handle null orderId for general CS chat
+      chatOrderStatus.textContent = orderStatus;
+      chatProductInfo.classList.remove('hidden'); // Show product info in chat header
+
+      // Fetch and display chat contacts (jastipers from user's orders)
+      await loadChatContacts();
+      // Select the current chat partner in the sidebar
+      const contactElement = chatContactsSidebar.querySelector(`[data-jastiper-id="${jastiperId}"]`);
+      if (contactElement) {
+        document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
+        contactElement.classList.add('active');
+      }
+
+      // Load messages for the selected chat
+      await loadChatMessages(orderId, currentUserId, jastiperId);
+
+      chatModal.classList.add('show');
+    }
+
+    window.hideChatModal = function () {
+      chatModal.classList.remove('show');
+      currentChatOrderId = null;
+      currentChatPartnerId = null;
+      chatProductInfo.classList.add('hidden'); // Hide product info
+      chatHeaderTitle.textContent = "Pilih kontak untuk memulai chat";
+      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>';
+      chatInput.value = '';
+    }
+
+    async function loadChatContacts() {
+      chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Memuat kontak...</div>';
+      try {
+        const q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId));
+        const querySnapshot = await getDocs(q);
+
+        const jastiperIds = new Set();
+        const jastiperNames = new Map(); // To store jastiper names
+
+        for (const docSnap of querySnapshot.docs) {
+          const orderData = docSnap.data();
+          if (orderData.jastiperId && !jastiperIds.has(orderData.jastiperId)) {
+            jastiperIds.add(orderData.jastiperId);
+            // Fetch jastiper's store name (assuming jastiperId is also tokoId)
+            const storeName = await getStoreName(orderData.jastiperId);
+            jastiperNames.set(orderData.jastiperId, storeName);
+          }
+        }
+
+        if (jastiperIds.size === 0) {
+          chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Tidak ada kontak chat.</div>';
+          return;
+        }
+
+        chatContactsSidebar.innerHTML = ''; // Clear loading message
+
+        jastiperIds.forEach(jastiperId => {
+          const jastiperName = jastiperNames.get(jastiperId) || 'Jastiper Tidak Dikenal';
+          const contactDiv = document.createElement('div');
+          contactDiv.classList.add('flex', 'items-center', 'gap-2', 'p-2', 'border', 'rounded', 'cursor-pointer', 'hover:bg-pink-50', 'chat-contact');
+          contactDiv.dataset.jastiperId = jastiperId;
+          contactDiv.innerHTML = `
+                        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" class="w-7 h-7 rounded-full" />
+                        <div>
+                            <div class="font-semibold text-sm">${jastiperName}</div>
+                            <div class="text-xs text-gray-500">Ketuk untuk chat</div>
+                        </div>
+                    `;
+          chatContactsSidebar.appendChild(contactDiv);
+
+          contactDiv.addEventListener('click', async () => {
+            document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
+            contactDiv.classList.add('active');
+            currentChatPartnerId = jastiperId;
+            chatHeaderTitle.textContent = `Chat dengan ${jastiperName}`;
+
+            // Find an order associated with this jastiper to display product info
+            const associatedOrder = allOrders.find(order => order.jastiperId === jastiperId);
+            if (associatedOrder && associatedOrder.products && associatedOrder.products.length > 0) {
+              currentChatOrderId = associatedOrder.id;
+              chatProductImage.src = associatedOrder.products[0].imageUrl || 'https://placehold.co/48x48/E0E0E0/333333?text=Produk';
+              chatProductName.textContent = associatedOrder.products[0].namaBarang || 'Produk';
+              chatOrderNumber.textContent = `No Pesanan ${associatedOrder.id.substring(0, 8)}`;
+              chatOrderStatus.textContent = associatedOrder.status;
+              chatProductInfo.classList.remove('hidden');
+            } else {
+              chatProductInfo.classList.add('hidden');
+            }
+
+            await loadChatMessages(currentChatOrderId, currentUserId, currentChatPartnerId);
+          });
+        });
+
+      } catch (error) {
+        console.error("Error loading chat contacts:", error);
+        chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Gagal memuat kontak.</div>';
+      }
+    }
+
+    async function loadChatMessages(orderId, userId1, userId2) {
+      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Memuat pesan...</div>';
+      if (!orderId || !userId1 || !userId2) {
+        chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>';
+        return;
+      }
+
+      try {
+        // Determine chat document ID (consistent for both users)
+        const chatDocId = [userId1, userId2].sort().join('_') + '_' + orderId;
+        const chatRef = doc(db, "chats", chatDocId);
+        const chatSnap = await getDoc(chatRef);
+
+        if (chatSnap.exists()) {
+          const chatData = chatSnap.data();
+          const messages = chatData.messages || [];
+
+          if (messages.length === 0) {
+            chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Belum ada pesan dalam obrolan ini.</div>';
+          } else {
+            chatMessagesContainer.innerHTML = messages.map(msg => `
+                            <div class="flex ${msg.senderId === currentUserId ? 'justify-end' : 'justify-start'} mb-2">
+                                <div class="max-w-[70%] p-2 rounded-lg ${msg.senderId === currentUserId ? 'bg-pink-600 text-white' : 'bg-gray-200 text-gray-800'}">
+                                    <p class="text-sm">${msg.text}</p>
+                                    <span class="text-xs opacity-75">${msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                                </div>
+                            </div>
+                        `).join('');
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+          }
+        } else {
+          chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Belum ada pesan dalam obrolan ini.</div>';
+        }
+      } catch (error) {
+        console.error("Error loading chat messages:", error);
+        chatMessagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Gagal memuat pesan.</div>';
+      }
+    }
+
+    window.sendMessage = async function () {
+      const messageText = chatInput.value.trim();
+      if (!messageText || !currentChatOrderId || !currentUserId || !currentChatPartnerId) {
+        showCustomAlert("Pesan tidak boleh kosong atau chat belum dipilih.");
+        return;
+      }
+
+      try {
+        const chatDocId = [currentUserId, currentChatPartnerId].sort().join('_') + '_' + currentChatOrderId;
+        const chatRef = doc(db, "chats", chatDocId);
+
+        const newMessage = {
+          senderId: currentUserId,
+          text: messageText,
+          timestamp: serverTimestamp()
         };
-        document.addEventListener('click', function (e) {
-          if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-            userDropdown.classList.add('hidden');
-          }
-        });
-      }
 
-      // --- Search Functionality ---
+        // Atomically update the messages array
+        await updateDoc(chatRef, {
+          messages: [...(await getDoc(chatRef)).data()?.messages || [], newMessage]
+        }, { merge: true }); // Use merge: true to create if not exists
+
+        chatInput.value = ''; // Clear input
+        await loadChatMessages(currentChatOrderId, currentUserId, currentChatPartnerId); // Reload messages
+      } catch (error) {
+        console.error("Error sending message:", error);
+        showCustomAlert("Gagal mengirim pesan: " + error.message);
+      }
+    }
+
+
+    // --- Event Listeners ---
+
+    // Highlight active sidebar item
+    document.addEventListener('DOMContentLoaded', function () {
+      const currentPath = window.location.pathname.split("/").pop();
+      document.querySelectorAll('.akun-menu-item').forEach(function (item) {
+        const linkHref = item.getAttribute('href').split("/").pop();
+        if (linkHref === currentPath) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      // Tab Navigation
+      pesananTabs.forEach(tab => {
+        tab.addEventListener('click', function (e) {
+          e.preventDefault();
+          pesananTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentTab = this.dataset.status; // Get status from data-status attribute
+          fetchOrdersFromFirestore(currentTab);
+        });
+      });
+
+      // Search functionality
       const searchInput = document.querySelector('.header-search');
       if (searchInput) {
         searchInput.addEventListener('keypress', function (e) {
@@ -596,251 +1211,71 @@
         });
       }
 
-      // --- Modal Rating ---
-      function showRatingModal() {
-        document.getElementById('ratingModal').classList.remove('hidden');
-      }
-      function hideRatingModal() {
-        document.getElementById('ratingModal').classList.add('hidden');
-      }
-      function makeStarRating(containerId) {
-        const container = document.getElementById(containerId);
-        const stars = container.querySelectorAll('.star');
-        let rating = 0;
-        stars.forEach((star, idx) => {
-          star.addEventListener('mouseenter', () => {
-            stars.forEach((s, i) => s.textContent = i <= idx ? '★' : '☆');
-          });
-          star.addEventListener('mouseleave', () => {
-            stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
-          });
-          star.addEventListener('click', () => {
-            rating = idx + 1;
-            stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
-          });
-        });
-        container.dataset.rating = rating;
-      }
-      makeStarRating('stars-produk');
-      makeStarRating('stars-jastiper');
-      makeStarRating('stars-kirim');
-      document.getElementById('ratingForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        alert('Terima kasih atas rating Anda!');
-        hideRatingModal();
-      });
-
-      // --- Modal Chat ---
-      function showChatModal() {
-        document.getElementById('chatModal').classList.remove('hidden');
-      }
-      function hideChatModal() {
-        document.getElementById('chatModal').classList.add('hidden');
-      }
-
-      // --- Chat Send ---
-      const chatInput = document.querySelector('.chat-quick-input');
-      if (chatInput) {
-        chatInput.addEventListener('keypress', function (e) {
-          if (e.key === 'Enter') sendMessage();
-        });
-      }
-      function sendMessage() {
-        const input = document.querySelector('#chatModal input[type="text"]');
-        if (input && input.value.trim()) {
-          alert('Terima kasih, pesan Anda telah dikirim!');
-          input.value = '';
-        }
-      }
-
-      // --- Chat Contact Selection ---
-      document.querySelectorAll('.chat-contact').forEach(function (contact) {
-        contact.addEventListener('click', function () {
-          document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
-
-      // --- Notifikasi & Kunjungi Toko ---
-      function showNotifications() {
-        alert('Anda memiliki 3 notifikasi baru!');
-      }
-      function kunjungiToko() {
-        alert('Fitur kunjungi toko akan segera hadir!');
-      }
-
-      // --- Dropdown User Icon Akun ---
-      function logoutUser() {
-        alert('Berhasil logout!');
-        if (userDropdown) userDropdown.classList.add('hidden');
-      }
-      function openChatCS() {
-        alert('Fitur chat CS akan segera hadir!');
-        if (userDropdown) userDropdown.classList.add('hidden');
-      }
-
-      // --- Pesanan ---
-      let orders = [];
-      let currentTab = 'sedang-dikemas';
-      function loadOrders() {
-        orders = JSON.parse(localStorage.getItem('orders') || '[]');
-        if (orders.some(order => order.status === 'Sedang Dikemas')) {
-          currentTab = 'sedang-dikemas';
-        } else if (orders.length > 0) {
-          currentTab = 'semua';
-        }
-        displayOrders();
-      }
-      // --- Pesanan Selesai ---
-      function pesananSelesai(orderIndex) {
-        if (confirm('Apakah Anda yakin pesanan sudah selesai?')) {
-          orders[orderIndex].status = 'Selesai';
-          localStorage.setItem('orders', JSON.stringify(orders));
-          currentTab = 'selesai';
-          displayOrders();
-        }
-      }
-      // --- Display Orders Dinamis ---
-      function displayOrders() {
-        const content = document.querySelector('.pesanan-content');
-        let filteredOrders = [];
-        let sectionTitle = '';
-        switch (currentTab) {
-          case 'semua': filteredOrders = orders; sectionTitle = 'Semua Pesanan'; break;
-          case 'belum-dibayar': filteredOrders = orders.filter(order => order.status === 'Belum Dibayar'); sectionTitle = 'Pesanan Belum Dibayar'; break;
-          case 'sedang-dikemas': filteredOrders = orders.filter(order => order.status === 'Sedang Dikemas'); sectionTitle = 'Pesanan Sedang Dikemas'; break;
-          case 'dikirim': filteredOrders = orders.filter(order => order.status === 'Dikirim'); sectionTitle = 'Pesanan Dikirim'; break;
-          case 'selesai': filteredOrders = orders.filter(order => order.status === 'Selesai'); sectionTitle = 'Pesanan Selesai'; break;
-          case 'dibatalkan': filteredOrders = orders.filter(order => order.status === 'Dibatalkan'); sectionTitle = 'Pesanan Dibatalkan'; break;
-        }
-        document.querySelector('.pesanan-section-title').textContent = sectionTitle;
-        if (filteredOrders.length === 0) {
-          content.innerHTML = `<div class="pesanan-kosong"><img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="No Orders" class="no-orders-icon"><h3>Tidak ada pesanan</h3><p>Belum ada pesanan dengan status ini.</p><button class="btn-belanja" onclick="window.location.href='pembeli_produk_gucci.html'">Mulai Belanja</button></div>`;
-          return;
-        }
-        content.innerHTML = filteredOrders.map((order, index) => {
-          let actionButtons = '';
-          if (order.status === 'Sedang Dikemas') {
-            actionButtons = `
-        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="pesananSelesai(${index})">Pesanan Selesai</button>
-        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>
-      `;
-          } else if (order.status === 'Selesai') {
-            actionButtons = `
-        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="showRatingModal()">Nilai</button>
-        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>
-      `;
-          } else {
-            actionButtons = `<button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModal()">Hubungi Penjual</button>`;
+      const searchIconInHeader = document.querySelector('.relative.hidden.md\\:block svg');
+      if (searchIconInHeader) {
+        searchIconInHeader.addEventListener('click', function () {
+          const searchTerm = this.previousElementSibling.value;
+          if (searchTerm.trim()) {
+            alert('Mencari: ' + searchTerm);
           }
-          return `
-      <div class="border border-gray-300 rounded bg-white mt-2 mb-8">
-        <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-base">${order.products && order.products[0] && order.products[0].store ? order.products[0].store : (order.store || 'Rifal Store')}</span>
-            <button class="px-2 py-1 border border-pink-600 rounded bg-pink-600 text-white text-xs hover:bg-pink-700 hover:border-pink-700 ml-2" onclick="kunjungiToko()">Kunjungi Toko</button>
-          </div>
-          <span class="text-sm text-gray-700">Pesanan ${order.status}</span>
-        </div>
-        <div class="flex flex-row gap-4 px-4 py-4 items-center">
-          <img src="asset/images/ootd (1).jpg" alt="Baju Gucci" class="w-20 h-20 object-cover rounded border border-gray-200">
-          <div class="flex-1">
-            <div class="font-semibold text-base mb-1">${order.products && order.products[0] ? order.products[0].name : 'Baju Gucci G6000 Man Limited Edition'}</div>
-            <div class="text-gray-600 text-sm mb-1">${order.products && order.products[0] ? (order.products[0].variant || order.products[0].color + ', ' + order.products[0].size + ' (' + order.products[0].quantity + ')') : 'Hitam, M (2)'}</div>
-          </div>
-          <div class="text-right min-w-[120px]">
-            <div class="text-red-600 font-semibold text-base">Rp. ${order.products && order.products[0] ? order.products[0].price.toLocaleString('id-ID') : '3.000.000'}</div>
-          </div>
-        </div>
-        <div class="flex justify-end items-center px-4 pb-4">
-          <div class="mr-8 text-base">Total Pesanan: <span class="text-red-600 font-semibold">Rp. ${(order.total || (order.products && order.products[0] ? order.products[0].price * (order.products[0].quantity || 1) : 6300000)).toLocaleString('id-ID')}</span></div>
-          ${actionButtons}
-        </div>
-      </div>
-    `;
-        }).join('');
-      }
-
-      // Tab Navigation
-      const pesananTabs = document.querySelectorAll('.pesanan-tab');
-      pesananTabs.forEach(function (tab) {
-        tab.addEventListener('click', function (e) {
-          e.preventDefault();
-          pesananTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          const tabText = this.textContent.toLowerCase();
-          if (tabText.includes('semua')) currentTab = 'semua';
-          else if (tabText.includes('belum dibayar')) currentTab = 'belum-dibayar';
-          else if (tabText.includes('sedang dikemas')) currentTab = 'sedang-dikemas';
-          else if (tabText.includes('dikirim')) currentTab = 'dikirim';
-          else if (tabText.includes('selesai')) currentTab = 'selesai';
-          else if (tabText.includes('dibatalkan')) currentTab = 'dibatalkan';
-          displayOrders();
         });
-      });
+      }
+    });
 
-      // Load orders saat halaman dimuat
-      window.onload = function () {
-        loadOrders();
+
+    // Header User Dropdown functionality
+    if (userIcon && userDropdown) {
+      userIcon.onclick = function (e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('hidden');
       };
-    </script>
-
-    <!-- Integrasi Firebase Firestore -->
-    <script type="module">
-      import { db, auth } from './js/firebase-config.js';
-      import { collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-
-      async function loadOrdersFromFirestore() {
-        const userId = localStorage.getItem('userId');
-        const q = query(collection(db, "orders"), where("userId", "==", userId));
-        const querySnapshot = await getDocs(q);
-        const orders = [];
-        querySnapshot.forEach((doc) => {
-          orders.push({ id: doc.id, ...doc.data() });
-        });
-        // Render ke HTML
-        const container = document.getElementById('orders-list');
-        if (!orders.length) {
-          container.innerHTML = '<div class="text-gray-500 text-center py-8">Belum ada pesanan.</div>';
-          return;
+      document.addEventListener('click', function (e) {
+        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+          userDropdown.classList.add('hidden');
         }
-        container.innerHTML = orders.map(order => `
-          <div class="border p-4 rounded mb-4 bg-white shadow">
-            <div class="mb-2 flex flex-wrap justify-between items-center">
-              <div><b>ID:</b> ${order.id}</div>
-              <div class="text-pink-600 font-semibold">${order.status}</div>
-            </div>
-            <div class="mb-1"><b>Total:</b> Rp. ${order.total.toLocaleString('id-ID')}</div>
-            <div class="mb-1"><b>Alamat:</b> ${order.alamat}</div>
-            <div class="mb-1"><b>Metode Bayar:</b> ${order.metodeBayar || '-'}</div>
-            <div><b>Produk:</b> ${order.products.map(p => `${p.varian || ''} x${p.qty || 1}`).join(', ')}</div>
-          </div>
-        `).join('');
-      }
-      window.addEventListener('DOMContentLoaded', loadOrdersFromFirestore);
-    </script>
+      });
+    }
 
-     <footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
-                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-            </ul>
-        </div>
-        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
-        </div>
-        <div class="w-full sm:w-1/3 text-right">
-            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
-    </div>
-</footer>
+    // Global functions for logout and chat CS (accessed from header dropdown)
+    window.logoutUser = async function () {
+      try {
+        await signOut(auth);
+        alert("Anda telah logout!");
+        window.location.href = "login.html"; // Redirect to login page after logout
+      } catch (error) {
+        console.error("Error logging out: ", error);
+        alert("Gagal logout. Silakan coba lagi.");
+      }
+      if (userDropdown) userDropdown.classList.add('hidden');
+    }
+
+    window.openChatCS = function () {
+      // This function is for the general "Chat with CS" from the header dropdown
+      // It will open the chat modal and load contacts.
+      // You might want to pre-select a 'CS' contact if one exists.
+      showChatModalWithOrder(null, null, 'Dukungan Pelanggan', null, 'CS'); // Example: no specific order, just CS chat
+    }
+
+    window.kunjungiToko = function (tokoId) {
+      // Implement redirect to store page
+      alert(`Mengarahkan ke halaman toko dengan ID: ${tokoId}`);
+      // window.location.href = `pembeli_toko_detail.html?id=${tokoId}`; // Example redirect
+    }
+
+    // Firebase Auth State Listener - Main entry point for data loading
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUserId = user.uid;
+        console.log("User logged in:", currentUserId);
+        fetchUserData(currentUserId); // Fetch user data for sidebar
+        fetchOrdersFromFirestore(currentTab); // Load initial orders based on default tab
+      } else {
+        console.warn("User not authenticated. Redirecting to login page.");
+        alert("Anda belum login. Silakan login terlebih dahulu.");
+        window.location.href = "login.html"; // Redirect to your login page
+      }
+    });
+  </script>
 </body>
 
 </html>

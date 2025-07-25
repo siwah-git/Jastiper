@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akun Saya</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         /* Gaya kustom yang sudah ada */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            /* Warna background utama */
+        }
+
         .header-akun {
             background: #fff;
             padding: 16px 24px;
@@ -300,78 +304,81 @@
 
 <body>
     <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-    <div class="flex items-center space-x-3">
-        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Cari Barang..."
-                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-            </svg>
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
         </div>
-    </div>
-    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-    </nav>
-    <nav class="flex items-center space-x-4 sm:space-x-6">
-        <a href="pembeli_dashboard.html"
-            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-        <div class="dropdown-kategori relative inline-block hidden md:block">
-            <a href="pembeli_kategori.html" 
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
-        </div>
+        <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
+        </nav>
+        <nav class="flex items-center space-x-4 sm:space-x-6">
+            <a href="pembeli_dashboard.html"
+                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
+            <div class="dropdown-kategori relative inline-block hidden md:block">
+                <a href="pembeli_kategori.html"
+                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
+                <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+            </div>
 
-        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-            </svg>
-        </a>
-        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-        </a>
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-            id="userIcon" style="cursor:pointer;">
-        <div id="userDropdown"
-            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-            <a href="pembeli_akun.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-            <a href="pembeli_pesanan_saya.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                CS</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-            <a href="#" onclick="logoutUser();return false;"
-                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-        </div>
-    </nav>
-</header>
+            <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
+                <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+            </a>
+            <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg
+                    class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
+                id="userIcon" style="cursor:pointer;">
+            <div id="userDropdown"
+                class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
+                <a href="pembeli_akun.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
+                    CS</a>
+                <a href="#" onclick="openChatCS();return false;"
+                    class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
+                <a href="#" onclick="logoutUser();return false;"
+                    class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+            </div>
+        </nav>
+    </header>
 
     <div class="akun-main">
         <div class="akun-sidebar bg-white rounded-xl shadow-md p-6 flex flex-col gap-6 min-h-[400px]">
             <div class="akun-user-info flex flex-col items-center gap-2 border-b pb-4">
                 <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User"
                     class="akun-user-icon w-16 h-16 rounded-full object-cover mb-2">
-                <div class="akun-username font-bold text-lg text-gray-800">dwirestykartika</div>
+                <div class="akun-username font-bold text-lg text-gray-800" id="sidebar-username">Memuat...</div>
                 <a href="#" class="akun-edit-link text-blue-600 text-sm hover:underline">Ubah Profil</a>
             </div>
             <nav class="akun-menu flex flex-col gap-2 mt-2">
                 <a href="pembeli_akun.html"
-                    class="akun-menu-item active bg-pink-600 text-white font-semibold rounded-lg px-4 py-2">Akun Saya</a>
-                <a href="pembeli_pesanan_saya.html" class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Pesanan
+                    class="akun-menu-item active bg-pink-600 text-white font-semibold rounded-lg px-4 py-2">Akun
+                    Saya</a>
+                <a href="pembeli_pesanan_saya.html"
+                    class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Pesanan
                     Saya</a>
                 <a href="#" class="akun-menu-item hover:bg-gray-100 rounded-lg px-4 py-2">Notifikasi</a>
-              
+
             </nav>
         </div>
 
@@ -382,32 +389,32 @@
                 <div class="akun-form-section">
                     <div class="akun-form-row">
                         <label class="akun-label">Username</label>
-                        <input type="text" value="dwirestykartika" class="akun-input">
+                        <input type="text" id="profile-username" class="akun-input" readonly>
                     </div>
 
                     <div class="akun-form-row">
                         <label class="akun-label">Nama</label>
-                        <input type="text" value="Dwi Resty kartika" class="akun-input">
+                        <input type="text" id="profile-nama" class="akun-input" readonly>
                     </div>
 
                     <div class="akun-form-row">
                         <label class="akun-label">Email</label>
-                        <input type="email" value="dwirestykartika@gmail.com" class="akun-input">
+                        <input type="email" id="profile-email" class="akun-input" readonly>
                     </div>
 
                     <div class="akun-form-row">
                         <label class="akun-label">Nomor Telepon</label>
-                        <input type="tel" value="0876736363636" class="akun-input">
+                        <input type="tel" id="profile-telepon" class="akun-input" readonly>
                     </div>
 
                     <div class="akun-form-row">
                         <label class="akun-label">Jenis Kelamin</label>
-                        <input type="text" value="Perempuan" class="akun-input">
+                        <input type="text" id="profile-jenis-kelamin" class="akun-input" readonly>
                     </div>
 
                     <div class="akun-form-row">
                         <label class="akun-label">Tanggal Lahir</label>
-                        <input type="text" value="11 Januari 2003" class="akun-input">
+                        <input type="text" id="profile-tanggal-lahir" class="akun-input" readonly>
                     </div>
                 </div>
 
@@ -415,130 +422,180 @@
         </div>
     </div>
 
-    <script>
-        // Edit Profile Button (fungsi ini mungkin tidak lagi relevan jika tombolnya dihapus, tapi saya biarkan di sini jika ada kebutuhan lain)
-        function editProfil() {
+    <footer class="bg-blue-900 py-8 px-6 mt-8">
+        <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
+            <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+                <h3 class="font-bold text-white mb-3">INFORMASI</h3>
+                <ul>
+                    <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a>
+                    </li>
+                    <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan
+                            Umum</a></li>
+                    <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+            </div>
+            <div class="w-full sm:w-1/3 text-right">
+                <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
+                <ul>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
+                            href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr"
+                            target="_blank" class="hover:text-pink-600">Instagram</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
+                            href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
+                            class="hover:text-pink-600">Facebook</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
+                            href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
+                            class="hover:text-pink-600">Youtube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
+        </div>
+    </footer>
+
+    <script type="module">
+        // Import Firebase functions from firebase-config.js
+        import {
+            auth,
+            db,
+            onAuthStateChanged,
+            doc,
+            getDoc,
+            signOut // Import signOut for logout functionality
+        } from './firebase-config.js'; // Ensure this path is correct
+
+        // DOM Elements for profile data
+        const sidebarUsername = document.getElementById('sidebar-username');
+        const profileUsernameInput = document.getElementById('profile-username');
+        const profileNamaInput = document.getElementById('profile-nama');
+        const profileEmailInput = document.getElementById('profile-email');
+        const profileTeleponInput = document.getElementById('profile-telepon');
+        const profileJenisKelaminInput = document.getElementById('profile-jenis-kelamin');
+        const profileTanggalLahirInput = document.getElementById('profile-tanggal-lahir');
+
+        // Header dropdown elements
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        // Fungsi untuk mengambil dan menampilkan data pengguna
+        async function fetchUserData(uid) {
+            try {
+                const userDocRef = doc(db, "users", uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    console.log("User Data:", userData);
+
+                    // Populate sidebar username
+                    sidebarUsername.textContent = userData.username || userData.namaLengkap || 'Pengguna';
+
+                    // Populate profile form fields
+                    profileUsernameInput.value = userData.username || '';
+                    profileNamaInput.value = userData.namaLengkap || '';
+                    profileEmailInput.value = userData.email || '';
+                    profileTeleponInput.value = userData.noTelepon || '';
+                    profileJenisKelaminInput.value = userData.jenisKelamin || '';
+                    profileTanggalLahirInput.value = userData.tanggalLahir || ''; // Assuming tanggalLahir is stored as a string
+
+                } else {
+                    console.warn("Dokumen pengguna tidak ditemukan di Firestore.");
+                    // Optionally, redirect to a profile creation page or show a message
+                    alert("Data profil Anda tidak ditemukan. Silakan lengkapi profil Anda.");
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                alert("Gagal memuat data profil: " + error.message);
+            }
+        }
+
+        // Event listener untuk tombol "Ubah Profil" (saat ini hanya alert)
+        // Fungsi ini mungkin tidak lagi relevan jika tombolnya dihapus atau diarahkan ke halaman lain
+        document.querySelector('.akun-edit-link').addEventListener('click', function (e) {
+            e.preventDefault();
             alert('Fitur Edit Profil akan segera hadir!');
-        }
-
-        // Menu Navigation
-        document.querySelectorAll('.akun-menu-item').forEach(function (item) {
-            item.addEventListener('click', function (e) {
-                // e.preventDefault(); // Tidak perlu preventDefault jika Anda ingin link berfungsi
-                // Hapus kelas 'active' dari semua item
-                document.querySelectorAll('.akun-menu-item').forEach(i => i.classList.remove('active'));
-                // Tambahkan kelas 'active' ke item yang diklik
-                this.classList.add('active');
-            });
         });
 
-        // Search functionality
-        document.querySelector('.header-search').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                if (searchTerm.trim()) {
-                    alert('Mencari: ' + searchTerm);
-                }
-            }
-        });
-
-        // Search button click (jika ada search icon yang terpisah dari input)
-        // Jika hanya input dengan enter, bagian ini mungkin tidak perlu.
-        // Asumsi SVG di dalam div .relative.hidden.md\:block adalah search icon.
-        const searchIconInHeader = document.querySelector('.relative.hidden.md\\:block svg');
-        if (searchIconInHeader) {
-            searchIconInHeader.addEventListener('click', function () {
-                const searchTerm = this.previousElementSibling.value;
-                if (searchTerm.trim()) {
-                    alert('Mencari: ' + searchTerm);
+        // Menu Navigation (highlight active item)
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname.split("/").pop();
+            document.querySelectorAll('.akun-menu-item').forEach(function (item) {
+                const linkHref = item.getAttribute('href').split("/").pop();
+                if (linkHref === currentPath) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
                 }
             });
-        }
 
-        function showNotifications() {
-            alert('Anda memiliki 3 notifikasi baru!');
-        }
-    </script>
+            // Search functionality
+            document.querySelector('.header-search').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value;
+                    if (searchTerm.trim()) {
+                        alert('Mencari: ' + searchTerm);
+                    }
+                }
+            });
 
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            // Dropdown Kategori
-            const kategoriMenu = document.getElementById('kategoriMenu');
-            const dropdownKategori = document.getElementById('dropdownKategori');
-
-            if (kategoriMenu && dropdownKategori) {
-                kategoriMenu.onclick = function (e) {
-                    e.preventDefault(); // Mencegah navigasi default jika hanya untuk dropdown
-                    e.stopPropagation(); // Mencegah event mencapai document click
-                    dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-                };
-
-                document.addEventListener('click', function (e) {
-                    if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-                        dropdownKategori.style.display = 'none';
+            const searchIconInHeader = document.querySelector('.relative.hidden.md\\:block svg');
+            if (searchIconInHeader) {
+                searchIconInHeader.addEventListener('click', function () {
+                    const searchTerm = this.previousElementSibling.value;
+                    if (searchTerm.trim()) {
+                        alert('Mencari: ' + searchTerm);
                     }
                 });
             }
+        });
 
-            // Dropdown User
-            const userIcon = document.getElementById('userIcon');
-            const userDropdown = document.getElementById('userDropdown');
+        // Header User Dropdown functionality
+        if (userIcon && userDropdown) {
+            userIcon.onclick = function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            };
+            document.addEventListener('click', function (e) {
+                if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
 
-            if (userIcon && userDropdown) {
-                userIcon.onclick = function (e) {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('hidden');
-                };
-                document.addEventListener('click', function (e) {
-                    if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-                        userDropdown.classList.add('hidden');
-                    }
-                });
+        // Global functions for logout and chat CS (accessed from header dropdown)
+        window.logoutUser = async function () {
+            try {
+                await signOut(auth);
+                alert("Anda telah logout!");
+                window.location.href = "login.html"; // Redirect to login page after logout
+            } catch (error) {
+                console.error("Error logging out: ", error);
+                alert("Gagal logout. Silakan coba lagi.");
             }
+            if (userDropdown) userDropdown.classList.add('hidden');
+        }
 
-            // These functions now rely on auth which is defined in firebase-config.js
-            window.logoutUser = function () {
-                auth.signOut().then(() => {
-                    alert("Anda telah logout!");
-                    window.location.href = "login.html"; // Redirect ke halaman login setelah logout
-                }).catch((error) => {
-                    console.error("Error logging out: ", error);
-                    alert("Gagal logout. Silakan coba lagi.");
-                });
-                if (userDropdown) userDropdown.classList.add('hidden');
-            }
+        window.openChatCS = function () {
+            alert('Fitur chat CS akan segera hadir!');
+            if (userDropdown) userDropdown.classList.add('hidden');
+        }
 
-            window.openChatCS = function () {
-                // Implementasi modal chat CS yang lebih baik, mirip dengan di pembeli_dashboard.html
-                // Untuk demo, kita pakai alert dulu.
-                alert('Fitur chat CS akan segera hadir!');
-                if (userDropdown) userDropdown.classList.add('hidden');
+        // Firebase Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User logged in:", user.uid);
+                fetchUserData(user.uid); // Fetch user data from Firestore
+            } else {
+                console.warn("User not authenticated. Redirecting to login page.");
+                alert("Anda belum login. Silakan login terlebih dahulu.");
+                window.location.href = "login.html"; // Redirect to your login page
             }
         });
     </script>
-
-
-     <footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
-                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-            </ul>
-        </div>
-        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
-        </div>
-        <div class="w-full sm:w-1/3 text-right">
-            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
-    </div>
-</footer>
 </body>
 
 </html>
