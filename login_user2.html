@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TitipGo</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('asset/images/Bg_login.jpeg');
+            /* Pastikan path ini benar */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 320px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .login-header {
+            text-align: center;
+            padding-top: 1.5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            z-index: 2;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            width: calc(100% + 3rem);
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .login-header img {
+            max-width: 120px;
+            height: auto;
+            margin: 0 auto 0.4rem auto;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .login-header h2 {
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1.75rem;
+            margin-bottom: 0;
+        }
+
+        .form-scroll-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-bottom: 1rem;
+        }
+
+        .form-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Styling untuk input fields */
+        .form-input-custom {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            padding-top: 0.6rem;
+            padding-bottom: 0.6rem;
+            color: #cccccc;
+        }
+
+        .form-input-custom:focus {
+            outline: none;
+            border-color: #9333ea;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.5);
+        }
+
+        .form-input-custom::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Styling untuk ikon di dalam input */
+        .input-icon {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Untuk ikon mata (password), pastikan area kliknya responsif */
+        .relative>div.absolute.right-0 {
+            cursor: pointer;
+            z-index: 10;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        #loading-overlay {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #loading-overlay>div {
+            border-top-color: #9333ea;
+            border-bottom-color: #9333ea;
+        }
+
+        .login-footer {
+            padding-top: 1rem;
+            padding-bottom: 1.5rem;
+            text-align: center;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border-bottom-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+            width: calc(100% + 3rem);
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-footer p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .login-footer .login-button {
+            background-color: #9333ea;
+            border: none;
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            width: calc(100% - 3rem);
+            margin-bottom: 1rem;
+        }
+
+        .login-footer .login-button:hover {
+            background-color: #7e22ce;
+        }
+
+        .text-link-custom {
+            color: #9333ea;
+            font-weight: 600;
+        }
+
+        .text-link-custom:hover {
+            text-decoration: underline;
+            color: #7e22ce;
+        }
+
+        /* Modal (Popup) Styling for Auth Errors and Success */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            /* Center buttons */
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-ok {
+            background-color: #9333ea;
+            /* Purple color for OK */
+            color: white;
+            border: 1px solid #9333ea;
+        }
+
+        .modal-buttons .btn-ok:hover {
+            background-color: #7e22ce;
+            border-color: #7e22ce;
+        }
+
+        .modal-buttons .btn-success {
+            background-color: #22c55e;
+            /* Green for success */
+            color: white;
+            border: 1px solid #22c55e;
+        }
+
+        .modal-buttons .btn-success:hover {
+            background-color: #16a34a;
+            border-color: #16a34a;
+        }
+
+        /* Specific styling for the Forgot Password modal */
+        #forgotPasswordModal .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        #forgotPasswordModal input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+        }
+
+        #forgotPasswordModal .modal-buttons button {
+            width: auto;
+            /* Override general modal button width */
+            margin: 0 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay"
+        class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-header">
+            <img src="asset/images/logosiwah.png" alt="TitipGo Logo" class="login-logo" />
+            <h2 class="text-3xl font-extrabold text-white">Log in</h2>
+        </div>
+
+        <div class="form-scroll-container">
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="email" class="sr-only">E-mail</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                        <input id="email" name="email" type="email" autocomplete="email" required
+                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="E-mail" />
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                            class="appearance-none block w-full pl-10 pr-3 form-input-custom shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            placeholder="Password" />
+                        <div id="togglePasswordVisibilityButton"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                            <i id="togglePasswordIcon" class="fas fa-eye input-icon hover:text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="rememberMe" name="rememberMe" type="checkbox"
+                            class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                        <label for="rememberMe" class="ml-2 block text-sm text-gray-300">
+                            Ingat Saya
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" id="forgotPasswordLink" class="font-medium text-purple-400 hover:text-purple-500">
+                            Lupa Password?
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <button type="submit" form="loginForm" class="login-button">
+                <i class="fas fa-sign-in-alt mr-2"></i> Log In
+            </button>
+            <p class="text-white text-opacity-80">
+                Belum punya akun? <a href="register_user.html" class="font-medium text-link-custom">Daftar</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="authResponseModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4" id="authResponseTitle"></h3>
+            <p class="text-gray-700 mb-4" id="authResponseMessage"></p>
+            <div class="modal-buttons">
+                <button id="authResponseOkButton" class="btn-ok">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgotPasswordModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-xl font-semibold mb-4">Lupa Password</h3>
+            <p class="text-gray-700 mb-4">Masukkan email Anda untuk menerima link reset password.</p>
+            <input type="email" id="forgotPasswordEmail" placeholder="Email Anda" class="mb-4" required />
+            <div class="modal-buttons">
+                <button id="sendResetLinkButton" class="btn-ok">Kirim Link Reset</button>
+                <button id="cancelResetButton"
+                    class="btn-cancel bg-gray-300 text-gray-800 hover:bg-gray-400">Batal</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        console.log("Memulai loading skrip modul utama...");
+
+        // Import modul Firebase Auth dan Firestore dari firebase-config.js
+        import { auth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, browserLocalPersistence, sendPasswordResetEmail, db, doc, getDoc } from "./js/firebase-config.js";
+
+        console.log("Import Firebase Auth berhasil.");
+        console.log("Objek 'auth' setelah import:", auth);
+
+        // Fungsi untuk mengaktifkan/menonaktifkan tampilan password
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePasswordIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
+        // Dapatkan elemen tombol toggle password
+        const togglePasswordVisibilityButton = document.getElementById("togglePasswordVisibilityButton");
+        if (togglePasswordVisibilityButton) {
+            togglePasswordVisibilityButton.addEventListener('click', togglePasswordVisibility);
+            console.log("Event listener untuk toggle password visibility ditambahkan.");
+        } else {
+            console.error("Error: Tombol toggle password visibility tidak ditemukan!");
+        }
+
+        // Dapatkan elemen-elemen form dan modal
+        const loginForm = document.getElementById("loginForm");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const rememberMeInput = document.getElementById("rememberMe");
+        const loadingOverlay = document.getElementById("loading-overlay");
+
+        // Auth Response Modal elements
+        const authResponseModal = document.getElementById('authResponseModal');
+        const authResponseTitle = document.getElementById('authResponseTitle');
+        const authResponseMessage = document.getElementById('authResponseMessage');
+        const authResponseOkButton = document.getElementById('authResponseOkButton');
+
+        // Forgot Password Modal elements
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const forgotPasswordEmailInput = document.getElementById('forgotPasswordEmail');
+        const sendResetLinkButton = document.getElementById('sendResetLinkButton');
+        const cancelResetButton = document.getElementById('cancelResetButton');
+
+
+        // Function to show auth response modal (for both success and error)
+        function showAuthResponseModal(message, title, isSuccess = false, redirectUrl = null) {
+            authResponseTitle.textContent = title;
+            authResponseMessage.textContent = message;
+
+            // Set title color and button style
+            if (isSuccess) {
+                authResponseTitle.classList.remove('text-red-600');
+                authResponseTitle.classList.add('text-green-600');
+                authResponseOkButton.classList.remove('btn-ok');
+                authResponseOkButton.classList.add('btn-success');
+            } else {
+                authResponseTitle.classList.remove('text-green-600');
+                authResponseTitle.classList.add('text-red-600');
+                authResponseOkButton.classList.remove('btn-success');
+                authResponseOkButton.classList.add('btn-ok');
+            }
+
+            authResponseModal.classList.add('show');
+
+            // Set up redirection if success
+            if (redirectUrl) {
+                authResponseOkButton.onclick = () => {
+                    authResponseModal.classList.remove('show');
+                    window.location.href = redirectUrl;
+                };
+            } else {
+                // For error messages, just close the modal
+                authResponseOkButton.onclick = () => {
+                    authResponseModal.classList.remove('show');
+                };
+            }
+        }
+
+
+        // Log untuk debugging, memastikan elemen ditemukan
+        if (loginForm) console.log("loginForm ditemukan."); else console.error("Error FATAL: loginForm tidak ditemukan!");
+        if (emailInput) console.log("emailInput ditemukan.");
+        if (passwordInput) console.log("passwordInput ditemukan.");
+        if (rememberMeInput) console.log("rememberMeInput ditemukan.");
+        if (loadingOverlay) console.log("loadingOverlay ditemukan.");
+        if (forgotPasswordLink) console.log("forgotPasswordLink ditemukan.");
+        if (forgotPasswordModal) console.log("forgotPasswordModal ditemukan.");
+        if (forgotPasswordEmailInput) console.log("forgotPasswordEmailInput ditemukan.");
+        if (sendResetLinkButton) console.log("sendResetLinkButton ditemukan.");
+        if (cancelResetButton) console.log("cancelResetButton ditemukan.");
+
+
+        // Event listener untuk submit formulir login
+        loginForm.addEventListener("submit", async (e) => {
+            console.log("Event 'submit' pada form terdeteksi!");
+            e.preventDefault(); // Mencegah refresh halaman
+            console.log("Default form submit telah dicegah.");
+
+            // Ambil nilai dari setiap input
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const rememberMe = rememberMeInput.checked;
+
+            // Validasi sederhana
+            if (!email || !password) {
+                showAuthResponseModal("Email dan password harus diisi.", "Login Gagal", false);
+                return;
+            }
+
+            // Tampilkan loading overlay
+            loadingOverlay.classList.remove("hidden");
+
+            try {
+                console.log("Mencoba mengatur persistensi sesi...");
+                // Atur persistensi sesi berdasarkan checkbox "Ingat Saya"
+                await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+                console.log("Persistensi sesi diatur ke:", rememberMe ? "lokal" : "sesi");
+
+                console.log("Mencoba login user dengan Firebase Authentication...");
+                // Login user dengan Firebase Authentication
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log("User berhasil login:", user);
+
+                // --- BAGIAN PENTING: Mengakses data pengguna dari Firestore setelah login berhasil ---
+                // Di sini, Anda memiliki 'user.uid' yang dapat digunakan untuk mengambil data dari koleksi 'users'
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    console.log("Data pengguna dari Firestore:", userData);
+                    // Anda bisa menyimpan userData ini di session/local storage atau menggunakannya
+                    // untuk personalisasi dashboard_user.html
+                    localStorage.setItem('currentUserData', JSON.stringify(userData)); // Contoh menyimpan data
+
+                    // Beri notifikasi sukses menggunakan modal dan redirect
+                    showAuthResponseModal("Login berhasil!", "Login Berhasil", true, "dashboard_user.html"); // Redirect to dashboard_user.html on success
+                } else {
+                    console.warn("Dokumen pengguna tidak ditemukan di Firestore untuk UID:", user.uid);
+                    // Ini bisa terjadi jika pendaftaran tidak menyimpan data ke Firestore
+                    // atau jika ada masalah sinkronisasi. Anda bisa memutuskan apakah ini error fatal
+                    // atau tetap melanjutkan ke dashboard dengan data minimal.
+                    showAuthResponseModal("Login berhasil, tetapi data profil tidak ditemukan.", "Login Berhasil", true, "dashboard_user.html");
+                }
+
+
+            } catch (error) {
+                // Sembunyikan loading overlay jika ada error
+                loadingOverlay.classList.add("hidden");
+                console.error("Firebase Auth Error:", error);
+
+                // Tangani berbagai jenis error Firebase
+                let message = "Terjadi kesalahan saat login. Silakan coba lagi.";
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        message = "Format email tidak valid.";
+                        break;
+                    case "auth/user-disabled":
+                        message = "Akun ini telah dinonaktifkan.";
+                        break;
+                    case "auth/user-not-found":
+                        message = "Email tidak terdaftar. Silakan daftar terlebih dahulu.";
+                        break;
+                    case "auth/wrong-password":
+                        message = "Password salah. Silakan coba lagi.";
+                        break;
+                    case "auth/invalid-credential": // More general error for wrong email/password
+                        message = "Email atau password salah.";
+                        break;
+                    case "auth/network-request-failed":
+                        message = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+                        break;
+                    default:
+                        message = "Login gagal: " + error.message;
+                        break;
+                }
+                showAuthResponseModal(message, "Login Gagal", false);
+            }
+        });
+
+        // Event listener untuk link "Lupa Password?"
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotPasswordEmailInput.value = ''; // Bersihkan input email
+            forgotPasswordModal.classList.add('show');
+        });
+
+        // Event listener untuk tombol "Batal" di modal Lupa Password
+        cancelResetButton.addEventListener('click', () => {
+            forgotPasswordModal.classList.remove('show');
+        });
+
+        // Event listener untuk tombol "Kirim Link Reset" di modal Lupa Password
+        sendResetLinkButton.addEventListener('click', async () => {
+            const email = forgotPasswordEmailInput.value.trim();
+            if (!email) {
+                alert("Masukkan alamat email Anda."); // Menggunakan alert sederhana untuk validasi di modal ini
+                return;
+            }
+
+            loadingOverlay.classList.remove("hidden");
+            forgotPasswordModal.classList.remove('show'); // Tutup modal forgot password
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                loadingOverlay.classList.add("hidden");
+                showAuthResponseModal("Link reset password telah dikirim ke " + email + ". Silakan periksa kotak masuk Anda.", "Reset Password Berhasil", true);
+            } catch (error) {
+                loadingOverlay.classList.add("hidden");
+                console.error("Error sending password reset email:", error);
+                let message = "Gagal mengirim link reset password. Silakan coba lagi.";
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        message = "Format email tidak valid.";
+                        break;
+                    case "auth/user-not-found":
+                        message = "Tidak ada akun yang terdaftar dengan email ini.";
+                        break;
+                    case "auth/network-request-failed":
+                        message = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+                        break;
+                    default:
+                        message = "Reset password gagal: " + error.message;
+                        break;
+                }
+                showAuthResponseModal(message, "Reset Password Gagal", false);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
