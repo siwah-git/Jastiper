@@ -1,622 +1,767 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Manajemen  Katalog - TitipGo Admin</title> </head>
-   
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manajemen Katalog - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-      /* Optional: Overlay tambahan jika diperlukan */
-      /* #mainContent::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.1); 
-        z-index: 0;
-        border-radius: inherit;
-      } */
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      overflow: hidden;
+      /* Prevent body scroll */
+    }
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("https://i.ibb.co/G0sTW8C/bg-titipgo.png");
+      /* Updated to a reliable CDN URL */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow-y: auto;
+      /* Allow main content to scroll */
+      min-height: 100vh;
+    }
 
-      /* Style untuk membuat background kartu statistik sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Style untuk membuat background kartu statistik sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      /* Added for header transparency */
-      .header-bg-transparent {
-        background-color: rgba(255, 255, 255, 0.8);
-      }
-    </style>
-  </head>
-  <body class="flex">
-    <aside
-      class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-    >
-      <div>
-        <nav class="space-y-2 p-4">
-          <img
-            src="asset/images/logosiwah.png"
-            alt="Logo"
-            class="w-48 h-20 object-contain mb-4"
-          />
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
 
-          <a
-            href="admin-dashboard.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-home mr-3"></i> Dashboard
-          </a>
-          <a
-            href="admin-katalog.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-box mr-3"></i> Manajemen Katalog
-          </a>
-          <a
-            href="admin-pengguna.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-          </a>
-          <a
-            href="admin-toko.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-store mr-3"></i> Manajemen Toko
-          </a>
-          <a
-            href="admin-pesanan.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-          </a>
-          <a
-            href="admin-aduan.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-envelope mr-3"></i> Aduan
-          </a>
-          <a
-            href="admin-laporan.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-chart-line mr-3"></i> Laporan
-          </a>
-          <a
-            href="admin-pendapatan.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-          </a>
-          <a
-            href="admin-profil.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-user-circle mr-3"></i> Profil
-          </a>
-          <a
-            href="admin-tentang.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-user-circle mr-3"></i> Tentang Kami
-          </a>
-        </nav>
-      </div>
-      <footer class="text-sm text-gray-500 text-center p-4 border-t">
-        &copy; 2025 TitipGo. All rights reserved.
-      </footer>
-    </aside>
-    <main
-      id="mainContent"
-      class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-      style="
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url('asset/images/background.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      "
-    >
-      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
-        <p class="text-lg font-semibold" id="productDetailTitle" >Detail Produk: Memuat....</p>
-        <div class="flex gap-3 text-right ml-auto">
-          </div>
-          <div class="text-right flex gap-3">
-            <!-- Tombol aksi produk, misalnya Edit/Hapus -->
-            <button
-              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-trash-alt mr-2"></i> Hapus Produk
-            </button>
-            <a
-              href="#"
-              id="logoutButton"
-              class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
-        </div>
+    /* Added for header transparency */
+    .header-bg-transparent {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
 
-        <!-- Breadcrumb Dinamis -->
-       <nav class="text-sm font-medium text-gray-500 mb-6">
-    <ol class="list-none p-0 inline-flex">
-        <li class="flex items-center">
-            <a href="dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
-            <i class="fas fa-chevron-right mx-2 text-gray-400"></i>
-        </li>
-        <li class="flex items-center">
-            <a href="admin-katalog.html" class="text-blue-600 hover:text-blue-800">Manajemen Katalog</a>
-            <i class="fas fa-chevron-right mx-2 text-gray-400"></i>
-        </li>
-        <li class="flex items-center text-gray-700">
-            <span id="breadcrumbProductName">Memuat...</span> </li>
-    </ol>
-</nav>
+    /* Custom Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-        <!-- Konten Detail Produk (akan diisi oleh JavaScript) -->
-        <div id="productDetailContent" class="flex flex-col space-y-6">
-          <!-- Initial loading state -->
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <p class="text-gray-600 text-lg">Memuat data produk...</p>
-          </div>
-        </div>
-      </div>
-    </main>
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
 
-    <!-- Firebase SDKs (Modular SDK v9.6.0) -->
-<script type="module">
-  // Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.0)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-} from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
 
-// KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-const firebaseConfig = {
-  apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-  authDomain: "titipgo-28f84.firebaseapp.com",
-  projectId: "titipgo-28f84",
-  storageBucket: "titipgo-28f84.firebasestorage.app",
-  messagingSenderId: "816687535591",
-  appId: "1:816687535591:web:eaecf2fcc994636a319942",
-  // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
-};
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-// Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
 
-// --- Fungsi untuk Mendapatkan Parameter URL (product ID) ---
-function getUrlParameter(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-  var results = regex.exec(location.search);
-  return results === null
-    ? ""
-    : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+    .modal-buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
 
-// Fungsi untuk memformat harga ke IDR
-function formatRupiah(amount) {
-  if (typeof amount !== 'number') return 'N/A';
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(amount);
-}
+    .modal-buttons .btn-cancel {
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+    }
 
-// --- Fungsi Utama untuk Memuat Detail Produk dan Toko ---
-async function loadProductAndTokoDetail() {
-  const productIdFromUrl = getUrlParameter("id");
+    .modal-buttons .btn-cancel:hover {
+      background-color: #e0e0e0;
+    }
 
-  // Menggunakan productDetailContent sebagai elemen target utama untuk semua konten dinamis
-  const productDetailContent = document.getElementById("productDetailContent");
-  // Elemen untuk update di header/breadcrumb (asumsi ini sudah ada di HTML Anda)
-  const productDetailTitle = document.getElementById("productDetailTitle");
-  const breadcrumbProductName = document.getElementById("breadcrumbProductName");
-  const pageTitleEl = document.getElementById("page-title"); // Tag <title> di <head>
+    .modal-buttons .btn-confirm {
+      background-color: #ef4444;
+      /* Red color for confirm */
+      color: white;
+      border: 1px solid #ef4444;
+    }
 
-  // Inisialisasi UI loading state
-  if (pageTitleEl) pageTitleEl.textContent = `Memuat Detail - TitipGo Admin`;
-  if (productDetailTitle) productDetailTitle.textContent = `Memuat Detail Produk...`;
-  if (breadcrumbProductName) breadcrumbProductName.textContent = `Memuat...`;
+    .modal-buttons .btn-confirm:hover {
+      background-color: #dc2626;
+    }
 
-  if (!productDetailContent) {
-    console.error("Critical HTML element 'productDetailContent' not found! Please ensure this ID exists in your main content area.");
-    // Tampilkan pesan error jika elemen utama tidak ditemukan
-    document.body.innerHTML = `
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" style="margin: 20px;">
-          <strong class="font-bold">Error Fatal!</strong>
-          <span class="block sm:inline">Elemen utama konten 'productDetailContent' tidak ditemukan. Mohon periksa ID di HTML Anda.</span>
-        </div>
-    `;
-    return;
-  }
+    .modal-buttons .btn-confirm.success {
+      background-color: #22c55e;
+      /* Green for success */
+      border-color: #22c55e;
+    }
 
-  // Set initial loading state inside the productDetailContent
-  productDetailContent.innerHTML = `
-    <div class="bg-white p-6 rounded-lg shadow-md text-center">
-      <p class="text-gray-600 text-lg">Memuat detail produk dan toko...</p>
+    .modal-buttons .btn-confirm.success:hover {
+      background-color: #16a34a;
+    }
+  </style>
+</head>
+
+<body class="flex">
+  <aside class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+    <div>
+      <nav class="space-y-2 p-4">
+        <img src="https://i.ibb.co/4J1yg0g/logo-titipgo.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+
+        <a href="admin-dashboard.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-home mr-3"></i> Dashboard
+        </a>
+        <a href="admin-katalog.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-box mr-3"></i> Manajemen Katalog
+        </a>
+        <a href="admin-pengguna.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+        </a>
+        <a href="admin-toko.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-store mr-3"></i> Manajemen Toko
+        </a>
+        <a href="admin-pesanan.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+        </a>
+        <a href="admin-aduan.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-envelope mr-3"></i> Aduan
+        </a>
+        <a href="admin-laporan.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-chart-line mr-3"></i> Laporan
+        </a>
+        <a href="admin-pendapatan.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+        </a>
+        <a href="admin-profil.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-user-circle mr-3"></i> Profil
+        </a>
+        <a href="admin-tentang.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+        </a>
+      </nav>
     </div>
-  `;
-
-  if (!productIdFromUrl) {
-    productDetailContent.innerHTML = `
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-          <p class="text-red-500 text-xl font-semibold">ID Produk tidak ditemukan di URL.</p>
-          <p class="text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan parameter 'id' (ID produk) yang valid.</p>
-          <div class="mt-4">
-            <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
-            </a>
-          </div>
-        </div>
-      `;
-    if (pageTitleEl) pageTitleEl.textContent = `Error - TitipGo Admin`;
-    if (productDetailTitle) productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-    if (breadcrumbProductName) breadcrumbProductName.textContent = `Tidak Ditemukan`;
-    return;
-  }
-
-  try {
-    // LANGKAH 1: Ambil dokumen produk berdasarkan ID Produk
-    const productRef = doc(db, "produk", productIdFromUrl);
-    const productDoc = await getDoc(productRef);
-
-    if (!productDoc.exists()) {
-      productDetailContent.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-                  <p class="text-red-500 text-xl font-semibold">Produk dengan ID '${productIdFromUrl}' tidak ditemukan.</p>
-                  <p class="text-gray-600 mt-2">Pastikan ID produk yang Anda cari sudah benar atau produk telah dihapus.</p>
-                  <div class="mt-4">
-                    <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
-                    </a>
-                  </div>
-                </div>
-              `;
-      if (pageTitleEl) pageTitleEl.textContent = `Produk Tidak Ditemukan - TitipGo Admin`;
-      if (productDetailTitle) productDetailTitle.textContent = `Produk Tidak Ditemukan`;
-      if (breadcrumbProductName) breadcrumbProductName.textContent = `Tidak Ditemukan`;
-      return;
-    }
-
-    const productData = productDoc.data();
-    const tokoId = productData.tokoId;
-
-    // LANGKAH 2: Ambil detail toko menggunakan tokoId
-    let tokoData = null;
-    if (tokoId) {
-      const tokoRef = doc(db, "toko", tokoId);
-      const tokoDoc = await getDoc(tokoRef);
-      if (tokoDoc.exists()) {
-        tokoData = tokoDoc.data();
-      } else {
-        console.warn(`Toko dengan ID '${tokoId}' tidak ditemukan.`);
-      }
-    } else {
-      console.warn(`Produk '${productData.namaBarang}' tidak memiliki tokoId.`);
-    }
-
-    // Update title dan breadcrumb dengan nama produk
-    if (pageTitleEl) pageTitleEl.textContent = `Detail Produk - ${productData.namaBarang || "N/A"} - TitipGo Admin`;
-    if (productDetailTitle) productDetailTitle.textContent = `Detail Produk: ${productData.namaBarang || "N/A"}`;
-    if (breadcrumbProductName) breadcrumbProductName.textContent = productData.namaBarang || "N/A";
-
-    // --- Render Konten Utama: Detail Produk, Detail Toko, dan Produk Lain ---
-    let productImageUrl = productData.imageUrl?.[0] || "https://via.placeholder.com/400x300/CCCCCC/FFFFFF?text=No+Image";
-    if (Array.isArray(productData.imageUrl) && productData.imageUrl.length > 0) {
-        productImageUrl = productData.imageUrl[0];
-    } else if (typeof productData.imageUrl === 'string') {
-        productImageUrl = productData.imageUrl;
-    }
-
-    let tokoHtml = '';
-    if (tokoData) {
-        let tokoPhotoUrl = tokoData.gambar || "https://via.placeholder.com/100x100/20B2AA/FFFFFF?text=Toko";
-        if (tokoPhotoUrl.startsWith("gs://")) {
-            try {
-                const photoRef = ref(storage, tokoPhotoUrl);
-                tokoPhotoUrl = await getDownloadURL(photoRef);
-            } catch (error) {
-                console.warn("Error fetching toko photo from storage:", error);
-                tokoPhotoUrl = "https://via.placeholder.com/100x100/CCCCCC/FFFFFF?text=Error";
-            }
-        }
-        tokoHtml = `
-            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-store text-blue-600 mr-2"></i> Detail Toko
-                </h2>
-                <div class="flex items-start md:items-center mb-4 pb-2">
-                    <img
-                        src="${tokoPhotoUrl}"
-                        alt="${tokoData.nama_toko || "Nama Toko"}"
-                        class="w-24 h-24 object-cover rounded-full shadow-sm mr-4"
-                    />
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-800">${tokoData.nama_toko || "Nama Toko Tidak Ditemukan"}</h3>
-                        <p class="text-gray-700 text-sm mb-2">${tokoData.deskripsi || "Tidak ada deskripsi toko."}</p>
-                        <div class="flex items-center text-gray-600 text-xs">
-                            <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i> ${tokoData.originCountry || "Tidak Diketahui"}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm">
-                    <p><strong>Email:</strong> <a href="mailto:${tokoData.email}" class="text-blue-600 hover:underline">${tokoData.email || "N/A"}</a></p>
-                    <p><strong>Telepon:</strong> <a href="tel:${tokoData.whatsApp}" class="text-blue-600 hover:underline">${tokoData.whatsApp || "N/A"}</a></p>
-                    <p><strong>Instagram:</strong> <a href="${tokoData.Instagram || "#"}" target="_blank" class="text-blue-600 hover:underline">${tokoData.Instagram || "N/A"}</a></p>
-                    <p><strong>Dibuat:</strong> ${
-                        tokoData.created_at
-                        ? new Date(tokoData.created_at.toDate()).toLocaleString("id-ID")
-                        : "N/A"
-                    }</p>
-                    <p><strong>Diperbarui:</strong> ${
-                        tokoData.updatedAt
-                        ? new Date(tokoData.updatedAt.toDate()).toLocaleString("id-ID")
-                        : "N/A"
-                    }</p>
-                    <p><strong>Status Akun:</strong> <span class="px-3 py-1 rounded-full text-xs font-semibold ${tokoData.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${tokoData.status || 'N/A'}</span></p>
-                </div>
-            </div>
-        `;
-    } else {
-        tokoHtml = `
-            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-store text-blue-600 mr-2"></i> Detail Toko
-                </h2>
-                <p class="text-red-500">Detail toko tidak dapat dimuat atau tidak ditemukan.</p>
-            </div>
-        `;
-    }
-
-    let relatedProductsHtml = '';
-    if (tokoId) {
-        try {
-            const productsRef = collection(db, "produk");
-            const qOtherProducts = query(productsRef, where("tokoId", "==", tokoId));
-            const otherProductSnapshot = await getDocs(qOtherProducts);
-
-            if (!otherProductSnapshot.empty) {
-                let tempProductsHtml = '';
-                otherProductSnapshot.forEach((pDoc) => {
-                    const pData = pDoc.data();
-                    const pId = pDoc.id;
-                    if (pId !== productIdFromUrl) { // Pastikan produk yang sedang dilihat tidak ditampilkan
-                        let otherProductImageUrl = pData.imageUrl?.[0] || 'https://via.placeholder.com/60x60/87CEEB/FFFFFF?text=Prod';
-                        if (Array.isArray(pData.imageUrl) && pData.imageUrl.length > 0) {
-                            otherProductImageUrl = pData.imageUrl[0];
-                        } else if (typeof pData.imageUrl === 'string') {
-                            otherProductImageUrl = pData.imageUrl;
-                        }
-                        tempProductsHtml += `
-                            <div class="border rounded-lg p-4 shadow-sm flex items-center space-x-4">
-                                <img src="${otherProductImageUrl}" alt="${pData.namaBarang}" class="w-16 h-16 object-cover rounded-md">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">${pData.namaBarang}</h4>
-                                    <p class="text-sm text-gray-600">Harga: ${formatRupiah(pData.harga)}</p>
-                                    <p class="text-sm text-gray-600">Stok: ${pData.stok || 0}</p>
-                                    <a href="admin-katalog-detail.html?id=${pId}" class="text-blue-500 hover:underline text-xs mt-1 inline-block">Lihat Detail Produk</a>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                if (tempProductsHtml === '') {
-                    relatedProductsHtml = '<p class="text-gray-500">Tidak ada produk lain yang ditemukan untuk toko ini.</p>';
-                } else {
-                    relatedProductsHtml = `
-                        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
-                            </h2>
-                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                ${tempProductsHtml}
-                            </div>
-                        </div>
-                    `;
-                }
-            } else {
-                relatedProductsHtml = `
-                    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
-                        </h2>
-                        <p class="text-gray-500">Tidak ada produk lain yang ditemukan untuk toko ini.</p>
-                    </div>
-                `;
-            }
-        } catch (productError) {
-            console.error("Error fetching related products:", productError);
-            relatedProductsHtml = `
-                <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
-                    </h2>
-                    <p class="text-red-500">Gagal memuat produk terkait.</p>
-                </div>
-            `;
-        }
-    } else {
-        relatedProductsHtml = `
-            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-boxes text-orange-600 mr-2"></i> Produk Lain dari Toko Ini
-                </h2>
-                <p class="text-gray-500">Tidak dapat memuat produk lain karena ID toko tidak tersedia.</p>
-            </div>
-        `;
-    }
-
-
-    productDetailContent.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-          <i class="fas fa-box-open text-pink-600 mr-2"></i> Detail Produk
-        </h2>
-        <div class="flex flex-col md:flex-row gap-6">
-          <div class="md:w-1/3">
-            <img src="${productImageUrl}" alt="${productData.namaBarang || 'Produk'}" class="w-full h-auto object-contain rounded-lg shadow-md border border-gray-200">
-          </div>
-          <div class="md:w-2/3">
-            <h3 class="text-3xl font-bold text-gray-900 mb-2">${productData.namaBarang || 'Nama Produk Tidak Diketahui'}</h3>
-            <p class="text-2xl font-semibold text-pink-600 mb-4">${formatRupiah(productData.harga)}</p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-gray-700 text-sm mb-4">
-                <p><strong>Jenis:</strong> ${productData.jenis || 'N/A'}</p>
-                <p><strong>Kategori:</strong> ${productData.kategori || 'N/A'}</p>
-                <p><strong>Merk:</strong> ${productData.merk || 'N/A'}</p>
-                <p><strong>Negara Asal:</strong> ${productData.negara || 'N/A'}</p>
-                <p><strong>Stok:</strong> ${productData.stok !== undefined ? productData.stok : 'N/A'}</p>
-                <p><strong>Status:</strong> <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${productData.status === 'PRE-ORDER' ? 'bg-blue-100 text-blue-800' : (productData.status === 'READY' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')}">${productData.status || 'N/A'}</span></p>
-                <p><strong>Diblokir:</strong> <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${productData.isBlocked ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">${productData.isBlocked ? 'Ya' : 'Tidak'}</span></p>
-            </div>
-            <p class="text-gray-700 mb-4"><strong>Deskripsi:</strong> ${productData.deskripsi || 'Tidak ada deskripsi.'}</p>
-
-            <div class="flex space-x-2 mt-4">
-                
-                <button id="deleteProductButton" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    <i class="fas fa-trash-alt mr-2"></i> Hapus Produk
-                </button>
-            </div>
+    <footer class="text-sm text-gray-500 text-center p-4 border-t">
+      &copy; 2025 TitipGo. All rights reserved.
+    </footer>
+  </aside>
+  <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen">
+    <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+      <p class="text-lg font-semibold">Manajemen Katalog</p>
+      <div class="flex gap-3 text-right ml-auto">
+        <a href="admin-notifikasi.html"
+          class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+            class="fas fa-bell mr-2"></i> Notifikasi</a>
+        <button id="logout-button"
+          class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center">
+          <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </button>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+      <div class="md:col-span-2">
+        <label for="search" class="sr-only">Cari barang</label>
+        <div class="relative">
+          <input type="text" id="search" placeholder="Cari barang..."
+            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" />
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-search text-gray-400"></i>
           </div>
         </div>
       </div>
+      <div>
+        <label for="status" class="sr-only">Status</label>
+        <select id="status"
+          class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+          <option value="">Semua Status</option>
+        </select>
+      </div>
+      <div>
+        <label for="toko" class="sr-only">Nama Toko</label>
+        <select id="toko"
+          class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+          <option value="">Semua Toko</option>
+        </select>
+      </div>
+      <div>
+        <label for="kategori" class="sr-only">Kategori</label>
+        <select id="kategori"
+          class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+          <option value="">Semua Kategori</option>
+        </select>
+      </div>
+    </div>
 
-      ${tokoHtml}
-      ${relatedProductsHtml}
-    `;
+    <div class="card-bg-transparent overflow-x-auto rounded-md border border-gray-200">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              No
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Foto
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Nama Barang
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Kategori
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Toko
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Harga
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Negara
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Fee
+            </th>
+            <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="py-3 px-4 text-center text-xs font-semibold uppercase tracking-wider">
+              Aksi
+            </th>
+          </tr>
+        </thead>
+        <tbody id="catalogTableBody" class="divide-y divide-gray-200">
+          <tr>
+            <td colspan="10" class="py-4 px-4 text-center text-gray-500">
+              Memuat data katalog...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="noDataMessage" class="hidden py-4 px-4 text-center text-gray-500">
+        Tidak ada data katalog yang ditemukan.
+      </div>
+    </div>
 
-    // --- Fungsionalitas Tombol Hapus Produk (dilampirkan setelah HTML di-render) ---
-    const deleteProductButton = document.getElementById("deleteProductButton");
-    if (deleteProductButton) {
-      deleteProductButton.onclick = async () => {
-        if (
-          confirm(
-            `Apakah Anda yakin ingin menghapus produk "${
-              productData.namaBarang || "ini"
-            }" secara permanen? Aksi ini tidak bisa dibatalkan!`
-          )
-        ) {
-          try {
-            await deleteDoc(doc(db, "produk", productIdFromUrl));
-            alert("Produk berhasil dihapus!");
-            window.location.href = "admin-katalog.html"; // Arahkan kembali ke daftar katalog
-          } catch (error) {
-            console.error("Error deleting product:", error);
-            alert("Gagal menghapus produk: " + error.message);
-          }
+    <div class="mt-6 flex justify-between items-center">
+      <div id="paginationInfo" class="text-sm text-gray-700"></div>
+      <div id="paginationButtons" class="flex"></div>
+    </div>
+  </main>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logout-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4">Konfirmasi Logout</h3>
+      <p class="text-gray-700">
+        Apakah Anda yakin ingin keluar dari akun ini?
+      </p>
+      <div class="modal-buttons">
+        <button id="cancel-logout" class="btn-cancel">Batal</button>
+        <button id="confirm-logout" class="btn-confirm">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation/Alert Modal -->
+  <div id="custom-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+      <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase functions from firebase-config.js
+    import {
+      auth,
+      db,
+      signOut,
+      onAuthStateChanged,
+      collection,
+      query,
+      where,
+      getDocs,
+      doc,
+      deleteDoc
+    } from './firebase-config.js'; // Ensure this path is correct
+
+    let currentAdminId = null;
+
+    // Custom Confirmation/Alert Modal elements
+    const customConfirmModal = document.getElementById('custom-confirm-modal');
+    const customConfirmTitle = document.getElementById('custom-confirm-title');
+    const customConfirmMessage = document.getElementById('custom-confirm-message');
+    const customCancelBtn = document.getElementById('custom-cancel-btn');
+    const customConfirmBtn = document.getElementById('custom-confirm-btn');
+    let customConfirmCallback = null;
+
+    // Function to show custom confirmation/alert modal
+    function showCustomConfirm(message, callback, isConfirmation = false) {
+      customConfirmMessage.textContent = message;
+      customConfirmCallback = callback;
+      customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
+      if (isConfirmation) {
+        customCancelBtn.classList.remove('hidden');
+      } else {
+        customCancelBtn.classList.add('hidden');
+      }
+      customConfirmBtn.textContent = isConfirmation ? "Ya" : "OK"; // Change text based on type
+      customConfirmBtn.classList.remove('success'); // Reset button style
+      customConfirmModal.classList.add('show');
+    }
+
+    customCancelBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      customConfirmCallback = null; // Clear callback if cancelled
+    });
+
+    customConfirmBtn.addEventListener('click', () => {
+      customConfirmModal.classList.remove('show');
+      if (customConfirmCallback) {
+        customConfirmCallback();
+      }
+      customConfirmCallback = null; // Clear callback after execution
+    });
+
+    // DOM Elements
+    const catalogTableBody = document.getElementById("catalogTableBody");
+    const noDataMessage = document.getElementById("noDataMessage");
+    const searchInput = document.getElementById("search");
+    const statusFilter = document.getElementById("status");
+    const tokoFilter = document.getElementById("toko");
+    const kategoriFilter = document.getElementById("kategori");
+    const logoutButton = document.getElementById("logout-button");
+    const logoutModal = document.getElementById("logout-modal");
+    const cancelLogoutButton = document.getElementById("cancel-logout");
+    const confirmLogoutButton = document.getElementById("confirm-logout");
+
+    let allProducts = [];
+    const itemsPerPage = 10;
+    let currentPage = 1;
+
+    // Fungsi untuk memformat harga ke IDR
+    function formatRupiah(amount) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    }
+
+    async function fetchCatalogData() {
+      catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-gray-500">Memuat data katalog...</td></tr>`;
+      noDataMessage.classList.add("hidden");
+      try {
+        if (typeof db === "undefined" || !db) {
+          console.error(
+            "Firebase Firestore tidak diinisialisasi. Pastikan SDK Firebase dimuat dengan benar."
+          );
+          catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-red-500">Error: Firebase tidak terinisialisasi.</td></tr>`;
+          return;
         }
-      };
+
+        const productsCol = collection(db, "produk"); // Use modular collection
+        const tokoCol = collection(db, "toko"); // Use modular collection
+
+        const productSnapshot = await getDocs(productsCol); // Use modular getDocs
+        const tokoSnapshot = await getDocs(tokoCol); // Use modular getDocs
+
+        const tokoMap = new Map();
+        tokoSnapshot.forEach((doc) => {
+          tokoMap.set(doc.id, doc.data().nama_toko); // Use nama_toko as per daftar-toko-html
+        });
+
+        allProducts = [];
+        const uniqueTokos = new Set();
+        const uniqueKategori = new Set();
+        const uniqueStatus = new Set();
+
+        productSnapshot.forEach((doc) => {
+          const data = doc.data();
+          const tokoId = data.tokoId;
+          const namaToko = tokoMap.get(tokoId) || "Toko Tidak Ditemukan";
+
+          allProducts.push({ id: doc.id, namaToko: namaToko, ...data });
+
+          if (namaToko) {
+            uniqueTokos.add(namaToko);
+          }
+          if (data.kategori) {
+            uniqueKategori.add(data.kategori);
+          }
+          if (data.keterangan) { // Use 'keterangan' as per tambah-produk-baru-html
+            uniqueStatus.add(data.keterangan);
+          }
+        });
+
+        populateTokoFilter(Array.from(uniqueTokos));
+        populateKategoriFilter(Array.from(uniqueKategori));
+        populateStatusFilter(Array.from(uniqueStatus));
+        renderTable();
+      } catch (error) {
+        console.error("Error fetching catalog data: ", error);
+        catalogTableBody.innerHTML = `<tr><td colspan="10" class="py-4 px-4 text-center text-red-500">Gagal memuat data. Error: ${error.message}</td></tr>`;
+      }
     }
 
-  } catch (error) {
-    console.error("Error in loadProductAndTokoDetail:", error);
-    let errorMessage = "Terjadi kesalahan yang tidak diketahui.";
-    if (error.code === "unavailable") {
-      errorMessage = "Gagal terhubung ke database. Pastikan Anda online atau periksa aturan keamanan Firebase Anda.";
-    } else {
-      errorMessage = error.message;
+    function populateTokoFilter(tokos) {
+      tokoFilter.innerHTML = '<option value="">Semua Toko</option>';
+      tokos.sort().forEach((toko) => {
+        const option = document.createElement("option");
+        option.value = toko;
+        option.textContent = toko;
+        tokoFilter.appendChild(option);
+      });
     }
-    productDetailContent.innerHTML = `
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-              <p class="text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail.</p>
-              <p class="text-gray-600 mt-2">Detail: ${errorMessage}</p>
-              <div class="mt-4">
-                <a href="admin-katalog.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
-                </a>
-              </div>
-            </div>
-          `;
-    if (pageTitleEl) pageTitleEl.textContent = `Error - TitipGo Admin`;
-    if (productDetailTitle) productDetailTitle.textContent = `Error Loading Detail`;
-    if (breadcrumbProductName) breadcrumbProductName.textContent = `Error`;
-  }
-}
 
-// Panggil fungsi utama saat DOMContentLoaded atau saat status autentikasi berubah
-document.addEventListener("DOMContentLoaded", () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      loadProductAndTokoDetail();
-    } else {
-      window.location.href = "login.html";
+    function populateKategoriFilter(kategoriArray) {
+      kategoriFilter.innerHTML = '<option value="">Semua Kategori</option>';
+      kategoriArray.sort().forEach((kategori) => {
+        const option = document.createElement("option");
+        option.value = kategori;
+        option.textContent = kategori;
+        kategoriFilter.appendChild(option);
+      });
     }
-  });
-});
 
-// --- Fungsionalitas Logout ---
-const logoutButton = document.getElementById("logoutButton");
-if (logoutButton) {
-  logoutButton.addEventListener("click", async (e) => {
-    e.preventDefault();
-    try {
-      await auth.signOut();
-      alert("Anda telah logout!");
-      window.location.href = "login.html";
-    } catch (error) {
-      console.error("Error during logout:", error);
-      alert("Gagal logout: " + error.message);
+    function populateStatusFilter(statusArray) {
+      statusFilter.innerHTML = '<option value="">Semua Status</option>';
+      statusArray.sort().forEach((status) => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        statusFilter.appendChild(option);
+      });
     }
-  });
-}
-</script>
-  </body>
+
+    function renderTable() {
+      catalogTableBody.innerHTML = "";
+      const filteredProducts = applyFilters(allProducts);
+
+      if (filteredProducts.length === 0) {
+        noDataMessage.classList.remove("hidden");
+        document.getElementById("paginationInfo").textContent = "";
+        document.getElementById("paginationButtons").innerHTML = "";
+        return;
+      } else {
+        noDataMessage.classList.add("hidden");
+      }
+
+      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(
+        startIndex + itemsPerPage,
+        filteredProducts.length
+      );
+      const paginatedProducts = filteredProducts.slice(
+        startIndex,
+        endIndex
+      );
+
+      paginatedProducts.forEach((product, index) => {
+        const row = document.createElement("tr");
+        row.classList.add("bg-white", "bg-opacity-80");
+        const displayIndex = startIndex + index + 1;
+
+        let statusText = product.keterangan || "Tidak Diketahui"; // Use 'keterangan'
+        let statusClass = "bg-gray-100 text-gray-800";
+        if (statusText === "READY ID") {
+          statusClass = "bg-green-100 text-green-800";
+        } else if (statusText === "PRE-ORDER") {
+          statusClass = "bg-yellow-100 text-yellow-800";
+        } else if (statusText === "KOSONG") {
+          statusClass = "bg-red-100 text-red-800";
+        }
+
+        row.innerHTML = `
+                                <td class="py-3 px-4 text-sm text-gray-700">${displayIndex}</td>
+                                <td class="py-3 px-4">
+                                    <img src="${product.imageUrl ||
+          "https://via.placeholder.com/40x40"
+          }" alt="Foto ${product.namaBarang
+          }" class="w-10 h-10 rounded-md object-cover">
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${product.namaBarang || "-"
+          }</td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${product.kategori || "-"
+          }</td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${product.namaToko || "-"
+          }</td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
+            product.harga || 0
+          )}</td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${product.negara || "-"
+          }</td>
+                                <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
+            product.fee || 0
+          )}</td>
+                                <td class="py-3 px-4 text-sm">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${statusText}</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
+                                    <a href="admin-katalog-detail.html?id=${product.id
+          }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-eye"></i></a>
+                                    <a href="edit-product.html?id=${product.id}" class="text-yellow-600 hover:text-yellow-900" title="Edit"><i class="fas fa-edit"></i></a>
+                                    <button type="button" class="text-red-600 hover:text-red-900 delete-button" data-id="${product.id
+          }" title="Hapus"><i class="fas fa-trash"></i></button>
+                                </td>
+                            `;
+        catalogTableBody.appendChild(row);
+      });
+
+      document.querySelectorAll(".delete-button").forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          const productId = this.dataset.id;
+          showCustomConfirm("Apakah Anda yakin ingin menghapus katalog ini?", () => {
+            deleteProduct(productId);
+          }, true);
+        });
+      });
+
+      updatePaginationControls(filteredProducts.length, totalPages);
+    }
+
+    async function deleteProduct(productId) {
+      try {
+        await deleteDoc(doc(db, "produk", productId)); // Use modular deleteDoc
+        showCustomConfirm("Katalog berhasil dihapus!", () => {
+          fetchCatalogData();
+        }, false);
+      } catch (error) {
+        console.error("Error removing document: ", error);
+        showCustomConfirm("Gagal menghapus katalog: " + error.message, () => { });
+      }
+    }
+
+    function applyFilters(products) {
+      let filtered = [...products];
+
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedStatus = statusFilter.value;
+      const selectedToko = tokoFilter.value;
+      const selectedKategori = kategoriFilter.value;
+
+      if (searchTerm) {
+        filtered = filtered.filter((product) =>
+          product.namaBarang.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (selectedStatus) {
+        filtered = filtered.filter(
+          (product) => product.keterangan === selectedStatus // Use 'keterangan' for filtering
+        );
+      }
+
+      if (selectedToko) {
+        filtered = filtered.filter(
+          (product) => product.namaToko === selectedToko
+        );
+      }
+
+      if (selectedKategori) {
+        filtered = filtered.filter(
+          (product) => product.kategori === selectedKategori
+        );
+      }
+      return filtered;
+    }
+
+    function updatePaginationControls(totalItems, totalPages) {
+      const paginationInfo = document.getElementById("paginationInfo");
+      const paginationButtons =
+        document.getElementById("paginationButtons");
+
+      const startIndex = (currentPage - 1) * itemsPerPage + 1;
+      const endIndex = Math.min(startIndex + itemsPerPage - 1, totalItems);
+      paginationInfo.textContent = `Menampilkan ${startIndex} sampai ${endIndex} dari ${totalItems} data`;
+
+      paginationButtons.innerHTML = "";
+
+      const prevButton = document.createElement("button");
+      prevButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+        }`;
+      prevButton.textContent = "Previous";
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable();
+        }
+      });
+      paginationButtons.appendChild(prevButton);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        let buttonClass = `px-4 py-2 text-sm font-medium ${currentPage === i
+          ? "text-pink-600 bg-pink-100"
+          : "text-gray-700 bg-white"
+          } border border-gray-300 hover:bg-gray-50`;
+
+        if (i === 1 && totalPages === 1) {
+          buttonClass += " rounded-l-md rounded-r-md";
+        } else if (i === 1) {
+          buttonClass += " -ml-px";
+        } else if (i === totalPages) {
+          buttonClass += " -ml-px rounded-r-md";
+        } else {
+          buttonClass += " -ml-px";
+        }
+
+        pageButton.className = buttonClass;
+        pageButton.textContent = i;
+        pageButton.addEventListener("click", () => {
+          currentPage = i;
+          renderTable();
+        });
+        paginationButtons.appendChild(pageButton);
+      }
+
+      const nextButton = document.createElement("button");
+      nextButton.className = `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 -ml-px ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+        }`;
+      nextButton.textContent = "Next";
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTable();
+        }
+      });
+      paginationButtons.appendChild(nextButton);
+    }
+
+    // Event Listener untuk pencarian dan filter
+    searchInput.addEventListener("keyup", () => {
+      currentPage = 1;
+      renderTable();
+    });
+    statusFilter.addEventListener("change", () => {
+      currentPage = 1;
+      renderTable();
+    });
+    tokoFilter.addEventListener("change", () => {
+      currentPage = 1;
+      renderTable();
+    });
+    kategoriFilter.addEventListener("change", () => {
+      currentPage = 1;
+      renderTable();
+    });
+
+    // Logout functionality
+    logoutButton.addEventListener("click", () => {
+      logoutModal.classList.add("show");
+    });
+
+    cancelLogoutButton.addEventListener("click", () => {
+      logoutModal.classList.remove("show");
+    });
+
+    confirmLogoutButton.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        console.log("Berhasil logout dari Firebase.");
+        showCustomConfirm("Anda telah logout.", () => {
+          window.location.href = "halaman_login_anda.html"; // Redirect to your login page
+        }, false);
+        logoutModal.classList.remove("show");
+      } catch (error) {
+        console.error("Error saat logout:", error);
+        showCustomConfirm("Terjadi kesalahan saat logout. Silakan coba lagi: " + error.message, () => { });
+      }
+    });
+
+    // Initial load and Firebase Auth State management
+    document.addEventListener("DOMContentLoaded", function () {
+      // Logika tautan sidebar aktif
+      const currentPath = window.location.pathname.split("/").pop();
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        if (linkHref === currentPath) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+        }
+      });
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentAdminId = user.uid;
+          console.log("Admin ID:", currentAdminId);
+          fetchCatalogData(); // Panggil fungsi pengambilan data setelah admin terautentikasi
+        } else {
+          console.warn("User tidak terautentikasi. Mengarahkan ke halaman login.");
+          showCustomConfirm("Anda belum login sebagai Admin. Silakan login terlebih dahulu.", () => {
+            window.location.href = "halaman_login_anda.html"; // Replace with your actual admin login page
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
