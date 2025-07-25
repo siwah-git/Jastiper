@@ -1,153 +1,122 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Manajemen Pesanan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Manajemen Pesanan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-      /* Optional: Overlay tambahan jika diperlukan */
-      /* #mainContent::before {
+  <style>
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      /* PASTIKAN PATH INI BENAR */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Optional: Overlay tambahan jika diperlukan */
+    /* #mainContent::before {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.1); 
+        background-color: rgba(0, 0, 0, 0.1);
         z-index: 0;
         border-radius: inherit;
       } */
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
 
-      /* Style untuk membuat background kartu statistik sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Style untuk membuat background kartu statistik sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      /* Added for header transparency */
-      .header-bg-transparent {
-        background-color: rgba(255, 255, 255, 0.8);
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100 font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
-        </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
+    /* Added for header transparency */
+    .header-bg-transparent {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
 
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
+<body class="bg-gray-100 font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
           background-image: linear-gradient(
               rgba(255, 255, 255, 0.3),
               rgba(255, 255, 255, 0.3)
@@ -156,398 +125,351 @@
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-        "
-      >
-        <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-        >
-          <p class="text-lg font-semibold">Manajemen Katalog</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="#"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+        ">
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold">Manajemen Pesanan</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="#"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-          <div class="md:col-span-2 lg:col-span-3">
-            <label for="search" class="sr-only">Cari</label>
-            <div class="relative">
-              <input
-                type="text"
-                id="search"
-                placeholder="Cari..."
-                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-              />
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <i class="fas fa-search text-gray-400"></i>
-              </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+        <div class="md:col-span-2 lg:col-span-3">
+          <label for="search" class="sr-only">Cari</label>
+          <div class="relative">
+            <input type="text" id="search" placeholder="Cari..."
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500" />
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
             </div>
           </div>
-          <div class="md:col-span-1 lg:col-span-1">
-            <label for="status" class="sr-only">Status</label>
-            <select
-              id="status"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-            >
-              <option value="">Semua Status</option>
-              <option value="Lunas">Lunas</option>
-              <option value="Pending">Pending</option>
-              <option value="Dibatalkan">Dibatalkan</option>
-            </select>
-          </div>
         </div>
-
-        <div
-          class="card-bg-transparent overflow-x-auto rounded-md border border-gray-200"
-        >
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-blue-600 text-white">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  No.pesanan
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Tanggal
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Customer
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Jastiper
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Barang
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Total
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider"
-                >
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              id="orders-table-body"
-              class="divide-y divide-gray-200"
-            ></tbody>
-          </table>
+        <div class="md:col-span-1 lg:col-span-1">
+          <label for="status" class="sr-only">Status</label>
+          <select id="status"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500">
+            <option value="">Semua Status</option>
+            <option value="Lunas">Lunas</option>
+            <option value="Pending">Pending</option>
+            <option value="Dibatalkan">Dibatalkan</option>
+          </select>
         </div>
+      </div>
 
-        <div class="mt-6 flex justify-between items-center">
-          <div id="pagination-info" class="text-sm text-gray-700"></div>
-          <div id="pagination-controls" class="flex"></div>
-        </div>
-      </main>
-    </div>
+      <div class="card-bg-transparent overflow-x-auto rounded-md border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                No.pesanan
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Tanggal
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Customer
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Jastiper
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Barang
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Total
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body" class="divide-y divide-gray-200"></tbody>
+        </table>
+      </div>
 
-    <script>
-      // Your Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-        authDomain: "titipgo-28f84.firebaseapp.com",
-        projectId: "titipgo-28f84",
-        storageBucket: "titipgo-28f84.firebasestorage.app",
-        messagingSenderId: "816687535591",
-        appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        measurementId: "G-CS3V405F3B",
-      };
+      <div class="mt-6 flex justify-between items-center">
+        <div id="pagination-info" class="text-sm text-gray-700"></div>
+        <div id="pagination-controls" class="flex"></div>
+      </div>
+    </main>
+  </div>
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+      authDomain: "titipgo-28f84.firebaseapp.com",
+      projectId: "titipgo-28f84",
+      storageBucket: "titipgo-28f84.firebasestorage.app",
+      messagingSenderId: "816687535591",
+      appId: "1:816687535591:web:eaecf2fcc994636a319942",
+      measurementId: "G-CS3V405F3B",
+    };
 
-      let allOrders = []; // To store all fetched orders
-      const itemsPerPage = 10;
-      let currentPage = 1;
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-      // Function to fetch orders from Firebase
-      async function fetchOrders() {
-        try {
-          const ordersRef = db.collection("pemesanan");
-          const snapshot = await ordersRef.orderBy("tanggal", "desc").get(); // Assuming 'tanggal' field exists for sorting
-          allOrders = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          renderTable(allOrders); // Initial render with all data
-        } catch (error) {
-          console.error("Error fetching orders: ", error);
-          alert("Gagal memuat data pesanan. Silakan coba lagi.");
-        }
+    let allOrders = []; // To store all fetched orders
+    const itemsPerPage = 10;
+    let currentPage = 1;
+
+    // Function to fetch orders from Firebase
+    async function fetchOrders() {
+      try {
+        // Mengganti "pemesanan" menjadi "orders"
+        const ordersRef = db.collection("orders");
+        const snapshot = await ordersRef.orderBy("tanggal", "desc").get(); // Assuming 'tanggal' field exists for sorting
+        allOrders = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        renderTable(allOrders); // Initial render with all data
+      } catch (error) {
+        console.error("Error fetching orders: ", error);
+        alert("Gagal memuat data pesanan. Silakan coba lagi.");
+      }
+    }
+
+    // Function to render table rows
+    function renderTable(ordersToRender) {
+      const tableBody = document.getElementById("orders-table-body");
+      tableBody.innerHTML = ""; // Clear existing rows
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedOrders = ordersToRender.slice(startIndex, endIndex);
+
+      if (paginatedOrders.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pesanan.</td></tr>`;
+        updatePaginationInfo(0, 0, 0);
+        renderPaginationControls(0);
+        return;
       }
 
-      // Function to render table rows
-      function renderTable(ordersToRender) {
-        const tableBody = document.getElementById("orders-table-body");
-        tableBody.innerHTML = ""; // Clear existing rows
+      paginatedOrders.forEach((order) => {
+        const row = tableBody.insertRow();
+        let statusClass = "";
+        let statusText = "";
 
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedOrders = ordersToRender.slice(startIndex, endIndex);
-
-        if (paginatedOrders.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="7" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pesanan.</td></tr>`;
-          updatePaginationInfo(0, 0, 0);
-          renderPaginationControls(0);
-          return;
+        switch (order.status) {
+          case "Lunas":
+            statusClass = "bg-green-100 text-green-800";
+            statusText = "Lunas";
+            break;
+          case "Pending":
+            statusClass = "bg-yellow-100 text-yellow-800";
+            statusText = "Pending";
+            break;
+          case "Dibatalkan":
+            statusClass = "bg-red-100 text-red-800";
+            statusText = "Dibatalkan";
+            break;
+          default:
+            statusClass = "bg-gray-100 text-gray-800";
+            statusText = order.status || "Unknown";
         }
 
-        paginatedOrders.forEach((order) => {
-          const row = tableBody.insertRow();
-          let statusClass = "";
-          let statusText = "";
+        const formattedDate = order.tanggal
+          ? new Date(order.tanggal.seconds * 1000).toLocaleString("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+          : "N/A";
 
-          switch (order.status) {
-            case "Lunas":
-              statusClass = "bg-green-100 text-green-800";
-              statusText = "Lunas";
-              break;
-            case "Pending":
-              statusClass = "bg-yellow-100 text-yellow-800";
-              statusText = "Pending";
-              break;
-            case "Dibatalkan":
-              statusClass = "bg-red-100 text-red-800";
-              statusText = "Dibatalkan";
-              break;
-            default:
-              statusClass = "bg-gray-100 text-gray-800";
-              statusText = order.status || "Unknown";
-          }
-
-          const formattedDate = order.tanggal
-            ? new Date(order.tanggal.seconds * 1000).toLocaleString("id-ID", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "N/A";
-
-          row.innerHTML = `
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              order.noPesanan || "N/A"
-            }</td>
+        row.innerHTML = `
+            <td class="py-3 px-4 text-sm text-gray-700">${order.noPesanan || "N/A"
+          }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${formattedDate}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              order.customerName || "N/A"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              order.jastiperName || "N/A"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              order.itemName || "N/A"
-            }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              order.totalPrice
-                ? `Rp. ${order.totalPrice.toLocaleString("id-ID")}`
-                : "N/A"
-            }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${order.customerName || "N/A"
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${order.jastiperName || "N/A"
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${order.itemName || "N/A"
+          }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${order.totalPrice
+            ? `Rp. ${order.totalPrice.toLocaleString("id-ID")}`
+            : "N/A"
+          }</td>
             <td class="py-3 px-4 text-sm">
               <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${statusText}</span>
             </td>
             <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-              <a href="admin-pesanan-detail.html?id=${
-                order.id
-              }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
-              <a href="#" class="text-red-600 hover:text-red-900 delete-btn" data-id="${
-                order.id
-              }" title="Hapus"><i class="fas fa-times-circle"></i></a>
+              <a href="admin-pesanan-detail.html?id=${order.id
+          }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+              <a href="#" class="text-red-600 hover:text-red-900 delete-btn" data-id="${order.id
+          }" title="Hapus"><i class="fas fa-times-circle"></i></a>
             </td>
           `;
-        });
-
-        updatePaginationInfo(
-          startIndex + 1,
-          startIndex + paginatedOrders.length,
-          ordersToRender.length
-        );
-        renderPaginationControls(ordersToRender.length);
-      }
-
-      // Function to filter table data based on search and status
-      function filterTable() {
-        const searchTerm = document
-          .getElementById("search")
-          .value.toLowerCase();
-        const statusFilter = document.getElementById("status").value;
-
-        const filteredOrders = allOrders.filter((order) => {
-          const matchesSearch =
-            (order.noPesanan &&
-              order.noPesanan.toLowerCase().includes(searchTerm)) ||
-            (order.customerName &&
-              order.customerName.toLowerCase().includes(searchTerm)) ||
-            (order.jastiperName &&
-              order.jastiperName.toLowerCase().includes(searchTerm)) ||
-            (order.itemName &&
-              order.itemName.toLowerCase().includes(searchTerm));
-
-          const matchesStatus =
-            statusFilter === "" || order.status === statusFilter;
-
-          return matchesSearch && matchesStatus;
-        });
-        currentPage = 1; // Reset to first page on filter
-        renderTable(filteredOrders);
-      }
-
-      // Function to delete an order (example, implement proper confirmation)
-      async function deleteOrder(orderId) {
-        if (confirm("Apakah Anda yakin ingin menghapus pesanan ini?")) {
-          try {
-            await db.collection("pemesanan").doc(orderId).delete();
-            alert("Pesanan berhasil dihapus!");
-            fetchOrders(); // Re-fetch and render table after deletion
-          } catch (error) {
-            console.error("Error removing document: ", error);
-            alert("Gagal menghapus pesanan. Silakan coba lagi.");
-          }
-        }
-      }
-
-      // Pagination functions
-      function updatePaginationInfo(start, end, total) {
-        const infoElement = document.getElementById("pagination-info");
-        infoElement.textContent = `Menampilkan ${start} sampai ${end} dari ${total} data`;
-      }
-
-      function renderPaginationControls(totalItems) {
-        const paginationControls = document.getElementById(
-          "pagination-controls"
-        );
-        paginationControls.innerHTML = "";
-
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        if (totalPages <= 1) return; // No pagination needed if only one page or less
-
-        // Previous button
-        const prevBtn = document.createElement("button");
-        prevBtn.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
-        prevBtn.textContent = "Previous";
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => {
-          if (currentPage > 1) {
-            currentPage--;
-            filterTable(); // Re-render with current filters but updated page
-          }
-        };
-        paginationControls.appendChild(prevBtn);
-
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
-          const pageBtn = document.createElement("button");
-          pageBtn.className = `px-4 py-2 text-sm font-medium ${
-            i === currentPage
-              ? "text-pink-600 bg-pink-100"
-              : "text-gray-700 bg-white hover:bg-gray-50"
-          } border border-gray-300`;
-          pageBtn.textContent = i;
-          pageBtn.onclick = () => {
-            currentPage = i;
-            filterTable(); // Re-render with current filters but updated page
-          };
-          paginationControls.appendChild(pageBtn);
-        }
-
-        // Next button
-        const nextBtn = document.createElement("button");
-        nextBtn.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
-        nextBtn.textContent = "Next";
-        nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            filterTable(); // Re-render with current filters but updated page
-          }
-        };
-        paginationControls.appendChild(nextBtn);
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        // Fetch and display initial orders
-        fetchOrders();
-
-        // Event listeners for search and filter
-        document
-          .getElementById("search")
-          .addEventListener("keyup", filterTable);
-        document
-          .getElementById("status")
-          .addEventListener("change", filterTable);
-
-        // Event listener for delete buttons (using event delegation)
-        document
-          .getElementById("orders-table-body")
-          .addEventListener("click", function (event) {
-            if (event.target.closest(".delete-btn")) {
-              event.preventDefault();
-              const orderId = event.target.closest(".delete-btn").dataset.id;
-              deleteOrder(orderId);
-            }
-          });
-
-        // Sidebar active state logic
-        const currentPath = window.location.pathname;
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const fileName = linkHref.substring(linkHref.lastIndexOf("/") + 1); // Get the filename from the href
-
-          // Compare the current path's filename with the link's filename
-          if (currentPath.includes(fileName)) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-          }
-        });
       });
-    </script>
-  </body>
+
+      updatePaginationInfo(
+        startIndex + 1,
+        startIndex + paginatedOrders.length,
+        ordersToRender.length
+      );
+      renderPaginationControls(ordersToRender.length);
+    }
+
+    // Function to filter table data based on search and status
+    function filterTable() {
+      const searchTerm = document
+        .getElementById("search")
+        .value.toLowerCase();
+      const statusFilter = document.getElementById("status").value;
+
+      const filteredOrders = allOrders.filter((order) => {
+        const matchesSearch =
+          (order.noPesanan &&
+            order.noPesanan.toLowerCase().includes(searchTerm)) ||
+          (order.customerName &&
+            order.customerName.toLowerCase().includes(searchTerm)) ||
+          (order.jastiperName &&
+            order.jastiperName.toLowerCase().includes(searchTerm)) ||
+          (order.itemName &&
+            order.itemName.toLowerCase().includes(searchTerm));
+
+        const matchesStatus =
+          statusFilter === "" || order.status === statusFilter;
+
+        return matchesSearch && matchesStatus;
+      });
+      currentPage = 1; // Reset to first page on filter
+      renderTable(filteredOrders);
+    }
+
+    // Function to delete an order (example, implement proper confirmation)
+    async function deleteOrder(orderId) {
+      if (confirm("Apakah Anda yakin ingin menghapus pesanan ini?")) {
+        try {
+          // Mengganti "pemesanan" menjadi "orders"
+          await db.collection("orders").doc(orderId).delete();
+          alert("Pesanan berhasil dihapus!");
+          fetchOrders(); // Re-fetch and render table after deletion
+        } catch (error) {
+          console.error("Error removing document: ", error);
+          alert("Gagal menghapus pesanan. Silakan coba lagi.");
+        }
+      }
+    }
+
+    // Pagination functions
+    function updatePaginationInfo(start, end, total) {
+      const infoElement = document.getElementById("pagination-info");
+      infoElement.textContent = `Menampilkan ${start} sampai ${end} dari ${total} data`;
+    }
+
+    function renderPaginationControls(totalItems) {
+      const paginationControls = document.getElementById(
+        "pagination-controls"
+      );
+      paginationControls.innerHTML = "";
+
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      if (totalPages <= 1) return; // No pagination needed if only one page or less
+
+      // Previous button
+      const prevBtn = document.createElement("button");
+      prevBtn.className =
+        "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+      prevBtn.textContent = "Previous";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          filterTable(); // Re-render with current filters but updated page
+        }
+      };
+      paginationControls.appendChild(prevBtn);
+
+      // Page numbers
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.className = `px-4 py-2 text-sm font-medium ${i === currentPage
+            ? "text-pink-600 bg-pink-100"
+            : "text-gray-700 bg-white hover:bg-gray-50"
+          } border border-gray-300`;
+        pageBtn.textContent = i;
+        pageBtn.onclick = () => {
+          currentPage = i;
+          filterTable(); // Re-render with current filters but updated page
+        };
+        paginationControls.appendChild(pageBtn);
+      }
+
+      // Next button
+      const nextBtn = document.createElement("button");
+      nextBtn.className =
+        "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+      nextBtn.textContent = "Next";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          filterTable(); // Re-render with current filters but updated page
+        }
+      };
+      paginationControls.appendChild(nextBtn);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Fetch and display initial orders
+      fetchOrders();
+
+      // Event listeners for search and filter
+      document
+        .getElementById("search")
+        .addEventListener("keyup", filterTable);
+      document
+        .getElementById("status")
+        .addEventListener("change", filterTable);
+
+      // Event listener for delete buttons (using event delegation)
+      document
+        .getElementById("orders-table-body")
+        .addEventListener("click", function (event) {
+          if (event.target.closest(".delete-btn")) {
+            event.preventDefault();
+            const orderId = event.target.closest(".delete-btn").dataset.id;
+            deleteOrder(orderId);
+          }
+        });
+
+      // Sidebar active state logic
+      const currentPath = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const fileName = linkHref.substring(linkHref.lastIndexOf("/") + 1); // Get the filename from the href
+
+        // Compare the current path's filename with the link's filename
+        if (currentPath.includes(fileName)) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>

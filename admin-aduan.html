@@ -1,601 +1,542 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Manajemen Aduan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Manajemen Aduan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+  <style>
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      /* PASTIKAN PATH INI BENAR */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
 
-      /* Style untuk membuat background kartu statistik sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Style untuk membuat background kartu statistik sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
+
+    .bg-white-transparent {
+      background-color: rgba(255,
           255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      .bg-white-transparent {
-        background-color: rgba(
           255,
-          255,
-          255,
-          0.85
-        ); /* Slightly transparent white */
-      }
-      .bg-blue-600-transparent {
-        background-color: rgba(
-          37,
+          0.85);
+      /* Slightly transparent white */
+    }
+
+    .bg-blue-600-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.85
-        ); /* Slightly transparent blue */
-      }
-      .table-bg-transparent {
-        background-color: rgba(
+          0.85);
+      /* Slightly transparent blue */
+    }
+
+    .table-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.7
-        ); /* More transparent for table body */
-      }
-      .header-bg-transparent {
-        background-color: rgba(
-          59,
+          0.7);
+      /* More transparent for table body */
+    }
+
+    .header-bg-transparent {
+      background-color: rgba(59,
           130,
           246,
-          0.85
-        ); /* Tailwind's blue-500 equivalent with transparency */
-      }
-    </style>
-  </head>
-  <body class="font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+          0.85);
+      /* Tailwind's blue-500 equivalent with transparency */
+    }
+  </style>
+</head>
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
+<body class="font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside
+      class="w-67 bg-white-transparent text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
 
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
+
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen">
+      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+        <p class="text-lg font-semibold">Manajemen Aduan</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="#" id="logoutButton"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
+      </div>
 
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-      >
-        <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-        >
-          <p class="text-lg font-semibold">Manajemen Aduan</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="#"
-              id="logoutButton"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-          <div class="md:col-span-2 lg:col-span-3">
-            <label for="search" class="sr-only">Cari</label>
-            <div class="relative">
-              <input
-                type="text"
-                id="search"
-                placeholder="Cari..."
-                class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
-              />
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <i class="fas fa-search text-gray-400"></i>
-              </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+        <div class="md:col-span-2 lg:col-span-3">
+          <label for="search" class="sr-only">Cari</label>
+          <div class="relative">
+            <input type="text" id="search" placeholder="Cari..."
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent" />
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
             </div>
           </div>
-          <div class="md:col-span-1 lg:col-span-1">
-            <label for="statusFilter" class="sr-only">Status</label>
-            <select
-              id="statusFilter"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
-            >
-              <option value="">Semua Status</option>
-              <option value="Baru">Baru</option>
-              <option value="Diproses">Diproses</option>
-              <option value="Selesai">Selesai</option>
-              <option value="Ditolak">Ditolak</option>
-            </select>
-          </div>
-          <div class="md:col-span-1 lg:col-span-1">
-            <label for="categoryFilter" class="sr-only">Kategori</label>
-            <select
-              id="categoryFilter"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent"
-            >
-              <option value="">Semua Kategori</option>
-              <option value="Fashion">Fashion</option>
-              <option value="Elektronik">Elektronik</option>
-              <option value="Permak-Pernik">Permak-Pernik</option>
-              <option value="Buku">Buku</option>
-              <option value="Koleksi">Koleksi</option>
-              <option value="Lainnya">Lainnya</option>
-            </select>
-          </div>
         </div>
-
-        <div class="overflow-x-auto rounded-md border border-gray-200">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-blue-600 text-white">
-              <tr>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  No. Aduan
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Tanggal
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  User
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Kategori
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
-                >
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              id="reportTableBody"
-              class="divide-y divide-gray-200 table-bg-transparent"
-            ></tbody>
-          </table>
+        <div class="md:col-span-1 lg:col-span-1">
+          <label for="statusFilter" class="sr-only">Status</label>
+          <select id="statusFilter"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent">
+            <option value="">Semua Status</option>
+            <option value="Baru">Baru</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
         </div>
-
-        <div class="mt-6 flex justify-between items-center">
-          <div id="paginationInfo" class="text-sm text-gray-700"></div>
-          <div id="paginationControls" class="flex"></div>
+        <div class="md:col-span-1 lg:col-span-1">
+          <label for="categoryFilter" class="sr-only">Kategori</label>
+          <select id="categoryFilter"
+            class="w-full p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 bg-white-transparent">
+            <option value="">Semua Kategori</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Elektronik">Elektronik</option>
+            <option value="Permak-Pernik">Permak-Pernik</option>
+            <option value="Buku">Buku</option>
+            <option value="Koleksi">Koleksi</option>
+            <option value="Chat">Chat</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
         </div>
-      </main>
-    </div>
+      </div>
 
-    <script>
-      // Firebase configuration (replace with your actual config from Firebase project settings)
-      const firebaseConfig = {
-        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-        authDomain: "titipgo-28f84.firebaseapp.com",
-        projectId: "titipgo-28f84",
-        storageBucket: "titipgo-28f84.firebasestorage.app",
-        messagingSenderId: "816687535591",
-        appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        measurementId: "G-CS3V405F3B",
-      };
+      <div class="overflow-x-auto rounded-md border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                No. Aduan
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Tanggal
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                User
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Kategori
+              </th>
+              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">
+                Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody" class="divide-y divide-gray-200 table-bg-transparent"></tbody>
+        </table>
+      </div>
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-      const auth = firebase.auth();
+      <div class="mt-6 flex justify-between items-center">
+        <div id="paginationInfo" class="text-sm text-gray-700"></div>
+        <div id="paginationControls" class="flex"></div>
+      </div>
+    </main>
+  </div>
 
-      const reportTableBody = document.getElementById("reportTableBody");
-      const searchInput = document.getElementById("search");
-      const statusFilter = document.getElementById("statusFilter");
-      const categoryFilter = document.getElementById("categoryFilter");
-      const paginationInfo = document.getElementById("paginationInfo");
-      const paginationControls = document.getElementById("paginationControls");
-      const logoutButton = document.getElementById("logoutButton");
+  <script>
+    // Firebase configuration (replace with your actual config from Firebase project settings)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+      authDomain: "titipgo-28f84.firebaseapp.com",
+      projectId: "titipgo-28f84",
+      storageBucket: "titipgo-28f84.firebasestorage.app",
+      messagingSenderId: "816687535591",
+      appId: "1:816687535591:web:eaecf2fcc994636a319942",
+      measurementId: "G-CS3V405F3B",
+    };
 
-      let allReports = []; // To store all reports fetched from Firebase
-      let filteredReports = []; // To store reports after search and filter
-      const itemsPerPage = 10;
-      let currentPage = 1;
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
-      // Function to fetch reports and user data from Firebase
-      async function fetchReports() {
-        try {
-          const reportsRef = db.collection("reports"); // Asumsi koleksi "reports"
-          const reportsSnapshot = await reportsRef.get();
+    const reportTableBody = document.getElementById("reportTableBody");
+    const searchInput = document.getElementById("search");
+    const statusFilter = document.getElementById("statusFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const paginationInfo = document.getElementById("paginationInfo");
+    const paginationControls = document.getElementById("paginationControls");
+    const logoutButton = document.getElementById("logoutButton");
 
-          const usersMap = new Map(); // To store user names by ID for quick lookup
-          const usersSnapshot = await db.collection("users").get();
-          usersSnapshot.forEach((doc) => {
-            usersMap.set(doc.id, doc.data().nama || "Pengguna Tidak Dikenal");
-          });
+    let allReports = []; // To store all reports fetched from Firebase
+    let filteredReports = []; // To store reports after search and filter
+    const itemsPerPage = 10;
+    let currentPage = 1;
 
-          allReports = reportsSnapshot.docs.map((doc) => {
-            const data = doc.data();
-            const userName =
-              usersMap.get(data.userId) || "Pengguna Tidak Dikenal";
-            return {
-              id: doc.id,
-              userName: userName,
-              ...data,
-            };
-          });
+    // Function to fetch reports and user data from Firebase
+    async function fetchReports() {
+      try {
+        const reportsRef = db.collection("reports"); // Asumsi koleksi "reports"
+        const reportsSnapshot = await reportsRef.get();
 
-          // Sort by timestamp descending (newest first)
-          allReports.sort(
-            (a, b) =>
-              (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
-          );
+        const usersMap = new Map(); // To store user names by ID for quick lookup
+        const usersSnapshot = await db.collection("users").get();
+        usersSnapshot.forEach((doc) => {
+          usersMap.set(doc.id, doc.data().nama || "Pengguna Tidak Dikenal");
+        });
 
-          applyFiltersAndSearch(); // Apply filters and search after fetching
-        } catch (error) {
-          console.error("Error fetching reports: ", error);
-          alert("Gagal memuat data aduan.");
-        }
+        // Fetch chat data if needed (e.g., to link a report to a chat)
+        // For now, we'll just fetch, but not necessarily display it directly in this table.
+        // If a report has a 'chatId', you could potentially fetch specific chat details here.
+        const chatsMap = new Map();
+        const chatsSnapshot = await db.collection("chat").get(); // Assuming 'chat' is your chat collection
+        chatsSnapshot.forEach((doc) => {
+          chatsMap.set(doc.id, doc.data()); // Store relevant chat data, e.g., participant names, last message
+        });
+
+        allReports = reportsSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          const userName =
+            usersMap.get(data.userId) || "Pengguna Tidak Dikenal";
+          const chatInfo = data.chatId ? chatsMap.get(data.chatId) : null; // Get chat info if chatId exists
+
+          return {
+            id: doc.id,
+            userName: userName,
+            chatInfo: chatInfo, // Add chat information to the report object
+            ...data,
+          };
+        });
+
+        // Sort by timestamp descending (newest first)
+        allReports.sort(
+          (a, b) =>
+            (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
+        );
+
+        applyFiltersAndSearch(); // Apply filters and search after fetching
+      } catch (error) {
+        console.error("Error fetching reports: ", error);
+        alert("Gagal memuat data aduan.");
+      }
+    }
+
+    // Function to render table rows
+    function renderTable(reportsToDisplay) {
+      reportTableBody.innerHTML = ""; // Clear existing rows
+      if (reportsToDisplay.length === 0) {
+        reportTableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data aduan.</td></tr>`;
+        paginationInfo.textContent = "Menampilkan 0 dari 0 data";
+        paginationControls.innerHTML = "";
+        return;
       }
 
-      // Function to render table rows
-      function renderTable(reportsToDisplay) {
-        reportTableBody.innerHTML = ""; // Clear existing rows
-        if (reportsToDisplay.length === 0) {
-          reportTableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data aduan.</td></tr>`;
-          paginationInfo.textContent = "Menampilkan 0 dari 0 data";
-          paginationControls.innerHTML = "";
-          return;
-        }
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedReports = reportsToDisplay.slice(startIndex, endIndex);
 
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedReports = reportsToDisplay.slice(startIndex, endIndex);
+      paginatedReports.forEach((report) => {
+        const row = reportTableBody.insertRow();
 
-        paginatedReports.forEach((report) => {
-          const row = reportTableBody.insertRow();
+        const statusClass =
+          {
+            Baru: "bg-blue-100 text-blue-800",
+            Diproses: "bg-yellow-100 text-yellow-800",
+            Selesai: "bg-green-100 text-green-800",
+            Ditolak: "bg-red-100 text-red-800",
+          }[report.status] || "bg-gray-100 text-gray-800"; // Default fallback
 
-          const statusClass =
-            {
-              Baru: "bg-blue-100 text-blue-800",
-              Diproses: "bg-yellow-100 text-yellow-800",
-              Selesai: "bg-green-100 text-green-800",
-              Ditolak: "bg-red-100 text-red-800",
-            }[report.status] || "bg-gray-100 text-gray-800"; // Default fallback
+        const formattedDate = report.timestamp
+          ? new Date(report.timestamp.toDate()).toLocaleString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+          : "-";
 
-          const formattedDate = report.timestamp
-            ? new Date(report.timestamp.toDate()).toLocaleString("id-ID", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "-";
-
-          row.innerHTML = `
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              report.reportId || report.id.substring(0, 6)
-            }</td>
+        row.innerHTML = `
+            <td class="py-3 px-4 text-sm text-gray-700">${report.reportId || report.id.substring(0, 6)
+          }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${formattedDate}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${report.userName}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${
-              report.category || "-"
-            }</td>
+            <td class="py-3 px-4 text-sm text-gray-700">${report.category || "-"
+          }</td>
             <td class="py-3 px-4 text-sm">
-              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${
-            report.status || "Tidak Diketahui"
+              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${report.status || "Tidak Diketahui"
           }</span>
             </td>
             <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                <a href="admin-aduan-detail.html?id=${
-                  report.id
-                }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-search"></i></a>
-                ${
-                  report.status === "Baru" || report.status === "Diproses"
-                    ? `
+                <a href="admin-aduan-detail.html?id=${report.id
+          }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-search"></i></a>
+                ${report.status === "Baru" || report.status === "Diproses"
+            ? `
                 <a href="#" class="text-green-600 hover:text-green-900 set-status-btn" data-id="${report.id}" data-status="Selesai" title="Tandai Selesai"><i class="fas fa-check-circle"></i></a>
                 <a href="#" class="text-yellow-600 hover:text-yellow-900 set-status-btn" data-id="${report.id}" data-status="Diproses" title="Tandai Diproses"><i class="fas fa-hourglass-half"></i></a>
                 <a href="#" class="text-red-600 hover:text-red-900 set-status-btn" data-id="${report.id}" data-status="Ditolak" title="Tandai Ditolak"><i class="fas fa-times-circle"></i></a>
                 `
-                    : ""
-                }
+            : ""
+          }
             </td>
           `;
-        });
-        attachStatusButtonListeners(); // Attach listeners after rendering
-        updatePagination(reportsToDisplay.length);
-      }
+      });
+      attachStatusButtonListeners(); // Attach listeners after rendering
+      updatePagination(reportsToDisplay.length);
+    }
 
-      // Function to attach event listeners to status change buttons
-      function attachStatusButtonListeners() {
-        document.querySelectorAll(".set-status-btn").forEach((button) => {
-          button.removeEventListener("click", handleStatusChange); // Remove existing to prevent duplicates
-          button.addEventListener("click", handleStatusChange);
-        });
-      }
+    // Function to attach event listeners to status change buttons
+    function attachStatusButtonListeners() {
+      document.querySelectorAll(".set-status-btn").forEach((button) => {
+        button.removeEventListener("click", handleStatusChange); // Remove existing to prevent duplicates
+        button.addEventListener("click", handleStatusChange);
+      });
+    }
 
-      async function handleStatusChange(event) {
-        event.preventDefault();
-        const reportId = event.currentTarget.dataset.id;
-        const newStatus = event.currentTarget.dataset.status;
+    async function handleStatusChange(event) {
+      event.preventDefault();
+      const reportId = event.currentTarget.dataset.id;
+      const newStatus = event.currentTarget.dataset.status;
 
-        if (
-          confirm(
-            `Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`
-          )
-        ) {
-          try {
-            await db
-              .collection("reports")
-              .doc(reportId)
-              .update({ status: newStatus });
-            alert(`Status aduan berhasil diubah menjadi "${newStatus}".`);
-            fetchReports(); // Re-fetch to update the table
-          } catch (error) {
-            console.error("Error updating report status: ", error);
-            alert("Gagal mengubah status aduan.");
-          }
-        }
-      }
-
-      // Function to apply search and filter
-      function applyFiltersAndSearch() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedStatus = statusFilter.value;
-        const selectedCategory = categoryFilter.value;
-
-        filteredReports = allReports.filter((report) => {
-          const matchesSearch =
-            (report.reportId &&
-              report.reportId.toLowerCase().includes(searchTerm)) ||
-            (report.userName &&
-              report.userName.toLowerCase().includes(searchTerm)) ||
-            (report.description &&
-              report.description.toLowerCase().includes(searchTerm)); // Assuming description can be searched
-
-          const matchesStatus =
-            selectedStatus === "" || report.status === selectedStatus;
-
-          const matchesCategory =
-            selectedCategory === "" || report.category === selectedCategory;
-
-          return matchesSearch && matchesStatus && matchesCategory;
-        });
-
-        currentPage = 1; // Reset to first page after filtering/searching
-        renderTable(filteredReports);
-      }
-
-      // Pagination functions
-      function updatePagination(totalItems) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        paginationInfo.textContent = `Menampilkan ${Math.min(
-          (currentPage - 1) * itemsPerPage + 1,
-          totalItems
-        )} sampai ${Math.min(
-          currentPage * itemsPerPage,
-          totalItems
-        )} dari ${totalItems} data`;
-
-        paginationControls.innerHTML = "";
-
-        const prevButton = document.createElement("button");
-        prevButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
-        prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            renderTable(filteredReports);
-          }
-        });
-        paginationControls.appendChild(prevButton);
-
-        for (let i = 1; i <= totalPages; i++) {
-          const pageButton = document.createElement("button");
-          pageButton.className = `px-4 py-2 text-sm font-medium ${
-            i === currentPage
-              ? "text-pink-600 bg-pink-100"
-              : "text-gray-700 bg-white hover:bg-gray-50"
-          } border border-gray-300`;
-          pageButton.textContent = i;
-          pageButton.addEventListener("click", () => {
-            currentPage = i;
-            renderTable(filteredReports);
-          });
-          paginationControls.appendChild(pageButton);
-        }
-
-        const nextButton = document.createElement("button");
-        nextButton.className =
-          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
-        nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages || totalPages === 0;
-        nextButton.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderTable(filteredReports);
-          }
-        });
-        paginationControls.appendChild(nextButton);
-      }
-
-      // Event listeners for search and filter
-      searchInput.addEventListener("keyup", applyFiltersAndSearch);
-      statusFilter.addEventListener("change", applyFiltersAndSearch);
-      categoryFilter.addEventListener("change", applyFiltersAndSearch);
-
-      // Logout Functionality
-      logoutButton.addEventListener("click", async (e) => {
-        e.preventDefault();
+      if (
+        confirm(
+          `Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`
+        )
+      ) {
         try {
-          await auth.signOut();
-          window.location.href = "admin-login.html"; // Redirect to login page after logout
+          await db
+            .collection("reports")
+            .doc(reportId)
+            .update({ status: newStatus });
+          alert(`Status aduan berhasil diubah menjadi "${newStatus}".`);
+          fetchReports(); // Re-fetch to update the table
         } catch (error) {
-          console.error("Error logging out: ", error);
-          alert("Gagal logout. Silakan coba lagi.");
+          console.error("Error updating report status: ", error);
+          alert("Gagal mengubah status aduan.");
+        }
+      }
+    }
+
+    // Function to apply search and filter
+    function applyFiltersAndSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedStatus = statusFilter.value;
+      const selectedCategory = categoryFilter.value;
+
+      filteredReports = allReports.filter((report) => {
+        const matchesSearch =
+          (report.reportId &&
+            report.reportId.toLowerCase().includes(searchTerm)) ||
+          (report.userName &&
+            report.userName.toLowerCase().includes(searchTerm)) ||
+          (report.description &&
+            report.description.toLowerCase().includes(searchTerm)); // Assuming description can be searched
+
+        const matchesStatus =
+          selectedStatus === "" || report.status === selectedStatus;
+
+        const matchesCategory =
+          selectedCategory === "" || report.category === selectedCategory;
+
+        return matchesSearch && matchesStatus && matchesCategory;
+      });
+
+      currentPage = 1; // Reset to first page after filtering/searching
+      renderTable(filteredReports);
+    }
+
+    // Pagination functions
+    function updatePagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      paginationInfo.textContent = `Menampilkan ${Math.min(
+        (currentPage - 1) * itemsPerPage + 1,
+        totalItems
+      )} sampai ${Math.min(
+        currentPage * itemsPerPage,
+        totalItems
+      )} dari ${totalItems} data`;
+
+      paginationControls.innerHTML = "";
+
+      const prevButton = document.createElement("button");
+      prevButton.className =
+        "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+      prevButton.textContent = "Previous";
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable(filteredReports);
         }
       });
+      paginationControls.appendChild(prevButton);
 
-      // Sidebar active link logic
-      document.addEventListener("DOMContentLoaded", () => {
-        fetchReports(); // Initial fetch
-
-        const currentPath = window.location.pathname;
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const currentFilename = currentPath.substring(
-            currentPath.lastIndexOf("/") + 1
-          );
-
-          let isLinkActive = false;
-
-          if (linkHref === currentFilename) {
-            isLinkActive = true;
-          } else if (
-            currentFilename === "" &&
-            linkHref === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          } else if (
-            currentFilename === "admin-aduan-detail.html" &&
-            linkHref === "admin-aduan.html"
-          ) {
-            // Special handling for detail page to highlight its parent link
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-          }
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.className = `px-4 py-2 text-sm font-medium ${i === currentPage
+            ? "text-pink-600 bg-pink-100"
+            : "text-gray-700 bg-white hover:bg-gray-50"
+          } border border-gray-300`;
+        pageButton.textContent = i;
+        pageButton.addEventListener("click", () => {
+          currentPage = i;
+          renderTable(filteredReports);
         });
+        paginationControls.appendChild(pageButton);
+      }
+
+      const nextButton = document.createElement("button");
+      nextButton.className =
+        "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+      nextButton.textContent = "Next";
+      nextButton.disabled = currentPage === totalPages || totalPages === 0;
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTable(filteredReports);
+        }
       });
-    </script>
-  </body>
+      paginationControls.appendChild(nextButton);
+    }
+
+    // Event listeners for search and filter
+    searchInput.addEventListener("keyup", applyFiltersAndSearch);
+    statusFilter.addEventListener("change", applyFiltersAndSearch);
+    categoryFilter.addEventListener("change", applyFiltersAndSearch);
+
+    // Logout Functionality
+    logoutButton.addEventListener("click", async (e) => {
+      e.preventDefault();
+      try {
+        await auth.signOut();
+        window.location.href = "admin-login.html"; // Redirect to login page after logout
+      } catch (error) {
+        console.error("Error logging out: ", error);
+        alert("Gagal logout. Silakan coba lagi.");
+      }
+    });
+
+    // Sidebar active link logic
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchReports(); // Initial fetch
+
+      const currentPath = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const currentFilename = currentPath.substring(
+          currentPath.lastIndexOf("/") + 1
+        );
+
+        let isLinkActive = false;
+
+        if (linkHref === currentFilename) {
+          isLinkActive = true;
+        } else if (
+          currentFilename === "" &&
+          linkHref === "admin-dashboard.html"
+        ) {
+          isLinkActive = true;
+        } else if (
+          currentFilename === "admin-aduan-detail.html" &&
+          linkHref === "admin-aduan.html"
+        ) {
+          // Special handling for detail page to highlight its parent link
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
