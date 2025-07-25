@@ -15,7 +15,6 @@
     <style>
         body {
             background-image: url('asset/images/Bg_login.jpeg');
-            /* Pastikan path ini benar */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -276,31 +275,6 @@
             background-color: #16a34a;
             border-color: #16a34a;
         }
-
-        /* Specific styling for the Forgot Password modal */
-        #forgotPasswordModal .modal-content {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        #forgotPasswordModal input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 0.5rem;
-        }
-
-        #forgotPasswordModal .modal-buttons button {
-            width: auto;
-            /* Override general modal button width */
-            margin: 0 0.5rem;
-        }
     </style>
 </head>
 
@@ -345,21 +319,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="rememberMe" name="rememberMe" type="checkbox"
-                            class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                        <label for="rememberMe" class="ml-2 block text-sm text-gray-300">
-                            Ingat Saya
-                        </label>
-                    </div>
-                    <div class="text-sm">
-                        <a href="#" id="forgotPasswordLink" class="font-medium text-purple-400 hover:text-purple-500">
-                            Lupa Password?
-                        </a>
-                    </div>
-                </div>
             </form>
         </div>
 
@@ -383,25 +342,12 @@
         </div>
     </div>
 
-    <div id="forgotPasswordModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 class="text-xl font-semibold mb-4">Lupa Password</h3>
-            <p class="text-gray-700 mb-4">Masukkan email Anda untuk menerima link reset password.</p>
-            <input type="email" id="forgotPasswordEmail" placeholder="Email Anda" class="mb-4" required />
-            <div class="modal-buttons">
-                <button id="sendResetLinkButton" class="btn-ok">Kirim Link Reset</button>
-                <button id="cancelResetButton"
-                    class="btn-cancel bg-gray-300 text-gray-800 hover:bg-gray-400">Batal</button>
-            </div>
-        </div>
-    </div>
-
-
     <script type="module">
         console.log("Memulai loading skrip modul utama...");
 
-        // Import modul Firebase Auth dan Firestore dari firebase-config.js
-        import { auth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, browserLocalPersistence, sendPasswordResetEmail, db, doc, getDoc } from "./js/firebase-config.js";
+        // Import modul Firebase Auth dari firebase-config.js
+        // Kita hanya butuh signInWithEmailAndPassword untuk login
+        import { auth, signInWithEmailAndPassword } from "./js/firebase-config.js";
 
         console.log("Import Firebase Auth berhasil.");
         console.log("Objek 'auth' setelah import:", auth);
@@ -431,11 +377,10 @@
             console.error("Error: Tombol toggle password visibility tidak ditemukan!");
         }
 
-        // Dapatkan elemen-elemen form dan modal
+        // Dapatkan elemen-elemen form
         const loginForm = document.getElementById("loginForm");
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
-        const rememberMeInput = document.getElementById("rememberMe");
         const loadingOverlay = document.getElementById("loading-overlay");
 
         // Auth Response Modal elements
@@ -443,14 +388,6 @@
         const authResponseTitle = document.getElementById('authResponseTitle');
         const authResponseMessage = document.getElementById('authResponseMessage');
         const authResponseOkButton = document.getElementById('authResponseOkButton');
-
-        // Forgot Password Modal elements
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-        const forgotPasswordEmailInput = document.getElementById('forgotPasswordEmail');
-        const sendResetLinkButton = document.getElementById('sendResetLinkButton');
-        const cancelResetButton = document.getElementById('cancelResetButton');
-
 
         // Function to show auth response modal (for both success and error)
         function showAuthResponseModal(message, title, isSuccess = false, redirectUrl = null) {
@@ -491,16 +428,9 @@
         if (loginForm) console.log("loginForm ditemukan."); else console.error("Error FATAL: loginForm tidak ditemukan!");
         if (emailInput) console.log("emailInput ditemukan.");
         if (passwordInput) console.log("passwordInput ditemukan.");
-        if (rememberMeInput) console.log("rememberMeInput ditemukan.");
         if (loadingOverlay) console.log("loadingOverlay ditemukan.");
-        if (forgotPasswordLink) console.log("forgotPasswordLink ditemukan.");
-        if (forgotPasswordModal) console.log("forgotPasswordModal ditemukan.");
-        if (forgotPasswordEmailInput) console.log("forgotPasswordEmailInput ditemukan.");
-        if (sendResetLinkButton) console.log("sendResetLinkButton ditemukan.");
-        if (cancelResetButton) console.log("cancelResetButton ditemukan.");
 
-
-        // Event listener untuk submit formulir login
+        // Event listener untuk submit formulir
         loginForm.addEventListener("submit", async (e) => {
             console.log("Event 'submit' pada form terdeteksi!");
             e.preventDefault(); // Mencegah refresh halaman
@@ -509,7 +439,6 @@
             // Ambil nilai dari setiap input
             const email = emailInput.value.trim();
             const password = passwordInput.value.trim();
-            const rememberMe = rememberMeInput.checked;
 
             // Validasi sederhana
             if (!email || !password) {
@@ -521,39 +450,14 @@
             loadingOverlay.classList.remove("hidden");
 
             try {
-                console.log("Mencoba mengatur persistensi sesi...");
-                // Atur persistensi sesi berdasarkan checkbox "Ingat Saya"
-                await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
-                console.log("Persistensi sesi diatur ke:", rememberMe ? "lokal" : "sesi");
-
                 console.log("Mencoba login user dengan Firebase Authentication...");
                 // Login user dengan Firebase Authentication
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
                 console.log("User berhasil login:", user);
 
-                // --- BAGIAN PENTING: Mengakses data pengguna dari Firestore setelah login berhasil ---
-                // Di sini, Anda memiliki 'user.uid' yang dapat digunakan untuk mengambil data dari koleksi 'users'
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    console.log("Data pengguna dari Firestore:", userData);
-                    // Anda bisa menyimpan userData ini di session/local storage atau menggunakannya
-                    // untuk personalisasi dashboard_user.html
-                    localStorage.setItem('currentUserData', JSON.stringify(userData)); // Contoh menyimpan data
-
-                    // Beri notifikasi sukses menggunakan modal dan redirect
-                    showAuthResponseModal("Login berhasil!", "Login Berhasil", true, "dashboard_user.html"); // Redirect to dashboard_user.html on success
-                } else {
-                    console.warn("Dokumen pengguna tidak ditemukan di Firestore untuk UID:", user.uid);
-                    // Ini bisa terjadi jika pendaftaran tidak menyimpan data ke Firestore
-                    // atau jika ada masalah sinkronisasi. Anda bisa memutuskan apakah ini error fatal
-                    // atau tetap melanjutkan ke dashboard dengan data minimal.
-                    showAuthResponseModal("Login berhasil, tetapi data profil tidak ditemukan.", "Login Berhasil", true, "dashboard_user.html");
-                }
-
+                // Beri notifikasi sukses menggunakan modal dan redirect
+                showAuthResponseModal("Login berhasil!", "Login Berhasil", true, "pembeli_dashboard.html"); // Redirect to dashboard_user.html on success
 
             } catch (error) {
                 // Sembunyikan loading overlay jika ada error
@@ -588,56 +492,6 @@
                 showAuthResponseModal(message, "Login Gagal", false);
             }
         });
-
-        // Event listener untuk link "Lupa Password?"
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            forgotPasswordEmailInput.value = ''; // Bersihkan input email
-            forgotPasswordModal.classList.add('show');
-        });
-
-        // Event listener untuk tombol "Batal" di modal Lupa Password
-        cancelResetButton.addEventListener('click', () => {
-            forgotPasswordModal.classList.remove('show');
-        });
-
-        // Event listener untuk tombol "Kirim Link Reset" di modal Lupa Password
-        sendResetLinkButton.addEventListener('click', async () => {
-            const email = forgotPasswordEmailInput.value.trim();
-            if (!email) {
-                alert("Masukkan alamat email Anda."); // Menggunakan alert sederhana untuk validasi di modal ini
-                return;
-            }
-
-            loadingOverlay.classList.remove("hidden");
-            forgotPasswordModal.classList.remove('show'); // Tutup modal forgot password
-
-            try {
-                await sendPasswordResetEmail(auth, email);
-                loadingOverlay.classList.add("hidden");
-                showAuthResponseModal("Link reset password telah dikirim ke " + email + ". Silakan periksa kotak masuk Anda.", "Reset Password Berhasil", true);
-            } catch (error) {
-                loadingOverlay.classList.add("hidden");
-                console.error("Error sending password reset email:", error);
-                let message = "Gagal mengirim link reset password. Silakan coba lagi.";
-                switch (error.code) {
-                    case "auth/invalid-email":
-                        message = "Format email tidak valid.";
-                        break;
-                    case "auth/user-not-found":
-                        message = "Tidak ada akun yang terdaftar dengan email ini.";
-                        break;
-                    case "auth/network-request-failed":
-                        message = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
-                        break;
-                    default:
-                        message = "Reset password gagal: " + error.message;
-                        break;
-                }
-                showAuthResponseModal(message, "Reset Password Gagal", false);
-            }
-        });
-
     </script>
 </body>
 
