@@ -228,6 +228,33 @@
     </div>
 
     <script type="module">
+        // Pastikan Anda memiliki file './js/firebase-config.js' yang menginisialisasi Firebase
+        // dan mengekspor objek-objek berikut: auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, serverTimestamp.
+        // Contoh firebase-config.js:
+        /*
+        // firebase-config.js
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        export { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, serverTimestamp };
+        */
+
         import {
             auth,
             db,
@@ -336,19 +363,21 @@
                 alamatToko: alamatToko,
                 gambar: profileImageUrl,
                 created_at: serverTimestamp(),
-                ownerId: jastiperId,
+                ownerId: jastiperId, // Ini adalah kunci agar aturan keamanan bekerja di koleksi 'toko'
                 totalViews: 0,
                 pengikut: [],
             };
 
             try {
                 // 1. Simpan data toko ke koleksi 'toko'
+                // ID dokumen toko akan sama dengan UID pengguna (jastiperId)
                 await setDoc(doc(db, "toko", jastiperId), newStoreData);
                 console.log("Toko berhasil didaftarkan untuk Jastiper ID:", jastiperId);
 
-                // 2. Update role user di koleksi 'user' menjadi 'jastiper'
-                // Menggunakan updateDoc untuk hanya mengubah field 'role'
-                const userRef = doc(db, "user", jastiperId);
+                // 2. Update role user di koleksi 'users' menjadi 'jastiper'
+                // PENTING: Pastikan nama koleksi di sini ("users") sama dengan yang ada di Firebase Security Rules.
+                // Sebelumnya mungkin tertulis "user" (singular) yang menyebabkan error permission.
+                const userRef = doc(db, "users", jastiperId);
                 await updateDoc(userRef, {
                     role: "jastiper"
                 });
@@ -359,6 +388,7 @@
 
             } catch (error) {
                 console.error("Error mendaftarkan toko atau memperbarui role:", error);
+                // Menampilkan pesan error yang lebih spesifik dari Firebase
                 showCustomConfirm("Gagal mendaftarkan toko atau memperbarui role: " + error.message, () => { });
             }
         });
@@ -368,6 +398,7 @@
             if (user) {
                 const jastiperId = user.uid;
                 try {
+                    // Cek apakah dokumen toko dengan ID pengguna sudah ada
                     const storeDoc = await getDoc(doc(db, "toko", jastiperId));
                     if (storeDoc.exists()) {
                         showCustomConfirm("Anda sudah memiliki toko. Mengarahkan Anda ke halaman 'Dashboard Jastiper'.", () => {
@@ -376,11 +407,13 @@
                     }
                 } catch (error) {
                     console.error("Error checking existing store:", error);
-                    // Jika ada error checking, jangan blokir user
+                    // Jika ada error checking, jangan blokir user. Biarkan mereka mencoba mendaftar.
+                    // Atau bisa juga tampilkan pesan error jika ingin user tahu ada masalah.
                 }
             } else {
                 // Opsional: jika user tidak login, redirect ke halaman login
                 // window.location.href = "login.html"; 
+                console.log("Pengguna belum login."); // Log untuk debugging
             }
         });
     </script>

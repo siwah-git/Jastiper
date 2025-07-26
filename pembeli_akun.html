@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akun Saya</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome untuk ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         /* Gaya kustom yang sudah ada */
@@ -366,9 +365,16 @@
         <div class="akun-sidebar bg-white rounded-xl shadow-md p-6 flex flex-col gap-6 min-h-[400px]">
             <div class="akun-user-info flex flex-col items-center gap-2 border-b pb-4">
                 <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User"
-                    class="akun-user-icon w-16 h-16 rounded-full object-cover mb-2">
+                    class="akun-user-icon w-16 h-16 rounded-full object-cover mb-2" id="sidebar-user-avatar">
                 <div class="akun-username font-bold text-lg text-gray-800" id="sidebar-username">Memuat...</div>
-                <a href="#" class="akun-edit-link text-blue-600 text-sm hover:underline">Ubah Profil</a>
+                <button type="button" id="editProfileBtn"
+                    class="akun-edit-link text-blue-600 text-sm hover:underline border-none bg-transparent cursor-pointer">Ubah
+                    Profil</button>
+                <input type="url" id="profilePictureUrlInput" placeholder="URL Gambar Profil"
+                    class="akun-input w-full mt-2 text-center hidden" />
+                <label for="profilePictureUrlInput" class="cursor-pointer text-blue-600 hover:underline hidden"
+                    id="uploadAvatarLabel">Ubah
+                    Foto Profil</label>
             </div>
             <nav class="akun-menu flex flex-col gap-2 mt-2">
                 <a href="pembeli_akun.html"
@@ -387,11 +393,6 @@
 
             <div class="akun-profile-container">
                 <div class="akun-form-section">
-                    <div class="akun-form-row">
-                        <label class="akun-label">Username</label>
-                        <input type="text" id="profile-username" class="akun-input" readonly>
-                    </div>
-
                     <div class="akun-form-row">
                         <label class="akun-label">Nama</label>
                         <input type="text" id="profile-nama" class="akun-input" readonly>
@@ -414,10 +415,14 @@
 
                     <div class="akun-form-row">
                         <label class="akun-label">Tanggal Lahir</label>
-                        <input type="text" id="profile-tanggal-lahir" class="akun-input" readonly>
+                        <input type="date" id="profile-tanggal-lahir" class="akun-input" readonly>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button type="button" id="saveProfileBtn"
+                            class="bg-pink-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-pink-700 hidden">Simpan
+                            Perubahan</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -459,27 +464,42 @@
 
     <script type="module">
         // Import Firebase functions from firebase-config.js
+        // Pastikan path ini benar sesuai lokasi firebase-config.js Anda
+        // Jika pembeli_akun.html dan folder 'js' ada di direktori yang sama: './js/firebase-config.js'
+        // Jika pembeli_akun.html ada di subfolder (ex: 'pembeli/') dan 'js' ada di parent folder: '../js/firebase-config.js'
         import {
             auth,
             db,
             onAuthStateChanged,
             doc,
             getDoc,
-            signOut // Import signOut for logout functionality
-        } from './firebase-config.js'; // Ensure this path is correct
+            updateDoc,
+            signOut,
+        } from './js/firebase-config.js'; // SESUAIKAN PATH INI JIKA PERLU!
 
-        // DOM Elements for profile data
+        // DOM Elements
         const sidebarUsername = document.getElementById('sidebar-username');
-        const profileUsernameInput = document.getElementById('profile-username');
+        // const profileUsernameInput = document.getElementById('profile-username'); // DIHAPUS
         const profileNamaInput = document.getElementById('profile-nama');
         const profileEmailInput = document.getElementById('profile-email');
         const profileTeleponInput = document.getElementById('profile-telepon');
         const profileJenisKelaminInput = document.getElementById('profile-jenis-kelamin');
         const profileTanggalLahirInput = document.getElementById('profile-tanggal-lahir');
 
+        // Buttons and Image URL Input Elements
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const profilePictureUrlInput = document.getElementById('profilePictureUrlInput');
+        const uploadAvatarLabel = document.getElementById('uploadAvatarLabel');
+        const sidebarUserAvatar = document.getElementById('sidebar-user-avatar');
+        // const profileUserAvatar = document.getElementById('profile-user-avatar'); // DIHAPUS
+
         // Header dropdown elements
         const userIcon = document.getElementById('userIcon');
         const userDropdown = document.getElementById('userDropdown');
+
+        // Placeholder for user avatar if not available
+        const defaultAvatarUrl = 'https://cdn-icons-png.flaticon.com/512/747/747376.png'; // Placeholder image
 
         // Fungsi untuk mengambil dan menampilkan data pengguna
         async function fetchUserData(uid) {
@@ -491,21 +511,33 @@
                     const userData = userDocSnap.data();
                     console.log("User Data:", userData);
 
-                    // Populate sidebar username
-                    sidebarUsername.textContent = userData.username || userData.namaLengkap || 'Pengguna';
+                    // Populate sidebar username and avatar
+                    sidebarUsername.textContent = userData.namaLengkap || 'Pengguna'; // Hanya pakai namaLengkap
+                    sidebarUserAvatar.src = userData.profilePictureUrl || defaultAvatarUrl;
 
                     // Populate profile form fields
-                    profileUsernameInput.value = userData.username || '';
                     profileNamaInput.value = userData.namaLengkap || '';
                     profileEmailInput.value = userData.email || '';
                     profileTeleponInput.value = userData.noTelepon || '';
                     profileJenisKelaminInput.value = userData.jenisKelamin || '';
-                    profileTanggalLahirInput.value = userData.tanggalLahir || ''; // Assuming tanggalLahir is stored as a string
+                    profileTanggalLahirInput.value = userData.tanggalLahir || '';
+                    profilePictureUrlInput.value = userData.profilePictureUrl || ''; // Set value for URL input
+
+                    // Set inputs to readonly by default
+                    toggleEditMode(false);
 
                 } else {
                     console.warn("Dokumen pengguna tidak ditemukan di Firestore.");
-                    // Optionally, redirect to a profile creation page or show a message
-                    alert("Data profil Anda tidak ditemukan. Silakan lengkapi profil Anda.");
+                    // Set inputs to editable if no data exists, allowing user to fill it
+                    toggleEditMode(true); // Make fields editable if no data to fill
+                    // Clear fields if no data to indicate they need to be filled
+                    profileNamaInput.value = '';
+                    profileEmailInput.value = '';
+                    profileTeleponInput.value = '';
+                    profileJenisKelaminInput.value = '';
+                    profileTanggalLahirInput.value = '';
+                    profilePictureUrlInput.value = '';
+                    sidebarUserAvatar.src = defaultAvatarUrl;
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -513,12 +545,97 @@
             }
         }
 
-        // Event listener untuk tombol "Ubah Profil" (saat ini hanya alert)
-        // Fungsi ini mungkin tidak lagi relevan jika tombolnya dihapus atau diarahkan ke halaman lain
-        document.querySelector('.akun-edit-link').addEventListener('click', function (e) {
+        // Function to toggle edit mode for profile fields and buttons
+        function toggleEditMode(isEditing) {
+            const inputFields = [
+                profileNamaInput,
+                profileEmailInput,
+                profileTeleponInput,
+                profileJenisKelaminInput,
+                profileTanggalLahirInput
+            ];
+
+            inputFields.forEach(input => {
+                if (isEditing) {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('akun-input[readonly]');
+                } else {
+                    input.setAttribute('readonly', true);
+                    input.classList.add('akun-input[readonly]');
+                }
+            });
+
+            // Toggle visibility of buttons and URL input/label
+            if (isEditing) {
+                editProfileBtn.classList.add('hidden');
+                saveProfileBtn.classList.remove('hidden');
+                profilePictureUrlInput.classList.remove('hidden'); // Show URL input
+                uploadAvatarLabel.classList.remove('hidden'); // Show "Ubah Foto Profil" label
+            } else {
+                editProfileBtn.classList.remove('hidden');
+                saveProfileBtn.classList.add('hidden');
+                profilePictureUrlInput.classList.add('hidden'); // Hide URL input
+                uploadAvatarLabel.classList.add('hidden'); // Hide "Ubah Foto Profil" label
+            }
+        }
+
+        // Event listener for "Ubah Profil" button
+        editProfileBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            alert('Fitur Edit Profil akan segera hadir!');
+            toggleEditMode(true);
         });
+
+        // Event listener for "Simpan Perubahan" button
+        saveProfileBtn.addEventListener('click', async function (e) {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (user) {
+                await updateProfileData(user.uid);
+            } else {
+                alert("Anda belum login. Silakan login terlebih dahulu.");
+                window.location.href = "login.html";
+            }
+        });
+
+        // Function to update user profile data in Firestore
+        async function updateProfileData(uid) {
+            try {
+                const userDocRef = doc(db, "users", uid);
+                const updatedData = {
+                    namaLengkap: profileNamaInput.value,
+                    email: profileEmailInput.value,
+                    noTelepon: profileTeleponInput.value,
+                    jenisKelamin: profileJenisKelaminInput.value,
+                    tanggalLahir: profileTanggalLahirInput.value,
+                    profilePictureUrl: profilePictureUrlInput.value // Ambil URL langsung dari input
+                };
+
+                // Filter out empty strings if you don't want to save them
+                Object.keys(updatedData).forEach(key => {
+                    if (updatedData[key] === '') {
+                        delete updatedData[key];
+                    }
+                });
+
+                await updateDoc(userDocRef, updatedData);
+                alert("Profil berhasil diperbarui!");
+                await fetchUserData(uid); // Muat ulang data setelah update dan kembali ke mode lihat
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert("Gagal memperbarui profil: " + error.message);
+            }
+        }
+
+        // Event listener for profile picture URL input change (for instant preview)
+        profilePictureUrlInput.addEventListener('input', function () {
+            const url = this.value;
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                sidebarUserAvatar.src = url;
+            } else {
+                sidebarUserAvatar.src = defaultAvatarUrl;
+            }
+        });
+
 
         // Menu Navigation (highlight active item)
         document.addEventListener('DOMContentLoaded', function () {

@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manajemen Pesanan - TitipGo Admin</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -12,14 +13,16 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
   <style>
+    /* Styling for the main content background image */
     #mainContent {
       background-image: linear-gradient(rgba(255, 255, 255, 0.3),
           rgba(255, 255, 255, 0.3)),
         url("asset/images/background.png");
-      /* PASTIKAN PATH INI BENAR */
+      /* PASTIKAN PATH INI BENAR SESUAI LOKASI FILE GAMBAR ANDA */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -27,37 +30,10 @@
       overflow: hidden;
     }
 
-    /* Optional: Overlay tambahan jika diperlukan */
-    /* #mainContent::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.1);
-        z-index: 0;
-        border-radius: inherit;
-      } */
-
-    /* Pastikan konten di dalam mainContent berada di atas overlay */
-    #mainContent>* {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Style untuk membuat background kartu statistik sedikit transparan */
+    /* Style for transparent card backgrounds */
     .card-bg-transparent {
-      background-color: rgba(255,
-          255,
-          255,
-          0.8);
-      /* Putih dengan opasitas 80% */
-    }
-
-    /* Added for header transparency */
-    .header-bg-transparent {
       background-color: rgba(255, 255, 255, 0.8);
+      /* White with 80% opacity */
     }
   </style>
 </head>
@@ -67,7 +43,7 @@
     <aside class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
       <div>
         <nav class="space-y-2 p-4">
-          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+          <img src="asset/images/logosiwah.png" alt="Logo TitipGo" class="w-48 h-20 object-contain mb-4" />
 
           <a href="admin-dashboard.html"
             class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
@@ -116,24 +92,16 @@
       </footer>
     </aside>
 
-    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
-          background-image: linear-gradient(
-              rgba(255, 255, 255, 0.3),
-              rgba(255, 255, 255, 0.3)
-            ),
-            url('asset/images/background.png');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-        ">
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen">
       <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
         <p class="text-lg font-semibold">Manajemen Pesanan</p>
         <div class="flex gap-3 text-right ml-auto">
-          <a href="#"
+          <a href="#" id="logoutButton"
             class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
               class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
       </div>
+
       <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
         <div class="md:col-span-2 lg:col-span-3">
           <label for="search" class="sr-only">Cari</label>
@@ -153,6 +121,9 @@
             <option value="Lunas">Lunas</option>
             <option value="Pending">Pending</option>
             <option value="Dibatalkan">Dibatalkan</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Dikirim">Dikirim</option>
+            <option value="Selesai">Selesai</option>
           </select>
         </div>
       </div>
@@ -171,13 +142,7 @@
                 Customer
               </th>
               <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
-                Jastiper
-              </th>
-              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
-                Barang
-              </th>
-              <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
-                Total
+                Nama Toko
               </th>
               <th scope="col" class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider">
                 Status
@@ -187,7 +152,11 @@
               </th>
             </tr>
           </thead>
-          <tbody id="orders-table-body" class="divide-y divide-gray-200"></tbody>
+          <tbody id="orders-table-body" class="divide-y divide-gray-200">
+            <tr>
+              <td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Memuat data pesanan...</td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
@@ -199,9 +168,9 @@
   </div>
 
   <script>
-    // Your Firebase configuration
+    // Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
     const firebaseConfig = {
-      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
+      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ", // GANTI DENGAN API KEY ASLI ANDA
       authDomain: "titipgo-28f84.firebaseapp.com",
       projectId: "titipgo-28f84",
       storageBucket: "titipgo-28f84.firebasestorage.app",
@@ -210,42 +179,102 @@
       measurementId: "G-CS3V405F3B",
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    // Initialize Firebase (only once to prevent errors)
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
+    // Global variables for orders and pagination
     let allOrders = []; // To store all fetched orders
     const itemsPerPage = 10;
     let currentPage = 1;
 
-    // Function to fetch orders from Firebase
-    async function fetchOrders() {
+    // --- Core Functions ---
+
+    // Function for user logout
+    document.getElementById('logoutButton').addEventListener('click', async (e) => {
+      e.preventDefault();
       try {
-        // Mengganti "pemesanan" menjadi "orders"
+        await auth.signOut();
+        alert('Anda telah logout.');
+        window.location.href = 'admin-login.html'; // Redirect to admin login page after logout
+      } catch (error) {
+        console.error('Error during logout:', error);
+        alert('Gagal logout. Silakan coba lagi.');
+      }
+    });
+
+    // Function to fetch orders from Firebase Firestore
+    async function fetchOrders() {
+      const tableBody = document.getElementById("orders-table-body");
+      tableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Memuat data pesanan...</td></tr>`;
+
+      try {
         const ordersRef = db.collection("orders");
-        const snapshot = await ordersRef.orderBy("tanggal", "desc").get(); // Assuming 'tanggal' field exists for sorting
-        allOrders = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        renderTable(allOrders); // Initial render with all data
+        const snapshot = await ordersRef.orderBy("createdAt", "desc").get();
+
+        const fetchedOrders = [];
+        for (const doc of snapshot.docs) {
+          const orderData = {
+            id: doc.id,
+            ...doc.data(),
+            namaToko: "N/A", // Default value
+            customerName: "N/A" // Default value
+          };
+
+          // --- Fetch Nama Toko ---
+          // Prioritas 1: Dari products[0].store (jika ada)
+          if (orderData.products && orderData.products.length > 0 && orderData.products[0].store) {
+            orderData.namaToko = orderData.products[0].store;
+          } else if (orderData.jastiperId) { // Prioritas 2: Dari koleksi 'toko' berdasarkan jastiperId
+            try {
+              const tokoDoc = await db.collection("toko").doc(orderData.jastiperId).get();
+              if (tokoDoc.exists) {
+                orderData.namaToko = tokoDoc.data().namaToko || "N/A";
+              }
+            } catch (tokoError) {
+              console.warn(`Could not fetch store name for jastiperId ${orderData.jastiperId}:`, tokoError);
+            }
+          }
+
+          // --- Fetch Customer Name ---
+          if (orderData.pembeliId) { // Assuming pembeliId in order document is the userId
+            try {
+              const userDoc = await db.collection("users").doc(orderData.pembeliId).get();
+              if (userDoc.exists) {
+                // Assuming 'nama' or 'username' field exists in 'users' collection
+                orderData.customerName = userDoc.data().nama || userDoc.data().username || "N/A";
+              }
+            } catch (userError) {
+              console.warn(`Could not fetch customer name for pembeliId ${orderData.pembeliId}:`, userError);
+            }
+          }
+
+          fetchedOrders.push(orderData);
+        }
+
+        allOrders = fetchedOrders;
+        renderTable(allOrders);
       } catch (error) {
         console.error("Error fetching orders: ", error);
-        alert("Gagal memuat data pesanan. Silakan coba lagi.");
+        alert("Gagal memuat data pesanan. Silakan periksa izin atau koneksi Anda.");
+        tableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-red-600">Gagal memuat data pesanan. Error: ${error.message}. Pastikan Anda login sebagai admin dan aturan keamanan Firestore sudah benar.</td></tr>`;
       }
     }
 
-    // Function to render table rows
+    // Function to render table rows based on filtered/paginated data
     function renderTable(ordersToRender) {
       const tableBody = document.getElementById("orders-table-body");
-      tableBody.innerHTML = ""; // Clear existing rows
+      tableBody.innerHTML = ""; // Clear existing rows before rendering
 
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       const paginatedOrders = ordersToRender.slice(startIndex, endIndex);
 
       if (paginatedOrders.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="8" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pesanan.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Tidak ada data pesanan.</td></tr>`;
         updatePaginationInfo(0, 0, 0);
         renderPaginationControls(0);
         return;
@@ -256,6 +285,7 @@
         let statusClass = "";
         let statusText = "";
 
+        // Determine status styling
         switch (order.status) {
           case "Lunas":
             statusClass = "bg-green-100 text-green-800";
@@ -269,13 +299,26 @@
             statusClass = "bg-red-100 text-red-800";
             statusText = "Dibatalkan";
             break;
+          case "Diproses":
+            statusClass = "bg-blue-100 text-blue-800";
+            statusText = "Diproses";
+            break;
+          case "Dikirim":
+            statusClass = "bg-purple-100 text-purple-800";
+            statusText = "Dikirim";
+            break;
+          case "Selesai":
+            statusClass = "bg-indigo-100 text-indigo-800";
+            statusText = "Selesai";
+            break;
           default:
             statusClass = "bg-gray-100 text-gray-800";
             statusText = order.status || "Unknown";
         }
 
-        const formattedDate = order.tanggal
-          ? new Date(order.tanggal.seconds * 1000).toLocaleString("id-ID", {
+        // Format date from Firebase Timestamp (using 'createdAt')
+        const formattedDate = order.createdAt && order.createdAt.seconds
+          ? new Date(order.createdAt.seconds * 1000).toLocaleString("id-ID", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -284,28 +327,23 @@
           })
           : "N/A";
 
+        // Insert row HTML
         row.innerHTML = `
             <td class="py-3 px-4 text-sm text-gray-700">${order.noPesanan || "N/A"
           }</td>
             <td class="py-3 px-4 text-sm text-gray-700">${formattedDate}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${order.customerName || "N/A"
           }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${order.jastiperName || "N/A"
-          }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${order.itemName || "N/A"
-          }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${order.totalPrice
-            ? `Rp. ${order.totalPrice.toLocaleString("id-ID")}`
-            : "N/A"
+            <td class="py-3 px-4 text-sm text-gray-700">${order.namaToko || "N/A"
           }</td>
             <td class="py-3 px-4 text-sm">
               <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${statusText}</span>
             </td>
             <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
               <a href="admin-pesanan-detail.html?id=${order.id
-          }" class="text-blue-600 hover:text-blue-900" title="Lihat"><i class="fas fa-search"></i></a>
+          }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-search"></i></a>
               <a href="#" class="text-red-600 hover:text-red-900 delete-btn" data-id="${order.id
-          }" title="Hapus"><i class="fas fa-times-circle"></i></a>
+          }" title="Hapus Pesanan"><i class="fas fa-times-circle"></i></a>
             </td>
           `;
       });
@@ -318,7 +356,7 @@
       renderPaginationControls(ordersToRender.length);
     }
 
-    // Function to filter table data based on search and status
+    // Function to filter table data based on search and status inputs
     function filterTable() {
       const searchTerm = document
         .getElementById("search")
@@ -329,38 +367,36 @@
         const matchesSearch =
           (order.noPesanan &&
             order.noPesanan.toLowerCase().includes(searchTerm)) ||
-          (order.customerName &&
+          (order.customerName && // Filter by customerName
             order.customerName.toLowerCase().includes(searchTerm)) ||
-          (order.jastiperName &&
-            order.jastiperName.toLowerCase().includes(searchTerm)) ||
-          (order.itemName &&
-            order.itemName.toLowerCase().includes(searchTerm));
+          (order.namaToko && // Filter by namaToko
+            order.namaToko.toLowerCase().includes(searchTerm));
 
         const matchesStatus =
           statusFilter === "" || order.status === statusFilter;
 
         return matchesSearch && matchesStatus;
       });
-      currentPage = 1; // Reset to first page on filter
+      currentPage = 1; // Reset to first page on filter change
       renderTable(filteredOrders);
     }
 
-    // Function to delete an order (example, implement proper confirmation)
+    // Function to delete an order (requires appropriate Firestore Security Rules)
     async function deleteOrder(orderId) {
-      if (confirm("Apakah Anda yakin ingin menghapus pesanan ini?")) {
+      if (confirm("Apakah Anda yakin ingin menghapus pesanan ini secara permanen?")) {
         try {
-          // Mengganti "pemesanan" menjadi "orders"
           await db.collection("orders").doc(orderId).delete();
           alert("Pesanan berhasil dihapus!");
           fetchOrders(); // Re-fetch and render table after deletion
         } catch (error) {
-          console.error("Error removing document: ", error);
-          alert("Gagal menghapus pesanan. Silakan coba lagi.");
+          console.error("Error removing order document: ", error);
+          alert("Gagal menghapus pesanan. Silakan coba lagi. Pastikan Anda memiliki izin.");
         }
       }
     }
 
-    // Pagination functions
+    // --- Pagination Helper Functions ---
+
     function updatePaginationInfo(start, end, total) {
       const infoElement = document.getElementById("pagination-info");
       infoElement.textContent = `Menampilkan ${start} sampai ${end} dari ${total} data`;
@@ -394,8 +430,8 @@
       for (let i = 1; i <= totalPages; i++) {
         const pageBtn = document.createElement("button");
         pageBtn.className = `px-4 py-2 text-sm font-medium ${i === currentPage
-            ? "text-pink-600 bg-pink-100"
-            : "text-gray-700 bg-white hover:bg-gray-50"
+          ? "text-pink-600 bg-pink-100"
+          : "text-gray-700 bg-white hover:bg-gray-50"
           } border border-gray-300`;
         pageBtn.textContent = i;
         pageBtn.onclick = () => {
@@ -420,38 +456,16 @@
       paginationControls.appendChild(nextBtn);
     }
 
+    // --- Event Listeners and Initial Load ---
     document.addEventListener("DOMContentLoaded", function () {
-      // Fetch and display initial orders
-      fetchOrders();
-
-      // Event listeners for search and filter
-      document
-        .getElementById("search")
-        .addEventListener("keyup", filterTable);
-      document
-        .getElementById("status")
-        .addEventListener("change", filterTable);
-
-      // Event listener for delete buttons (using event delegation)
-      document
-        .getElementById("orders-table-body")
-        .addEventListener("click", function (event) {
-          if (event.target.closest(".delete-btn")) {
-            event.preventDefault();
-            const orderId = event.target.closest(".delete-btn").dataset.id;
-            deleteOrder(orderId);
-          }
-        });
-
       // Sidebar active state logic
       const currentPath = window.location.pathname;
       const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
       sidebarLinks.forEach((link) => {
         const linkHref = link.getAttribute("href");
-        const fileName = linkHref.substring(linkHref.lastIndexOf("/") + 1); // Get the filename from the href
+        const fileName = linkHref.substring(linkHref.lastIndexOf("/") + 1);
 
-        // Compare the current path's filename with the link's filename
         if (currentPath.includes(fileName)) {
           link.classList.remove(
             "text-gray-700",
@@ -466,6 +480,49 @@
             "hover:bg-pink-100",
             "hover:text-pink-600"
           );
+        }
+      });
+
+      // --- Firebase Authentication State Change Listener (CRUCIAL FOR ADMIN ACCESS) ---
+      // This listener ensures that only authenticated admins can view and interact with this page's data.
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          // User is signed in, now check if they are an admin by querying the 'admin' collection
+          try {
+            const adminDoc = await db.collection("admin").doc(user.uid).get();
+            if (adminDoc.exists && adminDoc.data().role === 'admin') {
+              console.log("User is an admin. Proceeding to fetch orders data.");
+              fetchOrders(); // Only fetch orders if the user is verified as admin
+            } else {
+              // User is logged in but not an admin or admin data is incorrect
+              console.warn("User is logged in but does not have admin privileges. Redirecting to login.");
+              alert("Akses ditolak. Anda tidak memiliki izin admin untuk melihat halaman ini.");
+              auth.signOut(); // Force sign out if not admin to prevent unauthorized access attempts
+              window.location.href = 'admin-login.html'; // Redirect to your admin login page
+            }
+          } catch (error) {
+            console.error("Error checking admin role:", error);
+            alert("Terjadi kesalahan saat memverifikasi peran admin. Silakan coba lagi.");
+            auth.signOut(); // Sign out on error to prevent potential infinite loops or broken states
+            window.location.href = 'admin-login.html'; // Redirect to login on error
+          }
+        } else {
+          // User is not signed in at all, redirect to login page
+          console.log("User not logged in. Redirecting to admin login page.");
+          window.location.href = 'admin-login.html'; // Redirect to your admin login page
+        }
+      });
+
+      // Event listeners for search and filter inputs
+      document.getElementById("search").addEventListener("keyup", filterTable);
+      document.getElementById("status").addEventListener("change", filterTable);
+
+      // Event listener for delete buttons (using event delegation on the table body)
+      document.getElementById("orders-table-body").addEventListener("click", function (event) {
+        if (event.target.closest(".delete-btn")) {
+          event.preventDefault(); // Prevent default link behavior
+          const orderId = event.target.closest(".delete-btn").dataset.id;
+          deleteOrder(orderId);
         }
       });
     });

@@ -205,6 +205,35 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
+
+        /* Styling for Chat Modal Messages */
+        #chatCSMessages p {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        #chatCSMessages p strong {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+
+        #chatCSMessages .sender {
+            background-color: #e0f7fa;
+            /* Light blue for sender */
+            margin-left: auto;
+            text-align: right;
+        }
+
+        #chatCSMessages .receiver {
+            background-color: #fce4ec;
+            /* Light pink for receiver (admin) */
+            margin-right: auto;
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -268,7 +297,6 @@
         </nav>
     </header>
     <main class="mt-16">
-        <!-- Added mt-16 to push content below fixed header -->
         <section id="hero-section"
             class="relative h-[80vh] flex items-center justify-center text-center px-4 hero-section">
             <div class="absolute inset-0 overlay-dark z-0"></div>
@@ -311,7 +339,6 @@
                 <h2 class="text-3xl font-bold mb-10" id="produk-section-title">Produk</h2>
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
-                    <!-- Produk akan dimuat di sini secara dinamis -->
                     <p id="loading-products" class="col-span-full text-gray-500">Memuat produk...</p>
                     <p id="no-products-found" class="col-span-full text-gray-500 hidden">Tidak ada produk ditemukan.</p>
                 </div>
@@ -326,7 +353,6 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-10">Negara</h2>
             <div id="negara-terpopuler"
                 class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 px-4 max-w-6xl mx-auto">
-                <!-- Negara akan dimuat di sini secara dinamis -->
                 <p id="loading-countries" class="col-span-full text-gray-500">Memuat negara...</p>
                 <p id="no-countries-found" class="col-span-full text-gray-500 hidden">Tidak ada negara ditemukan.</p>
             </div>
@@ -381,7 +407,7 @@
                 <button onclick="document.getElementById('chatCSModal').style.display='none'"
                     style="background:none;border:none;font-size:22px;cursor:pointer;">&times;</button>
             </div>
-            <div style="padding:18px 20px 0 20px;min-height:80px;">
+            <div style="padding:18px 20px 0 20px;min-height:80px; max-height: 300px; overflow-y: auto;">
                 <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;"></div>
             </div>
             <div style="display:flex;align-items:center;padding:10px 20px 0 20px;gap:8px;">
@@ -394,7 +420,7 @@
     </div>
     <script type="module">
         // Import Firebase modules from your firebase-config.js
-        import { db, auth, collection, getDocs, query, where, doc, getDoc, onAuthStateChanged, signOut } from "/js/firebase-config.js";
+        import { db, auth, collection, getDocs, query, where, doc, getDoc, onAuthStateChanged, signOut, setDoc, updateDoc, serverTimestamp, onSnapshot, addDoc } from "/js/firebase-config.js";
 
         // Global variable to store all products for filtering
         let allProducts = [];
@@ -463,30 +489,140 @@
             }
         }
 
-        // Fungsi untuk membuka modal chat CS
-        function openChatCS() {
-            document.getElementById('chatCSModal').style.display = 'flex';
-            document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?"; // Pesan awal
-            document.getElementById('chatCSInput').value = ''; // Kosongkan input
+        // --- FUNGSI CHAT DENGAN CS ---
+        const chatCSModal = document.getElementById('chatCSModal');
+        const chatCSMessages = document.getElementById('chatCSMessages');
+        const chatCSInput = document.getElementById('chatCSInput');
+
+        // Ganti dengan UID admin yang sebenarnya di aplikasi Anda
+        // Anda bisa mengambil ini dari konfigurasi atau dari dokumen Firestore yang spesifik.
+        const ADMIN_UID = "YOUR_ADMIN_FIREBASE_UID_HERE"; // !!! PENTING: GANTI INI DENGAN UID ADMIN ASLI ANDA !!!
+
+        let currentUserUid = null;
+        let userChatRoomId = null; // Untuk menyimpan ID ruang chat spesifik antara user dan admin
+
+        // Fungsi untuk mendapatkan atau membuat ruang chat
+        async function getOrCreateChatRoom(userUid, adminUid) {
+            // Logika sederhana: ID ruang chat adalah gabungan UID user dan admin, diurutkan untuk konsistensi
+            const chatRoomIdentifier = [userUid, adminUid].sort().join('-');
+            const chatRoomRef = doc(db, "chat", chatRoomIdentifier);
+            const chatRoomSnap = await getDoc(chatRoomRef);
+
+            if (!chatRoomSnap.exists()) {
+                console.log("Membuat ruang chat baru...");
+                await setDoc(chatRoomRef, {
+                    members: [userUid, adminUid],
+                    createdAt: serverTimestamp(),
+                    lastMessageAt: serverTimestamp()
+                });
+            } else {
+                console.log("Ruang chat sudah ada.");
+            }
+            return chatRoomIdentifier;
         }
 
-        // Fungsi untuk mengirim pesan ke CS (contoh sederhana, tidak terhubung ke backend)
-        function sendCSMessage() {
-            const chatInput = document.getElementById('chatCSInput');
-            const chatMessages = document.getElementById('chatCSMessages');
-            const message = chatInput.value.trim();
+        // Fungsi untuk menampilkan pesan ke UI modal chat
+        function displayChatMessage(messageData) {
+            const messageElement = document.createElement('p');
+            const senderName = messageData.senderId === currentUserUid ? "Anda" : "CS";
 
-            if (message !== '') {
-                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
-                chatInput.value = '';
+            messageElement.innerHTML = `<strong>${senderName}:</strong> ${messageData.message}`;
+            messageElement.classList.add('mb-2', 'p-2', 'rounded-lg', 'max-w-[80%]');
 
-                // Contoh balasan otomatis (bukan dari CS sungguhan)
-                setTimeout(() => {
-                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
-                    chatMessages.scrollTop = chatMessages.scrollHeight; // Gulir ke bawah
-                }, 1000);
+            if (messageData.senderId === currentUserUid) {
+                messageElement.classList.add('bg-pink-100', 'ml-auto', 'text-right');
+            } else {
+                messageElement.classList.add('bg-gray-200', 'mr-auto', 'text-left');
+                // Tandai pesan sebagai terbaca jika itu dari CS dan belum terbaca
+                if (messageData.status === 'unread' && userChatRoomId) {
+                    updateDoc(doc(db, "chat", userChatRoomId, "messages", messageData.id), { // use messageData.id
+                        status: "read"
+                    });
+                }
+            }
+            chatCSMessages.appendChild(messageElement);
+            chatCSMessages.scrollTop = chatCSMessages.scrollHeight; // Gulir ke bawah
+        }
+
+        // Fungsi untuk membuka modal chat CS
+        async function openChatCS() {
+            if (!auth.currentUser) {
+                alert("Anda harus login untuk chat dengan CS.");
+                return;
+            }
+
+            currentUserUid = auth.currentUser.uid;
+            chatCSModal.style.display = 'flex';
+            chatCSMessages.innerHTML = ''; // Kosongkan pesan sebelumnya
+
+            // Dapatkan atau buat ruang chat
+            userChatRoomId = await getOrCreateChatRoom(currentUserUid, ADMIN_UID);
+
+            // Set up real-time listener for messages in this chat room
+            const messagesRef = collection(db, "chat", userChatRoomId, "messages");
+            const q = query(messagesRef, orderBy("timestamp", "asc"));
+
+            onSnapshot(q, (snapshot) => {
+                // Clear previous messages if it's the initial load or a reset
+                // Only re-render added messages to avoid flicker
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const messageData = { id: change.doc.id, ...change.doc.data() };
+                        displayChatMessage(messageData);
+                    } else if (change.type === "modified") {
+                        // Handle modifications, e.g., status changes
+                        // You might re-render specific message or update its style
+                        console.log("Modified message:", change.doc.data());
+                    }
+                });
+            }, (error) => {
+                console.error("Error fetching chat messages:", error);
+                chatCSMessages.innerHTML = `<p style="color:red;">Gagal memuat pesan: ${error.message}</p>`;
+            });
+        }
+
+        // Fungsi untuk mengirim pesan ke CS
+        async function sendCSMessage() {
+            const messageText = chatCSInput.value.trim();
+
+            if (messageText === "") {
+                alert("Pesan tidak boleh kosong!");
+                return;
+            }
+
+            if (!currentUserUid || !userChatRoomId) {
+                alert("Kesalahan: Pengguna tidak login atau ruang chat belum siap.");
+                return;
+            }
+
+            try {
+                const messagesCollectionRef = collection(db, "chat", userChatRoomId, "messages");
+                await addDoc(messagesCollectionRef, {
+                    senderId: currentUserUid,
+                    receiverId: ADMIN_UID,
+                    message: messageText,
+                    timestamp: serverTimestamp(),
+                    status: "unread" // Pesan baru selalu "unread" secara default
+                });
+                chatCSInput.value = ''; // Kosongkan input setelah kirim
+
+                // Opsional: Perbarui lastMessageAt di dokumen chat room induk
+                await updateDoc(doc(db, "chat", userChatRoomId), {
+                    lastMessageAt: serverTimestamp()
+                });
+
+            } catch (error) {
+                console.error("Error sending message:", error);
+                alert("Gagal mengirim pesan: " + error.message);
             }
         }
+
+        // Event listener untuk tombol Enter di input pesan chat
+        chatCSInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendCSMessage();
+            }
+        });
 
         // Expose functions to global scope for onclick attributes
         window.logoutUser = logoutUser;
@@ -644,35 +780,30 @@
             lihatSemuaProdukButton.classList.add('hidden'); // Hide the button after showing all
         });
 
-        // Event listener for "Lihat Semua Negara" button (if you want to implement a separate page for all countries)
-        // For now, it just re-renders all countries
-        lihatSemuaNegaraButton.addEventListener('click', () => {
-            // You might want to navigate to a dedicated 'all countries' page here
-            renderCountries(Array.from(firestoreCountryImagesMap.keys())); // Re-render all countries from map
-        });
+        // Initial fetch when the page loads
+        document.addEventListener('DOMContentLoaded', fetchProductsAndCountries);
 
-        // Auth state listener to handle user session and load data
-        onAuthStateChanged(auth, (user) => {
+        // Check user authentication status on page load to adjust UI (e.g., "Toko Saya" link)
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                console.log("User is logged in:", user.uid);
-                // Optionally fetch user role to adjust UI, e.g., for "Toko Saya" link
+                currentUserUid = user.uid; // Set currentUserUid when user is logged in
                 const userDocRef = doc(db, "users", user.uid);
-                getDoc(userDocRef).then(docSnap => {
-                    if (docSnap.exists() && docSnap.data().role === 'jastiper') {
-                        tokoSayaLink.href = "jastiper_dashboard.html"; // Change link for jastiper
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    if (userData.role === 'jastiper') {
+                        tokoSayaLink.href = "jastiper_dashboard.html"; // Link to Jastiper dashboard if role is jastiper
                     } else {
-                        // Default for pembeli or other roles
-                        tokoSayaLink.href = "pembeli_toko_saya.html"; // Assume this is a page for pembeli to manage their own 'toko' or create one
+                        tokoSayaLink.href = "jastiper_daftar_toko.html"; // Link to register store if not jastiper
                     }
-                }).catch(error => {
-                    console.error("Error fetching user role:", error);
-                    tokoSayaLink.href = "pembeli_toko_saya.html"; // Fallback
-                });
-                fetchProductsAndCountries(); // Load data after user is authenticated
+                } else {
+                    tokoSayaLink.href = "jastiper_daftar_toko.html"; // Default to register if user doc not found
+                }
             } else {
-                console.log("No user logged in, redirecting to index.html");
-                // Redirect to index.html if no user is logged in
-                window.location.href = "index.html";
+                // User is signed out
+                tokoSayaLink.href = "jastiper_daftar_toko.html"; // Redirect to register if not logged in
+                // Optionally hide user icon or show login/register links
             }
         });
     </script>

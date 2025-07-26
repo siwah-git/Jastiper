@@ -1,508 +1,549 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Detail Pesanan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Detail Pesanan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-      /* Custom styles */
-      .truncate-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* number of lines to show */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+  <!-- Chart.js tidak digunakan di halaman ini, bisa dihapus jika tidak ada grafik -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
-      /* Definisi lebar sidebar yang konsisten */
-      :root {
-        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda (w-67) */
-      }
+  <style>
+    /* Custom styles */
+    .truncate-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      /* number of lines to show */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-      .sidebar {
-        width: var(--sidebar-width);
-      }
+    /* Definisi lebar sidebar yang konsisten */
+    :root {
+      --sidebar-width: 268px;
+      /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda (w-67) */
+    }
 
-      .main-content {
-        margin-left: var(--sidebar-width);
-        flex-grow: 1; /* Penting untuk flexbox layout agar main mengisi sisa ruang */
-      }
+    .sidebar {
+      width: var(--sidebar-width);
+    }
 
-      body {
-        min-height: 100vh;
-      }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      /* Penting untuk flexbox layout agar main mengisi sisa ruang */
+    }
 
-      /* Untuk membatasi lebar konten utama agar tidak terlalu lebar di layar besar */
-      .content-wrapper {
-        max-width: 900px; /* Batasi lebar maksimum konten detail */
-        margin-left: auto;
-        margin-right: auto;
-      }
+    body {
+      min-height: 100vh;
+    }
 
-      /* Style untuk badge status pesanan */
-      .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px; /* Full rounded */
-        font-weight: 600; /* Semibold */
-        font-size: 0.75rem; /* text-xs */
-        line-height: 1rem;
-        display: inline-block;
-      }
+    /* Untuk membatasi lebar konten utama agar tidak terlalu lebar di layar besar */
+    .content-wrapper {
+      max-width: 900px;
+      /* Batasi lebar maksimum konten detail */
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-      /* Classes for different statuses (match with your Firebase data values) */
-      .status-pending {
-        background-color: #fefcbf; /* yellow-100 */
-        color: #92400e; /* yellow-800 */
-      }
-      .status-processing {
-        background-color: #bfdbfe; /* blue-100 */
-        color: #1e40af; /* blue-800 */
-      }
-      .status-shipped {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-delivered {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-cancelled {
-        background-color: #fee2e2; /* red-100 */
-        color: #991b1b; /* red-800 */
-      }
-      .status-completed {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-refunded {
-        background-color: #e0f2fe; /* light blue for refunded */
-        color: #075985;
-      }
-    </style>
-  </head>
-  <body class="flex min-h-screen bg-gray-100">
-    <aside
-      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-    >
-      <div>
-        <nav class="space-y-2 p-4">
-          <img
-            src="asset/images/logosiwah.png"
-            alt="Logo"
-            class="w-48 h-20 object-contain mb-4"
-          />
+    /* Style untuk badge status pesanan */
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      /* Full rounded */
+      font-weight: 600;
+      /* Semibold */
+      font-size: 0.75rem;
+      /* text-xs */
+      line-height: 1rem;
+      display: inline-block;
+    }
 
-          <a
-            href="admin-dashboard.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+    /* Classes for different statuses (match with your Firebase data values) */
+    .status-pending {
+      background-color: #fefcbf;
+      /* yellow-100 */
+      color: #92400e;
+      /* yellow-800 */
+    }
+
+    .status-processing {
+      background-color: #bfdbfe;
+      /* blue-100 */
+      color: #1e40af;
+      /* blue-800 */
+    }
+
+    .status-shipped {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
+
+    .status-delivered {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
+
+    .status-cancelled {
+      background-color: #fee2e2;
+      /* red-100 */
+      color: #991b1b;
+      /* red-800 */
+    }
+
+    .status-completed {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
+
+    .status-refunded {
+      background-color: #e0f2fe;
+      /* light blue for refunded */
+      color: #075985;
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen bg-gray-100">
+  <aside
+    class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+    <div>
+      <nav class="space-y-2 p-4">
+        <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+
+        <a href="admin-dashboard.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+        </a>
+        <a href="admin-katalog.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+        </a>
+        <a href="admin-pengguna.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+        </a>
+        <a href="admin-toko.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-store mr-3"></i> Manajemen Toko
+        </a>
+        <a href="admin-pesanan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+        </a>
+        <a href="admin-aduan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+        </a>
+        <a href="admin-laporan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+        </a>
+        <a href="admin-pendapatan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+        </a>
+        <a href="admin-profil.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+        </a>
+        <a href="admin-about-us.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+        </a>
+      </nav>
+    </div>
+    <footer class="text-sm text-gray-500 text-center p-4 border-t">
+      &copy; 2025 TitipGo. All rights reserved.
+    </footer>
+  </aside>
+
+  <main class="main-content p-8 overflow-y-auto">
+    <div class="content-wrapper">
+      <div
+        class="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between mb-8 rounded-lg shadow-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+          <a href="admin-pesanan.html" class="text-white hover:text-teal-100 mr-4">
+            <i class="fas fa-arrow-left text-2xl"></i>
           </a>
-          <a
-            href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
-          </a>
-          <a
-            href="admin-pengguna.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
-          </a>
-          <a
-            href="admin-toko.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-store mr-3"></i> Manajemen Toko
-          </a>
-          <a
-            href="admin-pesanan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
-          </a>
-          <a
-            href="admin-aduan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
-          </a>
-          <a
-            href="admin-laporan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
-          </a>
-          <a
-            href="admin-pendapatan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
-          </a>
-          <a
-            href="admin-profil.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
-          </a>
-          <a
-            href="admin-about-us.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
-          </a>
-        </nav>
+          <h1 class="text-2xl font-bold" id="order-detail-title">
+            Detail Pesanan: #ORD12345
+          </h1>
+        </div>
+        <div class="text-right flex gap-3">
+          <!-- Tombol "Update Status" dihapus -->
+          <!--
+                    <button
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+                        id="update-status-button">
+                        <i class="fas fa-tasks mr-2"></i> Update Status
+                    </button>
+                    -->
+          <!-- Tombol "Hapus Pesanan" dihapus -->
+          <!--
+                    <button
+                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
+                        id="delete-order-button">
+                        <i class="fas fa-trash-alt mr-2"></i> Hapus Pesanan
+                    </button>
+                    -->
+          <a href="#" id="logoutButton"
+            class="text-teal-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-teal-400 hover:bg-teal-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+        </div>
       </div>
-      <footer class="text-sm text-gray-500 text-center p-4 border-t">
-        &copy; 2025 TitipGo. All rights reserved.
-      </footer>
-    </aside>
 
-    <main class="main-content p-8 overflow-y-auto">
-      <div class="content-wrapper">
-        <div
-          class="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between mb-8 rounded-lg shadow-lg"
-        >
-          <div class="flex items-center mb-4 md:mb-0">
-            <a
-              href="admin-pesanan.html"
-              class="text-white hover:text-teal-100 mr-4"
-            >
-              <i class="fas fa-arrow-left text-2xl"></i>
-            </a>
-            <h1 class="text-2xl font-bold" id="order-detail-title">
-              Detail Pesanan: #ORD12345
-            </h1>
-          </div>
-          <div class="text-right flex gap-3">
-            <button
-              class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-              id="update-status-button"
-            >
-              <i class="fas fa-tasks mr-2"></i> Update Status
-            </button>
-            <button
-              class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-              id="delete-order-button"
-            >
-              <i class="fas fa-trash-alt mr-2"></i> Hapus Pesanan
-            </button>
-            <a
-              href="#"
-              class="text-teal-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-teal-400 hover:bg-teal-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
+      <nav class="text-sm text-gray-600 mb-6">
+        <ol class="list-none p-0 inline-flex">
+          <li class="flex items-center">
+            <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center">
+            <a href="admin-pesanan.html" class="text-blue-600 hover:text-blue-800">Manajemen Pesanan</a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+          </li>
+          <li class="flex items-center text-gray-500" id="breadcrumb-order-id">
+            #ORD12345
+          </li>
+        </ol>
+      </nav>
+
+      <div class="flex flex-col space-y-6">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-receipt text-teal-500 mr-2"></i> Ringkasan
+            Pesanan
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
+            <p><strong>ID Pesanan:</strong> <span id="order-id"></span></p>
+            <p>
+              <strong>Tanggal Pesan:</strong> <span id="order-date"></span>
+            </p>
+            <p>
+              <strong>Status Pesanan:</strong>
+              <span id="admin-order-status-badge" class="status-badge">Memuat...</span>
+            </p>
+            <p>
+              <strong>Total Pembayaran:</strong>
+              <span id="total-payment"></span>
+            </p>
+            <p>
+              <strong>Metode Pembayaran:</strong>
+              <span id="payment-method"></span>
+            </p>
+            <p>
+              <strong>Status Pembayaran:</strong>
+              <span class="font-semibold" id="payment-status"></span>
+            </p>
+            <p>
+              <strong>Nama Pelanggan:</strong>
+              <a href="#" id="customer-name-link" class="text-blue-600 hover:underline">Memuat...</a>
+            </p>
           </div>
         </div>
 
-        <nav class="text-sm text-gray-600 mb-6">
-          <ol class="list-none p-0 inline-flex">
-            <li class="flex items-center">
-              <a
-                href="admin-dashboard.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Dashboard</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li class="flex items-center">
-              <a
-                href="admin-pesanan.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Manajemen Pesanan</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li
-              class="flex items-center text-gray-500"
-              id="breadcrumb-order-id"
-            >
-              #ORD12345
-            </li>
-          </ol>
-        </nav>
-
-        <div class="flex flex-col space-y-6">
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-receipt text-teal-500 mr-2"></i> Ringkasan
-              Pesanan
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-            >
-              <p><strong>ID Pesanan:</strong> <span id="order-id"></span></p>
-              <p>
-                <strong>Tanggal Pesan:</strong> <span id="order-date"></span>
-              </p>
-              <p>
-                <strong>Status Pesanan:</strong>
-                <span id="admin-order-status-badge" class="status-badge"
-                  >Memuat...</span
-                >
-              </p>
-              <p>
-                <strong>Total Pembayaran:</strong>
-                <span id="total-payment"></span>
-              </p>
-              <p>
-                <strong>Metode Pembayaran:</strong>
-                <span id="payment-method"></span>
-              </p>
-              <p>
-                <strong>Status Pembayaran:</strong>
-                <span class="font-semibold" id="payment-status"></span>
-              </p>
-              <p>
-                <strong>Nama Pelanggan:</strong>
-                <a
-                  href="#"
-                  id="customer-name-link"
-                  class="text-blue-600 hover:underline"
-                  >Memuat...</a
-                >
-              </p>
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-box-open text-orange-500 mr-2"></i> Item Pesanan
+          </h3>
+          <div class="space-y-4" id="order-items-container">
+            <p class="text-gray-500">Memuat item pesanan...</p>
           </div>
-
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-box-open text-orange-500 mr-2"></i> Item Pesanan
-            </h3>
-            <div class="space-y-4" id="order-items-container">
-              <p class="text-gray-500">Memuat item pesanan...</p>
-            </div>
-            <div class="flex justify-end items-center mt-6 pt-4 border-t">
-              <p class="text-lg font-bold text-gray-800">Subtotal Item:</p>
-              <p
-                class="text-lg font-bold text-green-600 ml-2"
-                id="items-subtotal"
-              ></p>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-truck text-blue-500 mr-2"></i> Informasi
-              Pengiriman
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-            >
-              <p>
-                <strong>Nama Penerima:</strong> <span id="receiver-name"></span>
-              </p>
-              <p>
-                <strong>Telepon Penerima:</strong>
-                <span id="receiver-phone"></span>
-              </p>
-              <p class="sm:col-span-2">
-                <strong>Alamat:</strong> <span id="shipping-address"></span>
-              </p>
-              <p>
-                <strong>Metode Pengiriman:</strong>
-                <span id="shipping-method"></span>
-              </p>
-              <p>
-                <strong>Estimasi Tiba:</strong>
-                <span id="delivery-estimate"></span>
-              </p>
-              <p>
-                <strong>Nomor Resi:</strong>
-                <span
-                  class="font-semibold text-blue-600"
-                  id="tracking-number"
-                ></span
-                ><a
-                  href="#"
-                  id="tracking-link"
-                  class="text-blue-500 hover:underline text-xs ml-2"
-                  target="_blank"
-                  >(Lacak)</a
-                >
-              </p>
-              <p>
-                <strong>Biaya Pengiriman:</strong>
-                <span id="shipping-cost"></span>
-              </p>
-            </div>
-            <div class="flex justify-end items-center mt-6 pt-4 border-t">
-              <p class="text-lg font-bold text-gray-800">Total Akhir:</p>
-              <p
-                class="text-lg font-bold text-green-600 ml-2"
-                id="final-total"
-              ></p>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-user-tie text-purple-500 mr-2"></i> Informasi
-              Jastiper
-            </h3>
-            <div class="flex items-center mb-4">
-              <img
-                src="https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper"
-                alt="Foto Jastiper"
-                class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-purple-400"
-                id="jastiper-photo"
-              />
-              <div>
-                <p
-                  class="text-lg font-semibold text-gray-800"
-                  id="jastiper-name"
-                >
-                  Memuat...
-                </p>
-                <p class="text-sm text-gray-600">
-                  ID Jastiper: <span id="jastiper-id"></span>
-                </p>
-              </div>
-            </div>
-            <ul class="text-gray-700 space-y-2 text-sm">
-              <li>
-                <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Lokasi
-                Asal:
-                <span id="jastiper-origin-country"></span>
-              </li>
-              <li>
-                <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
-                <a
-                  href="#"
-                  id="jastiper-email"
-                  class="text-blue-600 hover:underline"
-                  >Memuat...</a
-                >
-              </li>
-              <li>
-                <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
-                <a
-                  href="#"
-                  id="jastiper-phone"
-                  class="text-blue-600 hover:underline"
-                  >Memuat...</a
-                >
-              </li>
-              <li class="mt-3">
-                <a
-                  href="#"
-                  id="view-jastiper-profile-link"
-                  class="text-blue-600 hover:text-blue-800 font-medium flex items-center"
-                >
-                  Lihat Profil Jastiper
-                  <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-clipboard-list text-green-500 mr-2"></i> Riwayat
-              Status Pesanan
-            </h3>
-            <ul class="space-y-3" id="order-history-list">
-              <p class="text-gray-500">Memuat riwayat...</p>
-            </ul>
+          <div class="flex justify-end items-center mt-6 pt-4 border-t">
+            <p class="text-lg font-bold text-gray-800">Subtotal Item:</p>
+            <p class="text-lg font-bold text-green-600 ml-2" id="items-subtotal"></p>
           </div>
         </div>
+
+        <!-- Bagian "Informasi Pengiriman" yang dihapus -->
+        <!--
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-truck text-blue-500 mr-2"></i> Informasi
+                        Pengiriman
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
+                        <p>
+                            <strong>Nama Penerima:</strong> <span id="receiver-name"></span>
+                        </p>
+                        <p>
+                            <strong>Telepon Penerima:</strong>
+                            <span id="receiver-phone"></span>
+                        </p>
+                        <p class="sm:col-span-2">
+                            <strong>Alamat:</strong> <span id="shipping-address"></span>
+                        </p>
+                        <p>
+                            <strong>Metode Pengiriman:</strong>
+                            <span id="shipping-method"></span>
+                        </p>
+                        <p>
+                            <strong>Estimasi Tiba:</strong>
+                            <span id="delivery-estimate"></span>
+                        </p>
+                        <p>
+                            <strong>Nomor Resi:</strong>
+                            <span class="font-semibold text-blue-600" id="tracking-number"></span><a href="#"
+                                id="tracking-link" class="text-blue-500 hover:underline text-xs ml-2"
+                                target="_blank">(Lacak)</a>
+                        </p>
+                        <p>
+                            <strong>Biaya Pengiriman:</strong>
+                            <span id="shipping-cost"></span>
+                        </p>
+                    </div>
+                    <div class="flex justify-end items-center mt-6 pt-4 border-t">
+                        <p class="text-lg font-bold text-gray-800">Total Akhir:</p>
+                        <p class="text-lg font-bold text-green-600 ml-2" id="final-total"></p>
+                    </div>
+                </div>
+                -->
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-store text-purple-500 mr-2"></i> Informasi Toko
+          </h3>
+          <div class="flex items-center mb-4">
+            <img src="https://via.placeholder.com/80x80/6A0DAD/FFFFFF?text=Toko" alt="Foto Toko"
+              class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-purple-400" id="toko-photo" />
+            <div>
+              <p class="text-lg font-semibold text-gray-800" id="toko-name">
+                Memuat...
+              </p>
+              <p class="text-sm text-gray-600">
+                ID Toko: <span id="toko-id"></span>
+              </p>
+            </div>
+          </div>
+          <ul class="text-gray-700 space-y-2 text-sm">
+            <li>
+              <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i> Alamat
+              Toko:
+              <span id="toko-address"></span>
+            </li>
+            <li>
+              <i class="fas fa-envelope text-gray-400 mr-2"></i> Email:
+              <a href="#" id="toko-email" class="text-blue-600 hover:underline">Memuat...</a>
+            </li>
+            <li>
+              <i class="fas fa-phone-alt text-gray-400 mr-2"></i> Telepon:
+              <a href="#" id="toko-phone" class="text-blue-600 hover:underline">Memuat...</a>
+            </li>
+            <li class="mt-3">
+              <a href="#" id="view-toko-profile-link"
+                class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                Lihat Profil Toko
+                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-clipboard-list text-green-500 mr-2"></i> Riwayat
+            Status Pesanan
+          </h3>
+          <ul class="space-y-3" id="order-history-list">
+            <p class="text-gray-500">Memuat riwayat...</p>
+          </ul>
+        </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+  <!-- Status Update Modal -->
+  <!-- Modal ini dihapus karena tombol update status juga dihapus -->
+  <!--
+    <div id="status-modal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden z-[100]">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="text-lg font-semibold mb-4">Ubah Status Pesanan</h3>
+            <div class="mb-4">
+                <label for="new-status" class="block text-sm font-medium text-gray-700">Pilih Status Baru:</label>
+                <select id="new-status"
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+                    <option value="pending">Pending</option>
+                    <option value="processing">Diproses</option>
+                    <option value="shipped">Dikirim</option>
+                    <option value="delivered">Diterima</option>
+                    <option value="completed">Selesai</option>
+                    <option value="cancelled">Dibatalkan</option>
+                    <option value="refunded">Dikembalikan Dana</option>
+                </select>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-status-update"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                    Batal
+                </button>
+                <button id="confirm-status-update"
+                    class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700">
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+    -->
 
-<script>
-  // Your Firebase configuration (same as your dashboard)
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-  };
+  <script type="module">
+    // Import db, auth, dan fungsi-fungsi Firestore lainnya dari file konfigurasi Firebase Anda
+    // Menggunakan jalur relatif yang mengasumsikan admin-pesanan-detail.html berada di subfolder
+    // dan firebase-config.js berada satu tingkat di atasnya di folder 'js'.
+    import {
+      db,
+      auth,
+      collection,
+      doc,
+      getDoc,
+      updateDoc,
+      deleteDoc,
+      serverTimestamp,
+      Timestamp,
+      arrayUnion,
+      onAuthStateChanged
+    } from '../js/firebase-config.js';
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+    // Variabel global untuk menyimpan data pesanan saat ini
+    let currentOrderData = null;
+    let currentOrderId = null;
 
-  document.addEventListener("DOMContentLoaded", async function () {
-    const currentPath = window.location.pathname.split("/").pop();
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get("id"); // Get order ID from URL
+    document.addEventListener("DOMContentLoaded", async function () {
+      const currentPath = window.location.pathname.split("/").pop();
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get("id"); // Dapatkan ID pesanan dari URL
+      currentOrderId = orderId; // Simpan secara global
 
-    // --- Sidebar Active State Logic ---
-    const sidebarLinks = document.querySelectorAll(".sidebar-item");
-    sidebarLinks.forEach((link) => {
-      const linkHref = link.getAttribute("href");
-      const linkFileName = linkHref.split("/").pop();
+      // --- Logika Status Aktif Sidebar ---
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
 
-      let isLinkActive = false;
+        let isLinkActive = false;
 
-      // Highlight "Manajemen Pesanan" if on this detail page
-      if (
-        linkFileName === "admin-pesanan.html" &&
-        currentPath.startsWith("admin-pesanan-detail")
-      ) {
-        isLinkActive = true;
-      } else if (linkFileName === currentPath) {
-        isLinkActive = true;
-      } else if (
-        (currentPath === "" || currentPath === "index.html") &&
-        linkFileName === "admin-dashboard.html"
-      ) {
-        isLinkActive = true;
-      }
+        // Sorot "Manajemen Pesanan" jika berada di halaman detail ini
+        if (
+          linkFileName === "admin-pesanan.html" &&
+          currentPath.startsWith("admin-pesanan-detail")
+        ) {
+          isLinkActive = true;
+        } else if (linkFileName === currentPath) {
+          isLinkActive = true;
+        } else if (
+          (currentPath === "" || currentPath === "index.html") &&
+          linkFileName === "admin-dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
 
-      if (isLinkActive) {
-        link.classList.remove(
-          "text-gray-700",
-          "hover:bg-pink-100",
-          "hover:text-pink-600",
-          "transition",
-          "duration-200",
-          "ease-in-out"
-        );
-        link.classList.add("bg-pink-600", "text-white", "font-semibold");
-      } else {
-        link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-        link.classList.add(
-          "text-gray-700",
-          "hover:bg-pink-100",
-          "hover:text-pink-600",
-          "transition",
-          "duration-200",
-          "ease-in-out"
-        );
-      }
-    });
+        if (isLinkActive) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+        }
+      });
 
-    // --- Firebase Data Fetching and Display ---
+      // --- Listener Perubahan Status Autentikasi Firebase ---
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            // Periksa peran admin dari koleksi 'admin'
+            const adminDocRef = doc(db, "admin", user.uid);
+            const adminDoc = await getDoc(adminDocRef);
 
-    // Helper function to format currency
+            if (adminDoc.exists() && adminDoc.data().role === 'admin') {
+              console.log("Pengguna adalah admin. Mengambil data detail pesanan.");
+              if (orderId) {
+                fetchOrderDetails(orderId);
+              } else {
+                displayNoOrderIdError();
+              }
+            } else {
+              console.warn("Pengguna masuk tetapi tidak memiliki hak admin. Mengarahkan ke login.");
+              alert("Akses ditolak. Anda tidak memiliki izin admin untuk melihat halaman ini.");
+              await auth.signOut(); // Logout pengguna non-admin
+              window.location.href = 'admin-login.html';
+            }
+          } catch (error) {
+            console.error("Kesalahan saat memeriksa peran admin:", error);
+            alert("Terjadi kesalahan saat memverifikasi peran admin. Silakan coba lagi.");
+            await auth.signOut();
+            window.location.href = 'admin-login.html';
+          }
+        } else {
+          console.log("Pengguna tidak masuk. Mengarahkan ke halaman login admin.");
+          window.location.href = 'admin-login.html';
+        }
+      });
+
+      // --- Event Listener untuk Tombol Logout ---
+      document.getElementById('logoutButton').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await auth.signOut();
+          alert('Anda telah logout.');
+          window.location.href = 'admin-login.html';
+        } catch (error) {
+          console.error('Kesalahan saat logout:', error);
+          alert('Gagal logout. Silakan coba lagi.');
+        }
+      });
+    }); // Akhir DOMContentLoaded
+
+    // --- Fungsi Pembantu ---
+
+    // Fungsi untuk menampilkan kesalahan jika ID pesanan tidak ditemukan
+    function displayNoOrderIdError() {
+      const contentWrapper = document.querySelector(".content-wrapper");
+      document.title = `Detail Pesanan : ID Tidak Ditemukan - TitipGo Admin`;
+      const orderDetailTitleEl = document.getElementById("order-detail-title");
+      if (orderDetailTitleEl) orderDetailTitleEl.textContent = "Detail Pesanan : ID Tidak Ditemukan";
+      const breadcrumbOrderIdEl = document.getElementById("breadcrumb-order-id");
+      if (breadcrumbOrderIdEl) breadcrumbOrderIdEl.textContent = "ID Tidak Ditemukan";
+
+      contentWrapper.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <p class="text-center text-red-500 text-xl font-semibold">ID Pesanan tidak ditemukan di URL.</p>
+                    <p class="text-center text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID pesanan yang valid.</p>
+                    <div class="text-center mt-4">
+                        <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
+                        </a>
+                    </div>
+                </div>
+            `;
+    }
+
+    // Fungsi pembantu untuk memformat mata uang
     const formatCurrency = (amount) => {
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
@@ -510,17 +551,20 @@
       }).format(amount);
     };
 
-    // Helper function to format date/timestamp
+    // Fungsi pembantu untuk memformat tanggal/timestamp
     const formatDate = (timestamp) => {
       if (!timestamp) return "N/A";
       let date;
+      // Periksa apakah itu objek Firebase Timestamp
       if (timestamp.toDate) {
-        date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
-      } else if (
-        typeof timestamp === "string" ||
-        typeof timestamp === "number"
-      ) {
-        date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
+        date = timestamp.toDate();
+      } else if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+        // Coba parse string atau angka (misalnya, string ISO atau milidetik)
+        date = new Date(timestamp);
+        // Validasi jika tanggal yang di-parse tidak valid
+        if (isNaN(date.getTime())) {
+          return "Invalid Date";
+        }
       } else {
         return "Invalid Date";
       }
@@ -534,9 +578,11 @@
       }).format(date);
     };
 
-    // Helper function for status badge styling
+    // Fungsi pembantu untuk gaya badge status
     const getStatusClass = (status) => {
-      switch (status) {
+      // Pastikan status huruf kecil untuk pencocokan
+      const lowerStatus = status ? status.toLowerCase() : '';
+      switch (lowerStatus) {
         case "pending":
           return "status-pending";
         case "processing":
@@ -552,427 +598,280 @@
         case "refunded":
           return "status-refunded";
         default:
-          return "bg-gray-200 text-gray-800"; // Default styling
+          return "bg-gray-200 text-gray-800"; // Gaya default
       }
     };
 
-    // GET ALL THE ELEMENTS THAT WILL DISPLAY ORDER DATA
-    const orderDetailTitleEl = document.getElementById("order-detail-title");
-    const breadcrumbOrderIdEl = document.getElementById("breadcrumb-order-id");
-    const orderIdEl = document.getElementById("order-id");
-    const orderDateEl = document.getElementById("order-date");
-    const orderStatusBadgeEl = document.getElementById("admin-order-status-badge");
-    const totalPaymentEl = document.getElementById("total-payment");
-    const paymentMethodEl = document.getElementById("payment-method");
-    const paymentStatusEl = document.getElementById("payment-status");
-    const customerNameLinkEl = document.getElementById("customer-name-link");
-    const orderItemsContainerEl = document.getElementById("order-items-container");
-    const itemsSubtotalEl = document.getElementById("items-subtotal");
-    const receiverNameEl = document.getElementById("receiver-name");
-    const receiverPhoneEl = document.getElementById("receiver-phone");
-    const shippingAddressEl = document.getElementById("shipping-address");
-    const shippingMethodEl = document.getElementById("shipping-method");
-    const deliveryEstimateEl = document.getElementById("delivery-estimate");
-    const trackingNumberEl = document.getElementById("tracking-number");
-    const trackingLinkEl = document.getElementById("tracking-link");
-    const shippingCostEl = document.getElementById("shipping-cost");
-    const finalTotalEl = document.getElementById("final-total");
-    const jastiperPhotoEl = document.getElementById("jastiper-photo");
-    const jastiperNameEl = document.getElementById("jastiper-name");
-    const jastiperIdEl = document.getElementById("jastiper-id");
-    const jastiperOriginCountryEl = document.getElementById("jastiper-origin-country");
-    const jastiperEmailEl = document.getElementById("jastiper-email");
-    const jastiperPhoneEl = document.getElementById("jastiper-phone");
-    const viewJastiperProfileLinkEl = document.getElementById("view-jastiper-profile-link");
-    const orderHistoryListEl = document.getElementById("order-history-list");
+    // Fungsi utama untuk mengambil dan menampilkan detail pesanan
+    async function fetchOrderDetails(orderId) {
+      // Dapatkan semua elemen yang akan menampilkan data pesanan
+      const orderDetailTitleEl = document.getElementById("order-detail-title");
+      const breadcrumbOrderIdEl = document.getElementById("breadcrumb-order-id");
+      const orderIdEl = document.getElementById("order-id");
+      const orderDateEl = document.getElementById("order-date");
+      const orderStatusBadgeEl = document.getElementById("admin-order-status-badge");
+      const totalPaymentEl = document.getElementById("total-payment");
+      const paymentMethodEl = document.getElementById("payment-method");
+      const paymentStatusEl = document.getElementById("payment-status");
+      const customerNameLinkEl = document.getElementById("customer-name-link");
+      const orderItemsContainerEl = document.getElementById("order-items-container");
+      const itemsSubtotalEl = document.getElementById("items-subtotal");
+      const finalTotalEl = document.getElementById("final-total");
+      const tokoPhotoEl = document.getElementById("toko-photo");
+      const tokoNameEl = document.getElementById("toko-name");
+      const tokoIdEl = document.getElementById("toko-id");
+      const tokoAddressEl = document.getElementById("toko-address");
+      const tokoEmailEl = document.getElementById("toko-email");
+      const tokoPhoneEl = document.getElementById("toko-phone");
+      const viewTokoProfileLinkEl = document.getElementById("view-toko-profile-link");
+      const orderHistoryListEl = document.getElementById("order-history-list");
 
-    // Elements for action buttons
-    const updateStatusButton = document.getElementById("update-status-button");
-    const deleteOrderButton = document.getElementById("delete-order-button");
-
-    // Main content wrapper, where you might want to show a general error
-    const contentWrapper = document.querySelector(".content-wrapper");
+      const contentWrapper = document.querySelector(".content-wrapper");
 
 
-    try {
-      if (!orderId) {
-        document.title = `Detail Pesanan : ID Tidak Ditemukan - TitipGo Admin`;
-        orderDetailTitleEl.textContent = "Detail Pesanan : ID Tidak Ditemukan";
-        breadcrumbOrderIdEl.textContent = "ID Tidak Ditemukan";
+      try {
+        // 1. Ambil Data Pesanan
+        const orderRef = doc(db, "orders", orderId); // Mengacu ke koleksi 'orders'
+        const orderDoc = await getDoc(orderRef);
 
-        // Show a specific error message within the content wrapper
-        contentWrapper.innerHTML = `
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <p class="text-center text-red-500 text-xl font-semibold">ID Pesanan tidak ditemukan di URL.</p>
-            <p class="text-center text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID pesanan yang valid.</p>
-            <div class="text-center mt-4">
-              <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
-              </a>
-            </div>
-          </div>
-        `;
-        // Disable and hide buttons if no order ID
-        if (updateStatusButton) updateStatusButton.classList.add('hidden');
-        if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
-        return; // Stop further execution
-      }
+        if (orderDoc.exists()) {
+          const orderData = orderDoc.data();
+          currentOrderData = orderData; // Simpan data yang diambil secara global
+          console.log("Data Pesanan Ditemukan:", orderData); // Untuk debugging
 
-      // 1. Fetch Order Data
-      const orderDoc = await db.collection("pemesanan").doc(orderId).get();
+          if (orderDetailTitleEl) orderDetailTitleEl.textContent = `Detail Pesanan: #${orderData.noPesanan || orderId}`;
+          if (breadcrumbOrderIdEl) breadcrumbOrderIdEl.textContent = `#${orderData.noPesanan || orderId}`;
+          document.title = `Detail Pesanan - #${orderData.noPesanan || orderId} - TitipGo Admin`;
 
-      if (orderDoc.exists) {
-        const orderData = orderDoc.data();
+          if (orderIdEl) orderIdEl.textContent = `#${orderData.noPesanan || orderId}`;
+          if (orderDateEl) orderDateEl.textContent = formatDate(orderData.orderDate);
 
-        document.title = `Detail Pesanan - #${orderId} - TitipGo Admin`;
-        orderDetailTitleEl.textContent = `Detail Pesanan: #${orderId}`;
-        breadcrumbOrderIdEl.textContent = `#${orderId}`;
-
-        orderIdEl.textContent = `#${orderId}`;
-        orderDateEl.textContent = formatDate(orderData.orderDate);
-
-        orderStatusBadgeEl.textContent = orderData.status || "N/A";
-        orderStatusBadgeEl.className = `status-badge ${getStatusClass(
-          orderData.status
-        )}`;
-
-        totalPaymentEl.textContent = formatCurrency(orderData.totalAmount || 0);
-        paymentMethodEl.textContent = orderData.paymentMethod || "N/A";
-
-        if (orderData.paymentStatus === "paid") {
-          paymentStatusEl.textContent = "Lunas";
-          paymentStatusEl.classList.add("text-green-600");
-        } else if (orderData.paymentStatus === "unpaid") {
-          paymentStatusEl.textContent = "Belum Lunas";
-          paymentStatusEl.classList.add("text-red-600");
-        } else {
-          paymentStatusEl.textContent = orderData.paymentStatus || "N/A";
-        }
-
-        // 2. Fetch Customer Data
-        const customerId = orderData.userId; // Assuming userId is customer's ID
-        if (customerId) {
-          const customerDoc = await db
-            .collection("users")
-            .doc(customerId)
-            .get();
-          if (customerDoc.exists) {
-            const customerData = customerDoc.data();
-            customerNameLinkEl.textContent = customerData.fullName || "N/A";
-            customerNameLinkEl.href = `admin-pengguna-detail.html?id=${customerId}`;
-          } else {
-            customerNameLinkEl.textContent = "Pengguna Tidak Ditemukan";
-            customerNameLinkEl.href = "#";
+          const displayStatus = orderData.status ? orderData.status.charAt(0).toUpperCase() + orderData.status.slice(1) : "N/A";
+          if (orderStatusBadgeEl) {
+            orderStatusBadgeEl.textContent = displayStatus;
+            orderStatusBadgeEl.className = `status-badge ${getStatusClass(orderData.status)}`;
           }
-        } else {
-          customerNameLinkEl.textContent = "N/A";
-          customerNameLinkEl.href = "#";
-        }
 
-        // 3. Populate Order Items
-        orderItemsContainerEl.innerHTML = ""; // Clear loading text
-        let itemsSubtotal = 0;
+          if (totalPaymentEl) totalPaymentEl.textContent = formatCurrency(orderData.totalAmount || 0);
+          if (paymentMethodEl) paymentMethodEl.textContent = orderData.paymentMethod || "N/A";
 
-        if (orderData.items && orderData.items.length > 0) {
-          for (const item of orderData.items) {
-            const itemTotal =
-              (item.quantity || 0) * (item.pricePerUnit || 0);
-            itemsSubtotal += itemTotal;
+          if (paymentStatusEl) {
+            if (orderData.paymentStatus === "paid") {
+              paymentStatusEl.textContent = "Lunas";
+              paymentStatusEl.classList.add("text-green-600");
+              paymentStatusEl.classList.remove("text-red-600");
+            } else if (orderData.paymentStatus === "unpaid") {
+              paymentStatusEl.textContent = "Belum Lunas";
+              paymentStatusEl.classList.add("text-red-600");
+              paymentStatusEl.classList.remove("text-green-600");
+            } else {
+              paymentStatusEl.textContent = orderData.paymentStatus || "N/A";
+              paymentStatusEl.classList.remove("text-green-600", "text-red-600");
+            }
+          }
 
-            // Fetch catalog details for image and correct product name
-            let catalogName =
-              item.productName || "Nama Produk Tidak Ditemukan";
-            let catalogImage =
-              item.imageUrl ||
-              "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Image";
-            if (item.catalogId) {
-              try {
-                const catalogDoc = await db
-                  .collection("catalogs")
-                  .doc(item.catalogId)
-                  .get();
-                if (catalogDoc.exists) {
-                  const catalog = catalogDoc.data();
-                  catalogName = catalog.productName || catalogName;
-                  catalogImage =
-                    catalog.imageUrls && catalog.imageUrls[0]
-                      ? catalog.imageUrls[0]
-                      : catalogImage;
-                }
-              } catch (error) {
-                console.error(
-                  "Error fetching catalog for item:",
-                  item.catalogId,
-                  error
-                );
+
+          // 2. Ambil Data Pelanggan
+          const customerId = orderData.userId;
+          if (customerId) {
+            const customerRef = doc(db, "users", customerId);
+            const customerDoc = await getDoc(customerRef);
+            if (customerDoc.exists()) {
+              const customerData = customerDoc.data();
+              if (customerNameLinkEl) {
+                customerNameLinkEl.textContent = customerData.fullName || customerData.username || "Pengguna Tidak Bernama";
+                customerNameLinkEl.href = `admin-pengguna-detail.html?id=${customerId}`;
+              }
+            } else {
+              if (customerNameLinkEl) {
+                customerNameLinkEl.textContent = "Pengguna Tidak Ditemukan";
+                customerNameLinkEl.href = "#";
               }
             }
-
-            const itemHtml = `
-              <div class="flex items-center border-b pb-4 mb-4">
-                <img
-                  src="${catalogImage}"
-                  alt="${catalogName}"
-                  class="w-20 h-20 object-cover rounded-md mr-4"
-                />
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-800">
-                    <a
-                      href="admin-katalog-detail.html?id=${
-                        item.catalogId || "#"
-                      }"
-                      class="text-blue-600 hover:underline"
-                      >${catalogName}</a
-                    >
-                  </h4>
-                  ${
-                    item.variant
-                      ? `<p class="text-sm text-gray-600">Varian: ${item.variant}</p>`
-                      : ""
-                  }
-                  <p class="text-sm text-gray-600">Jumlah: ${
-                    item.quantity || 0
-                  }</p>
-                  <p class="text-md font-bold text-green-600">${formatCurrency(
-                    item.pricePerUnit || 0
-                  )}</p>
-                </div>
-              </div>
-            `;
-            orderItemsContainerEl.insertAdjacentHTML("beforeend", itemHtml);
-          }
-        } else {
-          orderItemsContainerEl.innerHTML =
-            '<p class="text-gray-500">Tidak ada item dalam pesanan ini.</p>';
-        }
-        itemsSubtotalEl.textContent =
-          formatCurrency(itemsSubtotal);
-
-        // 4. Populate Shipping Information
-        receiverNameEl.textContent =
-          orderData.shippingAddress?.receiverName || "N/A";
-        receiverPhoneEl.textContent =
-          orderData.shippingAddress?.receiverPhone || "N/A";
-        shippingAddressEl.textContent =
-          orderData.shippingAddress?.fullAddress || "N/A";
-        shippingMethodEl.textContent = orderData.shippingMethod || "N/A";
-        deliveryEstimateEl.textContent =
-          orderData.deliveryEstimate || "N/A";
-        trackingNumberEl.textContent = orderData.trackingNumber || "N/A";
-
-        if (orderData.trackingNumber && orderData.shippingMethod) {
-          // You might need a more sophisticated mapping for tracking URLs
-          // This is a placeholder
-          trackingLinkEl.href = `https://cekresi.com/?no=${orderData.trackingNumber}`;
-          trackingLinkEl.classList.remove("hidden");
-        } else {
-          trackingLinkEl.classList.add("hidden");
-        }
-        shippingCostEl.textContent =
-          formatCurrency(orderData.shippingCost || 0);
-        finalTotalEl.textContent = formatCurrency(
-          orderData.totalAmount || 0
-        );
-
-        // 5. Populate Jastiper Information (Assuming one jastiper per order for simplicity,
-        // or fetch the jastiper of the first item if multiple jastipers are allowed in one order)
-        const firstItemJastiperId =
-          orderData.items && orderData.items.length > 0
-            ? orderData.items[0].jastiperId
-            : null;
-        if (firstItemJastiperId) {
-          const jastiperDoc = await db
-            .collection("users")
-            .doc(firstItemJastiperId)
-            .get();
-          if (jastiperDoc.exists) {
-            const jastiperData = jastiperDoc.data();
-            jastiperPhotoEl.src =
-              jastiperData.profilePictureUrl ||
-              "https://via.placeholder.com/80x80/20B2AA/FFFFFF?text=Jastiper";
-            jastiperNameEl.textContent =
-              jastiperData.fullName || "N/A";
-            jastiperIdEl.textContent =
-              firstItemJastiperId;
-            jastiperOriginCountryEl.textContent =
-              jastiperData.originCountry || "N/A";
-
-            jastiperEmailEl.textContent = jastiperData.email || "N/A";
-            jastiperEmailEl.href = `mailto:${jastiperData.email}`;
-
-            jastiperPhoneEl.textContent =
-              jastiperData.phoneNumber || "N/A";
-            jastiperPhoneEl.href = `tel:${jastiperData.phoneNumber}`;
-
-            viewJastiperProfileLinkEl.href = `admin-pengguna-detail.html?id=${firstItemJastiperId}`;
-            viewJastiperProfileLinkEl.classList.remove("hidden"); // Ensure it's visible
           } else {
-            jastiperNameEl.textContent =
-              "Jastiper Tidak Ditemukan";
-            jastiperIdEl.textContent = "N/A";
-            jastiperOriginCountryEl.textContent =
-              "N/A";
-            jastiperEmailEl.textContent = "N/A";
-            jastiperPhoneEl.textContent = "N/A";
-            jastiperPhotoEl.src = "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
-            viewJastiperProfileLinkEl.classList.add("hidden");
+            if (customerNameLinkEl) {
+              customerNameLinkEl.textContent = "N/A (ID Pelanggan Tidak Ada)";
+              customerNameLinkEl.href = "#";
+            }
           }
+
+          // 3. Isi Item Pesanan
+          if (orderItemsContainerEl) orderItemsContainerEl.innerHTML = "";
+          let itemsSubtotal = 0;
+
+          if (orderData.products && orderData.products.length > 0) { // Menggunakan 'products' sesuai struktur Firestore
+            for (const item of orderData.products) {
+              const itemTotal = (item.quantity || 0) * (item.price || 0); // Menggunakan 'price'
+              itemsSubtotal += itemTotal;
+
+              let catalogName = item.name || "Nama Produk Tidak Ditemukan"; // Menggunakan 'name'
+              let catalogImage = item.imageUrl || "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Image";
+
+              if (item.catalogId) {
+                try {
+                  const catalogRef = doc(db, "catalogs", item.catalogId);
+                  const catalogDoc = await getDoc(catalogRef);
+                  if (catalogDoc.exists()) {
+                    const catalog = catalogDoc.data();
+                    catalogName = catalog.productName || catalogName;
+                    catalogImage = (catalog.imageUrls && catalog.imageUrls[0]) ? catalog.imageUrls[0] : catalogImage;
+                  }
+                } catch (error) {
+                  console.error("Kesalahan saat mengambil katalog untuk item:", item.catalogId, error);
+                }
+              }
+
+              const itemHtml = `
+                                <div class="flex items-center border-b pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0">
+                                    <img
+                                        src="${catalogImage}"
+                                        alt="${catalogName}"
+                                        class="w-20 h-20 object-cover rounded-md mr-4"
+                                    />
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800">
+                                            <a
+                                                href="admin-katalog-detail.html?id=${item.catalogId || "#"}"
+                                                class="text-blue-600 hover:underline"
+                                                >${catalogName}</a
+                                            >
+                                        </h4>
+                                        ${item.variant
+                  ? `<p class="text-sm text-gray-600">Varian: ${item.variant}</p>`
+                  : ""
+                }
+                                        <p class="text-sm text-gray-600">Jumlah: ${item.quantity || 0}</p>
+                                        <p class="text-md font-bold text-green-600">${formatCurrency(item.price || 0)}</p>
+                                    </div>
+                                </div>
+                            `;
+              if (orderItemsContainerEl) orderItemsContainerEl.insertAdjacentHTML("beforeend", itemHtml);
+            }
+          } else {
+            if (orderItemsContainerEl) orderItemsContainerEl.innerHTML = '<p class="text-gray-500">Tidak ada item dalam pesanan ini.</p>';
+          }
+          if (itemsSubtotalEl) itemsSubtotalEl.textContent = formatCurrency(itemsSubtotal);
+
+          // 4. Isi Informasi Pengiriman (Bagian ini dihapus dari HTML, jadi kode JS yang terkait juga dihapus/dikomentari)
+          if (finalTotalEl) finalTotalEl.textContent = formatCurrency(orderData.totalAmount || 0); // finalTotal tetap ada
+
+          // 5. Isi Informasi Toko
+          // Mengambil tokoId dari item pertama dalam array 'products'
+          const firstItemTokoId = orderData.products && orderData.products.length > 0 ? orderData.products[0].tokoId : null;
+          const firstItemStoreName = orderData.products && orderData.products.length > 0 ? orderData.products[0].store : "N/A";
+
+          if (firstItemTokoId) {
+            const tokoRef = doc(db, "toko", firstItemTokoId); // Mengacu ke koleksi 'toko'
+            const tokoDoc = await getDoc(tokoRef);
+            if (tokoDoc.exists()) {
+              const tokoData = tokoDoc.data();
+              if (tokoPhotoEl) tokoPhotoEl.src = tokoData.profileImageUrl || "https://via.placeholder.com/80x80/6A0DAD/FFFFFF?text=Toko"; // Menggunakan profileImageUrl
+              if (tokoNameEl) tokoNameEl.textContent = tokoData.namaToko || firstItemStoreName; // Prioritaskan namaToko dari Firestore
+              if (tokoIdEl) tokoIdEl.textContent = firstItemTokoId;
+              if (tokoAddressEl) {
+                tokoAddressEl.textContent = tokoData.alamatToko || "N/A"; // Menggunakan alamatToko
+              }
+              if (tokoEmailEl) {
+                tokoEmailEl.textContent = tokoData.emailToko || "N/A"; // Field ini tidak ada di data contoh Anda
+                tokoEmailEl.href = `mailto:${tokoData.emailToko}`;
+              }
+              if (tokoPhoneEl) {
+                tokoPhoneEl.textContent = tokoData.teleponToko || "N/A"; // Field ini tidak ada di data contoh Anda
+                tokoPhoneEl.href = `tel:${tokoData.teleponToko}`;
+              }
+              if (viewTokoProfileLinkEl) {
+                viewTokoProfileLinkEl.href = `admin-toko-detail.html?id=${firstItemTokoId}`;
+                viewTokoProfileLinkEl.classList.remove("hidden");
+              }
+            } else {
+              console.warn(`Toko dengan ID ${firstItemTokoId} tidak ditemukan.`);
+              if (tokoNameEl) tokoNameEl.textContent = firstItemStoreName !== "N/A" ? firstItemStoreName + " (Detail Toko Tidak Ditemukan)" : "Toko Tidak Ditemukan";
+              if (tokoIdEl) tokoIdEl.textContent = firstItemTokoId;
+              if (tokoAddressEl) tokoAddressEl.textContent = "N/A";
+              if (tokoEmailEl) tokoEmailEl.textContent = "N/A";
+              if (tokoPhoneEl) tokoPhoneEl.textContent = "N/A";
+              if (tokoPhotoEl) tokoPhotoEl.src = "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=Toko";
+              if (viewTokoProfileLinkEl) viewTokoProfileLinkEl.classList.add("hidden");
+            }
+          } else {
+            if (tokoNameEl) tokoNameEl.textContent = firstItemStoreName;
+            if (tokoIdEl) tokoIdEl.textContent = "N/A";
+            if (tokoAddressEl) tokoAddressEl.textContent = "N/A";
+            if (tokoEmailEl) tokoEmailEl.textContent = "N/A";
+            if (tokoPhoneEl) tokoPhoneEl.textContent = "N/A";
+            if (tokoPhotoEl) tokoPhotoEl.src = "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=Toko";
+            if (viewTokoProfileLinkEl) viewTokoProfileLinkEl.classList.add("hidden");
+          }
+
+          // 6. Isi Riwayat Status Pesanan
+          if (orderHistoryListEl) orderHistoryListEl.innerHTML = "";
+          if (orderData.statusHistory && orderData.statusHistory.length > 0) {
+            const sortedHistory = [...orderData.statusHistory].sort((a, b) => {
+              const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : new Date(a.timestamp).getTime();
+              const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : new Date(b.timestamp).getTime();
+              return timeB - timeA;
+            });
+
+            sortedHistory.forEach((entry) => {
+              const historyHtml = `
+                                <li class="relative pl-6 pb-4">
+                                    <div class="absolute w-2 h-2 bg-pink-600 rounded-full left-0 top-1.5"></div>
+                                    <div class="absolute h-full border-l border-gray-300 left-1 top-0"></div>
+                                    <p class="text-sm font-medium text-gray-800">${entry.status || "N/A"}</p>
+                                    <p class="text-xs text-gray-500">${formatDate(entry.timestamp)}</p>
+                                    ${entry.note ? `<p class="text-xs text-gray-700 mt-1">Catatan: ${entry.note}</p>` : ''}
+                                </li>
+                            `;
+              if (orderHistoryListEl) orderHistoryListEl.insertAdjacentHTML("beforeend", historyHtml);
+            });
+          } else {
+            if (orderHistoryListEl) orderHistoryListEl.innerHTML = '<p class="text-gray-500">Tidak ada riwayat status untuk pesanan ini.</p>';
+          }
+
         } else {
-          jastiperNameEl.textContent =
-            "Tidak Ada Jastiper Terkait";
-          jastiperIdEl.textContent = "N/A";
-          jastiperOriginCountryEl.textContent =
-            "N/A";
-          jastiperEmailEl.textContent = "N/A";
-          jastiperPhoneEl.textContent = "N/A";
-          jastiperPhotoEl.src =
-            "https://via.placeholder.com/80x80/CCCCCC/FFFFFF?text=No+Jastiper";
-          viewJastiperProfileLinkEl.classList.add("hidden");
+          // Dokumen tidak ada (orderId tidak ditemukan di Firestore)
+          displayNoOrderIdError();
+        }
+      } catch (error) {
+        console.error("Kesalahan saat mengambil detail pesanan:", error);
+        document.title = `Error - TitipGo Admin`;
+        const orderDetailTitleEl = document.getElementById("order-detail-title");
+        if (orderDetailTitleEl) orderDetailTitleEl.textContent = "Error Memuat Detail Pesanan";
+        const breadcrumbOrderIdEl = document.getElementById("breadcrumb-order-id");
+        if (breadcrumbOrderIdEl) breadcrumbOrderIdEl.textContent = "Error";
+
+        let errorMessage = "Terjadi kesalahan yang tidak terduga.";
+        if (error.code) {
+          errorMessage = `Kode Error: ${error.code.replace('firestore/', '').replace(/-/g, ' ').toUpperCase()}`;
+        }
+        if (error.message && !error.message.includes("offline")) {
+          errorMessage += `. Pesan: ${error.message}`;
+        } else if (error.message.includes("offline") || error.code === 'unavailable') {
+          errorMessage = "Koneksi ke server Firebase gagal. Periksa koneksi internet Anda atau coba lagi nanti.";
+        } else if (error.code === 'permission-denied') {
+          errorMessage = "Anda tidak memiliki izin untuk melihat detail pesanan ini. Harap periksa aturan keamanan Firebase Anda.";
+        } else if (error.code === 'not-found' && orderId) {
+          errorMessage = `Pesanan dengan ID "${orderId}" tidak ditemukan.`;
         }
 
-        // 6. Populate Order History
-        orderHistoryListEl.innerHTML = ""; // Clear loading text
 
-        if (orderData.statusHistory && orderData.statusHistory.length > 0) {
-          // Sort history by date in descending order (newest first)
-          orderData.statusHistory.sort(
-            (a, b) => b.timestamp.toDate() - a.timestamp.toDate()
-          );
-
-          orderData.statusHistory.forEach((history) => {
-            let iconClass = "fas fa-info-circle text-gray-500"; // Default
-            switch (history.status) {
-              case "pending":
-                iconClass = "fas fa-clock text-yellow-500";
-                break;
-              case "processing":
-                iconClass = "fas fa-cogs text-orange-500";
-                break;
-              case "shipped":
-                iconClass = "fas fa-truck text-blue-500";
-                break;
-              case "delivered":
-                iconClass = "fas fa-check-circle text-green-500";
-                break;
-              case "completed":
-                iconClass = "fas fa-clipboard-check text-green-600";
-                break;
-              case "cancelled":
-                iconClass = "fas fa-times-circle text-red-500";
-                break;
-              case "refunded":
-                iconClass = "fas fa-wallet text-indigo-500";
-                break;
-            }
-
-            const historyHtml = `
-              <li class="flex items-start text-gray-700 text-sm mb-2">
-                <i class="${iconClass} mr-3 mt-1"></i>
-                <div>
-                  <strong class="block">Status: ${
-                    history.status
-                  }</strong>
-                  <span class="text-xs text-gray-500">${formatDate(
-                    history.timestamp
-                  )}</span>
-                  <p class="text-xs text-gray-600">${
-                    history.notes || ""
-                  }</p>
-                </div>
-              </li>
-            `;
-            orderHistoryListEl.insertAdjacentHTML("beforeend", historyHtml);
-          });
-        } else {
-          orderHistoryListEl.innerHTML =
-            '<p class="text-gray-500">Tidak ada riwayat status pesanan.</p>';
+        if (contentWrapper) {
+          contentWrapper.innerHTML = `
+                        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                            <p class="text-center text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail pesanan.</p>
+                            <p class="text-center text-gray-600 mt-2">${errorMessage}</p>
+                            <p class="text-center text-gray-600 mt-2">Pastikan konfigurasi Firebase Anda benar dan aturan keamanan Firestore mengizinkan akses.</p>
+                            <div class="text-center mt-4">
+                                <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
+                                </a>
+                            </div>
+                        </div>
+                    `;
         }
-
-        // --- Action Buttons Functionality ---
-        // Ensure buttons are visible if data exists
-        if (updateStatusButton) updateStatusButton.classList.remove('hidden');
-        if (deleteOrderButton) deleteOrderButton.classList.remove('hidden');
-
-        updateStatusButton.addEventListener("click", async () => {
-          const newStatus = prompt(
-            `Masukkan status baru untuk pesanan #${orderId} (contoh: processing, shipped, delivered, cancelled, completed):`
-          );
-          if (newStatus) {
-            try {
-              await db
-                .collection("pemesanan")
-                .doc(orderId)
-                .update({
-                  status: newStatus.toLowerCase(),
-                  statusHistory: firebase.firestore.FieldValue.arrayUnion({
-                    status: newStatus.toLowerCase(),
-                    timestamp: firebase.firestore.Timestamp.now(),
-                    notes: `Status diperbarui oleh Admin ke '${newStatus}'.`,
-                  }),
-                });
-              alert("Status pesanan berhasil diperbarui!");
-              location.reload(); // Reload page to show updated data
-            } catch (error) {
-              console.error("Error updating order status:", error);
-              alert("Gagal memperbarui status pesanan. Coba lagi.");
-            }
-          }
-        });
-
-        deleteOrderButton.addEventListener("click", async () => {
-          if (
-            confirm(
-              `Apakah Anda yakin ingin menghapus pesanan #${orderId} secara permanen? Aksi ini tidak bisa dibatalkan!`
-            )
-          ) {
-            try {
-              await db.collection("pemesanan").doc(orderId).delete();
-              alert("Pesanan berhasil dihapus.");
-              window.location.href = "admin-pesanan.html"; // Redirect back to orders list
-            } catch (error) {
-              console.error("Error deleting order:", error);
-              alert("Gagal menghapus pesanan. Coba lagi.");
-            }
-          }
-        });
-      } else {
-        // If order document does not exist in Firestore
-        document.title = `Detail Pesanan : Tidak Ditemukan - TitipGo Admin`;
-        orderDetailTitleEl.textContent = "Detail Pesanan : Tidak Ditemukan";
-        breadcrumbOrderIdEl.textContent = "Tidak Ditemukan";
-
-        contentWrapper.innerHTML = `
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <p class="text-center text-red-500 text-xl font-semibold">Pesanan dengan ID #${orderId} tidak ditemukan.</p>
-            <p class="text-center text-gray-600 mt-2">Mungkin ID pesanan salah atau pesanan telah dihapus.</p>
-            <div class="text-center mt-4">
-              <a href="admin-pesanan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Pesanan
-              </a>
-            </div>
-          </div>
-        `;
-        // Disable and hide buttons if no order data
-        if (updateStatusButton) updateStatusButton.classList.add('hidden');
-        if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
       }
-    } catch (error) {
-      console.error("Error fetching order data:", error);
-      document.title = `Detail Pesanan : Error - TitipGo Admin`;
-      orderDetailTitleEl.textContent = "Detail Pesanan : Error";
-      breadcrumbOrderIdEl.textContent = "Error";
-      contentWrapper.innerHTML = `
-        <div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">
-          Terjadi kesalahan saat memuat data pesanan. Silakan coba lagi.
-          <p class="text-sm text-gray-600 mt-2">${error.message || ''}</p>
-        </div>
-      `;
-      // Disable and hide buttons on error
-      if (updateStatusButton) updateStatusButton.classList.add('hidden');
-      if (deleteOrderButton) deleteOrderButton.classList.add('hidden');
     }
-  });
-</script>
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
