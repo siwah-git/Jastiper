@@ -277,29 +277,17 @@
     </main>
 
     <script type="module">
-        // Pastikan path ke firebase-config.js benar relatif dari toko.html
-        import { db, auth } from './js/firebase-config.js';
+        import { db, auth } from './js/firebase-config.js'; // Pastikan path benar
         import { doc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-        // Fungsi untuk mengambil parameter dari URL
+        // Fungsi untuk mendapatkan parameter dari URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
-            // --- DEBUGGING LOGS TAMBAHAN ---
-            console.log(`getQueryParam dipanggil untuk parameter: '${param}'. URL search string: '${window.location.search}'`);
-            // Ini akan menampilkan semua pasangan key-value yang ditemukan oleh URLSearchParams
-            for (let pair of urlParams.entries()) {
-                console.log(`URLSearchParams melihat: Key='${pair[0]}', Value='${pair[1]}'`);
-            }
-            const value = urlParams.get(param);
-            console.log(`Nilai get('${param}') adalah: '${value}'`);
-            // --- END DEBUGGING LOGS ---
-            return value;
+            return urlParams.get(param);
         }
 
         async function loadStoreDetail() {
             console.log("Memulai loadStoreDetail...");
-            const storeId = getQueryParam('Id'); // Mengambil parameter dengan nama 'Id'
-            console.log("ID Toko yang diambil dari URL (setelah getQueryParam):", storeId);
 
             const storeNameDetailElement = document.getElementById('storeNameDetail');
             const storeDisplayNameElement = document.getElementById('storeDisplayName');
@@ -312,46 +300,129 @@
             const storeProductsGridElement = document.getElementById('storeProductsGrid');
             const noProductsMessageElement = document.getElementById('noProductsMessage');
 
-            if (!storeId) {
-                storeNameDetailElement.textContent = "ID Toko tidak ditemukan dalam URL.";
-                noProductsMessageElement.textContent = "Tidak ada toko yang dipilih.";
-                console.error("Kesalahan: ID Toko tidak ditemukan dalam parameter URL. Pastikan parameter 'Id' ada di URL.");
-                return;
+            // Setel teks awal
+            if (storeNameDetailElement) storeNameDetailElement.textContent = "Memuat Detail Toko...";
+            if (storeDisplayNameElement) storeDisplayNameElement.textContent = "Memuat...";
+            if (storeActiveStatusElement) storeActiveStatusElement.textContent = "Memuat...";
+            if (storeDescriptionElement) storeDescriptionElement.textContent = "Memuat...";
+            if (storeFollowersElement) storeFollowersElement.textContent = "...";
+            if (storeProductsCountElement) storeProductsCountElement.textContent = "...";
+            if (noProductsMessageElement) {
+                noProductsMessageElement.textContent = "Memuat produk...";
+                noProductsMessageElement.style.display = 'block';
             }
+            if (storeProductsGridElement) storeProductsGridElement.innerHTML = ''; // Bersihkan konten awal
+
+            let storeData = null;
+            let storeId = null;
 
             try {
-                const storeDocRef = doc(db, "toko", storeId);
-                const storeDocSnap = await getDoc(storeDocRef);
+                // 1. Coba dapatkan ID toko dari parameter URL 'tokoId' atau 'id'
+                storeId = getQueryParam('tokoId') || getQueryParam('id');
 
-                console.log("Status dokumen toko (storeDocSnap.exists()):", storeDocSnap.exists() ? "Ditemukan" : "Tidak Ditemukan");
+                if (storeId) {
+                    console.log(`ID Toko diambil dari URL: ${storeId}`);
+                    const storeDocRef = doc(db, "toko", storeId);
+                    const docSnap = await getDoc(storeDocRef);
 
-                if (storeDocSnap.exists()) {
-                    const storeData = storeDocSnap.data();
-
-                    storeNameDetailElement.textContent = storeData.namaToko || "Nama Toko";
-                    storeDisplayNameElement.textContent = storeData.namaToko || "Nama Toko";
-                    storeActiveStatusElement.textContent = storeData.active_status || "Online";
-                    storeFollowersElement.textContent = storeData.pengikut ? storeData.pengikut.toLocaleString('id-ID') : '0';
-                    storeDescriptionElement.textContent = storeData.deskripsiToko || "Deskripsi toko belum tersedia.";
-
-                    if (storeData.gambar) {
-                        storeImageElement.src = storeData.gambar;
+                    if (docSnap.exists()) {
+                        storeData = docSnap.data();
+                        console.log(`Toko ditemukan dari ID URL: ${storeData.namaToko || 'Nama Tidak Tersedia'} (ID: ${storeId})`);
                     } else {
-                        storeImageElement.src = "https://via.placeholder.com/80";
+                        console.warn(`Dokumen toko dengan ID "${storeId}" tidak ditemukan di Firestore. Ini mungkin ID yang salah atau tidak ada. Mencoba mencari OverShop atau toko pertama sebagai fallback.`);
+                        storeId = null; // Set ID ke null agar fallback dijalankan
+                    }
+                } else {
+                    console.warn("ID Toko tidak ditemukan dalam URL. Mencoba mencari OverShop atau toko pertama.");
+                }
+
+                // 2. Jika storeData masih null (ID dari URL tidak ada atau tidak valid), coba fallback
+                if (!storeData) {
+                    const knownOwnerId = "NBjjprUBdugY1NAEhRvSOuQAo1o2"; // OwnerId yang benar untuk "OverShop"
+                    const ownerQuery = query(collection(db, "toko"), where("ownerId", "==", knownOwnerId));
+                    const ownerSnap = await getDocs(ownerQuery);
+
+                    if (!ownerSnap.empty) {
+                        const docSnap = ownerSnap.docs[0];
+                        storeData = docSnap.data();
+                        storeId = docSnap.id;
+                        console.log(`Toko ditemukan berdasarkan ownerId (fallback ke OverShop): ${storeData.namaToko || 'Nama Tidak Tersedia'} (ID: ${storeId})`);
+                    } else {
+                        console.warn(`Toko dengan ownerId ${knownOwnerId} tidak ditemukan. Mencoba mengambil toko pertama dari koleksi (final fallback).`);
+
+                        const allStoresQuery = query(collection(db, "toko"));
+                        const allStoresSnap = await getDocs(allStoresQuery);
+
+                        if (!allStoresSnap.empty) {
+                            const docSnap = allStoresSnap.docs[0];
+                            storeData = docSnap.data();
+                            storeId = docSnap.id;
+                            console.log(`Toko pertama di koleksi ditemukan (final fallback): ${storeData.namaToko || 'Nama Tidak Tersedia'} (ID: ${storeId})`);
+                        } else {
+                            // Tidak ada toko sama sekali di koleksi
+                            if (storeNameDetailElement) storeNameDetailElement.textContent = "Tidak ada toko tersedia.";
+                            if (storeDisplayNameElement) storeDisplayNameElement.textContent = "Tidak Tersedia";
+                            if (storeActiveStatusElement) storeActiveStatusElement.textContent = "Tidak Tersedia";
+                            if (storeDescriptionElement) storeDescriptionElement.textContent = "Tidak Tersedia";
+                            if (storeFollowersElement) storeFollowersElement.textContent = '0';
+                            if (storeProductsCountElement) storeProductsCountElement.textContent = '0';
+                            if (storeImageElement) storeImageElement.src = "https://via.placeholder.com/80";
+                            if (noProductsMessageElement) {
+                                noProductsMessageElement.textContent = "Tidak ada toko untuk ditampilkan.";
+                                noProductsMessageElement.style.display = 'block';
+                            }
+                            console.error("Kesalahan: Tidak ada dokumen toko ditemukan di Firestore.");
+                            return; // Hentikan eksekusi jika tidak ada toko
+                        }
+                    }
+                }
+
+                // --- UPDATE UI DENGAN DATA TOKO YANG DITEMUKAN ---
+                if (storeData && storeId) {
+                    if (storeNameDetailElement) storeNameDetailElement.textContent = storeData.namaToko || "Nama Toko Tidak Tersedia";
+                    if (storeDisplayNameElement) storeDisplayNameElement.textContent = storeData.namaToko || "Nama Toko Tidak Tersedia";
+                    if (storeActiveStatusElement) storeData.active_status ? storeActiveStatusElement.textContent = storeData.active_status : storeActiveStatusElement.textContent = "Status Tidak Tersedia";
+                    if (storeDescriptionElement) storeDescriptionElement.textContent = storeData.deskripsiToko || "Deskripsi toko belum tersedia.";
+
+                    if (storeImageElement) {
+                        storeImageElement.src = storeData.gambar || "https://via.placeholder.com/80";
+                        storeImageElement.alt = storeData.namaToko || "Logo Toko";
                     }
                     if (chatJastiperHeaderElement) {
                         chatJastiperHeaderElement.textContent = `Chat dengan ${storeData.namaToko || 'Toko'}`;
+                    }
+
+                    if (document.getElementById('chatJastiperModal')) {
+                        document.getElementById('chatJastiperModal').dataset.storeId = storeId;
+                    }
+
+                    // --- Mengambil Jumlah Pengikut (Followers) dari subkoleksi ---
+                    try {
+                        const followersQuery = query(collection(db, "toko", storeId, "followers"));
+                        const followersSnap = await getDocs(followersQuery);
+                        if (storeFollowersElement) {
+                            storeFollowersElement.textContent = followersSnap.size.toLocaleString('id-ID');
+                        }
+                        console.log(`Ditemukan ${followersSnap.size} pengikut untuk toko ini.`);
+                    } catch (followersError) {
+                        console.error("Kesalahan saat mengambil jumlah pengikut:", followersError);
+                        if (storeFollowersElement) {
+                            storeFollowersElement.textContent = '0';
+                        }
                     }
 
                     // Mengambil produk berdasarkan 'tokoId'
                     const productsQuery = query(collection(db, "produk"), where("tokoId", "==", storeId));
                     const productsSnap = await getDocs(productsQuery);
 
-                    storeProductsCountElement.textContent = productsSnap.size.toLocaleString('id-ID');
+                    if (storeProductsCountElement) storeProductsCountElement.textContent = productsSnap.size.toLocaleString('id-ID');
 
-                    storeProductsGridElement.innerHTML = '';
+                    if (storeProductsGridElement) storeProductsGridElement.innerHTML = ''; // Bersihkan konten awal
+
                     if (!productsSnap.empty) {
                         console.log(`Ditemukan ${productsSnap.size} produk untuk toko ini.`);
+                        if (noProductsMessageElement) noProductsMessageElement.style.display = 'none';
+
                         productsSnap.forEach(productDoc => {
                             const productData = productDoc.data();
                             const productId = productDoc.id;
@@ -360,31 +431,54 @@
                             productElement.href = `pembeli_produk_detail.html?productId=${productId}`;
                             productElement.className = 'block bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200';
                             productElement.innerHTML = `
-                                <img src="${productData.imageUrl || 'https://via.placeholder.com/150'}" alt="${productData.namaBarang}" class="w-full h-32 object-cover rounded-md mb-2">
-                                <h3 class="font-semibold text-gray-900 truncate">${productData.namaBarang}</h3>
+                                <img src="${productData.imageUrl || 'https://via.placeholder.com/150'}" alt="${productData.namaBarang || 'Produk'}" class="w-full h-32 object-cover rounded-md mb-2">
+                                <h3 class="font-semibold text-gray-900 truncate">${productData.namaBarang || 'Nama Produk Tidak Tersedia'}</h3>
                                 <p class="text-red-700 font-bold text-lg mt-1">Rp ${productData.harga ? productData.harga.toLocaleString('id-ID') : '0'}</p>
                             `;
                             storeProductsGridElement.appendChild(productElement);
                         });
                     } else {
-                        noProductsMessageElement.textContent = "Tidak ada produk dari toko ini.";
-                        storeProductsGridElement.appendChild(noProductsMessageElement);
+                        if (noProductsMessageElement) {
+                            noProductsMessageElement.textContent = "Tidak ada produk dari toko ini.";
+                            noProductsMessageElement.style.display = 'block';
+                        }
                         console.log("Tidak ada produk ditemukan untuk toko ini.");
                     }
-
                 } else {
-                    storeNameDetailElement.textContent = "Toko tidak ditemukan.";
-                    noProductsMessageElement.textContent = "Toko yang Anda cari tidak ditemukan.";
-                    console.error("Kesalahan: Dokumen toko tidak ada di Firestore untuk ID:", storeId);
+                    // Ini akan terjadi jika semua upaya mendapatkan toko (URL, ownerId, toko pertama) gagal
+                    if (storeNameDetailElement) storeNameDetailElement.textContent = "Gagal memuat detail toko.";
+                    if (storeDisplayNameElement) storeDisplayNameElement.textContent = "Tidak Tersedia";
+                    if (storeActiveStatusElement) storeActiveStatusElement.textContent = "Tidak Tersedia";
+                    if (storeDescriptionElement) storeDescriptionElement.textContent = "Tidak Tersedia";
+                    if (storeFollowersElement) storeFollowersElement.textContent = '0';
+                    if (storeProductsCountElement) storeProductsCountElement.textContent = '0';
+                    if (storeImageElement) storeImageElement.src = "https://via.placeholder.com/80";
+                    if (noProductsMessageElement) {
+                        noProductsMessageElement.textContent = "Terjadi kesalahan saat memuat detail toko, tidak ada toko yang dapat ditampilkan.";
+                        noProductsMessageElement.style.display = 'block';
+                    }
+                    console.error("Tidak ada data toko yang berhasil dimuat.");
                 }
+
             } catch (error) {
-                console.error("Kesalahan saat memuat detail toko:", error);
-                storeNameDetailElement.textContent = "Gagal memuat detail toko.";
-                noProductsMessageElement.textContent = "Terjadi kesalahan saat memuat produk.";
+                console.error("Kesalahan umum saat memuat detail toko:", error);
+                if (storeNameDetailElement) storeNameDetailElement.textContent = "Gagal memuat detail toko.";
+                if (storeDisplayNameElement) storeDisplayNameElement.textContent = "Error";
+                if (storeActiveStatusElement) storeActiveStatusElement.textContent = "Error";
+                if (storeDescriptionElement) storeDescriptionElement.textContent = "Terjadi kesalahan saat memuat detail toko.";
+                if (storeFollowersElement) storeFollowersElement.textContent = '0';
+                if (storeProductsCountElement) storeProductsCountElement.textContent = '0';
+                if (storeImageElement) storeImageElement.src = "https://via.placeholder.com/80";
+                if (noProductsMessageElement) {
+                    noProductsMessageElement.textContent = "Terjadi kesalahan saat memuat detail toko.";
+                    noProductsMessageElement.style.display = 'block';
+                }
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadStoreDetail);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStoreDetail();
+        });
 
         // Dropdown User (copied from main page for consistency)
         const userIcon = document.getElementById('userIcon');
@@ -425,13 +519,18 @@
             const chatJastiperModal = document.getElementById('chatJastiperModal');
             const chatJastiperMessages = document.getElementById('chatJastiperMessages');
             const storeDisplayName = document.getElementById('storeDisplayName').textContent;
-            const storeId = getQueryParam('Id');
+            const currentStoreId = chatJastiperModal.dataset.storeId;
+
+            if (!currentStoreId) {
+                alert("Tidak dapat memulai chat: ID Toko tidak ditemukan. Pastikan toko berhasil dimuat.");
+                return;
+            }
 
             if (chatJastiperModal && chatJastiperMessages) {
                 document.getElementById('chatJastiperHeader').textContent = `Chat dengan ${storeDisplayName}`;
                 chatJastiperMessages.innerHTML = `<b>${storeDisplayName}:</b> Halo, ada yang bisa saya bantu?`;
                 chatJastiperModal.style.display = 'flex';
-                chatJastiperModal.dataset.storeId = storeId;
+                chatJastiperModal.dataset.storeId = currentStoreId;
             }
         }
 
@@ -456,7 +555,6 @@
         window.openChatCS = openChatCS;
         window.sendCSMessage = sendCSMessage;
         window.logoutUser = logoutUser;
-
     </script>
 </body>
 

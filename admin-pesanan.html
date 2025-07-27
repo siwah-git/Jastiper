@@ -216,39 +216,46 @@
         const snapshot = await ordersRef.orderBy("createdAt", "desc").get();
 
         const fetchedOrders = [];
+        let orderNumberCounter = 1; // Initialize counter for sequential order numbers
+
         for (const doc of snapshot.docs) {
           const orderData = {
             id: doc.id,
             ...doc.data(),
             namaToko: "N/A", // Default value
-            customerName: "N/A" // Default value
+            customerName: "N/A", // Default value
+            noPesanan: orderNumberCounter++ // Assign sequential order number
           };
 
           // --- Fetch Nama Toko ---
-          // Prioritas 1: Dari products[0].store (jika ada)
-          if (orderData.products && orderData.products.length > 0 && orderData.products[0].store) {
-            orderData.namaToko = orderData.products[0].store;
-          } else if (orderData.jastiperId) { // Prioritas 2: Dari koleksi 'toko' berdasarkan jastiperId
+          // Initialize namaToko with default
+          orderData.namaToko = "N/A";
+
+          // Prioritas 1: Coba ambil dari products[0].namaToko jika ada
+          if (orderData.products && orderData.products.length > 0 && orderData.products[0].namaToko) {
+            orderData.namaToko = orderData.products[0].namaToko; // Use .namaToko as shown in screenshot
+          } else if (orderData.tokoId) { // Prioritas 2: Jika tidak ada di products, coba dari koleksi 'toko' berdasarkan tokoId
             try {
-              const tokoDoc = await db.collection("toko").doc(orderData.jastiperId).get();
-              if (tokoDoc.exists) {
-                orderData.namaToko = tokoDoc.data().namaToko || "N/A";
+              const tokoDoc = await db.collection("toko").doc(orderData.tokoId).get(); // Use .tokoId
+              if (tokoDoc.exists && tokoDoc.data().namaToko) { // Ensure namaToko exists in toko doc
+                orderData.namaToko = tokoDoc.data().namaToko; // Get 'namaToko' from 'toko' collection
               }
             } catch (tokoError) {
-              console.warn(`Could not fetch store name for jastiperId ${orderData.jastiperId}:`, tokoError);
+              console.warn(`Could not fetch store name for tokoId ${orderData.tokoId}:`, tokoError);
             }
           }
 
           // --- Fetch Customer Name ---
-          if (orderData.pembeliId) { // Assuming pembeliId in order document is the userId
+          // Using orderData.userId to fetch customer details
+          if (orderData.userId) { // Assuming userId in order document is the ID of the user who made the order
             try {
-              const userDoc = await db.collection("users").doc(orderData.pembeliId).get();
+              const userDoc = await db.collection("users").doc(orderData.userId).get();
               if (userDoc.exists) {
-                // Assuming 'nama' or 'username' field exists in 'users' collection
-                orderData.customerName = userDoc.data().nama || userDoc.data().username || "N/A";
+                // Assuming 'namaLengkap' field exists in 'users' collection
+                orderData.customerName = userDoc.data().namaLengkap || userDoc.data().username || "N/A";
               }
             } catch (userError) {
-              console.warn(`Could not fetch customer name for pembeliId ${orderData.pembeliId}:`, userError);
+              console.warn(`Could not fetch customer name for userId ${orderData.userId}:`, userError);
             }
           }
 
@@ -366,7 +373,7 @@
       const filteredOrders = allOrders.filter((order) => {
         const matchesSearch =
           (order.noPesanan &&
-            order.noPesanan.toLowerCase().includes(searchTerm)) ||
+            order.noPesanan.toString().toLowerCase().includes(searchTerm)) || // Convert noPesanan to string for search
           (order.customerName && // Filter by customerName
             order.customerName.toLowerCase().includes(searchTerm)) ||
           (order.namaToko && // Filter by namaToko
@@ -437,7 +444,7 @@
         pageBtn.onclick = () => {
           currentPage = i;
           filterTable(); // Re-render with current filters but updated page
-        };
+        }
         paginationControls.appendChild(pageBtn);
       }
 

@@ -75,6 +75,17 @@
             padding: 0;
             margin-top: 4px;
             z-index: 50;
+            position: absolute;
+            /* Added for correct positioning */
+            left: 0;
+            /* Added for correct positioning */
+            display: none;
+            /* Hidden by default */
+        }
+
+        .dropdown-kategori:hover .dropdown-content {
+            display: block;
+            /* Show on hover */
         }
 
         .dropdown-kategori .dropdown-content a {
@@ -260,9 +271,15 @@
             <a href="pembeli_dashboard.html"
                 class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
             <div class="dropdown-kategori relative inline-block hidden md:block">
-                <a href="pembeli_kategori.html"
-                    class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+                <a href="#" class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori
+                    <i class="fas fa-chevron-down text-xs ml-1"></i></a>
+                <div class="dropdown-content absolute">
+                    <a href="pembeli_kategori.html?kategori=Elektronik">Elektronik</a>
+                    <a href="pembeli_kategori.html?kategori=Fashion">Fashion</a>
+                    <a href="pembeli_kategori.html?kategori=Makanan">Makanan</a>
+                    <a href="pembeli_kategori.html?kategori=Kecantikan">Kecantikan</a>
+                    <a href="pembeli_kategori.html?kategori=Olahraga">Olahraga</a>
+                </div>
             </div>
 
             <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
@@ -638,14 +655,29 @@
                             console.log("Store data loaded:", currentStoreData);
                             storeNameDisplay.textContent = currentStoreData.namaToko || 'Nama Toko';
                             storeCountryName.textContent = currentStoreData.negaraToko || 'Tidak Tersedia';
-                            storeInfoContainer.classList.remove('hidden');
 
-                            // Update last active (dummy for now, replace with actual logic)
-                            // For actual last active, you'd need a field in your 'toko' collection
-                            storeLastActive.textContent = `Aktif beberapa saat yang lalu`; // Placeholder
+                            // --- BARIS INI YANG DIPERBAIKI UNTUK MENGARAHKAN KE pembeli_toko.html ---
+                            kunjungiTokoButton.href = `pembeli_toko.html?id=${currentStoreData.id}`;
+                            // --- AKHIR BARIS YANG DIPERBAIKI ---
 
-                            // Fetch followers count for the store
-                            const followersQuery = query(collection(db, "pengguna"), where("following", "array-contains", currentStoreData.id));
+                            // Logika untuk last active dan jumlah followers/products
+                            if (currentStoreData.lastActive) {
+                                const lastActiveDate = currentStoreData.lastActive.toDate();
+                                const diffMs = new Date() - lastActiveDate;
+                                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                                if (diffDays === 0) {
+                                    storeLastActive.textContent = "Aktif hari ini";
+                                } else if (diffDays === 1) {
+                                    storeLastActive.textContent = "Aktif kemarin";
+                                } else {
+                                    storeLastActive.textContent = `Aktif ${diffDays} hari yang lalu`;
+                                }
+                            } else {
+                                storeLastActive.textContent = "Status aktif tidak tersedia";
+                            }
+
+                            // Fetch followers count
+                            const followersQuery = query(collection(db, "toko", currentStoreData.id, "followers"));
                             const followersSnap = await getDocs(followersQuery);
                             storeFollowersCount.textContent = followersSnap.size;
 
@@ -654,29 +686,14 @@
                             const productsSnap = await getDocs(productsQuery);
                             storeProductsCount.textContent = productsSnap.size;
 
-                            // Set the href for "Kunjungi Toko" button
-                            kunjungiTokoButton.href = `pembeli_toko.html?id=${currentStoreData.id}`;
-
+                            storeInfoContainer.classList.remove('hidden');
                         } else {
                             console.warn("Store data not found for tokoId:", currentProductData.tokoId);
-                            storeNameDisplay.textContent = 'Toko Tidak Ditemukan';
-                            storeCountryName.textContent = '';
-                            storeLastActive.textContent = '';
-                            storeFollowersCount.textContent = '0';
-                            storeProductsCount.textContent = '0';
-                            storeInfoContainer.classList.remove('hidden'); // Still show, but with "not found" message
+                            // Optionally hide store info or show a message
                         }
                     } else {
-                        console.warn("Product has no tokoId.");
-                        storeNameDisplay.textContent = 'Toko Tidak Ditemukan';
-                        storeCountryName.textContent = '';
-                        storeLastActive.textContent = '';
-                        storeFollowersCount.textContent = '0';
-                        storeProductsCount.textContent = '0';
-                        storeInfoContainer.classList.remove('hidden'); // Still show, but with "not found" message
+                        console.warn("Produk tidak memiliki tokoId.");
                     }
-
-                    loadingProductMessage.classList.add('hidden');
                 } else {
                     loadingProductMessage.classList.add('hidden');
                     errorProductMessage.textContent = "Produk tidak ditemukan.";
@@ -688,8 +705,11 @@
             } catch (error) {
                 console.error("Error loading product or store data:", error);
                 loadingProductMessage.classList.add('hidden');
-                errorProductMessage.textContent = "Terjadi kesalahan saat memuat data produk. Silakan coba lagi.";
+                errorProductMessage.textContent = "Terjadi kesalahan saat memuat produk: " + error.message;
                 errorProductMessage.classList.remove('hidden');
+                showCustomConfirm("Terjadi kesalahan saat memuat produk. Kembali ke beranda.", () => {
+                    window.location.href = 'pembeli_dashboard.html';
+                });
             } finally {
                 loadingSpinner.classList.add('hidden');
             }
@@ -709,61 +729,57 @@
                 return;
             }
 
+            loadingSpinner.classList.remove('hidden');
+
             const qtyInput = document.querySelector('.produk-qty-input');
             const quantity = parseInt(qtyInput.value, 10);
-            // Pastikan stok yang dicek adalah stok varian yang dipilih, atau stok produk jika tidak ada varian
             const availableStock = parseInt(document.getElementById('product-stock').textContent, 10);
 
             if (quantity <= 0 || isNaN(quantity)) {
-                showCustomConfirm("Jumlah produk harus setidaknya 1.");
+                showCustomConfirm("Jumlah produk harus setidaknya 1.", null, false);
+                loadingSpinner.classList.add('hidden');
                 return;
             }
 
             if (quantity > availableStock) {
-                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`);
+                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`, null, false);
+                loadingSpinner.classList.add('hidden');
                 return;
             }
 
             try {
-                loadingSpinner.classList.remove('hidden');
-
-                const cartItemData = {
-                    productId: currentProductId,
-                    namaBarang: currentProductData.namaBarang,
-                    imageUrl: selectedVariant ? selectedVariant.imageUrl : currentProductData.imageUrl,
-                    harga: selectedVariant ? selectedVariant.price : currentProductData.harga,
-                    quantity: quantity,
-                    tokoId: currentProductData.tokoId,
-                    namaToko: currentStoreData ? currentStoreData.namaToko : 'Unknown Store', // Tambahkan nama toko
-                    variant: selectedVariant ? selectedVariant.name : null, // Tambahkan nama varian
-                    createdAt: new Date(),
-                };
-
-                // REFERENSI PENTING: Mengarahkan ke sub-koleksi keranjang di bawah dokumen pengguna
                 const userCartRef = collection(db, "users", currentUserId, "keranjang");
-
-                // Periksa apakah item (produk + varian) sudah ada di keranjang untuk pengguna saat ini
-                const existingCartItemQuery = query(
-                    userCartRef, // Gunakan userCartRef
+                const q = query(userCartRef,
                     where("productId", "==", currentProductId),
-                    where("variant", "==", cartItemData.variant) // Penting untuk memeriksa varian spesifik
+                    where("variant", "==", selectedVariant ? selectedVariant.name : null) // Match variant if exists
                 );
+                const querySnapshot = await getDocs(q);
 
-                const existingCartSnap = await getDocs(existingCartItemQuery);
-
-                if (existingCartSnap.empty) {
-                    // Item tidak ada, tambahkan sebagai yang baru
-                    await addDoc(userCartRef, cartItemData); // Tambahkan ke userCartRef
+                if (querySnapshot.empty) {
+                    // Item not in cart, add new
+                    const cartItem = {
+                        productId: currentProductId,
+                        namaBarang: currentProductData.namaBarang,
+                        imageUrl: selectedVariant ? selectedVariant.imageUrl : currentProductData.imageUrl,
+                        harga: selectedVariant ? selectedVariant.price : currentProductData.harga,
+                        quantity: quantity,
+                        tokoId: currentProductData.tokoId,
+                        namaToko: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
+                        variant: selectedVariant ? selectedVariant.name : null,
+                        addedAt: new Date(),
+                        // Tambahkan detail lain yang mungkin diperlukan untuk keranjang
+                    };
+                    await addDoc(userCartRef, cartItem);
                     showCustomConfirm("Produk berhasil ditambahkan ke keranjang!", null, false);
-                    console.log("Product added to cart:", cartItemData);
+                    console.log("Product added to cart:", cartItem);
                 } else {
-                    // Item sudah ada, perbarui kuantitas
-                    const existingItemDoc = existingCartSnap.docs[0];
-                    const existingQuantity = existingItemDoc.data().quantity;
+                    // Item already in cart, update quantity
+                    const existingItemDoc = querySnapshot.docs[0];
+                    const existingQuantity = existingItemDoc.data().quantity || 0;
                     const newQuantity = existingQuantity + quantity;
 
                     if (newQuantity > availableStock) {
-                        showCustomConfirm(`Tidak dapat menambahkan. Total kuantitas akan melebihi stok yang tersedia (${availableStock}).`);
+                        showCustomConfirm(`Tidak dapat menambahkan. Total kuantitas akan melebihi stok yang tersedia (${availableStock}).`, null, false);
                     } else {
                         await updateDoc(doc(db, "users", currentUserId, "keranjang", existingItemDoc.id), { // Perbarui di userCartRef
                             quantity: newQuantity
@@ -794,17 +810,21 @@
                 return;
             }
 
+            loadingSpinner.classList.remove('hidden'); // Show loading spinner for consistency
+
             const qtyInput = document.querySelector('.produk-qty-input');
             const quantity = parseInt(qtyInput.value, 10);
             const availableStock = parseInt(document.getElementById('product-stock').textContent, 10);
 
             if (quantity <= 0 || isNaN(quantity)) {
-                showCustomConfirm("Jumlah produk harus setidaknya 1.");
+                showCustomConfirm("Jumlah produk harus setidaknya 1.", null, false);
+                loadingSpinner.classList.add('hidden');
                 return;
             }
 
             if (quantity > availableStock) {
-                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`);
+                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`, null, false);
+                loadingSpinner.classList.add('hidden');
                 return;
             }
 
@@ -830,6 +850,7 @@
                 // window.location.href = `pembeli_checkout.html?productId=${orderItem.productId}&quantity=${orderItem.quantity}&variant=${orderItem.variant || ''}`;
                 showCustomConfirm("Produk siap dibeli! (Redirect ke halaman checkout belum diimplementasikan)", null, false);
             }, false); // Ini adalah alert informatif
+            loadingSpinner.classList.add('hidden'); // Hide spinner after showing confirmation
         }
 
         // Function to open Chat with Jastiper (Store)
