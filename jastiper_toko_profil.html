@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+    integrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
@@ -350,7 +350,7 @@
               <div class="flex-1 hidden" id="profileImageUrlInputContainer">
                 <input type="url" id="edit-profileImageUrl"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-pink-500 focus:border-pink-500"
-                  placeholder="Url Gambar baru" readonly />
+                  placeholder="Url Gambar baru" />
               </div>
             </div>
           </div>
@@ -439,7 +439,7 @@
     const formButtons = document.getElementById("form-buttons");
     const cancelEditButton = document.getElementById("cancel-edit-button");
 
-    let currentTokoId = null; // Changed from currentJastiperId to currentTokoId
+    let currentTokoId = null;
     let originalStoreData = null; // Untuk menyimpan data asli saat mode edit dimulai
 
     // Logout Modal elements
@@ -494,7 +494,6 @@
         negaraTokoInput,
         deskripsiTokoInput,
         alamatTokoInput,
-        profileImageUrlInput,
         feeInput,
       ];
 
@@ -507,19 +506,21 @@
         }
       });
 
+      // Toggle visibility of profile image URL input and form buttons
       if (isEditable) {
+        profileImageUrlInput.readOnly = false; // Make the URL input editable
         profileImageUrlInputContainer.classList.remove("hidden");
         formButtons.classList.remove("hidden");
       } else {
+        profileImageUrlInput.readOnly = true; // Make the URL input read-only
         profileImageUrlInputContainer.classList.add("hidden");
         formButtons.classList.add("hidden");
       }
     }
 
-    async function loadStoreData(tokoId) { // Changed jastiperId to tokoId
+    async function loadStoreData(tokoId) {
       try {
-        // Mengambil dokumen toko dari koleksi 'toko'
-        const tokoDocRef = doc(db, "toko", tokoId); // Changed collection to "toko"
+        const tokoDocRef = doc(db, "toko", tokoId);
         const docSnap = await getDoc(tokoDocRef);
 
         let storeData = {};
@@ -528,15 +529,14 @@
           console.log("Data toko ditemukan:", docSnap.data());
           storeData = docSnap.data();
         } else {
-          console.log("Dokumen toko tidak ditemukan untuk Toko ID:", tokoId); // Updated log message
-          // Jika dokumen tidak ada, inisialisasi dengan nilai kosong
+          console.log("Dokumen toko tidak ditemukan untuk Toko ID:", tokoId);
           storeData = {
             namaToko: "",
             negaraToko: "",
             deskripsiToko: "",
             alamatToko: "",
-            fee: 0, // Changed from feeJastiper to fee
-            profileImageUrl: "",
+            fee: 0,
+            gambar: "", // Use 'gambar' to match your Firestore field name
           };
         }
 
@@ -546,7 +546,6 @@
       } catch (error) {
         console.error("Error loading store data:", error);
         showCustomConfirm("Terjadi kesalahan saat memuat informasi toko: " + error.message, null);
-        // Opsional: Redirect atau tampilkan pesan error yang lebih spesifik
       }
     }
 
@@ -555,11 +554,12 @@
       negaraTokoInput.value = store.negaraToko || "";
       deskripsiTokoInput.value = store.deskripsiToko || "";
       alamatTokoInput.value = store.alamatToko || "";
-      feeInput.value = store.fee !== undefined ? store.fee : 0; // Changed from feeJastiper to fee
-      profileImageUrlInput.value = store.profileImageUrl || "";
+      feeInput.value = store.fee !== undefined ? store.fee : 0;
+      profileImageUrlInput.value = store.gambar || ""; // Use 'gambar' to populate the URL input
 
-      if (store.profileImageUrl) {
-        storeProfileImagePreview.src = store.profileImageUrl; // Menggunakan store.profileImageUrl
+      // Always display the image preview based on the stored URL or hide it
+      if (store.gambar) { // Use 'gambar' for the image source
+        storeProfileImagePreview.src = store.gambar;
         storeProfileImagePreview.classList.remove("hidden");
         storeImagePlaceholder.classList.add("hidden");
       } else {
@@ -585,19 +585,17 @@
 
       const updatedData = {
         namaToko: namaTokoInput.value,
-        namaTokoLowerCase: namaTokoInput.value.toLowerCase(), // Untuk pencarian
+        namaTokoLowerCase: namaTokoInput.value.toLowerCase(),
         negaraToko: negaraTokoInput.value,
         deskripsiToko: deskripsiTokoInput.value,
         alamatToko: alamatTokoInput.value,
-        fee: parseFloat(feeInput.value) || 0, // Changed from feeJastiper to fee
-        profileImageUrl: profileImageUrlInput.value,
-        // Tambahkan ownerId jika belum ada di dokumen toko
-        ownerId: currentTokoId, // Changed from currentJastiperId to currentTokoId
+        fee: parseFloat(feeInput.value) || 0,
+        gambar: profileImageUrlInput.value, // Use 'gambar' when saving to Firestore
+        ownerId: currentTokoId,
       };
 
       try {
-        // Menyimpan/memperbarui dokumen di koleksi 'toko' dengan ID pengguna
-        await setDoc(doc(db, "toko", currentTokoId), updatedData, { merge: true }); // Changed collection to "toko"
+        await setDoc(doc(db, "toko", currentTokoId), updatedData, { merge: true });
         showCustomConfirm("Informasi toko berhasil diperbarui!", () => {
           originalStoreData = { ...updatedData }; // Update data asli setelah berhasil disimpan
           setFormEditability(false);
@@ -608,7 +606,7 @@
       }
     });
 
-    // Event listener for profile image URL input to show preview
+    // Event listener for profile image URL input to show preview (only when editable)
     profileImageUrlInput.addEventListener("input", () => {
       if (profileImageUrlInput.value) {
         storeProfileImagePreview.src = profileImageUrlInput.value;
@@ -639,11 +637,11 @@
     // Auth State management
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        currentTokoId = user.uid; // Changed from currentJastiperId to currentTokoId
-        console.log("Logged in Toko UID:", currentTokoId); // Updated log message
+        currentTokoId = user.uid;
+        console.log("Logged in Toko UID:", currentTokoId);
         loadStoreData(currentTokoId);
       } else {
-        currentTokoId = null; // Changed from currentJastiperId to currentTokoId
+        currentTokoId = null;
         console.log("No user signed in. Redirecting to login.");
         // Redirect ke halaman login jika tidak ada user
         window.location.href = "login_user.html";

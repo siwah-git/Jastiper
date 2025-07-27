@@ -2,68 +2,50 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kategori - TitipGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        xintegrity="sha512-ieCDL2m3wD6P1L3+6o5u3Q9mQ5vG7yJ+zL3F0B5W6j8U7z6T7dC4xTj8yM1Q0/6QG6r7s5E12/wA8kS/oA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f5f7fa;
-            padding-top: 80px; /* Tambahkan padding-top agar konten tidak tertutup header fixed */
-        }
-
-        .header-search {
-            font-size: 1rem;
-            height: 36px;
-            padding-left: 2.2rem;
-            padding-right: 1rem;
-            border-radius: 9999px;
-            width: 180px;
-            font-weight: 600;
-        }
-
-        @media (min-width: 1024px) {
-            .header-search {
-                width: 220px;
-            }
+            background-color: #f7fafc;
         }
 
         .header-search::placeholder {
             color: #a0aec0;
             opacity: 1;
-            font-size: 1rem;
-            font-weight: 600;
         }
 
-        .icon-nav,
-        nav svg {
-            width: 20px !important;
-            height: 20px !important;
-            min-width: 20px;
-            min-height: 20px;
+        .header-icon {
+            color: #4a5568;
+            transition: color 0.2s ease-in-out;
         }
 
-        .icon-nav:hover {
-            filter: brightness(0.7);
+        .header-icon:hover {
+            color: #e53e3e;
         }
 
-        /* Navigasi tengah di header */
-        .main-nav-center {
+        .nav-items-group {
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 1.5rem;
-            /* Menyesuaikan jarak antar item */
         }
 
-        .main-nav-center a,
-        .main-nav-center .dropdown-kategori>a {
-            padding: 0;
-            font-size: 1rem;
+        .nav-items-group .nav-link {
             font-weight: 600;
-            letter-spacing: 0.01em;
+            color: #4a5568;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-items-group .nav-link:hover {
+            color: #e53e3e;
         }
 
         /* Gaya untuk dropdown */
@@ -75,7 +57,6 @@
             background: #fff;
             padding: 0;
             margin-top: 4px;
-            /* Sedikit jarak dari item nav */
         }
 
         .dropdown-kategori .dropdown-content a,
@@ -100,85 +81,83 @@
             color: #1976d2;
         }
 
-        .logo-titipgo {
-            width: 80px !important;
-            min-width: 80px;
-            max-width: 90px;
+        .auth-button-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        @media (max-width: 900px) {
-
-            .icon-nav,
-            nav svg {
-                width: 16px !important;
-                height: 16px !important;
-            }
-
-            .logo-titipgo {
-                width: 60px !important;
-            }
-
-            .header-search {
-                font-size: 0.9rem;
-                height: 28px;
-                width: 120px;
-            }
-
-            .header-search::placeholder {
-                font-size: 0.9rem;
-            }
-
-            .main-nav-center a,
-            .main-nav-center .dropdown-kategori>a {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Gaya untuk bagian kategori */
-        .kategori-section {
-            display: flex; /* Menggunakan flexbox */
-            flex-wrap: wrap; /* Memungkinkan item untuk wrap ke baris berikutnya */
+        .auth-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
-            gap: 40px; /* Jarak antar item */
+            height: 40px;
+            min-width: 90px;
+        }
+
+        .auth-button.masuk {
+            background-color: #2563eb;
+            color: white;
+            border: 1px solid #2563eb;
+        }
+
+        .auth-button.masuk:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .auth-button.daftar {
+            background-color: #ec4899;
+            color: white;
+            border: 1px solid #ec4899;
+        }
+
+        .auth-button.daftar:hover {
+            background-color: #db2777;
+            border-color: #db2777;
+        }
+
+        /* Gaya untuk bagian kategori utama */
+        .kategori-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
             margin: 0 auto;
             padding-top: 20px;
-            max-width: 1200px; /* Lebar maksimum container kategori agar sesuai 5 kolom */
-            /* Pastikan lebar ini cukup untuk 5 kolom + gap */
+            max-width: 1200px;
         }
 
         .kategori-col {
             text-align: center;
-            /* Atur lebar kolom agar 5 kolom muat. */
-            /* Setiap kolom diperkirakan sekitar 170px lebar, 5 * 170 = 850px. */
-            /* Total gap: 4 * 40px = 160px. Jadi sekitar 850 + 160 = 1010px. */
-            /* Kita gunakan calc untuk presisi */
-            flex-basis: calc((100% - (4 * 40px)) / 5); /* 5 kolom dengan gap 40px */
-            min-width: 170px; /* Pastikan kolom tidak terlalu kecil */
-            flex-grow: 1; /* Memungkinkan kolom tumbuh jika ada ruang ekstra */
-            flex-shrink: 1; /* Memungkinkan kolom menyusut jika perlu, tapi tidak di bawah min-width */
-            box-sizing: border-box; /* Pastikan padding dan border termasuk dalam lebar */
+            flex-basis: calc((100% - (4 * 40px)) / 5);
+            /* 5 kolom dengan gap 40px */
+            min-width: 170px;
+            flex-grow: 1;
+            flex-shrink: 1;
+            box-sizing: border-box;
         }
 
-        /* Media query untuk memastikan 5 kolom pada layar besar */
-        @media (min-width: 1100px) { /* Sesuaikan breakpoint ini agar 5 kolom terlihat optimal */
-            .kategori-section {
-                justify-content: center; /* Tetap center, atau space-evenly jika ingin merata */
-            }
+        @media (min-width: 1100px) {
             .kategori-col {
-                max-width: 170px; /* Atur lebar maksimum agar semua kolom memiliki lebar yang seragam */
-                /* Ini akan membuat semua kolom berukuran sama jika ada cukup ruang */
+                max-width: 170px;
             }
         }
 
-        /* Media query untuk 3 kolom di layar sedang */
         @media (max-width: 1099px) and (min-width: 768px) {
             .kategori-col {
-                flex-basis: calc((100% - (2 * 40px)) / 3); /* 3 kolom dengan gap 40px */
+                flex-basis: calc((100% - (2 * 40px)) / 3);
+                /* 3 kolom dengan gap 40px */
                 max-width: calc((100% - (2 * 40px)) / 3);
             }
         }
 
-        @media (max-width: 767px) { /* Untuk layar yang lebih kecil (mobile) */
+        @media (max-width: 767px) {
             .kategori-section {
                 flex-direction: column;
                 align-items: center;
@@ -188,14 +167,9 @@
 
             .kategori-col {
                 min-width: 0;
-                width: 90vw; /* Mengambil 90% lebar viewport */
-                flex-basis: auto; /* Kembali ke lebar otomatis untuk mobile */
-                max-width: none; /* Hapus batasan max-width */
-            }
-
-            .kategori-box {
-                min-width: 0;
-                width: 100%;
+                width: 90vw;
+                flex-basis: auto;
+                max-width: none;
             }
         }
 
@@ -216,7 +190,7 @@
             padding: 14px 24px;
             border-radius: 8px;
             text-align: left;
-            min-width: 150px; /* Minimum width for the box content */
+            min-width: 150px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
         }
 
@@ -238,22 +212,17 @@
             color: #ff0080;
         }
 
-        /* Gaya untuk daftar produk dari Firestore */
-        #products-list {
+        /* Gaya untuk daftar produk */
+        #products-list-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            /* Responsive grid */
             gap: 24px;
-            /* Jarak antar produk */
             max-width: 1200px;
-            /* Lebar maksimal container produk */
             margin: 36px auto;
-            /* Tengah dan jarak atas */
             padding: 0 16px;
-            /* Padding samping */
         }
 
-        #products-list .product-card {
+        #products-list-grid .product-card {
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -265,33 +234,32 @@
             transition: transform 0.2s ease-in-out;
         }
 
-        #products-list .product-card:hover {
+        #products-list-grid .product-card:hover {
             transform: translateY(-5px);
         }
 
-        #products-list .product-card img {
+        #products-list-grid .product-card img {
             width: 150px;
-            /* Ukuran gambar produk */
             height: 150px;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 16px;
         }
 
-        #products-list .product-card .product-name {
+        #products-list-grid .product-card .product-name {
             font-weight: 700;
             font-size: 1.15rem;
             color: #ff0080;
             margin-bottom: 8px;
         }
 
-        #products-list .product-card .product-price {
+        #products-list-grid .product-card .product-price {
             font-size: 1rem;
             color: #333333;
             margin-bottom: 8px;
         }
 
-        #products-list .product-card .product-description {
+        #products-list-grid .product-card .product-description {
             font-size: 0.9rem;
             color: #666666;
             margin-bottom: 8px;
@@ -299,18 +267,16 @@
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            /* Batasi deskripsi hanya 2 baris */
             -webkit-box-orient: vertical;
         }
 
-        #products-list .product-card .product-variants {
+        #products-list-grid .product-card .product-variants {
             font-size: 0.85rem;
             color: #888888;
         }
 
-        #products-list .empty-message {
+        #products-list-grid .empty-message {
             grid-column: 1 / -1;
-            /* Rentang seluruh kolom di grid */
             text-align: center;
             padding: 40px;
             font-size: 1.1rem;
@@ -320,232 +286,485 @@
 </head>
 
 <body class="font-sans bg-gray-100 m-0">
-   <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-    <div class="flex items-center space-x-3">
-        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Cari Barang..."
-                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-            </svg>
-        </div>
-    </div>
-    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-    </nav>
-    <nav class="flex items-center space-x-4 sm:space-x-6">
-        <a href="pembeli_dashboard.html"
-            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-        <div class="dropdown-kategori relative inline-block hidden md:block">
-            <a href="pembeli_kategori.html" 
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
+    <header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
+        <div class="flex items-center space-x-3">
+            <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
+            <div class="relative hidden md:block">
+                <input type="text" placeholder="Cari Barang..."
+                    class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:ring-pink-500 focus:border-pink-500">
+                <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
+                    viewBox="0 0 20 20">
+                    <path
+                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                </svg>
+            </div>
         </div>
 
-        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-            </svg>
-        </a>
-        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-        </a>
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-            id="userIcon" style="cursor:pointer;">
-        <div id="userDropdown"
-            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-            <a href="pembeli_akun.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-            <a href="pembeli_pesanan_saya.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                CS</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-            <a href="#" onclick="logoutUser();return false;"
-                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
+        <div class="flex items-center space-x-4 sm:space-x-6">
+            <nav class="nav-items-group hidden md:flex items-center gap-6">
+                <a href="pembeli_dashboard.html" class="nav-link">Beranda</a>
+                <div class="dropdown-kategori relative inline-block">
+                    <a href="pembeli_kategori.html" id="kategoriMenu" class="nav-link">Kategori</a>
+                    <div class="dropdown-content absolute left-0 top-full bg-white shadow-lg rounded min-w-[160px] z-10 py-2 border border-gray-200"
+                        id="dropdownKategori" style="display:none;">
+                        <a href="pembeli_kategori.html"
+                            class="block px-6 py-2 text-gray-900 no-underline text-sm hover:bg-gray-100 hover:text-pink-600">Pilih
+                            Kategori</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- User profile (HIDDEN by default, shown via JS after login) -->
+            <div id="userProfileContainer" class="hidden flex items-center space-x-4 relative">
+                <a href="pembeli_keranjang.html" class="header-icon text-2xl" title="Keranjang Belanja"><i
+                        class="far fa-shopping-cart"></i></a>
+                <a href="pembeli_notifikasi.html" class="header-icon text-2xl" title="Notifikasi"><i
+                        class="far fa-bell"></i></a>
+                <a href="#" id="userProfileIcon" class="header-icon text-2xl" title="Profil Pengguna">
+                    <i class="far fa-user"></i>
+                </a>
+
+                <div id="userDropdown"
+                    class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001] py-2 border border-gray-200">
+                    <a href="pembeli_akun.html"
+                        class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Akun
+                        Saya</a>
+                    <a href="pembeli_pesanan_saya.html"
+                        class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Pesanan</a>
+                    <a href="jastiper_dashboard.html"
+                        class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600"
+                        id="tokoSayaLink">Toko Saya</a>
+                    <a href="#" onclick="openChatCS();return false;"
+                        class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100 hover:bg-gray-100 hover:text-pink-600">Chat
+                        dengan CS</a>
+                    <a href="#" onclick="logoutUser();return false;"
+                        class="block px-5 py-3 text-red-600 no-underline text-sm hover:bg-gray-100">Logout</a>
+                </div>
+            </div>
+
+            <!-- Auth buttons (removed as per user request) -->
+            <!-- <div id="authContainer" class="auth-button-container">
+                <a href="login_user2.html" class="auth-button masuk">Masuk</a>
+                <a href="daftar_login.html" class="auth-button daftar">Daftar</a>
+            </div> -->
         </div>
-    </nav>
-</header>
-    <h1 class="page-title"
-        style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KATEGORI
-    </h1>
-    <div class="kategori-section flex flex-wrap justify-center gap-8 md:gap-12">
-        <div class="kategori-col flex flex-col items-center">
-            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Fashion &
-                Aksesoris</div>
-            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-                <a href="pembeli_kategori_fashion.html"
-                    class="block py-1 border-b border-gray-200 last:border-b-0">Pakaian</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sepatu</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Sandal</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Tas</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Dompet</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Jam Tangan</a>
-                
+    </header>
+
+    <main class="pt-16 px-4">
+        <h1 class="page-title"
+            style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">KATEGORI
+        </h1>
+        <div class="kategori-section" id="kategoriSection">
+            <!-- Kategori dan sub-kategori akan dimuat di sini oleh JavaScript -->
+            <p id="loadingCategories" class="col-span-full text-center text-gray-500">Memuat kategori...</p>
+            <p id="errorCategories" class="col-span-full text-center text-red-500 hidden">Gagal memuat kategori.</p>
+        </div>
+
+        <!-- Bagian untuk menampilkan produk -->
+        <h2 class="text-3xl font-bold text-center mb-8 mt-12" id="productsSectionTitle">Semua Produk</h2>
+        <!-- Container untuk pesan loading/error/no products -->
+        <div id="productMessagesContainer" class="text-center py-8">
+            <p id="loadingProducts" class="text-gray-500">Memuat produk...</p>
+            <p id="errorProducts" class="text-red-500 hidden">Gagal memuat produk.</p>
+            <p id="noProductsFound" class="text-gray-600 hidden">Tidak ada produk yang tersedia untuk filter ini.</p>
+        </div>
+        <!-- Container untuk daftar produk -->
+        <div id="products-list-grid" class="mt-6">
+            <!-- Product cards akan dirender di sini -->
+        </div>
+    </main>
+
+    <footer class="bg-blue-900 py-8 px-6 mt-8">
+        <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm">
+            <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
+                <h3 class="font-bold text-white mb-3">INFORMASI</h3>
+                <ul>
+                    <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a>
+                    </li>
+                    <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan
+                            Umum</a></li>
+                    <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
+                <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+            </div>
+            <div class="w-full sm:w-1/3 text-right">
+                <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3>
+                <ul>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a
+                            href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr"
+                            target="_blank" class="hover:text-pink-600">Instagram</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a
+                            href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank"
+                            class="hover:text-pink-600">Facebook</a></li>
+                    <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a
+                            href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank"
+                            class="hover:text-pink-600">Youtube</a></li>
+                </ul>
             </div>
         </div>
-        <div class="kategori-col flex flex-col items-center">
-            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Kosmetik &
-                Skincare</div>
-            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Skincare</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makeup</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Perawatan Rambut</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Body Care</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Masker Wajah</a>
-                <a href="#" class="block py-1">Produk Khusus</a>
-            </div>
+        <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
         </div>
-        <div class="kategori-col flex flex-col items-center">
-            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Elektronik &
-                Gadget</div>
-            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartphone</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Aksesoris Gadget</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Kamera</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Smartwatch</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Alat Elektronik</a>
-                <a href="#" class="block py-1">Gaming</a>
+    </footer>
+
+    <div id="chatCSModal"
+        style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;max-width:400px;width:90vw;padding:0 0 16px 0;box-shadow:0 4px 24px rgba(0,0,0,0.12);margin:auto;">
+            <div
+                style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px 20px;border-bottom:1px solid #eee;">
+                <span style="font-weight:bold;font-size:17px;">Chat dengan CS</span>
+                <button onclick="document.getElementById('chatCSModal').style.display='none'"
+                    style="background:none;border:none;font-size:22px;cursor:pointer;">&times;</button>
             </div>
-        </div>
-        <div class="kategori-col flex flex-col items-center">
-            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Makanan &
-                Minuman</div>
-            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Snack</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Minuman</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Bumbu</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Makanan</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Cokelat & permen</a>
-                <a href="#" class="block py-1">Oleh-oleh musiman</a>
+            <div style="padding:18px 20px 0 20px;min-height:80px;">
+                <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;"></div>
             </div>
-        </div>
-        <div class="kategori-col flex flex-col items-center">
-            <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">Mainan Anak-Anak</div>
-            <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Mainan anak</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Action figure</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Puzzle & board game</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Model kit</a>
-                <a href="#" class="block py-1 border-b border-gray-200 last:border-b-0">Alat Gambar</a>
-                <a href="#" class="block py-1">Robot</a>
+            <div style="display:flex;align-items:center;padding:10px 20px 0 20px;gap:8px;">
+                <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
+                    style="flex:1;padding:8px 12px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
+                <button onclick="sendCSMessage()"
+                    style="background:#1976d2;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-weight:bold;cursor:pointer;">Kirim</button>
             </div>
         </div>
     </div>
-    <div id="products-list" class="mt-6"></div>
-<footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
-                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-            </ul>
-        </div>
-        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
-        </div>
-        <div class="w-full sm:w-1/3 text-right">
-            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
-            </ul>
+
+    <!-- New Login Prompt Modal -->
+    <div id="loginPromptModal"
+        style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;max-width:400px;width:90vw;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,0.12);text-align:center;">
+            <h3 style="font-weight:bold;font-size:18px;margin-bottom:15px;">Anda Harus Login Dulu!</h3>
+            <p style="font-size:15px;color:#444;margin-bottom:20px;">Silakan login untuk melihat detail atau memfilter.
+            </p>
+            <button onclick="window.location.href='login_user2.html'"
+                style="background:#ec4899;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;transition:background-color 0.2s;">Login
+                Sekarang</button>
+            <button onclick="document.getElementById('loginPromptModal').style.display='none'"
+                style="background:#f0f0f0;color:#333;border:1px solid #ccc;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;margin-left:10px;transition:background-color 0.2s;">Batal</button>
         </div>
     </div>
-    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
-    </div>
-</footer>
-    <script>
-        // Dropdown Kategori
+
+    <script type="module">
+        // Mengimpor db dan fungsi-fungsi Firestore dari firebase-config.js
+        import { db, auth, collection, getDocs, doc, getDoc, onAuthStateChanged, signOut, query, where } from "./js/firebase-config.js";
+
+        let isLoggedIn = false;
+        let allProductsData = []; // Untuk menyimpan semua data produk
+
+        // --- FUNGSI DROPDOWN KATEGORI HEADER ---
         const kategoriMenu = document.getElementById('kategoriMenu');
         const dropdownKategori = document.getElementById('dropdownKategori');
+
         if (kategoriMenu && dropdownKategori) {
-            kategoriMenu.addEventListener('click', function (e) {
-                e.preventDefault();
+            kategoriMenu.addEventListener('click', function (event) {
+                event.preventDefault(); // Mencegah navigasi langsung
                 dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
             });
-            document.addEventListener('click', function (e) {
-                if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
+
+            document.addEventListener('click', function (event) {
+                if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
                     dropdownKategori.style.display = 'none';
                 }
             });
         }
-        // Dropdown User
-        const userIcon = document.getElementById('userIcon');
-        const userDropdown = document.getElementById('userDropdown');
-        if (userIcon && userDropdown) {
-            userIcon.onclick = function (e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('hidden');
-            };
-            document.addEventListener('click', function (e) {
-                if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-                    userDropdown.classList.add('hidden');
-                }
-            });
+
+        // --- FUNGSI CHAT CS ---
+        window.openChatCS = function () { // Dibuat global agar bisa diakses dari HTML
+            document.getElementById('chatCSModal').style.display = 'flex';
+            document.getElementById('chatCSMessages').innerHTML = "Halo! Ada yang bisa kami bantu?";
+            document.getElementById('chatCSInput').value = '';
         }
 
-        function logoutUser() {
-            alert('Berhasil logout!');
-            // Implementasi logout Firebase akan ditambahkan di sini jika diperlukan
-            if (userDropdown) userDropdown.classList.add('hidden');
-            // Redirect ke halaman login setelah logout, contoh:
-            // window.location.href = 'pembeli_login.html';
-        }
+        window.sendCSMessage = function () { // Dibuat global agar bisa diakses dari HTML
+            const chatInput = document.getElementById('chatCSInput');
+            const chatMessages = document.getElementById('chatCSMessages');
+            const message = chatInput.value.trim();
 
-        function openChatCS() {
-            alert('Fitur chat CS akan segera hadir!');
-            if (userDropdown) userDropdown.classList.add('hidden');
-        }
-    </script>
-    <script type="module">
-        import { db } from './js/firebase-config.js'; // Mengimpor db dari firebase-config.js
-        import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+            if (message !== '') {
+                chatMessages.innerHTML += `<p><strong>Anda:</strong> ${message}</p>`;
+                chatInput.value = '';
 
-        async function loadProductsFromFirestore() {
-            const productsListContainer = document.getElementById('products-list');
-            // Menghapus pesan loading awal
-            productsListContainer.innerHTML = ''; 
-
-            try {
-                const querySnapshot = await getDocs(collection(db, "products"));
-                const products = [];
-                querySnapshot.forEach((doc) => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-
-                if (!products.length) {
-                    productsListContainer.innerHTML = '<div class="empty-message">Belum ada produk yang tersedia.</div>';
-                    return;
-                }
-
-                productsListContainer.innerHTML = products.map(product => `
-                    <div class="product-card">
-                        <img src="${product.gambar || 'asset/images/placeholder.jpg'}" alt="${product.nama}" />
-                        <div class="product-name">${product.nama}</div>
-                        <div class="product-price">Rp. ${product.harga ? product.harga.toLocaleString('id-ID') : 'N/A'}</div>
-                        <div class="product-description">${product.deskripsi || 'Tidak ada deskripsi.'}</div>
-                        <div class="product-variants">Varian: ${product.varian && Array.isArray(product.varian) && product.varian.length > 0 ? product.varian.join(', ') : 'Tidak ada varian'}</div>
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error("Error fetching products: ", error);
+                setTimeout(() => {
+                    chatMessages.innerHTML += `<p><strong>CS:</strong> Terima kasih atas pesan Anda. Kami akan segera merespon.</p>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
             }
         }
 
-        // Panggil fungsi saat DOM sudah dimuat
-        window.addEventListener('DOMContentLoaded', loadProductsFromFirestore);
+        // --- New Login Prompt Modal Functions ---
+        const loginPromptModal = document.getElementById('loginPromptModal');
+
+        function showLoginPrompt() {
+            loginPromptModal.style.display = 'flex';
+        }
+
+        // --- Handlers for Product Click ---
+        window.handleProductClick = function (productId) { // Dibuat global agar bisa diakses dari HTML
+            if (isLoggedIn) {
+                window.location.href = `pembeli_detail_produk.html?id=${productId}`;
+            } else {
+                showLoginPrompt();
+            }
+        }
+
+        // --- FUNGSI UNTUK MERENDER DAFTAR PRODUK KE DALAM DOM ---
+        async function renderProducts(products) {
+            const productsListGridContainer = document.getElementById('products-list-grid'); // ID baru
+            const loadingMessage = document.getElementById('loadingProducts');
+            const errorMessage = document.getElementById('errorProducts');
+            const noProductsFoundMessage = document.getElementById('noProductsFound');
+            const productsSectionTitle = document.getElementById('productsSectionTitle');
+
+            // Sembunyikan semua pesan terlebih dahulu
+            loadingMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            noProductsFoundMessage.classList.add('hidden');
+
+            productsListGridContainer.innerHTML = ''; // Kosongkan hanya area grid produk
+
+            if (!products.length) {
+                noProductsFoundMessage.classList.remove('hidden');
+                productsSectionTitle.textContent = 'Tidak Ada Produk Ditemukan';
+                return;
+            }
+
+            productsSectionTitle.textContent = 'Produk yang Ditemukan'; // Update judul jika ada produk
+
+            // Buat HTML untuk setiap produk dan masukkan ke dalam container
+            products.forEach(product => {
+                const productCard = `
+                    <div class="product-card" onclick="handleProductClick('${product.id}')">
+                        <img src="${product.imageUrl || 'https://placehold.co/150x150/E0E0E0/666666?text=No+Image'}" alt="${product.namaBarang || 'Produk'}" />
+                        <div class="product-name">${product.namaBarang || 'Nama Produk'}</div>
+                        <div class="product-price">Rp ${product.harga ? product.harga.toLocaleString('id-ID') : 'N/A'}</div>
+                        <div class="product-description">${product.deskripsi || 'Tidak ada deskripsi.'}</div>
+                        <div class="product-variants">Negara: ${product.negara || 'Tidak Diketahui'}</div>
+                    </div>
+                `;
+                productsListGridContainer.innerHTML += productCard; // Tambahkan ke container grid baru
+            });
+        }
+
+        // --- FUNGSI UNTUK MEMUAT SEMUA PRODUK DARI FIRESTORE (untuk cache lokal) ---
+        async function fetchAllProducts() {
+            const loadingMessage = document.getElementById('loadingProducts');
+            const errorMessage = document.getElementById('errorProducts');
+
+            loadingMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            console.log("Memulai fetchAllProducts...");
+
+            try {
+                const productsCollectionRef = collection(db, "produk");
+                const snapshot = await getDocs(productsCollectionRef);
+                allProductsData = []; // Reset data produk
+
+                if (snapshot.empty) {
+                    console.log("Koleksi 'produk' kosong.");
+                    loadingMessage.classList.add('hidden');
+                    renderProducts([]); // Render kosong jika tidak ada produk
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const productData = doc.data();
+                    allProductsData.push({ id: doc.id, ...productData });
+                    console.log(`Produk dimuat: ID=${doc.id}, Nama=${productData.namaBarang}, Kategori='${productData.kategori}', Jenis='${productData.jenis}'`);
+                });
+                console.log("Total produk dimuat:", allProductsData.length);
+                loadingMessage.classList.add('hidden');
+                renderProducts(allProductsData); // Tampilkan semua produk secara default
+            } catch (error) {
+                console.error("Error fetching all products: ", error);
+                loadingMessage.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+                errorMessage.textContent = `Gagal memuat semua produk: ${error.message}.`;
+                renderProducts([]); // Render kosong jika ada error
+            }
+        }
+
+        // --- FUNGSI UNTUK MEMUAT KATEGORI UTAMA DAN JENIS PRODUK SECARA HARDCODE ---
+        async function loadCategoriesAndTypes() {
+            const kategoriSection = document.getElementById('kategoriSection');
+            const loadingMessage = document.getElementById('loadingCategories');
+            const errorMessage = document.getElementById('errorCategories');
+
+            kategoriSection.innerHTML = ''; // Kosongkan konten sebelumnya
+            loadingMessage.classList.add('hidden'); // Sembunyikan pesan loading karena data hardcode
+            errorMessage.classList.add('hidden'); // Sembunyikan pesan error
+            console.log("Memuat kategori dan jenis secara hardcode...");
+
+            // Struktur kategori dan jenis produk yang di-hardcode
+            const hardcodedCategories = new Map([
+                ["Fashion & Aksesoris", ["Pakaian", "Sepatu", "Sandal", "Tas", "Dompet", "Jam Tangan"]],
+                ["Kosmetik & Skincare", ["Skincare", "Makeup", "Perawatan Rambut", "Body Care", "Masker Wajah", "Produk Khusus"]],
+                ["Elektronik & Gadget", ["Smartphone", "Aksesoris Gadget", "Kamera", "Smartwatch", "Alat Elektronik", "Gaming"]],
+                ["Makanan & Minuman", ["Snack", "Minuman", "Bumbu", "Makanan", "Cokelat & Permen", "Oleh-oleh Musiman"]],
+                ["Mainan Anak-Anak", ["Mainan anak", "Action figure", "Puzzle & Board Game", "Model Kit", "Alat Gambar", "Robot"]]
+            ]);
+
+            if (hardcodedCategories.size === 0) {
+                kategoriSection.innerHTML = '<p class="col-span-full text-center text-gray-600">Tidak ada kategori atau jenis produk yang tersedia.</p>';
+                return;
+            }
+
+            // Urutkan kategori utama secara alfabetis (opsional, tapi bagus untuk konsistensi)
+            const sortedCategories = Array.from(hardcodedCategories.keys()).sort();
+
+            sortedCategories.forEach(kategori => {
+                const jenisArray = hardcodedCategories.get(kategori).sort(); // Urutkan jenis juga
+                let jenisLinksHtml = '';
+
+                // Tambahkan link "Semua [Kategori]" di awal daftar jenis
+                jenisLinksHtml += `<a href="#" onclick="filterProductsInPage('${kategori}', null); return false;" class="block py-1 border-b border-gray-200 last:border-b-0">Semua ${kategori}</a>`;
+
+                jenisArray.forEach(jenis => {
+                    // Link ini akan memanggil fungsi filterProductsInPage
+                    jenisLinksHtml += `<a href="#" onclick="filterProductsInPage('${kategori}', '${jenis}'); return false;" class="block py-1 border-b border-gray-200 last:border-b-0">${jenis}</a>`;
+                });
+
+                const kategoriColHtml = `
+                    <div class="kategori-col flex flex-col items-center">
+                        <div class="kategori-label bg-pink-600 text-white font-bold px-6 py-2 rounded-full mb-3 text-base">${kategori}</div>
+                        <div class="kategori-box bg-gray-100 rounded-lg shadow p-5 w-48 text-left">
+                            ${jenisLinksHtml}
+                        </div>
+                    </div>
+                `;
+                kategoriSection.innerHTML += kategoriColHtml;
+            });
+            console.log("Kategori dan jenis selesai dimuat.");
+        }
+
+        // --- FUNGSI UNTUK MEMFILTER PRODUK DI HALAMAN SAAT INI ---
+        window.filterProductsInPage = function (kategoriFilter = null, jenisFilter = null) {
+            const productsSectionTitle = document.getElementById('productsSectionTitle');
+            let filteredProducts = [...allProductsData]; // Salin semua data produk
+
+            console.log(`Memulai filterProductsInPage: Kategori = '${kategoriFilter}', Jenis = '${jenisFilter}'`); // Log untuk debugging
+
+            // Filter berdasarkan kategori utama
+            if (kategoriFilter && kategoriFilter !== 'Semua Kategori') {
+                filteredProducts = filteredProducts.filter(product => {
+                    const productKategori = product.kategori ? String(product.kategori).trim() : ''; // Pastikan string dan trim
+                    const filterKategoriTrimmed = String(kategoriFilter).trim(); // Pastikan string dan trim
+                    console.log(`  Membandingkan Kategori: Produk='${productKategori}' vs Filter='${filterKategoriTrimmed}' -> ${productKategori === filterKategoriTrimmed}`);
+                    return productKategori === filterKategoriTrimmed;
+                });
+                productsSectionTitle.textContent = `Produk Kategori: ${kategoriFilter}`;
+                console.log(`Setelah filter Kategori (${kategoriFilter}):`, filteredProducts.length, 'produk ditemukan.');
+            } else {
+                productsSectionTitle.textContent = 'Semua Produk';
+            }
+
+            // Filter berdasarkan jenis jika ada (hanya jika jenisFilter bukan null dan bukan 'Semua Jenis')
+            if (jenisFilter && jenisFilter !== 'Semua Jenis' && jenisFilter !== null) {
+                filteredProducts = filteredProducts.filter(product => {
+                    const productJenis = product.jenis ? String(product.jenis).trim() : ''; // Pastikan string dan trim
+                    const filterJenisTrimmed = String(jenisFilter).trim(); // Pastikan string dan trim
+                    console.log(`  Membandingkan Jenis: Produk='${productJenis}' vs Filter='${filterJenisTrimmed}' -> ${productJenis === filterJenisTrimmed}`);
+                    return productJenis === filterJenisTrimmed;
+                });
+                // Sesuaikan judul jika ada filter jenis
+                if (kategoriFilter && kategoriFilter !== 'Semua Kategori') {
+                    productsSectionTitle.textContent = `Produk Kategori: ${kategoriFilter}, Jenis: ${jenisFilter}`;
+                } else {
+                    productsSectionTitle.textContent = `Produk Jenis: ${jenisFilter}`;
+                }
+                console.log(`Setelah filter Jenis (${jenisFilter}):`, filteredProducts.length, 'produk ditemukan.');
+            }
+
+            renderProducts(filteredProducts);
+        };
+
+
+        // --- User Authentication and UI Updates ---
+        onAuthStateChanged(auth, async (user) => {
+            // const authContainer = document.getElementById('authContainer'); // Removed from HTML
+            const userProfileContainer = document.getElementById('userProfileContainer');
+            const tokoSayaLink = document.getElementById('tokoSayaLink');
+            const userProfileIcon = document.getElementById('userProfileIcon'); // New: Get the user profile icon
+
+            if (user) {
+                isLoggedIn = true;
+                // authContainer.classList.add('hidden'); // No longer needed as authContainer is removed
+                userProfileContainer.classList.remove('hidden'); // Tampilkan profil pengguna
+
+                // Add event listener for the new userProfileIcon to toggle dropdown
+                if (userProfileIcon) {
+                    userProfileIcon.addEventListener('click', function (event) {
+                        event.preventDefault(); // Prevent default link behavior
+                        const userDropdown = document.getElementById('userDropdown');
+                        userDropdown.classList.toggle('hidden');
+                    });
+                }
+
+                // Hide dropdown when clicking outside
+                document.addEventListener('click', function (event) {
+                    const userDropdown = document.getElementById('userDropdown');
+                    if (userDropdown && !userProfileContainer.contains(event.target) && !userDropdown.contains(event.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+
+
+                // Set avatar and nama pengguna if available (though these are now icons)
+                // This part might be removed if the design completely shifts to icons without text/avatar
+                // if (user.photoURL) {
+                //     document.getElementById('userAvatar').src = user.photoURL;
+                // }
+                // if (user.displayName) {
+                //     document.getElementById('userName').textContent = user.displayName;
+                // }
+
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        if (userData.isJastiper) {
+                            tokoSayaLink.style.display = 'block';
+                        } else {
+                            tokoSayaLink.style.display = 'none';
+                        }
+                    } else {
+                        console.log("Dokumen pengguna tidak ditemukan untuk UID:", user.uid);
+                        tokoSayaLink.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data for 'Toko Saya' link:", error);
+                    tokoSayaLink.style.display = 'none';
+                }
+
+            } else {
+                isLoggedIn = false;
+                // authContainer.classList.remove('hidden'); // No longer needed as authContainer is removed
+                userProfileContainer.classList.add('hidden'); // Sembunyikan ikon jika tidak login
+                tokoSayaLink.style.display = 'none';
+            }
+        });
+
+        // Fungsi logout
+        window.logoutUser = async () => {
+            try {
+                await signOut(auth);
+                console.log("Pengguna berhasil logout.");
+                window.location.href = 'pembeli_dashboard.html';
+            } catch (error) {
+                console.error("Error saat logout:", error);
+                alert("Gagal logout. Silakan coba lagi.");
+            }
+        };
+
+        // Panggil fungsi untuk memuat semua produk dan kategori/jenis saat DOM sudah dimuat
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchAllProducts(); // Muat semua produk terlebih dahulu
+            loadCategoriesAndTypes(); // Kemudian muat kategori/jenis berdasarkan data hardcode
+        });
     </script>
 </body>
 

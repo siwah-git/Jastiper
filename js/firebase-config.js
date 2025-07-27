@@ -1,5 +1,5 @@
 // firebase-config.js
-// Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.23.0).
+// Impor fungsi-fungsi Firebase dari CDN (Modular SDK v9.23.0).
 // Pastikan versi yang digunakan konsisten di seluruh proyek Anda.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import {
@@ -18,7 +18,8 @@ import {
     Timestamp,
     writeBatch,
     arrayUnion,
-    onSnapshot // <<< PASTIKAN onSnapshot diimpor dari firestore
+    onSnapshot,
+    orderBy // <<< PASTIKAN orderBy diimpor dari firestore
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import {
     getAuth,
@@ -104,12 +105,13 @@ export {
     Timestamp,
     writeBatch,
     arrayUnion,
-    onSnapshot, // <<< PASTIKAN onSnapshot diekspor di sini
+    onSnapshot,
+    orderBy // <<< PASTIKAN orderBy diekspor di sini
 
     // Fungsi Storage
-    ref,
-    getDownloadURL,
-    uploadBytes,
-    deleteObject
+    // ref,
+    // getDownloadURL,
+    // uploadBytes,
+    // deleteObject
     // httpsCallable // Ekspor httpsCallable jika Anda mengimpornya di atas
 };

@@ -266,11 +266,12 @@
 
             <!-- Authentication buttons - HIDDEN by default, shown if not logged in -->
             <div id="authContainer" class="auth-button-container">
-                <a href="login_user.html" class="auth-button masuk">Masuk</a>
+                <a href="login_user2.html" class="auth-button masuk">Masuk</a>
                 <a href="daftar_login.html" class="auth-button daftar">Daftar</a>
             </div>
 
             <!-- User profile (HIDDEN by default, shown via JS after login) -->
+            <!-- Bagian ini sekarang akan selalu tersembunyi sesuai permintaan -->
             <div id="userProfileContainer" class="hidden user-profile-menu">
                 <img id="userAvatar" src="asset/images/default_avatar.png" alt="User Avatar"
                     class="w-10 h-10 rounded-full object-cover border-2 border-pink-500">
@@ -435,7 +436,7 @@
             <h3 style="font-weight:bold;font-size:18px;margin-bottom:15px;">Anda Harus Login Dulu!</h3>
             <p style="font-size:15px;color:#444;margin-bottom:20px;">Silakan login untuk melihat detail atau memfilter.
             </p>
-            <button onclick="window.location.href='login_user.html'"
+            <button onclick="window.location.href='login_user2.html'"
                 style="background:#ec4899;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer;transition:background-color 0.2s;">Login
                 Sekarang</button>
             <button onclick="document.getElementById('loginPromptModal').style.display='none'"
@@ -682,105 +683,60 @@
         onAuthStateChanged(auth, async (user) => {
             const authContainer = document.getElementById('authContainer');
             const userProfileContainer = document.getElementById('userProfileContainer');
-            const userNameSpan = document.getElementById('userName');
-            const userAvatarImg = document.getElementById('userAvatar');
             const tokoSayaLink = document.getElementById('tokoSayaLink');
 
             if (user) {
-                isLoggedIn = true; // Set global flag
-                console.log("User logged in. isLoggedIn:", isLoggedIn, "UID:", user.uid);
+                // Pengguna sudah login.
+                isLoggedIn = true;
+                authContainer.classList.add('hidden');         // Sembunyikan tombol Masuk/Daftar
+                userProfileContainer.classList.add('hidden');  // Sembunyikan avatar/profil
 
-                // Hide auth buttons, show user profile
-                if (authContainer) authContainer.classList.add('hidden');
-                if (userProfileContainer) userProfileContainer.classList.remove('hidden');
-
-                // Fetch user display name and photo from Firestore 'users' collection
+                // Ambil data pengguna untuk memeriksa apakah dia jastiper (untuk link "Toko Saya")
                 try {
                     const userDocRef = doc(db, "users", user.uid);
                     const userDocSnap = await getDoc(userDocRef);
+
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
-                        userNameSpan.textContent = userData.namaLengkap || user.email;
-                        if (userData.profileImageUrl) {
-                            userAvatarImg.src = userData.profileImageUrl;
+                        if (userData.isJastiper) {
+                            tokoSayaLink.style.display = 'block'; // Tampilkan link "Toko Saya" jika pengguna adalah Jastiper
                         } else {
-                            userAvatarImg.src = 'asset/images/default_avatar.png'; // Fallback default avatar
+                            tokoSayaLink.style.display = 'none'; // Sembunyikan jika bukan Jastiper
                         }
                     } else {
-                        userNameSpan.textContent = user.email; // Fallback to email if no user doc
-                        userAvatarImg.src = 'asset/images/default_avatar.png';
+                        console.log("Dokumen pengguna tidak ditemukan untuk UID:", user.uid);
+                        tokoSayaLink.style.display = 'none'; // Sembunyikan jika dokumen pengguna tidak ditemukan
                     }
                 } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                    userNameSpan.textContent = user.email; // Fallback
-                    userAvatarImg.src = 'asset/images/default_avatar.png';
-                }
-
-                // Check if the user is a jastiper (has a document in 'toko' collection)
-                try {
-                    const tokoDocRef = doc(db, "toko", user.uid);
-                    const tokoDocSnap = await getDoc(tokoDocRef);
-                    if (tokoDocSnap.exists()) {
-                        tokoSayaLink.href = "jastiper_dashboard.html"; // Link to jastiper dashboard
-                        tokoSayaLink.textContent = "Dashboard Toko";
-                    } else {
-                        tokoSayaLink.href = "jastiper_register_toko.html"; // Link to register as jastiper
-                        tokoSayaLink.textContent = "Daftar Toko";
-                    }
-                    tokoSayaLink.classList.remove('hidden'); // Ensure "Toko Saya" link is visible
-                } catch (error) {
-                    console.error("Error checking toko status:", error);
-                    tokoSayaLink.href = "#"; // Fallback
-                    tokoSayaLink.textContent = "Error Toko";
+                    console.error("Error fetching user data for 'Toko Saya' link:", error);
+                    tokoSayaLink.style.display = 'none'; // Sembunyikan jika terjadi error
                 }
 
             } else {
-                isLoggedIn = false; // Set global flag
-                console.log("User logged out. isLoggedIn:", isLoggedIn);
-
-                // Show auth buttons, hide user profile
-                if (authContainer) authContainer.classList.remove('hidden');
-                if (userProfileContainer) userProfileContainer.classList.add('hidden');
+                // Pengguna belum login.
+                isLoggedIn = false;
+                authContainer.classList.remove('hidden'); // Tampilkan tombol Masuk/Daftar
+                userProfileContainer.classList.add('hidden'); // Pastikan avatar/profil tersembunyi
+                tokoSayaLink.style.display = 'none'; // Pastikan link Toko Saya juga tersembunyi jika belum login
             }
         });
 
-        // Logout function for user dropdown
-        async function logoutUser() {
+        // Fungsi logout
+        window.logoutUser = async () => {
             try {
                 await signOut(auth);
-                console.log("Logged out from Firebase.");
-                // No redirect here, onAuthStateChanged will handle the UI update
+                console.log("Pengguna berhasil logout.");
+                // Redirect ke halaman ini sendiri atau halaman utama lainnya untuk memperbarui UI
+                window.location.href = 'pembeli_dashboard.html'; // Redirect kembali ke dashboard setelah logout
             } catch (error) {
-                console.error("Error during logout:", error);
-                // You might want a custom modal here too for error
+                console.error("Error saat logout:", error);
+                alert("Gagal logout. Silakan coba lagi.");
             }
-        }
-        window.logoutUser = logoutUser; // Expose to global scope
+        };
 
-        // Event listener for user profile menu to toggle dropdown
-        const userProfileMenu = document.getElementById('userProfileContainer');
-        const userDropdown = document.getElementById('userDropdown');
-
-        if (userProfileMenu) {
-            userProfileMenu.addEventListener('click', (event) => {
-                // Prevent click from propagating to document and closing immediately
-                event.stopPropagation();
-                userDropdown.classList.toggle('hidden');
-            });
-        }
-
-        // Close dropdown if clicked outside
-        document.addEventListener('click', (event) => {
-            if (userDropdown && !userDropdown.contains(event.target) && !userProfileMenu.contains(event.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        });
-
-        // Initial data fetch when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-            loadCountries();
-        });
+        // Initial calls to load products and countries
+        loadProducts();
+        loadCountries();
     </script>
 </body>
 

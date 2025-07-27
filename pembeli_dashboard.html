@@ -29,14 +29,14 @@
             min-height: calc(100vh - 64px);
             /* Assuming header height is roughly 64px (py-1 + some height) */
             /* You might need to adjust 64px based on your actual header height */
-        }
-
-        /* If you want the hero section to always be exactly 80vh of the remaining viewport,
+            /* If you want the hero section to always be exactly 80vh of the remaining viewport,
             you might combine with the existing h-[80vh] like this:
             height: 80vh; /* This sets its height relative to viewport height */
-        /* But if you want it to fill the remaining space after header, min-height: calc() is better.
+            /* But if you want it to fill the remaining space after header, min-height: calc() is better.
             For fixed header and content starting right after, you typically make the first section
             take up the remaining height. Let's keep h-[80vh] but ensure no top padding. */
+
+        }
 
         /* Untuk card produk dan negara agar terlihat lebih baik */
         .product-card,
@@ -206,7 +206,7 @@
             font-size: 1.1rem;
         }
 
-        /* Styling for Chat Modal Messages */
+        /* Styling for Chat Modal Messages (Re-added) */
         #chatCSMessages p {
             margin-bottom: 0.5rem;
             padding: 0.5rem 0.75rem;
@@ -247,7 +247,7 @@
                 <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
                     viewBox="0 0 20 20">
                     <path
-                        d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
+                        d="M8 4a4 4 0 104 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
                 </svg>
             </div>
         </div>
@@ -340,7 +340,8 @@
                 <div id="produk-best-seller"
                     class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 max-w-6xl mx-auto">
                     <p id="loading-products" class="col-span-full text-gray-500">Memuat produk...</p>
-                    <p id="no-products-found" class="col-span-full text-gray-500 hidden">Tidak ada produk ditemukan.</p>
+                    <p id="no-products-found" class="col-span-full text-gray-500 hidden">Tidak ada produk ditemukan.
+                    </p>
                 </div>
                 <button id="lihat-semua-produk-button"
                     class="mt-10 bg-white text-blue-800 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-md">
@@ -408,9 +409,22 @@
                     style="background:none;border:none;font-size:22px;cursor:pointer;">&times;</button>
             </div>
             <div style="padding:18px 20px 0 20px;min-height:80px; max-height: 300px; overflow-y: auto;">
-                <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;"></div>
+                <div id="chatCSMessages" style="font-size:15px;color:#444;min-height:40px;">
+                    <p class="receiver"><strong>CS:</strong> Selamat datang! Ada yang bisa kami bantu?</p>
+                    <p class="sender"><strong>Anda:</strong> Saya ingin bertanya tentang pesanan saya.</p>
+                </div>
             </div>
-            <div style="display:flex;align-items:center;padding:10px 20px 0 20px;gap:8px;">
+            <div style="padding:10px 20px 0 20px;">
+                <label for="chatCSCategory" class="block text-sm font-medium text-gray-700 mb-1">Kategori:</label>
+                <select id="chatCSCategory"
+                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm mb-3">
+                    <option value="Pertanyaan Umum">Pertanyaan Umum</option>
+                    <option value="Laporan Masalah">Laporan Masalah</option>
+                    <option value="Saran & Masukan">Saran & Masukan</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 20px 0 20px;gap:8px;">
                 <input id="chatCSInput" type="text" placeholder="Tulis pesan..."
                     style="flex:1;padding:8px 12px;border-radius:6px;border:1px solid #ccc;font-size:15px;">
                 <button onclick="sendCSMessage()"
@@ -419,15 +433,18 @@
         </div>
     </div>
     <script type="module">
-        // Import Firebase modules from your firebase-config.js
-        import { db, auth, collection, getDocs, query, where, doc, getDoc, onAuthStateChanged, signOut, setDoc, updateDoc, serverTimestamp, onSnapshot, addDoc } from "/js/firebase-config.js";
+        // Import Firebase modules (hanya yang diperlukan)
+        import { db, auth, collection, getDocs, query, where, doc, getDoc, onAuthStateChanged, signOut } from "./js/firebase-config.js";
 
         // Global variable to store all products for filtering
         let allProducts = [];
+        let currentCountryFilter = null; // New: To keep track of the active country filter
+
         const produkSectionTitle = document.getElementById('produk-section-title');
         const lihatSemuaProdukButton = document.getElementById('lihat-semua-produk-button');
-        const lihatSemuaNegaraButton = document.getElementById('lihat-semua-negara-button'); // Added this line
-        // Global map to store country images fetched from Firestore
+        const lihatSemuaNegaraButton = document.getElementById('lihat-semua-negara-button');
+
+        // Global map to store country images fetched from Firestore (still useful for display)
         const firestoreCountryImagesMap = new Map();
 
         // Helper function to convert string to Title Case
@@ -489,132 +506,37 @@
             }
         }
 
-        // --- FUNGSI CHAT DENGAN CS ---
+        // --- FUNGSI CHAT DENGAN CS (KEMBALI KE TAMPILAN, FUNGSI DINONAKTIFKAN) ---
         const chatCSModal = document.getElementById('chatCSModal');
         const chatCSMessages = document.getElementById('chatCSMessages');
         const chatCSInput = document.getElementById('chatCSInput');
+        const chatCSCategory = document.getElementById('chatCSCategory');
 
-        // Ganti dengan UID admin yang sebenarnya di aplikasi Anda
-        // Anda bisa mengambil ini dari konfigurasi atau dari dokumen Firestore yang spesifik.
-        const ADMIN_UID = "YOUR_ADMIN_FIREBASE_UID_HERE"; // !!! PENTING: GANTI INI DENGAN UID ADMIN ASLI ANDA !!!
-
-        let currentUserUid = null;
-        let userChatRoomId = null; // Untuk menyimpan ID ruang chat spesifik antara user dan admin
-
-        // Fungsi untuk mendapatkan atau membuat ruang chat
-        async function getOrCreateChatRoom(userUid, adminUid) {
-            // Logika sederhana: ID ruang chat adalah gabungan UID user dan admin, diurutkan untuk konsistensi
-            const chatRoomIdentifier = [userUid, adminUid].sort().join('-');
-            const chatRoomRef = doc(db, "chat", chatRoomIdentifier);
-            const chatRoomSnap = await getDoc(chatRoomRef);
-
-            if (!chatRoomSnap.exists()) {
-                console.log("Membuat ruang chat baru...");
-                await setDoc(chatRoomRef, {
-                    members: [userUid, adminUid],
-                    createdAt: serverTimestamp(),
-                    lastMessageAt: serverTimestamp()
-                });
-            } else {
-                console.log("Ruang chat sudah ada.");
+        // Fungsi untuk membuka modal chat CS - Hanya menampilkan modal
+        function openChatCS() {
+            if (!auth.currentUser) {
+                alert("Anda harus login untuk mengakses chat.");
+                return;
             }
-            return chatRoomIdentifier;
-        }
-
-        // Fungsi untuk menampilkan pesan ke UI modal chat
-        function displayChatMessage(messageData) {
-            const messageElement = document.createElement('p');
-            const senderName = messageData.senderId === currentUserUid ? "Anda" : "CS";
-
-            messageElement.innerHTML = `<strong>${senderName}:</strong> ${messageData.message}`;
-            messageElement.classList.add('mb-2', 'p-2', 'rounded-lg', 'max-w-[80%]');
-
-            if (messageData.senderId === currentUserUid) {
-                messageElement.classList.add('bg-pink-100', 'ml-auto', 'text-right');
-            } else {
-                messageElement.classList.add('bg-gray-200', 'mr-auto', 'text-left');
-                // Tandai pesan sebagai terbaca jika itu dari CS dan belum terbaca
-                if (messageData.status === 'unread' && userChatRoomId) {
-                    updateDoc(doc(db, "chat", userChatRoomId, "messages", messageData.id), { // use messageData.id
-                        status: "read"
-                    });
-                }
-            }
-            chatCSMessages.appendChild(messageElement);
+            chatCSModal.style.display = 'flex';
+            // Anda bisa mengisi pesan statis di sini jika ingin ada contoh pesan,
+            // atau biarkan kosong seperti di HTML jika hanya untuk tampilan awal.
+            chatCSMessages.innerHTML = `
+                <p class="receiver"><strong>CS:</strong> Fitur chat ini hanya untuk tampilan. Pesan tidak akan terkirim.</p>
+                <p class="sender"><strong>Anda:</strong> Baiklah, terima kasih informasinya.</p>
+            `;
             chatCSMessages.scrollTop = chatCSMessages.scrollHeight; // Gulir ke bawah
         }
 
-        // Fungsi untuk membuka modal chat CS
-        async function openChatCS() {
-            if (!auth.currentUser) {
-                alert("Anda harus login untuk chat dengan CS.");
-                return;
-            }
-
-            currentUserUid = auth.currentUser.uid;
-            chatCSModal.style.display = 'flex';
-            chatCSMessages.innerHTML = ''; // Kosongkan pesan sebelumnya
-
-            // Dapatkan atau buat ruang chat
-            userChatRoomId = await getOrCreateChatRoom(currentUserUid, ADMIN_UID);
-
-            // Set up real-time listener for messages in this chat room
-            const messagesRef = collection(db, "chat", userChatRoomId, "messages");
-            const q = query(messagesRef, orderBy("timestamp", "asc"));
-
-            onSnapshot(q, (snapshot) => {
-                // Clear previous messages if it's the initial load or a reset
-                // Only re-render added messages to avoid flicker
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added") {
-                        const messageData = { id: change.doc.id, ...change.doc.data() };
-                        displayChatMessage(messageData);
-                    } else if (change.type === "modified") {
-                        // Handle modifications, e.g., status changes
-                        // You might re-render specific message or update its style
-                        console.log("Modified message:", change.doc.data());
-                    }
-                });
-            }, (error) => {
-                console.error("Error fetching chat messages:", error);
-                chatCSMessages.innerHTML = `<p style="color:red;">Gagal memuat pesan: ${error.message}</p>`;
-            });
-        }
-
-        // Fungsi untuk mengirim pesan ke CS
-        async function sendCSMessage() {
+        // Fungsi untuk mengirim pesan ke CS - Hanya menampilkan alert, tidak mengirim
+        function sendCSMessage() {
             const messageText = chatCSInput.value.trim();
-
             if (messageText === "") {
                 alert("Pesan tidak boleh kosong!");
                 return;
             }
-
-            if (!currentUserUid || !userChatRoomId) {
-                alert("Kesalahan: Pengguna tidak login atau ruang chat belum siap.");
-                return;
-            }
-
-            try {
-                const messagesCollectionRef = collection(db, "chat", userChatRoomId, "messages");
-                await addDoc(messagesCollectionRef, {
-                    senderId: currentUserUid,
-                    receiverId: ADMIN_UID,
-                    message: messageText,
-                    timestamp: serverTimestamp(),
-                    status: "unread" // Pesan baru selalu "unread" secara default
-                });
-                chatCSInput.value = ''; // Kosongkan input setelah kirim
-
-                // Opsional: Perbarui lastMessageAt di dokumen chat room induk
-                await updateDoc(doc(db, "chat", userChatRoomId), {
-                    lastMessageAt: serverTimestamp()
-                });
-
-            } catch (error) {
-                console.error("Error sending message:", error);
-                alert("Gagal mengirim pesan: " + error.message);
-            }
+            alert("Maaf, fitur pengiriman pesan sedang dinonaktifkan.");
+            chatCSInput.value = ''; // Kosongkan input setelah alert
         }
 
         // Event listener untuk tombol Enter di input pesan chat
@@ -637,175 +559,258 @@
         const loadingCountriesMessage = document.getElementById('loading-countries');
         const noCountriesFoundMessage = document.getElementById('no-countries-found');
 
-        async function fetchProductsAndCountries() {
-            produkBestSellerContainer.innerHTML = ''; // Clear existing content
-            negaraTerpopulerContainer.innerHTML = ''; // Clear existing content
-            loadingProductsMessage.classList.remove('hidden');
-            noProductsFoundMessage.classList.add('hidden');
+        // Function to fetch countries from 'negara' collection
+        async function fetchCountries() {
+            negaraTerpopulerContainer.innerHTML = '';
             loadingCountriesMessage.classList.remove('hidden');
             noCountriesFoundMessage.classList.add('hidden');
+            const countries = [];
 
             try {
-                // Fetch products
+                const countriesCollectionRef = collection(db, "negara");
+                const countriesSnapshot = await getDocs(countriesCollectionRef);
+
+                if (countriesSnapshot.empty) {
+                    noCountriesFoundMessage.classList.remove('hidden');
+                    noCountriesFoundMessage.textContent = "Tidak ada negara ditemukan di koleksi 'negara'.";
+                    return []; // Return empty array if no countries
+                } else {
+                    countriesSnapshot.forEach(doc => {
+                        const country = { id: doc.id, ...doc.data() };
+                        countries.push(country);
+                        // Store image URL in map for quick lookup. Use 'imageUrl' or 'gambar' based on your 'negara' collection
+                        const imageUrl = country.imageUrl || country.gambar;
+                        if (imageUrl) {
+                            firestoreCountryImagesMap.set(country.nama.toLowerCase(), imageUrl);
+                        }
+                    });
+
+                    // Display up to 5 countries
+                    const countriesToDisplay = countries.slice(0, 5);
+                    countriesToDisplay.forEach(country => {
+                        const countryCard = document.createElement('div');
+                        countryCard.className = 'country-card bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden';
+
+                        // Use country.imageUrl or country.gambar, fallback to generic placeholder
+                        const countryImage = country.imageUrl || country.gambar || 'asset/images/placeholder_country.jpg';
+                        countryCard.innerHTML = `
+                            <img src="${countryImage}" alt="${country.nama}" class="w-full h-40 object-cover">
+                            <div class="country-name-overlay">
+                                ${toTitleCase(country.nama)}
+                            </div>
+                        `;
+                        countryCard.addEventListener('click', () => {
+                            // Filter products by this country directly on the dashboard
+                            filterProductsByCountry(country.nama);
+                        });
+                        negaraTerpopulerContainer.appendChild(countryCard);
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching countries:", error);
+                noCountriesFoundMessage.classList.remove('hidden');
+                noCountriesFoundMessage.textContent = `Error memuat negara: ${error.message}`;
+                return []; // Return empty array on error
+            } finally {
+                loadingCountriesMessage.classList.add('hidden');
+            }
+            return countries; // Return fetched countries
+        }
+
+        async function fetchProducts() {
+            produkBestSellerContainer.innerHTML = ''; // Clear existing content
+            loadingProductsMessage.classList.remove('hidden');
+            noProductsFoundMessage.classList.add('hidden');
+
+            try {
                 const productsCollectionRef = collection(db, "produk");
                 const productsSnapshot = await getDocs(productsCollectionRef);
                 const products = [];
-                const countriesFromProducts = new Set();
 
-                if (!productsSnapshot.empty) {
-                    productsSnapshot.forEach((doc) => {
-                        const productData = doc.data();
-                        // Normalize country name from product data
-                        const normalizedCountry = toTitleCase(productData.negara);
-                        products.push({ id: doc.id, ...productData, negara: normalizedCountry });
-                        if (normalizedCountry) {
-                            countriesFromProducts.add(normalizedCountry);
-                        }
+                if (productsSnapshot.empty) {
+                    noProductsFoundMessage.classList.remove('hidden');
+                    noProductsFoundMessage.textContent = "Tidak ada produk ditemukan.";
+                } else {
+                    productsSnapshot.forEach(doc => {
+                        const product = { id: doc.id, ...doc.data() };
+                        products.push(product);
                     });
+                    allProducts = products; // Store all products globally
+
+                    // Sort products to display the latest first (assuming `tanggalUpload` exists)
+                    // If not, you might need a different sorting logic or remove this line.
+                    products.sort((a, b) => (b.tanggalUpload?.toDate() || 0) - (a.tanggalUpload?.toDate() || 0));
+
+                    // Render initial products (e.g., top 8)
+                    renderProducts(products.slice(0, 8)); // Display initial subset
                 }
-
-                allProducts = products; // Store all fetched products globally
-                renderProducts(allProducts); // Render all products initially
-
-                // Fetch countries from 'negara' collection (if it exists)
-                const allCountries = new Set();
-                firestoreCountryImagesMap.clear(); // Clear previous data
-
-                try {
-                    const negaraCollectionRef = collection(db, "negara");
-                    const negaraSnapshot = await getDocs(negaraCollectionRef);
-                    if (!negaraSnapshot.empty) {
-                        negaraSnapshot.forEach((doc) => {
-                            const countryData = doc.data();
-                            // Use 'nama' field for country name as requested
-                            if (countryData.nama) {
-                                // Normalize country name from negara collection
-                                const normalizedCountryName = toTitleCase(countryData.nama);
-                                allCountries.add(normalizedCountryName);
-                                if (countryData.imageUrl) { // Check if imageUrl exists
-                                    firestoreCountryImagesMap.set(normalizedCountryName, countryData.imageUrl);
-                                }
-                            }
-                        });
-                    }
-                } catch (error) {
-                    console.warn("Koleksi 'negara' tidak ditemukan atau error saat mengambil data:", error);
-                    // Jika koleksi 'negara' tidak ada atau ada error, kita akan tetap menggunakan negara dari produk
-                }
-
-                // Combine countries from 'negara' collection and 'produk' collection
-                const finalCountries = Array.from(new Set([...allCountries, ...countriesFromProducts]));
-                renderCountries(finalCountries);
-
             } catch (error) {
-                console.error("Error fetching products or countries:", error);
-                loadingProductsMessage.classList.add('hidden');
-                noProductsFoundMessage.textContent = "Gagal memuat produk: " + error.message;
+                console.error("Error fetching products:", error);
                 noProductsFoundMessage.classList.remove('hidden');
-                loadingCountriesMessage.classList.add('hidden');
-                noCountriesFoundMessage.textContent = "Gagal memuat negara: " + error.message;
-                noCountriesFoundMessage.classList.remove('hidden');
+                noProductsFoundMessage.textContent = `Error memuat produk: ${error.message}`;
+            } finally {
+                loadingProductsMessage.classList.add('hidden');
             }
         }
 
+        // New function to render products based on a given array
         function renderProducts(productsToRender) {
-            loadingProductsMessage.classList.add('hidden');
-            produkBestSellerContainer.innerHTML = ''; // Clear again before rendering
-
+            produkBestSellerContainer.innerHTML = ''; // Clear current products
             if (productsToRender.length === 0) {
                 noProductsFoundMessage.classList.remove('hidden');
-                return;
-            }
+                noProductsFoundMessage.textContent = "Tidak ada produk ditemukan.";
+            } else {
+                noProductsFoundMessage.classList.add('hidden');
+                productsToRender.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden';
 
-            productsToRender.forEach(product => {
-                const productCard = `
-                    <div class="product-card text-black rounded-lg overflow-hidden shadow-md p-3" onclick="viewProductDetail('${product.id}')">
-                        <img src="${product.imageUrl || 'https://placehold.co/128x128/E0F2F7/2C3E50?text=No+Image'}" alt="${product.namaBarang}"
-                            class="w-full h-32 object-cover rounded mb-2">
-                        <p class="font-semibold text-lg">${product.namaBarang || 'Nama Produk'}</p>
-                        <span class="text-sm text-gray-500">${product.merk || ''} - ${product.negara || 'Negara Asal'}</span>
-                    </div>
-                `;
-                produkBestSellerContainer.innerHTML += productCard;
-            });
+                    // Use product.imageUrl, fallback to placeholder
+                    productCard.innerHTML = `
+                        <img src="${product.imageUrl || 'asset/images/placeholder_product.jpg'}" alt="${product.namaBarang}" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">${product.namaBarang}</h3>
+                            <p class="text-gray-600 text-sm">Dari: ${toTitleCase(product.negara || 'Tidak Diketahui')}</p>
+                            <p class="text-pink-600 font-bold text-lg mt-2">Rp${product.harga?.toLocaleString('id-ID') || '0'}</p>
+                        </div>
+                    `;
+                    // Add click event listener to each product card
+                    productCard.addEventListener('click', () => {
+                        window.location.href = `pembeli_produk.html?id=${product.id}`;
+                    });
+                    produkBestSellerContainer.appendChild(productCard);
+                });
+            }
         }
 
-        function renderCountries(countries) {
-            loadingCountriesMessage.classList.add('hidden');
-            negaraTerpopulerContainer.innerHTML = ''; // Clear again before rendering
-
-            if (countries.length === 0) {
-                noCountriesFoundMessage.classList.remove('hidden');
-                return;
+        // Helper function to set the button's state (text and data-mode)
+        function setLihatSemuaButtonState(mode) {
+            if (mode === 'reset') {
+                lihatSemuaProdukButton.textContent = "Lihat Semua Produk (Reset Filter)";
+                lihatSemuaProdukButton.dataset.mode = 'reset';
+            } else { // mode === 'viewAll'
+                lihatSemuaProdukButton.textContent = "Lihat Semua";
+                lihatSemuaProdukButton.dataset.mode = 'viewAll';
             }
-
-            countries.forEach(country => {
-                // Strictly prioritize imageUrl from Firestore, then generic placeholder
-                const imageUrl = firestoreCountryImagesMap.get(country) || 'https://placehold.co/160x160/F7FAFC/1A202C?text=No+Flag';
-
-                // Log the country name and image URL being used for debugging
-                console.log(`Rendering country: ${country}, Image URL: ${imageUrl}`);
-
-                const countryCard = `
-                    <div class="country-card" onclick="filterProductsByCountry('${country}')">
-                        <img src="${imageUrl}" alt="${country}" onerror="this.onerror=null;this.src='https://placehold.co/160x160/F7FAFC/1A202C?text=Error+Loading+Flag';" />
-                        <div class="country-name-overlay">${country}</div>
-                    </div>
-                `;
-                negaraTerpopulerContainer.innerHTML += countryCard;
-            });
         }
 
         // New function to filter products by country
         function filterProductsByCountry(countryName) {
-            const filtered = allProducts.filter(product => product.negara === countryName);
-            produkSectionTitle.textContent = `Produk dari ${countryName}`;
+            currentCountryFilter = countryName.toLowerCase();
+            const filtered = allProducts.filter(product =>
+                product.negara && product.negara.toLowerCase() === currentCountryFilter
+            );
             renderProducts(filtered);
-            lihatSemuaProdukButton.classList.remove('hidden'); // Ensure "Lihat Semua" button is visible
+            produkSectionTitle.textContent = `Produk dari ${toTitleCase(countryName)}`;
+            setLihatSemuaButtonState('reset'); // Use the new helper function
         }
 
-        // New function to navigate to product detail page
-        function viewProductDetail(productId) {
-            window.location.href = `pembeli_produk.html?id=${productId}`; // Changed to pembeli_produk.html
+        // New function to reset product filter
+        function resetProductFilter() {
+            currentCountryFilter = null;
+            renderProducts(allProducts.slice(0, 8)); // Show initial 8 products again
+            produkSectionTitle.textContent = "Produk";
+            setLihatSemuaButtonState('viewAll'); // Use the new helper function
+            searchInput.value = ''; // Clear search input when resetting filter
         }
 
-        // Expose viewProductDetail globally
-        window.viewProductDetail = viewProductDetail;
-        window.filterProductsByCountry = filterProductsByCountry; // Expose this too for onclick in country cards
+        // Single, dynamic event listener for "Lihat Semua Produk" button
+        lihatSemuaProdukButton.addEventListener('click', () => {
+            const buttonMode = lihatSemuaProdukButton.dataset.mode; // Read the mode from data attribute
 
-        // Event listener for "Lihat Semua Produk" button
-        lihatSemuaProdukButton.addEventListener('click', () => { // Corrected typo here
-            produkSectionTitle.textContent = "Produk"; // Reset title
-            renderProducts(allProducts); // Show all products
-            lihatSemuaProdukButton.classList.add('hidden'); // Hide the button after showing all
+            if (buttonMode === 'reset') {
+                resetProductFilter();
+            } else { // mode === 'viewAll'
+                window.location.href = 'pembeli_kategori.html';
+            }
         });
 
-        // Initial fetch when the page loads
-        document.addEventListener('DOMContentLoaded', fetchProductsAndCountries);
 
-        // Check user authentication status on page load to adjust UI (e.g., "Toko Saya" link)
+        // Search functionality
+        const searchInput = document.querySelector('.header-search');
+        searchInput.addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase().trim();
+            let productsToSearch = allProducts;
+
+            if (currentCountryFilter) {
+                productsToSearch = allProducts.filter(product =>
+                    product.negara && product.negara.toLowerCase() === currentCountryFilter
+                );
+            }
+
+            const filteredAndSearchedProducts = productsToSearch.filter(product =>
+                product.namaBarang.toLowerCase().includes(searchTerm) ||
+                (product.deskripsi && product.deskripsi.toLowerCase().includes(searchTerm))
+            );
+
+            renderProducts(filteredAndSearchedProducts);
+
+            if (searchTerm) {
+                let title = `Hasil Pencarian untuk "${searchTerm}"`;
+                if (currentCountryFilter) {
+                    title += ` di ${toTitleCase(currentCountryFilter)}`;
+                }
+                produkSectionTitle.textContent = title;
+                // If searching, keep the button state based on currentCountryFilter
+                if (currentCountryFilter) {
+                    setLihatSemuaButtonState('reset');
+                } else {
+                    setLihatSemuaButtonState('viewAll');
+                }
+                lihatSemuaProdukButton.classList.remove('hidden');
+            } else {
+                // If search is cleared, revert to state based on country filter
+                if (currentCountryFilter) {
+                    produkSectionTitle.textContent = `Produk dari ${toTitleCase(currentCountryFilter)}`;
+                    renderProducts(allProducts.filter(product => product.negara && product.negara.toLowerCase() === currentCountryFilter));
+                    setLihatSemuaButtonState('reset');
+                } else {
+                    produkSectionTitle.textContent = "Produk";
+                    renderProducts(allProducts.slice(0, 8));
+                    setLihatSemuaButtonState('viewAll');
+                }
+                lihatSemuaProdukButton.classList.remove('hidden');
+            }
+        });
+
+
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchCountries(); // Fetch countries first to populate the map
+            await fetchProducts();  // Then fetch products
+            // Set initial button state after products are loaded
+            setLihatSemuaButtonState('viewAll'); // Initial state: no filter, view all
+        });
+
+        // Event listener for "Lihat Semua Negara" button
+        lihatSemuaNegaraButton.addEventListener('click', () => {
+            // This button still navigates to the category page for a broader view of all categories/countries
+            window.location.href = 'pembeli_kategori.html';
+        });
+
+        // Authentication State Change Listener
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                currentUserUid = user.uid; // Set currentUserUid when user is logged in
+                console.log("User logged in:", user.uid);
+                // Check if the user is a Jastiper
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    if (userData.role === 'jastiper') {
-                        tokoSayaLink.href = "jastiper_dashboard.html"; // Link to Jastiper dashboard if role is jastiper
-                    } else {
-                        tokoSayaLink.href = "jastiper_daftar_toko.html"; // Link to register store if not jastiper
-                    }
+                if (userDocSnap.exists() && userDocSnap.data().role === 'jastiper') {
+                    // If user is a Jastiper, redirect Toko Saya link to jastiper_toko_kita.html
+                    tokoSayaLink.href = 'jastiper_toko_kita.html';
                 } else {
-                    tokoSayaLink.href = "jastiper_daftar_toko.html"; // Default to register if user doc not found
+                    // For regular users (pembeli), set to a placeholder or hide if no store functionality
+                    // Or redirect to a page where they can register as a jastiper
+                    tokoSayaLink.href = 'jastiper_daftar_toko.html'; // Example: Page to become a jastiper
                 }
             } else {
-                // User is signed out
-                tokoSayaLink.href = "jastiper_daftar_toko.html"; // Redirect to register if not logged in
-                // Optionally hide user icon or show login/register links
+                console.log("No user is logged in.");
+
+                tokoSayaLink.href = 'login_user.html'; // Or hide the link if not applicable
             }
         });
+
     </script>
 </body>
 
