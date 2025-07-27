@@ -11,10 +11,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-
   <style>
     #mainContent {
       background-image: linear-gradient(rgba(255, 255, 255, 0.3),
@@ -217,21 +213,7 @@
   </div>
 
   <script>
-    // Firebase configuration (replace with your actual config from Firebase project settings)
-    const firebaseConfig = {
-      apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-      authDomain: "titipgo-28f84.firebaseapp.com",
-      projectId: "titipgo-28f84",
-      storageBucket: "titipgo-28f84.firebasestorage.app",
-      messagingSenderId: "816687535591",
-      appId: "1:816687535591:web:eaecf2fcc994636a319942",
-      measurementId: "G-CS3V405F3B",
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+    // No Firebase configuration needed for dummy data
 
     const reportTableBody = document.getElementById("reportTableBody");
     const searchInput = document.getElementById("search");
@@ -241,57 +223,60 @@
     const paginationControls = document.getElementById("paginationControls");
     const logoutButton = document.getElementById("logoutButton");
 
-    let allReports = []; // To store all reports fetched from Firebase
+    let allReports = []; // To store all reports (dummy data)
     let filteredReports = []; // To store reports after search and filter
     const itemsPerPage = 10;
     let currentPage = 1;
 
-    // Function to fetch reports and user data from Firebase
-    async function fetchReports() {
-      try {
-        const reportsRef = db.collection("reports"); // Asumsi koleksi "reports"
-        const reportsSnapshot = await reportsRef.get();
+    // --- DUMMY DATA ---
+    function generateDummyReports(count) {
+      const statuses = ["Baru", "Diproses", "Selesai", "Ditolak"];
+      const categories = ["Fashion", "Elektronik", "Permak-Pernik", "Buku", "Koleksi", "Chat", "Lainnya"];
+      const users = ["Alice Smith", "Bob Johnson", "Charlie Brown", "Diana Prince", "Eve Adams"];
+      const descriptions = [
+        "Produk tidak sesuai deskripsi.",
+        "Pengiriman sangat lambat.",
+        "Ada masalah dengan pembayaran.",
+        "Kualitas barang buruk.",
+        "Respon chat dari toko lama.",
+        "Barang rusak saat diterima.",
+        "Penipuan oleh penjual.",
+        "Masalah dengan pengembalian dana.",
+        "Tidak dapat login ke akun.",
+        "Pertanyaan umum tentang fitur aplikasi."
+      ];
 
-        const usersMap = new Map(); // To store user names by ID for quick lookup
-        const usersSnapshot = await db.collection("users").get();
-        usersSnapshot.forEach((doc) => {
-          usersMap.set(doc.id, doc.data().nama || "Pengguna Tidak Dikenal");
+      const dummyData = [];
+      for (let i = 1; i <= count; i++) {
+        const timestamp = new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000)); // Last 30 days
+        dummyData.push({
+          id: `dummyReport${i}`, // Unique ID for dummy data
+          reportId: `ADUAN-${String(i).padStart(4, '0')}`, // Sequential ID
+          timestamp: {
+            toDate: () => timestamp
+          }, // Mock Firebase Timestamp.toDate()
+          userId: `dummyUser${Math.floor(Math.random() * users.length)}`, // Dummy user ID
+          userName: users[Math.floor(Math.random() * users.length)],
+          category: categories[Math.floor(Math.random() * categories.length)],
+          status: statuses[Math.floor(Math.random() * statuses.length)],
+          description: descriptions[Math.floor(Math.random() * descriptions.length)],
+          chatId: Math.random() < 0.3 ? `dummyChat${Math.floor(Math.random() * 5)}` : null, // Some reports linked to chat
         });
-
-        // Fetch chat data if needed (e.g., to link a report to a chat)
-        // For now, we'll just fetch, but not necessarily display it directly in this table.
-        // If a report has a 'chatId', you could potentially fetch specific chat details here.
-        const chatsMap = new Map();
-        const chatsSnapshot = await db.collection("chat").get(); // Assuming 'chat' is your chat collection
-        chatsSnapshot.forEach((doc) => {
-          chatsMap.set(doc.id, doc.data()); // Store relevant chat data, e.g., participant names, last message
-        });
-
-        allReports = reportsSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          const userName =
-            usersMap.get(data.userId) || "Pengguna Tidak Dikenal";
-          const chatInfo = data.chatId ? chatsMap.get(data.chatId) : null; // Get chat info if chatId exists
-
-          return {
-            id: doc.id,
-            userName: userName,
-            chatInfo: chatInfo, // Add chat information to the report object
-            ...data,
-          };
-        });
-
-        // Sort by timestamp descending (newest first)
-        allReports.sort(
-          (a, b) =>
-            (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
-        );
-
-        applyFiltersAndSearch(); // Apply filters and search after fetching
-      } catch (error) {
-        console.error("Error fetching reports: ", error);
-        alert("Gagal memuat data aduan.");
       }
+      return dummyData.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate()); // Sort by newest first
+    }
+
+    // --- Core Functions (updated for dummy data) ---
+
+    // Function to fetch reports (now uses dummy data)
+    async function fetchReports() {
+      reportTableBody.innerHTML = `<tr><td colspan="6" class="py-3 px-4 text-center text-sm text-gray-600">Memuat data aduan...</td></tr>`;
+
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      allReports = generateDummyReports(25); // Generate 25 dummy reports
+      applyFiltersAndSearch(); // Apply filters and search after fetching
     }
 
     // Function to render table rows
@@ -320,7 +305,7 @@
           }[report.status] || "bg-gray-100 text-gray-800"; // Default fallback
 
         const formattedDate = report.timestamp
-          ? new Date(report.timestamp.toDate()).toLocaleString("id-ID", {
+          ? report.timestamp.toDate().toLocaleString("id-ID", {
             day: "2-digit",
             month: "long",
             year: "numeric",
@@ -330,29 +315,22 @@
           : "-";
 
         row.innerHTML = `
-            <td class="py-3 px-4 text-sm text-gray-700">${report.reportId || report.id.substring(0, 6)
-          }</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${formattedDate}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${report.userName}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">${report.category || "-"
-          }</td>
-            <td class="py-3 px-4 text-sm">
-              <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${report.status || "Tidak Diketahui"
-          }</span>
-            </td>
-            <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
-                <a href="admin-aduan-detail.html?id=${report.id
-          }" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-search"></i></a>
-                ${report.status === "Baru" || report.status === "Diproses"
-            ? `
-                <a href="#" class="text-green-600 hover:text-green-900 set-status-btn" data-id="${report.id}" data-status="Selesai" title="Tandai Selesai"><i class="fas fa-check-circle"></i></a>
-                <a href="#" class="text-yellow-600 hover:text-yellow-900 set-status-btn" data-id="${report.id}" data-status="Diproses" title="Tandai Diproses"><i class="fas fa-hourglass-half"></i></a>
-                <a href="#" class="text-red-600 hover:text-red-900 set-status-btn" data-id="${report.id}" data-status="Ditolak" title="Tandai Ditolak"><i class="fas fa-times-circle"></i></a>
-                `
-            : ""
-          }
-            </td>
-          `;
+                    <td class="py-3 px-4 text-sm text-gray-700">${report.reportId}</td>
+                    <td class="py-3 px-4 text-sm text-gray-700">${formattedDate}</td>
+                    <td class="py-3 px-4 text-sm text-gray-700">${report.userName}</td>
+                    <td class="py-3 px-4 text-sm text-gray-700">${report.category || "-"}</td>
+                    <td class="py-3 px-4 text-sm">
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${report.status || "Tidak Diketahui"}</span>
+                    </td>
+                    <td class="py-3 px-4 text-sm text-center flex justify-center space-x-2">
+                        <a href="admin-aduan-detail.html?id=${report.id}" class="text-blue-600 hover:text-blue-900" title="Lihat Detail"><i class="fas fa-search"></i></a>
+                        ${report.status === "Baru" || report.status === "Diproses" ? `
+                        <a href="#" class="text-green-600 hover:text-green-900 set-status-btn" data-id="${report.id}" data-status="Selesai" title="Tandai Selesai"><i class="fas fa-check-circle"></i></a>
+                        <a href="#" class="text-yellow-600 hover:text-yellow-900 set-status-btn" data-id="${report.id}" data-status="Diproses" title="Tandai Diproses"><i class="fas fa-hourglass-half"></i></a>
+                        <a href="#" class="text-red-600 hover:text-red-900 set-status-btn" data-id="${report.id}" data-status="Ditolak" title="Tandai Ditolak"><i class="fas fa-times-circle"></i></a>
+                        ` : ""}
+                    </td>
+                `;
       });
       attachStatusButtonListeners(); // Attach listeners after rendering
       updatePagination(reportsToDisplay.length);
@@ -366,26 +344,21 @@
       });
     }
 
+    // Handle status change for dummy data
     async function handleStatusChange(event) {
       event.preventDefault();
       const reportId = event.currentTarget.dataset.id;
       const newStatus = event.currentTarget.dataset.status;
 
-      if (
-        confirm(
-          `Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`
-        )
-      ) {
-        try {
-          await db
-            .collection("reports")
-            .doc(reportId)
-            .update({ status: newStatus });
+      if (confirm(`Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`)) {
+        // Find the report in allReports and update its status
+        const reportIndex = allReports.findIndex(report => report.id === reportId);
+        if (reportIndex !== -1) {
+          allReports[reportIndex].status = newStatus;
           alert(`Status aduan berhasil diubah menjadi "${newStatus}".`);
-          fetchReports(); // Re-fetch to update the table
-        } catch (error) {
-          console.error("Error updating report status: ", error);
-          alert("Gagal mengubah status aduan.");
+          applyFiltersAndSearch(); // Re-render with updated dummy data
+        } else {
+          alert("Aduan tidak ditemukan.");
         }
       }
     }
@@ -447,8 +420,8 @@
       for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement("button");
         pageButton.className = `px-4 py-2 text-sm font-medium ${i === currentPage
-            ? "text-pink-600 bg-pink-100"
-            : "text-gray-700 bg-white hover:bg-gray-50"
+          ? "text-pink-600 bg-pink-100"
+          : "text-gray-700 bg-white hover:bg-gray-50"
           } border border-gray-300`;
         pageButton.textContent = i;
         pageButton.addEventListener("click", () => {
@@ -477,47 +450,42 @@
     statusFilter.addEventListener("change", applyFiltersAndSearch);
     categoryFilter.addEventListener("change", applyFiltersAndSearch);
 
-    // Logout Functionality
+    // Logout Functionality (now just an alert, no actual Firebase signOut)
     logoutButton.addEventListener("click", async (e) => {
       e.preventDefault();
-      try {
-        await auth.signOut();
-        window.location.href = "admin-login.html"; // Redirect to login page after logout
-      } catch (error) {
-        console.error("Error logging out: ", error);
-        alert("Gagal logout. Silakan coba lagi.");
-      }
+      alert("Anda telah logout (simulasi).");
+      // window.location.href = "admin-login.html"; // Uncomment if you want to redirect to a dummy login page
     });
 
     // Sidebar active link logic
     document.addEventListener("DOMContentLoaded", () => {
-      fetchReports(); // Initial fetch
+      fetchReports(); // Initial fetch (now fetches dummy data)
 
       const currentPath = window.location.pathname;
       const sidebarLinks = document.querySelectorAll(".sidebar-item");
 
       sidebarLinks.forEach((link) => {
         const linkHref = link.getAttribute("href");
-        const currentFilename = currentPath.substring(
-          currentPath.lastIndexOf("/") + 1
+        const currentFilename = linkHref.substring(
+          linkHref.lastIndexOf("/") + 1
         );
 
         let isLinkActive = false;
 
-        if (linkHref === currentFilename) {
+        // Check if the current page's filename matches the link's href
+        if (currentPath.includes(currentFilename) && currentFilename !== "") {
+          isLinkActive = true;
+        } else if (currentFilename === "" && linkHref === "admin-dashboard.html") {
+          // Special handling for dashboard if it's the root or index page
           isLinkActive = true;
         } else if (
-          currentFilename === "" &&
-          linkHref === "admin-dashboard.html"
-        ) {
-          isLinkActive = true;
-        } else if (
-          currentFilename === "admin-aduan-detail.html" &&
-          linkHref === "admin-aduan.html"
+          currentPath.includes("admin-aduan-detail.html") &&
+          currentFilename === "admin-aduan.html"
         ) {
           // Special handling for detail page to highlight its parent link
           isLinkActive = true;
         }
+
 
         if (isLinkActive) {
           link.classList.remove(

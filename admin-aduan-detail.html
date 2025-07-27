@@ -1,295 +1,250 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Detail Pesanan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Detail Pesanan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-      /* Custom styles */
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      /* Definisi lebar sidebar yang konsisten *
-      /* Custom styles */
-       .truncate-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* number of lines to show */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+  <style>
+    /* Custom styles */
 
-      /* Definisi lebar sidebar yang konsisten */
-      :root {
-        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
-      }
+    /* Definisi lebar sidebar yang konsisten */
+    :root {
+      --sidebar-width: 268px;
+      /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
+    }
 
-      .sidebar {
-        width: var(--sidebar-width);
-      }
+    .sidebar {
+      width: var(--sidebar-width);
+    }
 
-      .main-content {
-        margin-left: var(--sidebar-width);
-        flex-grow: 1; /* Penting untuk flexbox layout */
-        /* Gaya background tetap */
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed; /* Ini membuat background tidak bergerak */
-      }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      /* Penting untuk flexbox layout */
+      /* Gaya background tetap */
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      /* Ini membuat background tidak bergerak */
+    }
 
-      body {
-        min-height: 100vh;
-      }
+    body {
+      min-height: 100vh;
+    }
 
-      /* Style untuk membuat background kartu sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+    /* Style untuk membuat background kartu sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
 
-      /* Optional: Overlay tambahan jika diperlukan */
-      .main-content > * {
-        position: relative;
-        z-index: 1;
-      }
+    /* Optional: Overlay tambahan jika diperlukan */
+    .main-content>* {
+      position: relative;
+      z-index: 1;
+    }
 
-      .blue-header-transparent {
-        background-color: rgba(
-          37,
+    .blue-header-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.8
-        ); /* blue-600 dengan opasitas 80% */
-      }
+          0.8);
+      /* blue-600 dengan opasitas 80% */
+    }
 
-      /* Untuk membatasi lebar konten utama agar tidak terlalu lebar di layar besar */
-      .content-wrapper {
-        max-width: 900px; /* Batasi lebar maksimum konten detail */
-        margin-left: auto;
-        margin-right: auto;
-      }
+    /* Untuk membatasi lebar konten utama agar tidak terlalu lebar di layar besar */
+    .content-wrapper {
+      max-width: 900px;
+      /* Batasi lebar maksimum konten detail */
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-      /* Style untuk badge status pesanan */
-      .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px; /* Full rounded */
-        font-weight: 600; /* Semibold */
-        font-size: 0.75rem; /* text-xs */
-        line-height: 1rem;
-        display: inline-block;
-      }
+    /* Style untuk badge status pesanan */
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      /* Full rounded */
+      font-weight: 600;
+      /* Semibold */
+      font-size: 0.75rem;
+      /* text-xs */
+      line-height: 1rem;
+      display: inline-block;
+    }
 
-      /* Classes for different statuses (match with your Firebase data values) */
-      .status-pending {
-        background-color: #fefcbf; /* yellow-100 */
-        color: #92400e; /* yellow-800 */
-      }
-      .status-processing {
-        background-color: #bfdbfe; /* blue-100 */
-        color: #1e40af; /* blue-800 */
-      }
-      .status-shipped {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-delivered {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-cancelled {
-        background-color: #fee2e2; /* red-100 */
-        color: #991b1b; /* red-800 */
-      }
-      .status-completed {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-      }
-      .status-refunded {
-        background-color: #e0f2fe; /* light blue for refunded */
-        color: #075985;
-      }
-    </style>
-  </head>
-  <body class="flex min-h-screen bg-gray-100">
-    <aside
-      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-    >
-      <div>
-        <nav class="space-y-2 p-4">
-          <img
-            src="asset/images/logosiwah.png"
-            alt="Logo"
-            class="w-48 h-20 object-contain mb-4"
-          />
+    /* Classes for different statuses (match with your Firebase data values) */
+    .status-pending {
+      background-color: #fefcbf;
+      /* yellow-100 */
+      color: #92400e;
+      /* yellow-800 */
+    }
 
-          <a
-            href="admin-dashboard.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
-          </a>
-          <a
-            href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
-          </a>
-          <a
-            href="admin-pengguna.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
-          </a>
-          <a
-            href="admin-toko.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-store mr-3"></i> Manajemen Toko
-          </a>
-          <a
-            href="admin-pesanan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
-          </a>
-          <a
-            href="admin-aduan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
-          </a>
-          <a
-            href="admin-laporan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
-          </a>
-          <a
-            href="admin-pendapatan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
-          </a>
-          <a
-            href="admin-profil.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
-          </a>
-          <a
-            href="admin-about-us.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
-          </a>
-        </nav>
-      </div>
-      <footer class="text-sm text-gray-500 text-center p-4 border-t">
-        &copy; 2025 TitipGo. All rights reserved.
-      </footer>
-    </aside>
-    </style>
-  </head>
-  <body class="flex min-h-screen bg-gray-100">
-    <aside
-      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-    >
-      <div>
-        <nav class="space-y-2 p-4">
-          <img
-            src="asset/images/logosiwah.png"
-            alt="Logo"
-            class="w-48 h-20 object-contain mb-4"
-          />
+    .status-processing {
+      background-color: #bfdbfe;
+      /* blue-100 */
+      color: #1e40af;
+      /* blue-800 */
+    }
 
-          <a
-            href="admin-dashboard.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
-          </a>
-          <a
-            href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
-          </a>
-          <a
-            href="admin-pengguna.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
-          </a>
-          <a
-            href="admin-toko.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-store mr-3"></i> Manajemen Toko
-          </a>
-          <a
-            href="admin-pesanan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
-          </a>
-          <a
-            href="admin-aduan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
-          </a>
-          <a
-            href="admin-laporan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
-          </a>
-          <a
-            href="admin-pendapatan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
-          </a>
-          <a
-            href="admin-profil.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
-          </a>
-          <a
-            href="admin-about-us.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
-          </a>
-        </nav>
-      </div>
-      <footer class="text-sm text-gray-500 text-center p-4 border-t">
-        &copy; 2025 TitipGo. All rights reserved.
-      </footer>
-    </aside>
+    .status-shipped {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
 
-    <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
+    .status-delivered {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
+
+    .status-cancelled {
+      background-color: #fee2e2;
+      /* red-100 */
+      color: #991b1b;
+      /* red-800 */
+    }
+
+    .status-completed {
+      background-color: #d1fae5;
+      /* green-100 */
+      color: #065f46;
+      /* green-800 */
+    }
+
+    .status-refunded {
+      background-color: #e0f2fe;
+      /* light blue for refunded */
+      color: #075985;
+    }
+
+    /* New styles for aduan status */
+    .status-new {
+      background-color: #e0f7fa;
+      /* Light cyan */
+      color: #006064;
+      /* Dark cyan */
+    }
+
+    .status-in-progress {
+      background-color: #fffde7;
+      /* Light yellow */
+      color: #f9a825;
+      /* Dark yellow */
+    }
+
+    .status-resolved {
+      background-color: #e8f5e9;
+      /* Light green */
+      color: #2e7d32;
+      /* Dark green */
+    }
+
+    .status-closed {
+      background-color: #e0e0e0;
+      /* Light gray */
+      color: #424242;
+      /* Dark gray */
+    }
+
+    .status-rejected {
+      background-color: #ffebee;
+      /* Light red */
+      color: #c62828;
+      /* Dark red */
+    }
+
+    /* Priority styles */
+    .priority-low {
+      color: #4CAF50;
+      /* Green */
+    }
+
+    .priority-medium {
+      color: #FFC107;
+      /* Amber */
+    }
+
+    .priority-high {
+      color: #F44336;
+      /* Red */
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen bg-gray-100">
+  <aside
+    class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+    <div>
+      <nav class="space-y-2 p-4">
+        <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+
+        <a href="admin-dashboard.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+        </a>
+        <a href="admin-katalog.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+        </a>
+        <a href="admin-pengguna.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+        </a>
+        <a href="admin-toko.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-store mr-3"></i> Manajemen Toko
+        </a>
+        <a href="admin-pesanan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+        </a>
+        <a href="admin-aduan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+        </a>
+        <a href="admin-laporan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+        </a>
+        <a href="admin-pendapatan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+        </a>
+        <a href="admin-profil.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+        </a>
+        <a href="admin-about-us.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+        </a>
+      </nav>
+    </div>
+    <footer class="text-sm text-gray-500 text-center p-4 border-t">
+      &copy; 2025 TitipGo. All rights reserved.
+    </footer>
+  </aside>
+
+  <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
           background-image: linear-gradient(
               rgba(255, 255, 255, 0.3),
               rgba(255, 255, 255, 0.3)
@@ -298,808 +253,704 @@
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-        "
-      >
-        <div
-          class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg"
-        >
-          <p class="text-lg font-semibold">Detail Aduan</p>
-          <div class="text-right flex gap-3">
-            <button
-              id="handle-aduan-button"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-edit mr-2"></i> Tangani Aduan
-            </button>
-            <button
-              id="reject-aduan-button"
-              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-times-circle mr-2"></i> Tolak Aduan
-            </button>
-            <a
-              href="#"
-              class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+        ">
+    <div class="bg-blue-600 p-4 text-white flex items-center justify-between mb-6 rounded-lg">
+      <p class="text-lg font-semibold" id="aduan-detail-title">Detail Aduan</p>
+      <div class="text-right flex gap-3">
+        <button id="handle-aduan-button"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm">
+          <i class="fas fa-edit mr-2"></i> Tangani Aduan
+        </button>
+        <button id="reject-aduan-button"
+          class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm">
+          <i class="fas fa-times-circle mr-2"></i> Tolak Aduan
+        </button>
+        <a href="#"
+          class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"><i
+            class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+      </div>
+    </div>
+
+    <nav class="text-sm text-gray-600 mb-6">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
+          <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        </li>
+        <li class="flex items-center">
+          <a href="admin-aduan.html" class="text-blue-600 hover:text-blue-800">Aduan</a>
+          <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        </li>
+        <li id="breadcrumb-aduan-id" class="flex items-center text-gray-500">
+          Loading...
+        </li>
+      </ol>
+    </nav>
+
+    <div id="aduan-content" class="flex flex-col space-y-6">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-info-circle text-orange-500 mr-2"></i> Informasi
+          Aduan
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
+          <p><strong>ID Aduan:</strong> <span id="aduan-id">N/A</span></p>
+          <p>
+            <strong>Tanggal Aduan:</strong> <span id="aduan-date">N/A</span>
+          </p>
+          <p>
+            <strong>Topik Aduan:</strong> <span id="aduan-topic">N/A</span>
+          </p>
+          <p>
+            <strong>Status Aduan:</strong>
+            <span id="aduan-status-badge" class="status-badge">N/A</span>
+          </p>
+          <p>
+            <strong>Prioritas:</strong>
+            <span id="aduan-priority" class="font-semibold">N/A</span>
+          </p>
         </div>
-
-        <nav class="text-sm text-gray-600 mb-6">
-          <ol class="list-none p-0 inline-flex">
-            <li class="flex items-center">
-              <a
-                href="admin-dashboard.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Dashboard</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li class="flex items-center">
-              <a href="aduan.html" class="text-blue-600 hover:text-blue-800"
-                >Aduan</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li
-              id="breadcrumb-aduan-id"
-              class="flex items-center text-gray-500"
-            >
-              Loading...
-            </li>
-          </ol>
-        </nav>
-
-        <div id="aduan-content" class="flex flex-col space-y-6">
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-info-circle text-orange-500 mr-2"></i> Informasi
-              Aduan
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-            >
-              <p><strong>ID Aduan:</strong> <span id="aduan-id">N/A</span></p>
-              <p>
-                <strong>Tanggal Aduan:</strong> <span id="aduan-date">N/A</span>
-              </p>
-              <p>
-                <strong>Topik Aduan:</strong> <span id="aduan-topic">N/A</span>
-              </p>
-              <p>
-                <strong>Status Aduan:</strong>
-                <span id="aduan-status-badge" class="status-badge">N/A</span>
-              </p>
-              <p>
-                <strong>Prioritas:</strong>
-                <span id="aduan-priority" class="font-semibold">N/A</span>
-              </p>
-            </div>
-            <div class="mt-4 border-t pt-4">
-              <h4 class="font-semibold text-gray-800 mb-2">Deskripsi Aduan:</h4>
-              <p
-                id="aduan-description"
-                class="text-gray-700 text-sm leading-relaxed"
-              >
-                Loading deskripsi...
-              </p>
-            </div>
-            <div class="mt-4 border-t pt-4">
-              <h4 class="font-semibold text-gray-800 mb-2">Lampiran:</h4>
-              <div
-                id="aduan-attachments-container"
-                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
-              >
-                <p class="text-gray-500 text-sm">Tidak ada lampiran.</p>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">
-                Klik gambar untuk melihat lebih detail.
-              </p>
-            </div>
+        <div class="mt-4 border-t pt-4">
+          <h4 class="font-semibold text-gray-800 mb-2">Deskripsi Aduan:</h4>
+          <p id="aduan-description" class="text-gray-700 text-sm leading-relaxed">
+            Loading deskripsi...
+          </p>
+        </div>
+        <div class="mt-4 border-t pt-4">
+          <h4 class="font-semibold text-gray-800 mb-2">Lampiran:</h4>
+          <div id="aduan-attachments-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <p class="text-gray-500 text-sm">Tidak ada lampiran.</p>
           </div>
+          <p class="text-xs text-gray-500 mt-2">
+            Klik gambar untuk melihat lebih detail.
+          </p>
+        </div>
+      </div>
 
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-user-alt text-blue-500 mr-2"></i> Detail Pengadu
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-            >
-              <p>
-                <strong>Nama:</strong>
-                <a
-                  id="complainant-name-link"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-              <p>
-                <strong>ID Pengguna:</strong>
-                <span id="complainant-id">N/A</span>
-              </p>
-              <p>
-                <strong>Email:</strong>
-                <a
-                  id="complainant-email"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-              <p>
-                <strong>Telepon:</strong>
-                <a
-                  id="complainant-phone"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-            </div>
-          </div>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-user-alt text-blue-500 mr-2"></i> Detail Pengadu
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
+          <p>
+            <strong>Nama:</strong>
+            <a id="complainant-name-link" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+          <p>
+            <strong>ID Pengguna:</strong>
+            <span id="complainant-id">N/A</span>
+          </p>
+          <p>
+            <strong>Email:</strong>
+            <a id="complainant-email" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+          <p>
+            <strong>Telepon:</strong>
+            <a id="complainant-phone" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+        </div>
+      </div>
 
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-box-open text-purple-500 mr-2"></i> Detail
-              Terkait
-            </h3>
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm"
-            >
-              <p>
-                <strong>ID Pesanan:</strong>
-                <a
-                  id="related-order-id-link"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-              <p>
-                <strong>Nama Produk:</strong>
-                <a
-                  id="related-product-name-link"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-              <p>
-                <strong>ID Jastiper:</strong>
-                <a
-                  id="related-jastiper-id-link"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-              <p>
-                <strong>Nama Jastiper:</strong>
-                <a
-                  id="related-jastiper-name-link"
-                  href="#"
-                  class="text-blue-600 hover:underline"
-                  >N/A</a
-                >
-              </p>
-            </div>
-          </div>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-box-open text-purple-500 mr-2"></i> Detail
+          Terkait
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-gray-700 text-sm">
+          <p>
+            <strong>ID Pesanan:</strong>
+            <a id="related-order-id-link" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+          <p>
+            <strong>Nama Produk:</strong>
+            <a id="related-product-name-link" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+          <p>
+            <strong>ID Jastiper:</strong>
+            <a id="related-jastiper-id-link" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+          <p>
+            <strong>Nama Jastiper:</strong>
+            <a id="related-jastiper-name-link" href="#" class="text-blue-600 hover:underline">N/A</a>
+          </p>
+        </div>
+      </div>
 
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3
-              class="text-xl font-semibold text-gray-800 mb-4 flex items-center"
-            >
-              <i class="fas fa-history text-green-500 mr-2"></i> Riwayat
-              Penanganan
-            </h3>
-            <ul id="aduan-history-list" class="space-y-3">
-              <p class="text-gray-500">Tidak ada riwayat penanganan.</p>
-            </ul>
-            <div class="mt-6 border-t pt-4">
-              <h4 class="font-semibold text-gray-800 mb-2">
-                Tambahkan Catatan / Tindakan:
-              </h4>
-              <textarea
-                id="admin-notes-textarea"
-                class="w-full p-3 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 text-sm"
-                rows="4"
-                placeholder="Tulis catatan penanganan atau update status di sini..."
-              ></textarea>
-              <div class="flex items-center gap-4 mt-3">
-                <button
-                  id="add-note-button"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-                >
-                  <i class="fas fa-plus-circle mr-2"></i> Tambah Catatan
-                </button>
-                <select
-                  id="update-status-select"
-                  class="p-2 border border-gray-300 rounded-md text-sm"
-                >
-                  <option value="">Ubah Status</option>
-                  <option value="new">Baru</option>
-                  <option value="in-progress">Dalam Proses</option>
-                  <option value="resolved">Selesai</option>
-                  <option value="closed">Ditutup</option>
-                  <option value="rejected">Ditolak</option>
-                </select>
-              </div>
-            </div>
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-history text-green-500 mr-2"></i> Riwayat
+          Penanganan
+        </h3>
+        <ul id="aduan-history-list" class="space-y-3">
+          <p class="text-gray-500">Tidak ada riwayat penanganan.</p>
+        </ul>
+        <div class="mt-6 border-t pt-4">
+          <h4 class="font-semibold text-gray-800 mb-2">
+            Tambahkan Catatan / Tindakan:
+          </h4>
+          <textarea id="admin-notes-textarea"
+            class="w-full p-3 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 text-sm"
+            rows="4" placeholder="Tulis catatan penanganan atau update status di sini..."></textarea>
+          <div class="flex items-center gap-4 mt-3">
+            <button id="add-note-button"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm">
+              <i class="fas fa-plus-circle mr-2"></i> Tambah Catatan
+            </button>
+            <select id="update-status-select" class="p-2 border border-gray-300 rounded-md text-sm">
+              <option value="">Ubah Status</option>
+              <option value="new">Baru</option>
+              <option value="in-progress">Dalam Proses</option>
+              <option value="resolved">Selesai</option>
+              <option value="closed">Ditutup</option>
+              <option value="rejected">Ditolak</option>
+            </select>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
-    <script>
-      // Your Firebase configuration
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY", // Ganti dengan kunci API Anda
-        authDomain: "YOUR_AUTH_DOMAIN",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID",
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY", // Ganti dengan kunci API Anda
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      const currentPath = window.location.pathname.split("/").pop();
+      const urlParams = new URLSearchParams(window.location.search);
+      const aduanId = urlParams.get("id"); // Get aduan ID from URL
+
+      // --- Sidebar Active State Logic ---
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
+
+        let isLinkActive = false;
+
+        if (
+          linkFileName === "admin-aduan.html" && // Corrected this to 'admin-aduan.html'
+          currentPath.startsWith("admin-aduan-detail")
+        ) {
+          isLinkActive = true;
+        } else if (linkFileName === currentPath) {
+          isLinkActive = true;
+        } else if (
+          (currentPath === "" || currentPath === "index.html") &&
+          linkFileName === "admin-dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+        }
+      });
+
+      // --- Firebase Data Fetching and Display for Aduan Detail ---
+
+      // Helper function to format date/timestamp
+      const formatDate = (timestamp) => {
+        if (!timestamp) return "N/A";
+        let date;
+        if (timestamp.toDate) {
+          date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
+        } else if (
+          typeof timestamp === "string" ||
+          typeof timestamp === "number"
+        ) {
+          date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
+        } else {
+          return "Invalid Date";
+        }
+
+        return new Intl.DateTimeFormat("id-ID", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
       };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+      // Helper function for status badge styling
+      const getStatusClass = (status) => {
+        switch (status) {
+          case "new":
+            return "status-new";
+          case "in-progress":
+            return "status-in-progress";
+          case "resolved":
+            return "status-resolved";
+          case "closed":
+            return "status-closed";
+          case "rejected":
+            return "status-rejected";
+          default:
+            return "bg-gray-200 text-gray-800"; // Default styling
+        }
+      };
 
-      document.addEventListener("DOMContentLoaded", async function () {
-        const currentPath = window.location.pathname.split("/").pop();
-        const urlParams = new URLSearchParams(window.location.search);
-        const aduanId = urlParams.get("id"); // Get aduan ID from URL
+      // Helper function for priority styling
+      const getPriorityClass = (priority) => {
+        switch (priority) {
+          case "low":
+            return "priority-low";
+          case "medium":
+            return "priority-medium";
+          case "high":
+            return "priority-high";
+          default:
+            return "text-gray-700"; // Default styling
+        }
+      };
 
-        // --- Sidebar Active State Logic ---
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
+      // Get all the elements that will display aduan data
+      const pageTitleEl = document.querySelector("title"); // Use querySelector for title
+      const aduanDetailTitleEl =
+        document.getElementById("aduan-detail-title");
+      const breadcrumbAduanIdEl = document.getElementById(
+        "breadcrumb-aduan-id"
+      );
+      const aduanIdEl = document.getElementById("aduan-id");
+      const aduanDateEl = document.getElementById("aduan-date");
+      const aduanTopicEl = document.getElementById("aduan-topic");
+      const aduanStatusBadgeEl =
+        document.getElementById("aduan-status-badge");
+      const aduanPriorityEl = document.getElementById("aduan-priority");
+      const aduanDescriptionEl = document.getElementById("aduan-description");
+      const aduanAttachmentsContainerEl = document.getElementById(
+        "aduan-attachments-container"
+      );
+      const complainantNameLinkEl = document.getElementById(
+        "complainant-name-link"
+      );
+      const complainantIdEl = document.getElementById("complainant-id");
+      const complainantEmailEl = document.getElementById("complainant-email");
+      const complainantPhoneEl = document.getElementById("complainant-phone");
+      const relatedOrderIdLinkEl = document.getElementById(
+        "related-order-id-link"
+      );
+      const relatedProductNameLinkEl = document.getElementById(
+        "related-product-name-link"
+      );
+      const relatedJastiperIdLinkEl = document.getElementById(
+        "related-jastiper-id-link"
+      );
+      const relatedJastiperNameLinkEl = document.getElementById(
+        "related-jastiper-name-link"
+      );
+      const aduanHistoryListEl =
+        document.getElementById("aduan-history-list");
+      const adminNotesTextarea = document.getElementById(
+        "admin-notes-textarea"
+      );
+      const addNoteButton = document.getElementById("add-note-button");
+      const updateStatusSelect = document.getElementById(
+        "update-status-select"
+      );
+      const handleAduanButton = document.getElementById(
+        "handle-aduan-button"
+      );
+      const rejectAduanButton = document.getElementById(
+        "reject-aduan-button"
+      );
 
-          let isLinkActive = false;
+      // Main content wrapper to display error messages
+      const aduanContentWrapper = document.getElementById("aduan-content");
 
-          if (
-            linkFileName === "aduan.html" &&
-            currentPath.startsWith("admin-aduan-detail")
-          ) {
-            isLinkActive = true;
-          } else if (linkFileName === currentPath) {
-            isLinkActive = true;
-          } else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
+      try {
+        if (!aduanId) {
+          pageTitleEl.textContent = `Detail Aduan : ID Tidak Ditemukan - TitipGo Admin`;
+          aduanDetailTitleEl.textContent =
+            "Detail Aduan : ID Tidak Ditemukan";
+          breadcrumbAduanIdEl.textContent = "ID Tidak Ditemukan";
 
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-          }
-        });
-
-        // --- Firebase Data Fetching and Display for Aduan Detail ---
-
-        // Helper function to format date/timestamp
-        const formatDate = (timestamp) => {
-          if (!timestamp) return "N/A";
-          let date;
-          if (timestamp.toDate) {
-            date = timestamp.toDate(); // Convert Firebase Timestamp to Date object
-          } else if (
-            typeof timestamp === "string" ||
-            typeof timestamp === "number"
-          ) {
-            date = new Date(timestamp); // Handle string or number (e.g., ISO string or milliseconds)
-          } else {
-            return "Invalid Date";
-          }
-
-          return new Intl.DateTimeFormat("id-ID", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }).format(date);
-        };
-
-        // Helper function for status badge styling
-        const getStatusClass = (status) => {
-          switch (status) {
-            case "new":
-              return "status-new";
-            case "in-progress":
-              return "status-in-progress";
-            case "resolved":
-              return "status-resolved";
-            case "closed":
-              return "status-closed";
-            case "rejected":
-              return "status-rejected";
-            default:
-              return "bg-gray-200 text-gray-800"; // Default styling
-          }
-        };
-
-        // Helper function for priority styling
-        const getPriorityClass = (priority) => {
-          switch (priority) {
-            case "low":
-              return "priority-low";
-            case "medium":
-              return "priority-medium";
-            case "high":
-              return "priority-high";
-            default:
-              return "text-gray-700"; // Default styling
-          }
-        };
-
-        // Get all the elements that will display aduan data
-        const pageTitleEl = document.getElementById("page-title");
-        const aduanDetailTitleEl =
-          document.getElementById("aduan-detail-title");
-        const breadcrumbAduanIdEl = document.getElementById(
-          "breadcrumb-aduan-id"
-        );
-        const aduanIdEl = document.getElementById("aduan-id");
-        const aduanDateEl = document.getElementById("aduan-date");
-        const aduanTopicEl = document.getElementById("aduan-topic");
-        const aduanStatusBadgeEl =
-          document.getElementById("aduan-status-badge");
-        const aduanPriorityEl = document.getElementById("aduan-priority");
-        const aduanDescriptionEl = document.getElementById("aduan-description");
-        const aduanAttachmentsContainerEl = document.getElementById(
-          "aduan-attachments-container"
-        );
-        const complainantNameLinkEl = document.getElementById(
-          "complainant-name-link"
-        );
-        const complainantIdEl = document.getElementById("complainant-id");
-        const complainantEmailEl = document.getElementById("complainant-email");
-        const complainantPhoneEl = document.getElementById("complainant-phone");
-        const relatedOrderIdLinkEl = document.getElementById(
-          "related-order-id-link"
-        );
-        const relatedProductNameLinkEl = document.getElementById(
-          "related-product-name-link"
-        );
-        const relatedJastiperIdLinkEl = document.getElementById(
-          "related-jastiper-id-link"
-        );
-        const relatedJastiperNameLinkEl = document.getElementById(
-          "related-jastiper-name-link"
-        );
-        const aduanHistoryListEl =
-          document.getElementById("aduan-history-list");
-        const adminNotesTextarea = document.getElementById(
-          "admin-notes-textarea"
-        );
-        const addNoteButton = document.getElementById("add-note-button");
-        const updateStatusSelect = document.getElementById(
-          "update-status-select"
-        );
-        const handleAduanButton = document.getElementById(
-          "handle-aduan-button"
-        );
-        const rejectAduanButton = document.getElementById(
-          "reject-aduan-button"
-        );
-
-        // Main content wrapper to display error messages
-        const aduanContentWrapper = document.getElementById("aduan-content");
-
-        try {
-          if (!aduanId) {
-            pageTitleEl.textContent = `Detail Aduan : ID Tidak Ditemukan - TitipGo Admin`;
-            aduanDetailTitleEl.textContent =
-              "Detail Aduan : ID Tidak Ditemukan";
-            breadcrumbAduanIdEl.textContent = "ID Tidak Ditemukan";
-
-            aduanContentWrapper.innerHTML = `
-              <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <p class="text-center text-red-500 text-xl font-semibold">ID Aduan tidak ditemukan di URL.</p>
-                <p class="text-center text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID aduan yang valid.</p>
-                <div class="text-center mt-4">
-                  <a href="aduan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Aduan
-                  </a>
-                </div>
+          aduanContentWrapper.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+              <p class="text-center text-red-500 text-xl font-semibold">ID Aduan tidak ditemukan di URL.</p>
+              <p class="text-center text-gray-600 mt-2">Pastikan Anda mengakses halaman ini dengan ID aduan yang valid.</p>
+              <div class="text-center mt-4">
+                <a href="admin-aduan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Aduan
+                </a>
               </div>
-            `;
-            // Hide action buttons if no aduan ID
-            if (handleAduanButton) handleAduanButton.classList.add("hidden");
-            if (rejectAduanButton) rejectAduanButton.classList.add("hidden");
-            return; // Stop further execution
+            </div>
+          `;
+          // Hide action buttons if no aduan ID
+          if (handleAduanButton) handleAduanButton.classList.add("hidden");
+          if (rejectAduanButton) rejectAduanButton.classList.add("hidden");
+          return; // Stop further execution
+        }
+
+        // Fetch Aduan Data
+        const aduanDoc = await db.collection("aduans").doc(aduanId).get();
+
+        if (aduanDoc.exists) {
+          const aduanData = aduanDoc.data();
+
+          pageTitleEl.textContent = `Detail Aduan - #${aduanId} - TitipGo Admin`;
+          aduanDetailTitleEl.textContent = `Detail Aduan: #${aduanId}`;
+          breadcrumbAduanIdEl.textContent = `#${aduanId}`;
+
+          // Populate Aduan Information
+          aduanIdEl.textContent = `#${aduanId}`;
+          aduanDateEl.textContent = formatDate(aduanData.aduanDate);
+          aduanTopicEl.textContent = aduanData.topic || "N/A";
+
+          aduanStatusBadgeEl.textContent = aduanData.status || "N/A";
+          aduanStatusBadgeEl.className = `status-badge ${getStatusClass(
+            aduanData.status
+          )}`;
+
+          aduanPriorityEl.textContent = aduanData.priority || "N/A";
+          aduanPriorityEl.classList = `font-semibold ${getPriorityClass(
+            aduanData.priority
+          )}`;
+
+          aduanDescriptionEl.textContent =
+            aduanData.description || "Tidak ada deskripsi.";
+
+          // Populate Attachments
+          aduanAttachmentsContainerEl.innerHTML = ""; // Clear existing content
+          if (aduanData.attachments && aduanData.attachments.length > 0) {
+            aduanData.attachments.forEach((attachmentUrl) => {
+              const imgHtml = `
+                <img
+                  src="${attachmentUrl}"
+                  alt="Lampiran Aduan"
+                  class="w-full h-24 object-cover rounded-md shadow-sm border border-gray-200 hover:border-orange-400 cursor-pointer transition duration-200"
+                  onclick="window.open('${attachmentUrl}', '_blank');"
+                />
+              `;
+              aduanAttachmentsContainerEl.insertAdjacentHTML(
+                "beforeend",
+                imgHtml
+              );
+            });
+          } else {
+            aduanAttachmentsContainerEl.innerHTML =
+              '<p class="text-gray-500 text-sm col-span-full">Tidak ada lampiran.</p>';
           }
 
-          // Fetch Aduan Data
-          const aduanDoc = await db.collection("aduans").doc(aduanId).get();
-
-          if (aduanDoc.exists) {
-            const aduanData = aduanDoc.data();
-
-            pageTitleEl.textContent = `Detail Aduan - #${aduanId} - TitipGo Admin`;
-            aduanDetailTitleEl.textContent = `Detail Aduan: #${aduanId}`;
-            breadcrumbAduanIdEl.textContent = `#${aduanId}`;
-
-            // Populate Aduan Information
-            aduanIdEl.textContent = `#${aduanId}`;
-            aduanDateEl.textContent = formatDate(aduanData.aduanDate);
-            aduanTopicEl.textContent = aduanData.topic || "N/A";
-
-            aduanStatusBadgeEl.textContent = aduanData.status || "N/A";
-            aduanStatusBadgeEl.className = `status-badge ${getStatusClass(
-              aduanData.status
-            )}`;
-
-            aduanPriorityEl.textContent = aduanData.priority || "N/A";
-            aduanPriorityEl.classList = `font-semibold ${getPriorityClass(
-              aduanData.priority
-            )}`;
-
-            aduanDescriptionEl.textContent =
-              aduanData.description || "Tidak ada deskripsi.";
-
-            // Populate Attachments
-            aduanAttachmentsContainerEl.innerHTML = ""; // Clear existing content
-            if (aduanData.attachments && aduanData.attachments.length > 0) {
-              aduanData.attachments.forEach((attachmentUrl) => {
-                const imgHtml = `
-                  <img
-                    src="${attachmentUrl}"
-                    alt="Lampiran Aduan"
-                    class="w-full h-24 object-cover rounded-md shadow-sm border border-gray-200 hover:border-orange-400 cursor-pointer transition duration-200"
-                    onclick="window.open('${attachmentUrl}', '_blank');"
-                  />
-                `;
-                aduanAttachmentsContainerEl.insertAdjacentHTML(
-                  "beforeend",
-                  imgHtml
-                );
-              });
+          // Populate Complainant (Pengadu) Information
+          const userId = aduanData.userId;
+          if (userId) {
+            const userDoc = await db.collection("users").doc(userId).get();
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              complainantNameLinkEl.textContent = userData.fullName || "N/A";
+              complainantNameLinkEl.href = `admin-pengguna-detail.html?id=${userId}`; // Corrected link
+              complainantIdEl.textContent = userId;
+              complainantEmailEl.textContent = userData.email || "N/A";
+              complainantEmailEl.href = `mailto:${userData.email}`;
+              complainantPhoneEl.textContent = userData.phoneNumber || "N/A";
+              complainantPhoneEl.href = `tel:${userData.phoneNumber}`;
             } else {
-              aduanAttachmentsContainerEl.innerHTML =
-                '<p class="text-gray-500 text-sm col-span-full">Tidak ada lampiran.</p>';
-            }
-
-            // Populate Complainant (Pengadu) Information
-            const userId = aduanData.userId;
-            if (userId) {
-              const userDoc = await db.collection("users").doc(userId).get();
-              if (userDoc.exists) {
-                const userData = userDoc.data();
-                complainantNameLinkEl.textContent = userData.fullName || "N/A";
-                complainantNameLinkEl.href = `pengguna-detail.html?id=${userId}`;
-                complainantIdEl.textContent = userId;
-                complainantEmailEl.textContent = userData.email || "N/A";
-                complainantEmailEl.href = `mailto:${userData.email}`;
-                complainantPhoneEl.textContent = userData.phoneNumber || "N/A";
-                complainantPhoneEl.href = `tel:${userData.phoneNumber}`;
-              } else {
-                complainantNameLinkEl.textContent = "Pengguna Tidak Ditemukan";
-                complainantNameLinkEl.href = "#";
-                complainantIdEl.textContent = userId;
-                complainantEmailEl.textContent = "N/A";
-                complainantPhoneEl.textContent = "N/A";
-              }
-            } else {
-              complainantNameLinkEl.textContent = "N/A";
+              complainantNameLinkEl.textContent = "Pengguna Tidak Ditemukan";
               complainantNameLinkEl.href = "#";
-              complainantIdEl.textContent = "N/A";
+              complainantIdEl.textContent = userId;
               complainantEmailEl.textContent = "N/A";
               complainantPhoneEl.textContent = "N/A";
             }
+          } else {
+            complainantNameLinkEl.textContent = "N/A";
+            complainantNameLinkEl.href = "#";
+            complainantIdEl.textContent = "N/A";
+            complainantEmailEl.textContent = "N/A";
+            complainantPhoneEl.textContent = "N/A";
+          }
 
-            // Populate Related Details (Order, Product, Jastiper)
-            const orderId = aduanData.orderId;
-            const productId = aduanData.productId;
-            const jastiperId = aduanData.jastiperId;
+          // Populate Related Details (Order, Product, Jastiper)
+          const orderId = aduanData.orderId;
+          const productId = aduanData.productId;
+          const jastiperId = aduanData.jastiperId;
 
-            if (orderId) {
-              relatedOrderIdLinkEl.textContent = `#${orderId}`;
-              relatedOrderIdLinkEl.href = `admin-pesanan-detail.html?id=${orderId}`;
+          if (orderId) {
+            relatedOrderIdLinkEl.textContent = `#${orderId}`;
+            relatedOrderIdLinkEl.href = `admin-pesanan-detail.html?id=${orderId}`;
+          } else {
+            relatedOrderIdLinkEl.textContent = "N/A";
+            relatedOrderIdLinkEl.href = "#";
+          }
+
+          if (productId) {
+            const productDoc = await db
+              .collection("catalogs")
+              .doc(productId)
+              .get();
+            if (productDoc.exists) {
+              const productData = productDoc.data();
+              relatedProductNameLinkEl.textContent =
+                productData.productName || "N/A";
+              relatedProductNameLinkEl.href = `admin-katalog-detail.html?id=${productId}`;
             } else {
-              relatedOrderIdLinkEl.textContent = "N/A";
-              relatedOrderIdLinkEl.href = "#";
-            }
-
-            if (productId) {
-              const productDoc = await db
-                .collection("catalogs")
-                .doc(productId)
-                .get();
-              if (productDoc.exists) {
-                const productData = productDoc.data();
-                relatedProductNameLinkEl.textContent =
-                  productData.productName || "N/A";
-                relatedProductNameLinkEl.href = `admin-katalog-detail.html?id=${productId}`;
-              } else {
-                relatedProductNameLinkEl.textContent = "Produk Tidak Ditemukan";
-                relatedProductNameLinkEl.href = "#";
-              }
-            } else {
-              relatedProductNameLinkEl.textContent = "N/A";
+              relatedProductNameLinkEl.textContent = "Produk Tidak Ditemukan";
               relatedProductNameLinkEl.href = "#";
             }
+          } else {
+            relatedProductNameLinkEl.textContent = "N/A";
+            relatedProductNameLinkEl.href = "#";
+          }
 
-            if (jastiperId) {
-              const jastiperDoc = await db
-                .collection("users")
-                .doc(jastiperId)
-                .get();
-              if (jastiperDoc.exists) {
-                const jastiperData = jastiperDoc.data();
-                relatedJastiperIdLinkEl.textContent = jastiperId;
-                relatedJastiperIdLinkEl.href = `pengguna-detail.html?id=${jastiperId}`;
-                relatedJastiperNameLinkEl.textContent =
-                  jastiperData.fullName || "N/A";
-                relatedJastiperNameLinkEl.href = `pengguna-detail.html?id=${jastiperId}`;
-              } else {
-                relatedJastiperIdLinkEl.textContent = jastiperId;
-                relatedJastiperIdLinkEl.href = "#";
-                relatedJastiperNameLinkEl.textContent =
-                  "Jastiper Tidak Ditemukan";
-                relatedJastiperNameLinkEl.href = "#";
-              }
+          if (jastiperId) {
+            const jastiperDoc = await db
+              .collection("users") // Assuming jastipers are also in the 'users' collection
+              .doc(jastiperId)
+              .get();
+            if (jastiperDoc.exists) {
+              const jastiperData = jastiperDoc.data();
+              relatedJastiperIdLinkEl.textContent = jastiperId;
+              relatedJastiperIdLinkEl.href = `admin-pengguna-detail.html?id=${jastiperId}`; // Corrected link
+              relatedJastiperNameLinkEl.textContent =
+                jastiperData.fullName || "N/A";
+              relatedJastiperNameLinkEl.href = `admin-pengguna-detail.html?id=${jastiperId}`; // Corrected link
             } else {
-              relatedJastiperIdLinkEl.textContent = "N/A";
+              relatedJastiperIdLinkEl.textContent = jastiperId;
               relatedJastiperIdLinkEl.href = "#";
-              relatedJastiperNameLinkEl.textContent = "N/A";
+              relatedJastiperNameLinkEl.textContent =
+                "Jastiper Tidak Ditemukan";
               relatedJastiperNameLinkEl.href = "#";
             }
+          } else {
+            relatedJastiperIdLinkEl.textContent = "N/A";
+            relatedJastiperIdLinkEl.href = "#";
+            relatedJastiperNameLinkEl.textContent = "N/A";
+            relatedJastiperNameLinkEl.href = "#";
+          }
 
-            // Populate Aduan History
-            aduanHistoryListEl.innerHTML = ""; // Clear existing content
-            if (aduanData.history && aduanData.history.length > 0) {
-              aduanData.history.sort(
-                (a, b) => b.timestamp.toDate() - a.timestamp.toDate()
-              ); // Sort newest first
-
-              aduanData.history.forEach((historyItem) => {
-                let iconClass = "fas fa-info-circle text-gray-500";
-                let title = "Catatan Admin";
-                if (historyItem.type === "status_update") {
-                  switch (historyItem.newStatus) {
-                    case "new":
-                      iconClass = "fas fa-clock text-yellow-500";
-                      break;
-                    case "in-progress":
-                      iconClass = "fas fa-cogs text-blue-500";
-                      break;
-                    case "resolved":
-                      iconClass = "fas fa-check-circle text-green-500";
-                      break;
-                    case "closed":
-                      iconClass = "fas fa-times-circle text-gray-500";
-                      break;
-                    case "rejected":
-                      iconClass = "fas fa-exclamation-triangle text-red-500";
-                      break;
-                  }
-                  title = `Status Diperbarui ke: ${historyItem.newStatus}`;
-                } else if (historyItem.type === "note") {
-                  iconClass = "fas fa-comment-dots text-gray-500";
-                  title = "Komentar Admin";
-                }
-
-                const historyHtml = `
-                  <li class="flex items-start text-gray-700 text-sm">
-                    <i class="${iconClass} mr-3 mt-1"></i>
-                    <div>
-                      <strong class="block">${title}</strong>
-                      <span class="text-xs text-gray-500">${formatDate(
-                        historyItem.timestamp
-                      )}</span>
-                      <p class="text-xs text-gray-600">${
-                        historyItem.notes || ""
-                      }</p>
-                    </div>
-                  </li>
-                `;
-                aduanHistoryListEl.insertAdjacentHTML("beforeend", historyHtml);
-              });
-            } else {
-              aduanHistoryListEl.innerHTML =
-                '<p class="text-gray-500">Tidak ada riwayat penanganan.</p>';
-            }
-
-            // --- Action Buttons Functionality ---
-            // Ensure buttons are visible
-            if (handleAduanButton) handleAduanButton.classList.remove("hidden");
-            if (rejectAduanButton) rejectAduanButton.classList.remove("hidden");
-
-            handleAduanButton.onclick = async () => {
-              const newStatus = "in-progress"; // Default to in-progress when handling
-              const notes = prompt(
-                `Tambahkan catatan untuk penanganan aduan #${aduanId}:`
-              );
-              if (notes !== null) {
-                // User didn't click cancel
-                try {
-                  await db
-                    .collection("aduans")
-                    .doc(aduanId)
-                    .update({
-                      status: newStatus,
-                      history: firebase.firestore.FieldValue.arrayUnion({
-                        type: "status_update",
-                        newStatus: newStatus,
-                        timestamp: firebase.firestore.Timestamp.now(),
-                        by: "Admin_User", // Replace with actual logged-in admin user ID
-                        notes: notes || "Mulai penanganan aduan.",
-                      }),
-                    });
-                  alert(
-                    "Aduan berhasil ditangani dan status diperbarui menjadi 'Dalam Proses'!"
-                  );
-                  location.reload();
-                } catch (error) {
-                  console.error("Error handling aduan:", error);
-                  alert("Gagal menangani aduan. Coba lagi.");
-                }
-              }
-            };
-
-            rejectAduanButton.onclick = async () => {
-              if (
-                confirm(`Apakah Anda yakin ingin menolak aduan #${aduanId}?`)
-              ) {
-                const notes = prompt("Tulis alasan penolakan aduan:");
-                if (notes !== null) {
-                  try {
-                    await db
-                      .collection("aduans")
-                      .doc(aduanId)
-                      .update({
-                        status: "rejected",
-                        history: firebase.firestore.FieldValue.arrayUnion({
-                          type: "status_update",
-                          newStatus: "rejected",
-                          timestamp: firebase.firestore.Timestamp.now(),
-                          by: "Admin_User", // Replace with actual logged-in admin user ID
-                          notes: notes || "Aduan ditolak.",
-                        }),
-                      });
-                    alert("Aduan berhasil ditolak.");
-                    location.reload();
-                  } catch (error) {
-                    console.error("Error rejecting aduan:", error);
-                    alert("Gagal menolak aduan. Coba lagi.");
-                  }
-                }
-              }
-            };
-
-            addNoteButton.addEventListener("click", async () => {
-              const notes = adminNotesTextarea.value.trim();
-              if (notes) {
-                try {
-                  await db
-                    .collection("aduans")
-                    .doc(aduanId)
-                    .update({
-                      history: firebase.firestore.FieldValue.arrayUnion({
-                        type: "note",
-                        timestamp: firebase.firestore.Timestamp.now(),
-                        by: "Admin_User", // Replace with actual logged-in admin user ID
-                        notes: notes,
-                      }),
-                    });
-                  adminNotesTextarea.value = ""; // Clear textarea
-                  alert("Catatan berhasil ditambahkan!");
-                  location.reload();
-                } catch (error) {
-                  console.error("Error adding note:", error);
-                  alert("Gagal menambahkan catatan. Coba lagi.");
-                }
-              } else {
-                alert("Catatan tidak boleh kosong.");
-              }
-            });
-
-            updateStatusSelect.addEventListener("change", async (event) => {
-              const newStatus = event.target.value;
-              if (newStatus) {
-                const notes = prompt(
-                  `Tambahkan catatan untuk perubahan status ke '${newStatus}':`
-                );
-                if (notes !== null) {
-                  try {
-                    await db
-                      .collection("aduans")
-                      .doc(aduanId)
-                      .update({
-                        status: newStatus,
-                        history: firebase.firestore.FieldValue.arrayUnion({
-                          type: "status_update",
-                          newStatus: newStatus,
-                          timestamp: firebase.firestore.Timestamp.now(),
-                          by: "Admin_User", // Replace with actual logged-in admin user ID
-                          notes: notes || `Status diubah ke ${newStatus}.`,
-                        }),
-                      });
-                    alert(
-                      `Status aduan berhasil diperbarui menjadi '${newStatus}'!`
-                    );
-                    location.reload();
-                  } catch (error) {
-                    console.error("Error updating aduan status:", error);
-                    alert("Gagal memperbarui status aduan. Coba lagi.");
-                  }
-                }
-                event.target.value = ""; // Reset select after action
-              }
+          // Populate Aduan History
+          aduanHistoryListEl.innerHTML = ""; // Clear existing content
+          if (aduanData.history && aduanData.history.length > 0) {
+            aduanData.history.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate()); // Sort by most recent
+            aduanData.history.forEach((entry) => {
+              const historyItemHtml = `
+                <li class="relative pl-6 pb-4">
+                  <div class="absolute w-2 h-2 bg-blue-500 rounded-full mt-1.5 -left-1 border border-white"></div>
+                  <div class="text-sm text-gray-800">
+                    <span class="font-semibold">${entry.actionBy || 'Admin'}</span> pada
+                    <span class="text-gray-600">${formatDate(entry.timestamp)}</span>:
+                  </div>
+                  <p class="text-sm text-gray-700 mt-1">${entry.notes || 'Tidak ada catatan.'}</p>
+                  ${entry.newStatus ? `<p class="text-xs text-gray-500 mt-1">Status diubah menjadi: <span class="status-badge ${getStatusClass(entry.newStatus)}">${entry.newStatus}</span></p>` : ''}
+                </li>
+              `;
+              aduanHistoryListEl.insertAdjacentHTML("beforeend", historyItemHtml);
             });
           } else {
-            // If aduan document does not exist in Firestore
-            pageTitleEl.textContent = `Detail Aduan : Tidak Ditemukan - TitipGo Admin`;
-            aduanDetailTitleEl.textContent = "Detail Aduan : Tidak Ditemukan";
-            breadcrumbAduanIdEl.textContent = "Tidak Ditemukan";
-
-            aduanContentWrapper.innerHTML = `
-              <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <p class="text-center text-red-500 text-xl font-semibold">Aduan dengan ID #${aduanId} tidak ditemukan.</p>
-                <p class="text-center text-gray-600 mt-2">Mungkin ID aduan salah atau aduan telah dihapus.</p>
-                <div class="text-center mt-4">
-                  <a href="aduan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Aduan
-                  </a>
-                </div>
-              </div>
-            `;
-            // Disable and hide buttons if no aduan data
-            if (handleAduanButton) handleAduanButton.classList.add("hidden");
-            if (rejectAduanButton) rejectAduanButton.classList.add("hidden");
+            aduanHistoryListEl.innerHTML = '<p class="text-gray-500">Tidak ada riwayat penanganan.</p>';
           }
-        } catch (error) {
-          console.error("Error fetching aduan data:", error);
-          pageTitleEl.textContent = `Detail Aduan : Error - TitipGo Admin`;
-          aduanDetailTitleEl.textContent = "Detail Aduan : Error";
-          breadcrumbAduanIdEl.textContent = "Error";
+
+          // Handle "Tangani Aduan" Button Click
+          handleAduanButton.addEventListener("click", async () => {
+            const currentStatus = aduanData.status;
+            let newStatus = "";
+
+            if (currentStatus === "new") {
+              newStatus = "in-progress";
+            } else if (currentStatus === "in-progress") {
+              newStatus = "resolved";
+            } else {
+              alert(`Aduan saat ini berstatus "${currentStatus}". Tidak dapat mengubah status secara otomatis.`);
+              return;
+            }
+
+            const notes = adminNotesTextarea.value.trim() || `Status diubah menjadi ${newStatus}.`;
+
+            if (confirm(`Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`)) {
+              try {
+                const updatedHistory = aduanData.history || [];
+                updatedHistory.push({
+                  actionBy: "Admin", // In a real app, this would be dynamic (e.g., current logged-in admin's name/ID)
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                  notes: notes,
+                  oldStatus: currentStatus,
+                  newStatus: newStatus,
+                });
+
+                await db.collection("aduans").doc(aduanId).update({
+                  status: newStatus,
+                  history: updatedHistory,
+                });
+                alert(`Status aduan berhasil diubah menjadi "${newStatus}".`);
+                location.reload(); // Reload to show updated data
+              } catch (error) {
+                console.error("Error updating aduan status:", error);
+                alert("Gagal mengubah status aduan. Silakan coba lagi.");
+              }
+            }
+          });
+
+          // Handle "Tolak Aduan" Button Click
+          rejectAduanButton.addEventListener("click", async () => {
+            const currentStatus = aduanData.status;
+            const newStatus = "rejected";
+            const notes = adminNotesTextarea.value.trim() || `Aduan ditolak.`;
+
+            if (confirm(`Apakah Anda yakin ingin menolak aduan ini?`)) {
+              try {
+                const updatedHistory = aduanData.history || [];
+                updatedHistory.push({
+                  actionBy: "Admin",
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                  notes: notes,
+                  oldStatus: currentStatus,
+                  newStatus: newStatus,
+                });
+
+                await db.collection("aduans").doc(aduanId).update({
+                  status: newStatus,
+                  history: updatedHistory,
+                });
+                alert("Aduan berhasil ditolak.");
+                location.reload();
+              } catch (error) {
+                console.error("Error rejecting aduan:", error);
+                alert("Gagal menolak aduan. Silakan coba lagi.");
+              }
+            }
+          });
+
+
+          // Handle "Tambah Catatan" Button Click
+          addNoteButton.addEventListener("click", async () => {
+            const notes = adminNotesTextarea.value.trim();
+            if (!notes) {
+              alert("Catatan tidak boleh kosong.");
+              return;
+            }
+
+            try {
+              const updatedHistory = aduanData.history || [];
+              updatedHistory.push({
+                actionBy: "Admin", // Replace with actual admin name/ID
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                notes: notes,
+              });
+
+              await db.collection("aduans").doc(aduanId).update({
+                history: updatedHistory,
+              });
+              adminNotesTextarea.value = ""; // Clear textarea
+              alert("Catatan berhasil ditambahkan.");
+              location.reload(); // Reload to show updated history
+            } catch (error) {
+              console.error("Error adding note:", error);
+              alert("Gagal menambahkan catatan. Silakan coba lagi.");
+            }
+          });
+
+          // Handle "Ubah Status" Select Change
+          updateStatusSelect.addEventListener("change", async (event) => {
+            const newStatus = event.target.value;
+            const currentStatus = aduanData.status;
+
+            if (!newStatus) return; // Do nothing if "Ubah Status" is selected
+
+            const notes = adminNotesTextarea.value.trim() || `Status diubah dari ${currentStatus} menjadi ${newStatus}.`;
+
+            if (confirm(`Apakah Anda yakin ingin mengubah status aduan ini menjadi "${newStatus}"?`)) {
+              try {
+                const updatedHistory = aduanData.history || [];
+                updatedHistory.push({
+                  actionBy: "Admin", // Replace with actual admin name/ID
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                  notes: notes,
+                  oldStatus: currentStatus,
+                  newStatus: newStatus,
+                });
+
+                await db.collection("aduans").doc(aduanId).update({
+                  status: newStatus,
+                  history: updatedHistory,
+                });
+                adminNotesTextarea.value = ""; // Clear textarea
+                alert(`Status aduan berhasil diubah menjadi "${newStatus}".`);
+                location.reload(); // Reload to show updated data
+              } catch (error) {
+                console.error("Error updating aduan status:", error);
+                alert("Gagal mengubah status aduan. Silakan coba lagi.");
+              }
+            }
+            event.target.value = ""; // Reset select after action
+          });
+
+
+        } else {
+          pageTitleEl.textContent = `Detail Aduan : Tidak Ditemukan - TitipGo Admin`;
+          aduanDetailTitleEl.textContent = "Detail Aduan : Tidak Ditemukan";
+          breadcrumbAduanIdEl.textContent = "Tidak Ditemukan";
           aduanContentWrapper.innerHTML = `
-            <div class="text-center text-red-500 text-xl mt-10 bg-white p-6 rounded-lg shadow-md">
-              Terjadi kesalahan saat memuat data aduan. Silakan coba lagi.
-              <p class="text-sm text-gray-600 mt-2">Detail: ${
-                error.message || "Unknown error"
-              }</p>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+              <p class="text-center text-red-500 text-xl font-semibold">Aduan dengan ID "${aduanId}" tidak ditemukan.</p>
+              <p class="text-center text-gray-600 mt-2">Mungkin aduan tersebut telah dihapus atau ID tidak valid.</p>
+              <div class="text-center mt-4">
+                <a href="admin-aduan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Aduan
+                </a>
+              </div>
             </div>
           `;
-          // Disable and hide buttons on error
+          // Hide action buttons if aduan not found
           if (handleAduanButton) handleAduanButton.classList.add("hidden");
           if (rejectAduanButton) rejectAduanButton.classList.add("hidden");
         }
-      });
-    </script>
-  </body>
+      } catch (error) {
+        console.error("Error fetching aduan data:", error);
+        pageTitleEl.textContent = `Error - Detail Aduan - TitipGo Admin`;
+        aduanDetailTitleEl.textContent = "Terjadi Kesalahan";
+        breadcrumbAduanIdEl.textContent = "Error";
+        aduanContentWrapper.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <p class="text-center text-red-500 text-xl font-semibold">Terjadi kesalahan saat memuat detail aduan.</p>
+            <p class="text-center text-gray-600 mt-2">Silakan coba refresh halaman atau hubungi administrator.</p>
+            <p class="text-center text-gray-600 mt-1 text-sm">Detail: ${error.message}</p>
+            <div class="text-center mt-4">
+              <a href="admin-aduan.html" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Aduan
+              </a>
+            </div>
+          </div>
+        `;
+        // Hide action buttons on error
+        if (handleAduanButton) handleAduanButton.classList.add("hidden");
+        if (rejectAduanButton) rejectAduanButton.classList.add("hidden");
+      }
+    });
+  </script>
+</body>
+
 </html>

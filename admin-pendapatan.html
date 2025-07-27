@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Pendapatan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Pendapatan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-      /* Main content background with transparency */
-      #mainContent {
-        background-image: linear-gradient(
-            rgba(255, 255, 255, 0.3),
-            /* Overlay putih transparan */ rgba(255, 255, 255, 0.3)
-          ),
-          url("asset/images/background.png"); /* PASTIKAN PATH INI BENAR */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        position: relative;
-        overflow: hidden;
-      }
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      /* Style untuk membuat background kartu statistik dan tabel sedikit transparan */
-      .card-bg-transparent {
-        background-color: rgba(
+  <style>
+    /* Main content background with transparency */
+    #mainContent {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.3),
+          /* Overlay putih transparan */
+          rgba(255, 255, 255, 0.3)),
+        url("asset/images/background.png");
+      /* PASTIKAN PATH INI BENAR */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Style untuk membuat background kartu statistik dan tabel sedikit transparan */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      /* Optional: Overlay tambahan jika diperlukan */
-      /* #mainContent::before {
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
+
+    /* Optional: Overlay tambahan jika diperlukan */
+    /* #mainContent::before {
         content: "";
         position: absolute;
         top: 0;
@@ -50,116 +48,87 @@
         border-radius: inherit;
       } */
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
 
-      /* Adjusting header transparency if desired, or use a specific Tailwind color */
-      .header-bg-transparent {
-        background-color: rgba(
+    /* Adjusting header transparency if desired, or use a specific Tailwind color */
+    .header-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
-      /* Untuk header blue, jika ingin transparan: */
-      .blue-header-transparent {
-        background-color: rgba(
-          37,
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
+
+    /* Untuk header blue, jika ingin transparan: */
+    .blue-header-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.8
-        ); /* blue-600 dengan opasitas 80% */
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100 font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+          0.8);
+      /* blue-600 dengan opasitas 80% */
+    }
+  </style>
+</head>
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
-        </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
+<body class="bg-gray-100 font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
 
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
           background-image: linear-gradient(
               rgba(255, 255, 255, 0.3),
               rgba(255, 255, 255, 0.3)
@@ -168,546 +137,774 @@
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-        "
-      >
-        <div
-          class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md"
-        >
-          <p class="text-lg font-semibold">Pendapatan Platform</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="#"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+        ">
+      <div class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md">
+        <p class="text-lg font-semibold">Pendapatan Platform</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="#"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
+      </div>
 
-        <div class="card-bg-transparent p-6 rounded-md shadow-md mb-8">
-          <div class="flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex flex-wrap gap-4 items-center">
-              <div
-                class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent"
-              >
-                <i
-                  class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"
-                ></i>
-                <p class="text-gray-600 text-sm">Total Pendapatan</p>
-                <p id="totalPendapatan" class="text-xl font-bold text-gray-800">
-                  Rp. 0,-
-                </p>
-              </div>
-              <div
-                class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent"
-              >
-                <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
-                <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
-                <p id="jumlahPesanan" class="text-xl font-bold text-gray-800">
-                  0
-                </p>
-              </div>
+      <div class="card-bg-transparent p-6 rounded-md shadow-md mb-8">
+        <div class="flex flex-wrap gap-4 items-center justify-between">
+          <div class="flex flex-wrap gap-4 items-center">
+            <div
+              class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent">
+              <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
+              <p class="text-gray-600 text-sm">Total Pendapatan</p>
+              <p id="totalPendapatan" class="text-xl font-bold text-gray-800">
+                Rp. 0,-
+              </p>
             </div>
-
-            <div class="flex justify-end items-center space-x-4 ml-auto">
-              <select
-                id="monthYearFilter"
-                class="p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 card-bg-transparent"
-              >
-                <option value="">Semua Bulan/Tahun</option>
-                <option value="2024-01">Januari 2024</option>
-                <option value="2024-02">Februari 2024</option>
-                <option value="2024-03">Maret 2024</option>
-                <option value="2024-04">April 2024</option>
-                <option value="2024-05">Mei 2024</option>
-                <option value="2024-06">Juni 2024</option>
-                <option value="2024-07">Juli 2024</option>
-                <option value="2024-08">Agustus 2024</option>
-                <option value="2024-09">September 2024</option>
-                <option value="2024-10">Oktober 2024</option>
-                <option value="2024-11">November 2024</option>
-                <option value="2024-12">Desember 2024</option>
-              </select>
-              <button
-                id="exportButton"
-                class="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200"
-              >
-                <i class="fas fa-file-export mr-2"></i> Ekspor
-              </button>
+            <div
+              class="flex flex-col items-center justify-center text-center bg-gray-50 p-4 rounded-md shadow-md card-bg-transparent">
+              <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
+              <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
+              <p id="jumlahPesanan" class="text-xl font-bold text-gray-800">
+                0
+              </p>
             </div>
           </div>
-        </div>
 
-        <div class="card-bg-transparent p-6 rounded-md shadow-md">
-          <div class="overflow-x-auto rounded-md border border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-blue-600">
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    No
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    No. Pesanan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Tanggal
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Customer
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Total Pesanan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Ongkir
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Fee Platform
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Biaya Layanan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Aksi
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                id="dataTableBody"
-                class="bg-white divide-y divide-gray-200"
-              ></tbody>
-            </table>
-          </div>
-
-          <div class="mt-6 flex justify-between items-center">
-            <div id="paginationInfo" class="text-sm text-gray-700"></div>
-            <div id="paginationButtons" class="flex"></div>
+          <div class="flex justify-end items-center space-x-4 ml-auto">
+            <select id="monthYearFilter"
+              class="p-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 card-bg-transparent">
+              <option value="">Semua Bulan/Tahun</option>
+              <option value="2024-01">Januari 2024</option>
+              <option value="2024-02">Februari 2024</option>
+              <option value="2024-03">Maret 2024</option>
+              <option value="2024-04">April 2024</option>
+              <option value="2024-05">Mei 2024</option>
+              <option value="2024-06">Juni 2024</option>
+              <option value="2024-07">Juli 2024</option>
+              <option value="2024-08">Agustus 2024</option>
+              <option value="2024-09">September 2024</option>
+              <option value="2024-10">Oktober 2024</option>
+              <option value="2024-11">November 2024</option>
+              <option value="2024-12">Desember 2024</option>
+            </select>
+            <button id="exportButton"
+              class="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200">
+              <i class="fas fa-file-export mr-2"></i> Ekspor
+            </button>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
 
-    <script type="module">
-      // Import fungsi-fungsi Firebase yang dibutuhkan
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        query,
-        orderBy,
-        where,
-        Timestamp,
-      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      <div class="card-bg-transparent p-6 rounded-md shadow-md">
+        <div class="overflow-x-auto rounded-md border border-gray-200">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-600">
+              <tr>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  No
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  No. Pesanan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Tanggal
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Customer
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Total Pesanan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Ongkir
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Fee Platform
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Biaya Layanan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Status
+                </th>
+                <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
 
-      // KONFIGURASI FIREBASE ANDA - GANTI DENGAN DATA ASLI PROYEK ANDA
-      // Anda bisa mendapatkan ini dari Firebase Console -> Project settings -> General -> Your apps -> Web app -> Config
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY", // <-- GANTI INI
-        authDomain: "YOUR_AUTH_DOMAIN", // <-- GANTI INI
-        projectId: "YOUR_PROJECT_ID", // <-- GANTI INI
-        storageBucket: "YOUR_STORAGE_BUCKET", // <-- GANTI INI
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // <-- GANTI INI
-        appId: "YOUR_APP_ID", // <-- GANTI INI
-      };
+        <div class="mt-6 flex justify-between items-center">
+          <div id="paginationInfo" class="text-sm text-gray-700"></div>
+          <div id="paginationButtons" class="flex"></div>
+        </div>
+      </div>
+    </main>
+  </div>
 
-      // Inisialisasi Firebase di sini (hanya sekali)
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+  <script type="module">
+    // Import fungsi-fungsi Firebase yang dibutuhkan (ini hanya untuk struktur, tidak akan digunakan)
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    // import {
+    //   getFirestore,
+    //   collection,
+    //   getDocs,
+    //   query,
+    //   orderBy,
+    //   where,
+    //   Timestamp,
+    // } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      // Referensi elemen-elemen DOM
-      const dataTableBody = document.getElementById("dataTableBody");
-      const totalPendapatanElement = document.getElementById("totalPendapatan");
-      const jumlahPesananElement = document.getElementById("jumlahPesanan");
-      const monthYearFilter = document.getElementById("monthYearFilter");
-      const exportButton = document.getElementById("exportButton");
-      const paginationInfo = document.getElementById("paginationInfo");
-      const paginationButtons = document.getElementById("paginationButtons");
+    // Referensi elemen-elemen DOM
+    const dataTableBody = document.getElementById("dataTableBody");
+    const totalPendapatanElement = document.getElementById("totalPendapatan");
+    const jumlahPesananElement = document.getElementById("jumlahPesanan");
+    const monthYearFilter = document.getElementById("monthYearFilter");
+    const exportButton = document.getElementById("exportButton");
+    const paginationInfo = document.getElementById("paginationInfo");
+    const paginationButtons = document.getElementById("paginationButtons");
 
-      const itemsPerPage = 10; // Jumlah item per halaman
-      let currentPage = 1; // Halaman saat ini
-      let allOrders = []; // Menyimpan semua pesanan yang diambil dari Firebase
-      let filteredOrders = []; // Menyimpan pesanan setelah difilter (untuk paginasi)
+    const itemsPerPage = 10; // Jumlah item per halaman
+    let currentPage = 1; // Halaman saat ini
+    let allOrders = []; // Menyimpan semua pesanan (dummy data)
+    let filteredOrders = []; // Menyimpan pesanan setelah difilter (untuk paginasi)
 
-      // Fungsi untuk memformat angka menjadi format Rupiah
-      const formatRupiah = (amount) => {
-        if (typeof amount !== "number") {
-          return "Rp. 0"; // Handle non-numeric values gracefully
-        }
-        return new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-          minimumFractionDigits: 0,
-        }).format(amount);
-      };
+    // Dummy data untuk pesanan
+    const dummyOrders = [
+      {
+        id: "order001",
+        noPesanan: "ORD-202407001",
+        tanggal: new Date("2024-07-20T10:00:00"),
+        customerName: "Alice Smith",
+        totalPesanan: 150000,
+        ongkir: 15000,
+        feePlatform: 7500,
+        biayaLayanan: 2000,
+        status: "Lunas",
+      },
+      {
+        id: "order002",
+        noPesanan: "ORD-202407002",
+        tanggal: new Date("2024-07-21T11:30:00"),
+        customerName: "Bob Johnson",
+        totalPesanan: 200000,
+        ongkir: 20000,
+        feePlatform: 10000,
+        biayaLayanan: 2500,
+        status: "Pending",
+      },
+      {
+        id: "order003",
+        noPesanan: "ORD-202407003",
+        tanggal: new Date("2024-06-15T14:00:00"),
+        customerName: "Charlie Brown",
+        totalPesanan: 100000,
+        ongkir: 10000,
+        feePlatform: 5000,
+        biayaLayanan: 1500,
+        status: "Lunas",
+      },
+      {
+        id: "order004",
+        noPesanan: "ORD-202405004",
+        tanggal: new Date("2024-05-01T09:15:00"),
+        customerName: "Diana Prince",
+        totalPesanan: 300000,
+        ongkir: 25000,
+        feePlatform: 15000,
+        biayaLayanan: 3000,
+        status: "Lunas",
+      },
+      {
+        id: "order005",
+        noPesanan: "ORD-202407005",
+        tanggal: new Date("2024-07-22T16:45:00"),
+        customerName: "Eve Adams",
+        totalPesanan: 80000,
+        ongkir: 12000,
+        feePlatform: 4000,
+        biayaLayanan: 1000,
+        status: "Dibatalkan",
+      },
+      {
+        id: "order006",
+        noPesanan: "ORD-202407006",
+        tanggal: new Date("2024-07-23T08:00:00"),
+        customerName: "Frank Green",
+        totalPesanan: 180000,
+        ongkir: 18000,
+        feePlatform: 9000,
+        biayaLayanan: 2200,
+        status: "Lunas",
+      },
+      {
+        id: "order007",
+        noPesanan: "ORD-202406007",
+        tanggal: new Date("2024-06-05T13:00:00"),
+        customerName: "Grace Hall",
+        totalPesanan: 250000,
+        ongkir: 22000,
+        feePlatform: 12500,
+        biayaLayanan: 2800,
+        status: "Lunas",
+      },
+      {
+        id: "order008",
+        noPesanan: "ORD-202407008",
+        tanggal: new Date("2024-07-24T09:30:00"),
+        customerName: "Harry White",
+        totalPesanan: 120000,
+        ongkir: 14000,
+        feePlatform: 6000,
+        biayaLayanan: 1800,
+        status: "Menunggu Pembayaran",
+      },
+      {
+        id: "order009",
+        noPesanan: "ORD-202407009",
+        tanggal: new Date("2024-07-25T10:10:00"),
+        customerName: "Ivy Black",
+        totalPesanan: 90000,
+        ongkir: 11000,
+        feePlatform: 4500,
+        biayaLayanan: 1200,
+        status: "Lunas",
+      },
+      {
+        id: "order010",
+        noPesanan: "ORD-202407010",
+        tanggal: new Date("2024-07-26T15:20:00"),
+        customerName: "Jack Taylor",
+        totalPesanan: 170000,
+        ongkir: 16000,
+        feePlatform: 8500,
+        biayaLayanan: 2100,
+        status: "Lunas",
+      },
+      {
+        id: "order011",
+        noPesanan: "ORD-202407011",
+        tanggal: new Date("2024-07-27T17:00:00"),
+        customerName: "Karen Green",
+        totalPesanan: 210000,
+        ongkir: 20000,
+        feePlatform: 10500,
+        biayaLayanan: 2600,
+        status: "Lunas",
+      },
+      {
+        id: "order012",
+        noPesanan: "ORD-202406012",
+        tanggal: new Date("2024-06-20T11:00:00"),
+        customerName: "Liam Brown",
+        totalPesanan: 130000,
+        ongkir: 13000,
+        feePlatform: 6500,
+        biayaLayanan: 1700,
+        status: "Lunas",
+      },
+      {
+        id: "order013",
+        noPesanan: "ORD-202405013",
+        tanggal: new Date("2024-05-10T12:00:00"),
+        customerName: "Mia Davis",
+        totalPesanan: 280000,
+        ongkir: 23000,
+        feePlatform: 14000,
+        biayaLayanan: 2900,
+        status: "Lunas",
+      },
+      {
+        id: "order014",
+        noPesanan: "ORD-202407014",
+        tanggal: new Date("2024-07-28T09:00:00"),
+        customerName: "Noah Wilson",
+        totalPesanan: 110000,
+        ongkir: 10000,
+        feePlatform: 5500,
+        biayaLayanan: 1400,
+        status: "Pending",
+      },
+      {
+        id: "order015",
+        noPesanan: "ORD-202407015",
+        tanggal: new Date("2024-07-29T14:00:00"),
+        customerName: "Olivia Moore",
+        totalPesanan: 190000,
+        ongkir: 17000,
+        feePlatform: 9500,
+        biayaLayanan: 2300,
+        status: "Lunas",
+      },
+      {
+        id: "order016",
+        noPesanan: "ORD-202407016",
+        tanggal: new Date("2024-07-30T10:30:00"),
+        customerName: "Peter Clark",
+        totalPesanan: 160000,
+        ongkir: 15000,
+        feePlatform: 8000,
+        biayaLayanan: 1900,
+        status: "Menunggu Pembayaran",
+      },
+      {
+        id: "order017",
+        noPesanan: "ORD-202407017",
+        tanggal: new Date("2024-07-31T11:00:00"),
+        customerName: "Quinn Lewis",
+        totalPesanan: 140000,
+        ongkir: 13000,
+        feePlatform: 7000,
+        biayaLayanan: 1600,
+        status: "Dibatalkan",
+      },
+      {
+        id: "order018",
+        noPesanan: "ORD-2024-07-018",
+        tanggal: new Date("2024-07-01T09:00:00"),
+        customerName: "Rina S",
+        totalPesanan: 125000,
+        ongkir: 12000,
+        feePlatform: 6250,
+        biayaLayanan: 1800,
+        status: "Lunas",
+      },
+      {
+        id: "order019",
+        noPesanan: "ORD-2024-07-019",
+        tanggal: new Date("2024-07-02T10:30:00"),
+        customerName: "Budi H",
+        totalPesanan: 210000,
+        ongkir: 18000,
+        feePlatform: 10500,
+        biayaLayanan: 2500,
+        status: "Pending",
+      },
+      {
+        id: "order020",
+        noPesanan: "ORD-2024-06-001",
+        tanggal: new Date("2024-06-10T14:00:00"),
+        customerName: "Siti A",
+        totalPesanan: 90000,
+        ongkir: 10000,
+        feePlatform: 4500,
+        biayaLayanan: 1200,
+        status: "Lunas",
+      },
+      {
+        id: "order021",
+        noPesanan: "ORD-2024-06-002",
+        tanggal: new Date("2024-06-12T11:45:00"),
+        customerName: "Dewi P",
+        totalPesanan: 300000,
+        ongkir: 25000,
+        feePlatform: 15000,
+        biayaLayanan: 3000,
+        status: "Lunas",
+      },
+      {
+        id: "order022",
+        noPesanan: "ORD-2024-05-001",
+        tanggal: new Date("2024-05-05T16:00:00"),
+        customerName: "Fajar M",
+        totalPesanan: 75000,
+        ongkir: 9000,
+        feePlatform: 3750,
+        biayaLayanan: 1000,
+        status: "Dibatalkan",
+      },
+      {
+        id: "order023",
+        noPesanan: "ORD-2024-07-023",
+        tanggal: new Date("2024-07-03T08:30:00"),
+        customerName: "Gita L",
+        totalPesanan: 180000,
+        ongkir: 16000,
+        feePlatform: 9000,
+        biayaLayanan: 2200,
+        status: "Lunas",
+      },
+      {
+        id: "order024",
+        noPesanan: "ORD-2024-06-003",
+        tanggal: new Date("2024-06-25T13:15:00"),
+        customerName: "Hadi K",
+        totalPesanan: 240000,
+        ongkir: 20000,
+        feePlatform: 12000,
+        biayaLayanan: 2800,
+        status: "Lunas",
+      },
+      {
+        id: "order025",
+        noPesanan: "ORD-2024-07-025",
+        tanggal: new Date("2024-07-04T09:45:00"),
+        customerName: "Indah J",
+        totalPesanan: 110000,
+        ongkir: 11000,
+        feePlatform: 5500,
+        biayaLayanan: 1500,
+        status: "Menunggu Pembayaran",
+      },
+      {
+        id: "order026",
+        noPesanan: "ORD-2024-07-026",
+        tanggal: new Date("2024-07-05T15:00:00"),
+        customerName: "Joko W",
+        totalPesanan: 95000,
+        ongkir: 9500,
+        feePlatform: 4750,
+        biayaLayanan: 1300,
+        status: "Lunas",
+      },
+      {
+        id: "order027",
+        noPesanan: "ORD-2024-07-027",
+        tanggal: new Date("2024-07-06T10:00:00"),
+        customerName: "Kartika D",
+        totalPesanan: 200000,
+        ongkir: 19000,
+        feePlatform: 10000,
+        biayaLayanan: 2400,
+        status: "Lunas",
+      },
+      {
+        id: "order028",
+        noPesanan: "ORD-2024-06-004",
+        tanggal: new Date("2024-06-18T12:00:00"),
+        customerName: "Lukman S",
+        totalPesanan: 140000,
+        ongkir: 13000,
+        feePlatform: 7000,
+        biayaLayanan: 1700,
+        status: "Lunas",
+      },
+      {
+        id: "order029",
+        noPesanan: "ORD-2024-05-002",
+        tanggal: new Date("2024-05-20T10:00:00"),
+        customerName: "Maria G",
+        totalPesanan: 270000,
+        ongkir: 22000,
+        feePlatform: 13500,
+        biayaLayanan: 2800,
+        status: "Lunas",
+      },
+      {
+        id: "order030",
+        noPesanan: "ORD-2024-07-030",
+        tanggal: new Date("2024-07-07T11:00:00"),
+        customerName: "Nanda R",
+        totalPesanan: 100000,
+        ongkir: 10000,
+        feePlatform: 5000,
+        biayaLayanan: 1400,
+        status: "Pending",
+      },
+      // Tambahkan lebih banyak data dummy jika diperlukan untuk menguji paginasi
+    ].sort((a, b) => b.tanggal.getTime() - a.tanggal.getTime()); // Urutkan dari yang terbaru
 
-      // Fungsi untuk memformat Timestamp Firebase menjadi string tanggal yang mudah dibaca
-      const formatDate = (timestamp) => {
-        if (timestamp && typeof timestamp.toDate === "function") {
-          const date = timestamp.toDate();
-          const options = {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          };
-          return date.toLocaleDateString("id-ID", options);
-        } else if (typeof timestamp === "string") {
-          // Handle cases where date might already be a string
-          const date = new Date(timestamp);
-          if (!isNaN(date)) {
-            // Check if date parsing was successful
-            const options = {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            };
-            return date.toLocaleDateString("id-ID", options);
-          }
-        }
-        return "-"; // Default if date is not valid
-      };
+    // Fungsi untuk memformat angka menjadi format Rupiah
+    const formatRupiah = (amount) => {
+      if (typeof amount !== "number") {
+        return "Rp. 0"; // Handle non-numeric values gracefully
+      }
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    };
 
-      // Fungsi untuk merender data ke tabel
-      function renderTable(ordersToDisplay) {
-        dataTableBody.innerHTML = ""; // Hapus baris tabel yang ada
+    // Fungsi untuk memformat Date object menjadi string tanggal yang mudah dibaca
+    const formatDate = (dateObj) => {
+      if (dateObj instanceof Date && !isNaN(dateObj)) {
+        const options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+        return dateObj.toLocaleDateString("id-ID", options);
+      }
+      return "-"; // Default if date is not valid
+    };
 
-        ordersToDisplay.forEach((order, index) => {
-          const row = dataTableBody.insertRow();
-          // Hitung nomor urut yang benar untuk halaman saat ini
-          const displayIndex = (currentPage - 1) * itemsPerPage + index + 1;
+    // Fungsi untuk merender data ke tabel
+    function renderTable(ordersToDisplay) {
+      dataTableBody.innerHTML = ""; // Hapus baris tabel yang ada
 
-          row.insertCell().textContent = displayIndex
-            .toString()
-            .padStart(3, "0"); // No.
-          row.insertCell().textContent = order.noPesanan || "-";
-          row.insertCell().textContent = formatDate(order.tanggal); // Format tanggal
-          row.insertCell().textContent = order.customerName || "-";
-          row.insertCell().textContent = formatRupiah(order.totalPesanan || 0);
-          row.insertCell().textContent = formatRupiah(order.ongkir || 0);
-          row.insertCell().textContent = formatRupiah(order.feePlatform || 0);
-          row.insertCell().textContent = formatRupiah(order.biayaLayanan || 0);
-
-          const statusCell = row.insertCell();
-          const statusSpan = document.createElement("span");
-          statusSpan.classList.add(
-            "px-2",
-            "py-1",
-            "inline-flex",
-            "text-xs",
-            "leading-5",
-            "font-semibold",
-            "rounded-full"
-          );
-
-          // Terapkan warna berdasarkan status
-          if (order.status === "Lunas") {
-            statusSpan.classList.add("bg-green-100", "text-green-800");
-          } else if (
-            order.status === "Pending" ||
-            order.status === "Menunggu Pembayaran"
-          ) {
-            statusSpan.classList.add("bg-yellow-100", "text-yellow-800");
-          } else if (order.status === "Dibatalkan") {
-            statusSpan.classList.add("bg-red-100", "text-red-800");
-          } else {
-            statusSpan.classList.add("bg-gray-100", "text-gray-800"); // Default
-          }
-          statusSpan.textContent = order.status || "-";
-          statusCell.appendChild(statusSpan);
-
-          const actionCell = row.insertCell();
-          actionCell.classList.add("py-3", "px-4", "text-sm", "text-center");
-          const detailLink = document.createElement("a");
-          detailLink.href = `admin-pendapatan-detail.html?orderId=${order.id}`; // Sertakan ID dokumen sebagai parameter URL
-          detailLink.classList.add("text-blue-600", "hover:text-blue-900");
-          detailLink.title = "Lihat Detail";
-          detailLink.innerHTML = '<i class="fas fa-search"></i>';
-          actionCell.appendChild(detailLink);
-        });
+      if (ordersToDisplay.length === 0) {
+        const noDataRow = dataTableBody.insertRow();
+        const cell = noDataRow.insertCell();
+        cell.colSpan = 10; // Sesuaikan dengan jumlah kolom
+        cell.classList.add("text-center", "py-4", "text-gray-500");
+        cell.textContent = "Tidak ada data pendapatan untuk ditampilkan.";
+        return;
       }
 
-      // Fungsi untuk memperbarui kontrol paginasi
-      function updatePaginationControls() {
-        const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-        paginationButtons.innerHTML = ""; // Hapus tombol paginasi yang ada
+      ordersToDisplay.forEach((order, index) => {
+        const row = dataTableBody.insertRow();
+        // Hitung nomor urut yang benar untuk halaman saat ini
+        const displayIndex = (currentPage - 1) * itemsPerPage + index + 1;
 
-        // Informasi "Menampilkan X sampai Y dari Z data"
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = Math.min(
-          currentPage * itemsPerPage,
-          filteredOrders.length
+        row.insertCell().textContent = displayIndex
+          .toString()
+          .padStart(3, "0"); // No.
+        row.insertCell().textContent = order.noPesanan || "-";
+        row.insertCell().textContent = formatDate(order.tanggal); // Format tanggal
+        row.insertCell().textContent = order.customerName || "-";
+        row.insertCell().textContent = formatRupiah(order.totalPesanan || 0);
+        row.insertCell().textContent = formatRupiah(order.ongkir || 0);
+        row.insertCell().textContent = formatRupiah(order.feePlatform || 0);
+        row.insertCell().textContent = formatRupiah(order.biayaLayanan || 0);
+
+        const statusCell = row.insertCell();
+        const statusSpan = document.createElement("span");
+        statusSpan.classList.add(
+          "px-2",
+          "py-1",
+          "inline-flex",
+          "text-xs",
+          "leading-5",
+          "font-semibold",
+          "rounded-full"
         );
-        paginationInfo.textContent = `Menampilkan ${
-          filteredOrders.length > 0 ? startIndex + 1 : 0
+
+        // Terapkan warna berdasarkan status
+        if (order.status === "Lunas") {
+          statusSpan.classList.add("bg-green-100", "text-green-800");
+        } else if (
+          order.status === "Pending" ||
+          order.status === "Menunggu Pembayaran"
+        ) {
+          statusSpan.classList.add("bg-yellow-100", "text-yellow-800");
+        } else if (order.status === "Dibatalkan") {
+          statusSpan.classList.add("bg-red-100", "text-red-800");
+        } else {
+          statusSpan.classList.add("bg-gray-100", "text-gray-800"); // Default
+        }
+        statusSpan.textContent = order.status || "-";
+        statusCell.appendChild(statusSpan);
+
+        const actionCell = row.insertCell();
+        actionCell.classList.add("py-3", "px-4", "text-sm", "text-center");
+        const detailLink = document.createElement("a");
+        detailLink.href = `admin-pendapatan-detail.html?orderId=${order.id}`; // Sertakan ID dokumen sebagai parameter URL
+        detailLink.classList.add("text-blue-600", "hover:text-blue-900");
+        detailLink.title = "Lihat Detail";
+        detailLink.innerHTML = '<i class="fas fa-search"></i>';
+        actionCell.appendChild(detailLink);
+      });
+    }
+
+    // Fungsi untuk memperbarui kontrol paginasi
+    function updatePaginationControls() {
+      const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+      paginationButtons.innerHTML = ""; // Hapus tombol paginasi yang ada
+
+      // Informasi "Menampilkan X sampai Y dari Z data"
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(
+        currentPage * itemsPerPage,
+        filteredOrders.length
+      );
+      paginationInfo.textContent = `Menampilkan ${filteredOrders.length > 0 ? startIndex + 1 : 0
         } sampai ${endIndex} dari ${filteredOrders.length} data`;
 
-        // Tombol "Previous"
-        const prevButton = document.createElement("button");
-        prevButton.classList.add(
+      // Tombol "Previous"
+      const prevButton = document.createElement("button");
+      prevButton.classList.add(
+        "px-4",
+        "py-2",
+        "text-sm",
+        "font-medium",
+        "text-gray-700",
+        "bg-white",
+        "border",
+        "border-gray-300",
+        "rounded-l-md",
+        "hover:bg-gray-50"
+      );
+      prevButton.textContent = "Previous";
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          applyFiltersAndPaginate();
+        }
+      });
+      paginationButtons.appendChild(prevButton);
+
+      // Tombol nomor halaman
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.classList.add(
           "px-4",
           "py-2",
           "text-sm",
           "font-medium",
-          "text-gray-700",
-          "bg-white",
           "border",
-          "border-gray-300",
-          "rounded-l-md",
-          "hover:bg-gray-50"
+          "border-gray-300"
         );
-        prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            applyFiltersAndPaginate();
-          }
-        });
-        paginationButtons.appendChild(prevButton);
-
-        // Tombol nomor halaman
-        for (let i = 1; i <= totalPages; i++) {
-          const pageButton = document.createElement("button");
+        if (i === currentPage) {
+          pageButton.classList.add("text-pink-600", "bg-pink-100");
+        } else {
           pageButton.classList.add(
-            "px-4",
-            "py-2",
-            "text-sm",
-            "font-medium",
-            "border",
-            "border-gray-300"
-          );
-          if (i === currentPage) {
-            pageButton.classList.add("text-pink-600", "bg-pink-100");
-          } else {
-            pageButton.classList.add(
-              "text-gray-700",
-              "bg-white",
-              "hover:bg-gray-50"
-            );
-          }
-          pageButton.textContent = i;
-          pageButton.addEventListener("click", () => {
-            currentPage = i;
-            applyFiltersAndPaginate();
-          });
-          paginationButtons.appendChild(pageButton);
-        }
-
-        // Tombol "Next"
-        const nextButton = document.createElement("button");
-        nextButton.classList.add(
-          "px-4",
-          "py-2",
-          "text-sm",
-          "font-medium",
-          "text-gray-700",
-          "bg-white",
-          "border",
-          "border-gray-300",
-          "rounded-r-md",
-          "hover:bg-gray-50"
-        );
-        nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages || totalPages === 0;
-        nextButton.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            applyFiltersAndPaginate();
-          }
-        });
-        paginationButtons.appendChild(nextButton);
-      }
-
-      // Fungsi utama untuk mengambil data dari Firebase
-      async function fetchOrders() {
-        try {
-          const ordersCol = collection(db, "pemesanan");
-          // Mengambil semua dokumen dan mengurutkannya berdasarkan tanggal
-          const q = query(ordersCol, orderBy("tanggal", "desc"));
-          const querySnapshot = await getDocs(q);
-
-          allOrders = querySnapshot.docs.map((doc) => {
-            // Mendapatkan data dokumen dan ID-nya
-            const data = doc.data();
-            return {
-              id: doc.id,
-              noPesanan: data.noPesanan || null,
-              tanggal: data.tanggal || null, // Harus berupa Timestamp Firebase
-              customerName: data.customerName || null,
-              totalPesanan: data.totalPesanan || 0,
-              ongkir: data.ongkir || 0,
-              feePlatform: data.feePlatform || 0,
-              biayaLayanan: data.biayaLayanan || 0,
-              status: data.status || null,
-            };
-          });
-
-          applyFiltersAndPaginate(); // Terapkan filter dan paginasi awal
-        } catch (error) {
-          console.error("Error fetching orders: ", error);
-          alert(
-            "Gagal memuat data pesanan. Silakan periksa konsol untuk detailnya."
+            "text-gray-700",
+            "bg-white",
+            "hover:bg-gray-50"
           );
         }
-      }
-
-      // Fungsi untuk menerapkan filter dan paginasi pada data
-      function applyFiltersAndPaginate() {
-        // Mulai dengan semua pesanan
-        filteredOrders = [...allOrders];
-
-        const selectedMonthYear = monthYearFilter.value;
-        if (selectedMonthYear) {
-          const [year, month] = selectedMonthYear.split("-"); // Misalnya "2024-07" -> ["2024", "07"]
-          filteredOrders = filteredOrders.filter((order) => {
-            if (!order.tanggal || typeof order.tanggal.toDate !== "function") {
-              // Jika tanggal bukan Timestamp, coba parse sebagai string
-              const date = new Date(order.tanggal);
-              if (!isNaN(date)) {
-                return (
-                  date.getFullYear() === parseInt(year) &&
-                  date.getMonth() + 1 === parseInt(month)
-                );
-              }
-              return false; // Lewati jika tanggal tidak valid
-            }
-            const orderDate = order.tanggal.toDate(); // Konversi Timestamp ke objek Date
-            return (
-              orderDate.getFullYear() === parseInt(year) &&
-              orderDate.getMonth() + 1 === parseInt(month)
-            ); // getMonth() adalah 0-indexed
-          });
-        }
-
-        // Hitung total pendapatan dan jumlah pesanan dari data yang sudah difilter
-        let currentTotalFeePlatform = 0;
-        filteredOrders.forEach((order) => {
-          currentTotalFeePlatform += order.feePlatform || 0;
+        pageButton.textContent = i;
+        pageButton.addEventListener("click", () => {
+          currentPage = i;
+          applyFiltersAndPaginate();
         });
-        totalPendapatanElement.textContent = formatRupiah(
-          currentTotalFeePlatform
-        );
-        jumlahPesananElement.textContent = filteredOrders.length;
-
-        // Terapkan paginasi
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
-
-        renderTable(paginatedOrders); // Render hanya data halaman saat ini
-        updatePaginationControls(); // Perbarui kontrol paginasi
+        paginationButtons.appendChild(pageButton);
       }
 
-      // Event listener untuk filter bulan/tahun
-      monthYearFilter.addEventListener("change", () => {
-        currentPage = 1; // Reset ke halaman pertama saat filter berubah
-        applyFiltersAndPaginate();
+      // Tombol "Next"
+      const nextButton = document.createElement("button");
+      nextButton.classList.add(
+        "px-4",
+        "py-2",
+        "text-sm",
+        "font-medium",
+        "text-gray-700",
+        "bg-white",
+        "border",
+        "border-gray-300",
+        "rounded-r-md",
+        "hover:bg-gray-50"
+      );
+      nextButton.textContent = "Next";
+      nextButton.disabled = currentPage === totalPages || totalPages === 0;
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          applyFiltersAndPaginate();
+        }
       });
+      paginationButtons.appendChild(nextButton);
+    }
 
-      // Event listener untuk tombol Ekspor
-      exportButton.addEventListener("click", () => {
-        // Data yang diekspor adalah data yang sudah difilter (bukan hanya yang dipaginasi)
-        if (filteredOrders.length === 0) {
-          alert("Tidak ada data untuk diekspor.");
-          return;
-        }
+    // Fungsi utama untuk mengambil data (sekarang dari dummy data)
+    async function fetchOrders() {
+      // Langsung gunakan dummy data
+      allOrders = dummyOrders;
+      applyFiltersAndPaginate(); // Terapkan filter dan paginasi awal
+    }
 
-        // Header CSV
-        let csvContent =
-          "No,No. Pesanan,Tanggal,Customer,Total Pesanan,Ongkir,Fee Platform,Biaya Layanan,Status\n";
+    // Fungsi untuk menerapkan filter dan paginasi pada data
+    function applyFiltersAndPaginate() {
+      // Mulai dengan semua pesanan
+      filteredOrders = [...allOrders];
 
-        // Baris data CSV
-        filteredOrders.forEach((order, index) => {
-          const formattedDate = formatDate(order.tanggal);
-          csvContent += `${index + 1},"${
-            order.noPesanan || ""
-          }","${formattedDate}","${order.customerName || ""}",${
-            order.totalPesanan || 0
-          },${order.ongkir || 0},${order.feePlatform || 0},${
-            order.biayaLayanan || 0
+      const selectedMonthYear = monthYearFilter.value;
+      if (selectedMonthYear) {
+        const [year, month] = selectedMonthYear.split("-"); // Misalnya "2024-07" -> ["2024", "07"]
+        filteredOrders = filteredOrders.filter((order) => {
+          const orderDate = new Date(order.tanggal); // Pastikan ini adalah objek Date
+          return (
+            orderDate.getFullYear() === parseInt(year) &&
+            orderDate.getMonth() + 1 === parseInt(month)
+          ); // getMonth() adalah 0-indexed
+        });
+      }
+
+      // Hitung total pendapatan dan jumlah pesanan dari data yang sudah difilter
+      let currentTotalFeePlatform = 0;
+      filteredOrders.forEach((order) => {
+        currentTotalFeePlatform += order.feePlatform || 0;
+      });
+      totalPendapatanElement.textContent = formatRupiah(
+        currentTotalFeePlatform
+      );
+      jumlahPesananElement.textContent = filteredOrders.length;
+
+      // Terapkan paginasi
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+
+      renderTable(paginatedOrders); // Render hanya data halaman saat ini
+      updatePaginationControls(); // Perbarui kontrol paginasi
+    }
+
+    // Event listener untuk filter bulan/tahun
+    monthYearFilter.addEventListener("change", () => {
+      currentPage = 1; // Reset ke halaman pertama saat filter berubah
+      applyFiltersAndPaginate();
+    });
+
+    // Event listener untuk tombol Ekspor
+    exportButton.addEventListener("click", () => {
+      // Data yang diekspor adalah data yang sudah difilter (bukan hanya yang dipaginasi)
+      if (filteredOrders.length === 0) {
+        alert("Tidak ada data untuk diekspor.");
+        return;
+      }
+
+      // Header CSV
+      let csvContent =
+        "No,No. Pesanan,Tanggal,Customer,Total Pesanan,Ongkir,Fee Platform,Biaya Layanan,Status\n";
+
+      // Baris data CSV
+      filteredOrders.forEach((order, index) => {
+        const formattedDate = formatDate(order.tanggal);
+        csvContent += `${index + 1},"${order.noPesanan || ""
+          }","${formattedDate}","${order.customerName || ""}",${order.totalPesanan || 0
+          },${order.ongkir || 0},${order.feePlatform || 0},${order.biayaLayanan || 0
           },"${order.status || ""}"\n`;
-        });
+      });
 
-        // Buat blob dan link untuk download
-        const blob = new Blob([csvContent], {
-          type: "text/csv;charset=utf-8;",
-        });
-        const link = document.createElement("a");
-        if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", "pendapatan_titipgo.csv");
-          link.style.visibility = "hidden"; // Sembunyikan link
-          document.body.appendChild(link);
-          link.click(); // Klik link secara otomatis
-          document.body.removeChild(link); // Hapus link setelah di-klik
+      // Buat blob dan link untuk download
+      const blob = new Blob([csvContent], {
+        type: "text/csv;charset=utf-8;",
+      });
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "pendapatan_titipgo.csv");
+        link.style.visibility = "hidden"; // Sembunyikan link
+        document.body.appendChild(link);
+        link.click(); // Klik link secara otomatis
+        document.body.removeChild(link); // Hapus link setelah di-klik
+      }
+      alert("Data pendapatan berhasil diekspor sebagai CSV.");
+    });
+
+    // Logika untuk menandai item sidebar yang aktif
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentPath = window.location.pathname.split("/").pop(); // Mendapatkan nama file HTML saja
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        if (linkHref === currentPath) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600"
+          );
         }
-        alert("Data pendapatan berhasil diekspor sebagai CSV.");
       });
 
-      // Logika untuk menandai item sidebar yang aktif
-      document.addEventListener("DOMContentLoaded", () => {
-        const currentPath = window.location.pathname.split("/").pop(); // Mendapatkan nama file HTML saja
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
+      // Panggil fungsi untuk mengambil data pesanan setelah DOM dimuat
+      fetchOrders();
+    });
+  </script>
+</body>
 
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          if (linkHref === currentPath) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600"
-            );
-          }
-        });
-
-        // Panggil fungsi untuk mengambil data pesanan setelah DOM dimuat
-        fetchOrders();
-      });
-    </script>
-  </body>
 </html>

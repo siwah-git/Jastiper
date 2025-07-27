@@ -1,190 +1,161 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="page-title">Notifikasi - Memuat... - TitipGo Admin</title>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Notifikasi - Memuat... - TitipGo Admin</title>
 
-    <!-- Font Awesome untuk ikon -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-      /* Gaya Kustom dari layout sebelumnya */
-      .truncate-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* jumlah baris yang ditampilkan */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-      :root {
-        --sidebar-width: 268px;
-      }
+  <style>
+    /* Gaya Kustom dari layout sebelumnya */
+    .truncate-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      /* jumlah baris yang ditampilkan */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-      .sidebar {
-        width: var(--sidebar-width);
-        /* Menambahkan overflow-y-auto untuk membuat sidebar bisa di-scroll secara vertikal */
-        overflow-y: auto;
-      }
+    :root {
+      --sidebar-width: 268px;
+    }
 
-      .main-content {
-        margin-left: var(--sidebar-width);
-        flex-grow: 1;
-      }
+    .sidebar {
+      width: var(--sidebar-width);
+      /* Menambahkan overflow-y-auto untuk membuat sidebar bisa di-scroll secara vertikal */
+      overflow-y: auto;
+    }
 
-      body {
-        min-height: 100vh;
-      }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+    }
 
-      /* Gaya khusus untuk notifikasi */
-      .notification-item {
-        background-color: #ffffff;
-        border-left: 5px solid transparent;
-        transition: all 0.2s ease-in-out;
-      }
+    body {
+      min-height: 100vh;
+    }
 
-      .notification-item.unread {
-        background-color: #fff7ed; /* orange-50 */
-        border-left-color: #f97316; /* orange-500 */
-        font-weight: 600; /* semi-bold */
-      }
+    /* Gaya khusus untuk notifikasi */
+    .notification-item {
+      background-color: #ffffff;
+      border-left: 5px solid transparent;
+      transition: all 0.2s ease-in-out;
+    }
 
-      .notification-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
+    .notification-item.unread {
+      background-color: #fff7ed;
+      /* orange-50 */
+      border-left-color: #f97316;
+      /* orange-500 */
+      font-weight: 600;
+      /* semi-bold */
+    }
 
-      /* Gaya untuk modal */
-      .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-      }
+    .notification-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-      .modal-overlay.open {
-        opacity: 1;
-        visibility: visible;
-      }
+    /* Gaya untuk modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
 
-      .modal-content {
-        background-color: #fff;
-        padding: 2rem;
-        border-radius: 0.75rem; /* rounded-lg */
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 600px;
-        transform: translateY(-20px);
-        transition: transform 0.3s ease-in-out;
-      }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
 
-      .modal-overlay.open .modal-content {
-        transform: translateY(0);
-      }
-    </style>
-  </head>
-  <body class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside
-      class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-    >
-      <div>
-        <nav class="space-y-2 p-4">
-          <img
-            src="asset/images/logosiwah.png"
-            alt="Logo TitipGo"
-            class="w-48 h-20 object-contain mb-4"
-          />
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      /* rounded-lg */
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease-in-out;
+    }
 
-          <a
-            href="admin-dashboard.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-home mr-3 text-lg"></i> Dashboard
-          </a>
-          <a
-            href="admin-katalog.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
-          </a>
-          <a
-            href="admin-pengguna.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
-          </a>
-          <a
-            href="admin-toko.html"
-            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-          >
-            <i class="fas fa-store mr-3"></i> Manajemen Toko
-          </a>
-          <a
-            href="admin-pesanan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
-          </a>
-          <a
-            href="admin-aduan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
-          </a>
-          <a
-            href="admin-laporan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
-          </a>
-          <a
-            href="admin-pendapatan.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
-          </a>
-          <a
-            href="admin-profil.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
-          </a>
-          <a
-            href="admin-about-us.html"
-            class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out"
-          >
-            <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
-          </a>
-          <!-- Notifikasi link dihapus dari sidebar, sekarang ada di header -->
-        </nav>
-      </div>
-      <footer class="text-sm text-gray-500 text-center p-4 border-t">
-        &copy; 2025 TitipGo. All rights reserved.
-      </footer>
-    </aside>
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+  </style>
+</head>
 
-    <!-- Konten Utama -->
-     <main
-      id="mainContent"
-      class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-      style="
+<body class="flex min-h-screen bg-gray-100">
+  <aside
+    class="sidebar bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+    <div>
+      <nav class="space-y-2 p-4">
+        <img src="asset/images/logosiwah.png" alt="Logo TitipGo" class="w-48 h-20 object-contain mb-4" />
+
+        <a href="admin-dashboard.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-home mr-3 text-lg"></i> Dashboard
+        </a>
+        <a href="admin-katalog.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-box mr-3 text-lg"></i> Manajemen Katalog
+        </a>
+        <a href="admin-pengguna.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-users mr-3 text-lg"></i> Manajemen Pengguna
+        </a>
+        <a href="admin-toko.html"
+          class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+          <i class="fas fa-store mr-3"></i> Manajemen Toko
+        </a>
+        <a href="admin-pesanan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-shopping-cart mr-3 text-lg"></i> Manajemen Pesanan
+        </a>
+        <a href="admin-aduan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-envelope mr-3 text-lg"></i> Aduan
+        </a>
+        <a href="admin-laporan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-chart-line mr-3 text-lg"></i> Laporan
+        </a>
+        <a href="admin-pendapatan.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Pendapatan
+        </a>
+        <a href="admin-profil.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-user-circle mr-3 text-lg"></i> Profil
+        </a>
+        <a href="admin-about-us.html"
+          class="sidebar-item flex items-center py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition duration-200 ease-in-out">
+          <i class="fas fa-info-circle mr-3 text-lg"></i> Tentang Kami
+        </a>
+      </nav>
+    </div>
+    <footer class="text-sm text-gray-500 text-center p-4 border-t">
+      &copy; 2025 TitipGo. All rights reserved.
+    </footer>
+  </aside>
+
+  <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
         background-image: linear-gradient(
             rgba(255, 255, 255, 0.3),
             rgba(255, 255, 255, 0.3)
@@ -193,376 +164,305 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-      "
-    >
-      <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
-        <p class="text-lg font-semibold">Notifikasi</p>
-        <div class="flex gap-3 text-right ml-auto">
-        
-            <!-- Ikon Notifikasi di Header -->
-            <a
-              href="admin-notifikasi.html"
-              class="relative text-white hover:text-orange-100 transition duration-200 ease-in-out p-2 rounded-full hover:bg-orange-700"
-              id="notification-header-link"
-            >
-              <i class="fas fa-bell text-xl"></i>
-              <span
-                id="notification-badge"
-                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center hidden"
-                >0</span
-              >
-            </a>
+      ">
+    <div class="bg-blue-600 p-4 text-white flex items-center mb-6 rounded-lg">
+      <p class="text-lg font-semibold">Notifikasi</p>
+      <div class="flex gap-3 text-right ml-auto">
 
-            <button
-              id="mark-all-read-button"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm"
-            >
-              <i class="fas fa-check-double mr-2"></i> Tandai Semua Dibaca
-            </button>
-            <a
-              href="#"
-              id="logoutButton"
-              class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
-        </div>
+        <a href="admin-notifikasi.html"
+          class="relative text-white hover:text-orange-100 transition duration-200 ease-in-out p-2 rounded-full hover:bg-orange-700"
+          id="notification-header-link">
+          <i class="fas fa-bell text-xl"></i>
+          <span id="notification-badge"
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+        </a>
 
-        <!-- Breadcrumb Dinamis -->
-        <nav class="text-sm text-gray-600 mb-6">
-          <ol class="list-none p-0 inline-flex">
-            <li class="flex items-center">
-              <a
-                href="admin-dashboard.html"
-                class="text-blue-600 hover:text-blue-800"
-                >Dashboard</a
-              >
-              <i class="fas fa-chevron-right mx-2 text-xs"></i>
-            </li>
-            <li class="flex items-center text-gray-500">Notifikasi</li>
-          </ol>
-        </nav>
-
-        <!-- Konten Notifikasi -->
-        <div id="notifications-list" class="flex flex-col space-y-4">
-          <!-- Notifikasi akan dimuat di sini oleh JavaScript -->
-          <div class="bg-white p-6 rounded-lg shadow-md text-center">
-            <p class="text-gray-600 text-lg">Memuat notifikasi...</p>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!-- Modal Detail Notifikasi -->
-    <div id="notification-detail-modal" class="modal-overlay">
-      <div class="modal-content">
-        <div class="flex justify-between items-center mb-4 border-b pb-2">
-          <h3 class="text-xl font-bold text-gray-800">Detail Notifikasi</h3>
-          <button
-            id="close-modal-button"
-            class="text-gray-500 hover:text-gray-700 text-2xl"
-          >
-            &times;
-          </button>
-        </div>
-        <div id="modal-body" class="text-gray-700 space-y-3">
-          <!-- Isi detail notifikasi di sini -->
-          <p><strong>Tipe:</strong> <span id="modal-type"></span></p>
-          <p><strong>Pesan:</strong> <span id="modal-message"></span></p>
-          <p><strong>Waktu:</strong> <span id="modal-timestamp"></span></p>
-          <p><strong>Status:</strong> <span id="modal-read-status"></span></p>
-          <div id="modal-related-info">
-            <p>
-              <strong>Dokumen Terkait:</strong>
-              <span id="modal-related-doc-id"></span>
-            </p>
-            <p>
-              <strong>Koleksi Terkait:</strong>
-              <span id="modal-related-collection"></span>
-            </p>
-            <a
-              id="modal-related-link"
-              href="#"
-              target="_blank"
-              class="text-blue-600 hover:underline mt-2 block"
-              >Lihat Detail Terkait</a
-            >
-          </div>
-        </div>
-        <div class="mt-6 text-right">
-          <button
-            id="mark-as-read-from-modal-button"
-            class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out text-sm"
-          >
-            Tandai Dibaca
-          </button>
-        </div>
+        <button id="mark-all-read-button"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out flex items-center text-sm">
+          <i class="fas fa-check-double mr-2"></i> Tandai Semua Dibaca
+        </button>
+        <a href="#" id="logoutButton"
+          class="text-orange-100 hover:text-white transition duration-200 ease-in-out px-4 py-2 rounded-md border border-orange-400 hover:bg-orange-700 text-sm flex items-center"><i
+            class="fas fa-sign-out-alt mr-2"></i> Logout</a>
       </div>
     </div>
 
-    <!-- Firebase SDKs (Modular SDK v9.6.0) -->
-    <script type="module">
-      // Import fungsi-fungsi Firebase dari CDN (Modular SDK v9.6.0)
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        getDoc,
-        updateDoc,
-        collection,
-        query,
-        where,
-        orderBy,
-        onSnapshot,
-        writeBatch,
-      } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
-      // getStorage tidak diperlukan jika gambar tidak langsung dari storage di notifikasi
-      // import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js";
+    <nav class="text-sm text-gray-600 mb-6">
+      <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center">
+          <a href="admin-dashboard.html" class="text-blue-600 hover:text-blue-800">Dashboard</a>
+          <i class="fas fa-chevron-right mx-2 text-xs"></i>
+        </li>
+        <li class="flex items-center text-gray-500">Notifikasi</li>
+      </ol>
+    </nav>
 
-      // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA!
-      const firebaseConfig = {
-        apiKey: "AIzaSyCaEVRX88dod-9BWHPCq_RTIIHwus-29rQ",
-        authDomain: "titipgo-28f84.firebaseapp.com",
-        projectId: "titipgo-28f84",
-        storageBucket: "titipgo-28f84.firebasestorage.app",
-        messagingSenderId: "816687535591",
-        appId: "1:816687535591:web:eaecf2fcc994636a319942",
-        // measurementId: "G-CS3V405F3B", // Opsional, jika Anda menggunakan Analytics
+    <div id="notifications-list" class="flex flex-col space-y-4">
+      <div class="bg-white p-6 rounded-lg shadow-md text-center">
+        <p class="text-gray-600 text-lg">Memuat notifikasi...</p>
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <div id="notification-detail-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h3 class="text-xl font-bold text-gray-800">Detail Notifikasi</h3>
+        <button id="close-modal-button" class="text-gray-500 hover:text-gray-700 text-2xl">
+          &times;
+        </button>
+      </div>
+      <div id="modal-body" class="text-gray-700 space-y-3">
+        <p><strong>Tipe:</strong> <span id="modal-type"></span></p>
+        <p><strong>Pesan:</strong> <span id="modal-message"></span></p>
+        <p><strong>Waktu:</strong> <span id="modal-timestamp"></span></p>
+        <p><strong>Status:</strong> <span id="modal-read-status"></span></p>
+        <div id="modal-related-info">
+          <p>
+            <strong>Dokumen Terkait:</strong>
+            <span id="modal-related-doc-id"></span>
+          </p>
+          <p>
+            <strong>Koleksi Terkait:</strong>
+            <span id="modal-related-collection"></span>
+          </p>
+          <a id="modal-related-link" href="#" target="_blank" class="text-blue-600 hover:underline mt-2 block">Lihat
+            Detail Terkait</a>
+        </div>
+      </div>
+      <div class="mt-6 text-right">
+        <button id="mark-as-read-from-modal-button"
+          class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition duration-200 ease-in-out text-sm">
+          Tandai Dibaca
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import fungsi-fungsi Firebase dihapus karena tidak lagi digunakan
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    // import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+    // import {
+    //   getFirestore,
+    //   doc,
+    //   getDoc,
+    //   updateDoc,
+    //   collection,
+    //   query,
+    //   where,
+    //   orderBy,
+    //   onSnapshot,
+    //   writeBatch,
+    // } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+    // KONFIGURASI FIREBASE ANDA YANG SEBENARNYA! -> Dihapus
+    // const firebaseConfig = { ... };
+
+    // Inisialisasi Firebase dihapus
+    // const app = initializeApp(firebaseConfig);
+    // const auth = getAuth(app);
+    // const db = getFirestore(app);
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      const currentPath = window.location.pathname.split("/").pop();
+
+      // --- Logika Status Aktif Sidebar ---
+      const sidebarLinks = document.querySelectorAll(".sidebar-item");
+      sidebarLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+        const linkFileName = linkHref.split("/").pop();
+
+        let isLinkActive = false;
+
+        if (
+          linkFileName === "admin-katalog.html" &&
+          currentPath.startsWith("admin-katalog-detail")
+        ) {
+          isLinkActive = true;
+        } else if (linkFileName === currentPath) {
+          isLinkActive = true;
+        } else if (
+          (currentPath === "" || currentPath === "index.html") &&
+          linkFileName === "admin-dashboard.html"
+        ) {
+          isLinkActive = true;
+        }
+
+        if (isLinkActive) {
+          link.classList.remove(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+          link.classList.add("bg-pink-600", "text-white", "font-semibold");
+        } else {
+          link.classList.remove("bg-pink-600", "text-white", "font-semibold");
+          link.classList.add(
+            "text-gray-700",
+            "hover:bg-pink-100",
+            "hover:text-pink-600",
+            "transition",
+            "duration-200",
+            "ease-in-out"
+          );
+        }
+      });
+
+      // --- Elemen HTML ---
+      const pageTitleEl = document.getElementById("page-title");
+      const notificationsListEl =
+        document.getElementById("notifications-list");
+      const notificationBadge = document.getElementById("notification-badge");
+      const markAllReadButton = document.getElementById(
+        "mark-all-read-button"
+      );
+
+      const modalOverlay = document.getElementById(
+        "notification-detail-modal"
+      );
+      const closeModalButton = document.getElementById("close-modal-button");
+      const modalType = document.getElementById("modal-type");
+      const modalMessage = document.getElementById("modal-message");
+      const modalTimestamp = document.getElementById("modal-timestamp");
+      const modalReadStatus = document.getElementById("modal-read-status");
+      const modalRelatedInfo = document.getElementById("modal-related-info");
+      const modalRelatedDocId = document.getElementById(
+        "modal-related-doc-id"
+      );
+      const modalRelatedCollection = document.getElementById(
+        "modal-related-collection"
+      );
+      const modalRelatedLink = document.getElementById("modal-related-link");
+      const markAsReadFromModalButton = document.getElementById(
+        "mark-as-read-from-modal-button"
+      );
+
+      let currentOpenedNotificationId = null; // Untuk melacak notifikasi yang sedang dibuka di modal
+
+      // --- Dummy Data Notifikasi ---
+      let dummyNotifications = [
+        {
+          id: "notif1",
+          type: "new_order",
+          message: "Pesanan baru #ORD-20250728-001 telah diterima.",
+          timestamp: new Date("2025-07-28T10:00:00Z"),
+          read: false,
+          relatedDocId: "ORD-20250728-001",
+          relatedCollection: "pemesanan",
+        },
+        {
+          id: "notif2",
+          type: "new_user",
+          message: "Pengguna baru 'Budi Santoso' telah mendaftar.",
+          timestamp: new Date("2025-07-27T15:30:00Z"),
+          read: false,
+          relatedDocId: "user-abc-123",
+          relatedCollection: "users",
+        },
+        {
+          id: "notif3",
+          type: "product_update",
+          message: "Produk 'Laptop Gaming XYZ' diperbarui oleh admin.",
+          timestamp: new Date("2025-07-27T09:15:00Z"),
+          read: true,
+          relatedDocId: "prod-def-456",
+          relatedCollection: "produk",
+        },
+        {
+          id: "notif4",
+          type: "new_aduan",
+          message: "Aduan baru dari pengguna 'Siti Aminah' terkait pesanan #ORD-20250726-003.",
+          timestamp: new Date("2025-07-26T18:45:00Z"),
+          read: false,
+          relatedDocId: "aduan-ghi-789",
+          relatedCollection: "aduans",
+        },
+        {
+          id: "notif5",
+          type: "system_alert",
+          message: "Sistem: Database backup berhasil diselesaikan.",
+          timestamp: new Date("2025-07-26T02:00:00Z"),
+          read: true,
+          relatedDocId: null,
+          relatedCollection: null,
+        },
+        {
+          id: "notif6",
+          type: "verification_pending",
+          message: "Verifikasi toko 'Toko Sejahtera' menunggu persetujuan.",
+          timestamp: new Date("2025-07-25T11:20:00Z"),
+          read: false,
+          relatedDocId: "store-jkl-012",
+          relatedCollection: "toko", // Example for a "toko" collection
+        },
+      ].sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp descending
+
+      // --- Fungsi Pembantu ---
+      const formatDate = (timestamp) => {
+        if (!timestamp) return "N/A";
+        let date;
+        if (timestamp instanceof Date) {
+          date = timestamp;
+        } else if (
+          typeof timestamp === "string" ||
+          typeof timestamp === "number"
+        ) {
+          date = new Date(timestamp);
+        } else {
+          return "Invalid Date";
+        }
+
+        return new Intl.DateTimeFormat("id-ID", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
       };
 
-      // Inisialisasi Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      // const storage = getStorage(app); // Tidak digunakan di sini, bisa dihapus jika tidak ada gambar notifikasi
+      const renderNotifications = () => {
+        notificationsListEl.innerHTML = ""; // Bersihkan daftar notifikasi
+        let unreadCount = 0;
 
-      document.addEventListener("DOMContentLoaded", async function () {
-        const currentPath = window.location.pathname.split("/").pop();
-
-        // --- Logika Status Aktif Sidebar ---
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
-
-          let isLinkActive = false;
-
-          // Penanganan khusus untuk halaman notifikasi
-          // Kondisi ini tidak lagi diperlukan untuk sidebar karena link notifikasi dipindahkan ke header
-          // if (linkFileName === "admin-notifikasi.html") {
-          //   isLinkActive = true;
-          // }
-          // Penanganan umum untuk halaman lain (dari kode sebelumnya)
-          if (
-            linkFileName === "admin-katalog.html" &&
-            currentPath.startsWith("admin-katalog-detail")
-          ) {
-            isLinkActive = true;
-          } else if (linkFileName === currentPath) {
-            isLinkActive = true;
-          } else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-          }
-        });
-
-        // --- Elemen HTML ---
-        const pageTitleEl = document.getElementById("page-title");
-        const notificationsListEl =
-          document.getElementById("notifications-list");
-        // Menggunakan ID baru untuk badge di header
-        const notificationBadge = document.getElementById("notification-badge");
-        const markAllReadButton = document.getElementById(
-          "mark-all-read-button"
-        );
-
-        const modalOverlay = document.getElementById(
-          "notification-detail-modal"
-        );
-        const closeModalButton = document.getElementById("close-modal-button");
-        const modalType = document.getElementById("modal-type");
-        const modalMessage = document.getElementById("modal-message");
-        const modalTimestamp = document.getElementById("modal-timestamp");
-        const modalReadStatus = document.getElementById("modal-read-status");
-        const modalRelatedInfo = document.getElementById("modal-related-info");
-        const modalRelatedDocId = document.getElementById(
-          "modal-related-doc-id"
-        );
-        const modalRelatedCollection = document.getElementById(
-          "modal-related-collection"
-        );
-        const modalRelatedLink = document.getElementById("modal-related-link");
-        const markAsReadFromModalButton = document.getElementById(
-          "mark-as-read-from-modal-button"
-        );
-
-        let currentOpenedNotificationId = null; // Untuk melacak notifikasi yang sedang dibuka di modal
-
-        // --- Fungsi Pembantu ---
-        const formatDate = (timestamp) => {
-          if (!timestamp) return "N/A";
-          let date;
-          if (timestamp.toDate) {
-            date = timestamp.toDate();
-          } else if (
-            typeof timestamp === "string" ||
-            typeof timestamp === "number"
-          ) {
-            date = new Date(timestamp);
-          } else {
-            return "Invalid Date";
-          }
-
-          return new Intl.DateTimeFormat("id-ID", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          }).format(date);
-        };
-
-        const openModal = (notification) => {
-          currentOpenedNotificationId = notification.id;
-          modalType.textContent = notification.type || "Umum";
-          modalMessage.textContent = notification.message || "Tidak ada pesan.";
-          modalTimestamp.textContent = formatDate(notification.timestamp);
-          modalReadStatus.textContent = notification.read
-            ? "Sudah Dibaca"
-            : "Belum Dibaca";
-
-          if (notification.relatedDocId && notification.relatedCollection) {
-            modalRelatedInfo.classList.remove("hidden");
-            modalRelatedDocId.textContent = notification.relatedDocId;
-            modalRelatedCollection.textContent = notification.relatedCollection;
-
-            let linkHref = "#";
-            // Contoh link berdasarkan koleksi terkait
-            if (notification.relatedCollection === "pemesanan") {
-              linkHref = `admin-pesanan-detail.html?id=${notification.relatedDocId}`;
-            } else if (notification.relatedCollection === "users") {
-              linkHref = `admin-pengguna-detail.html?id=${notification.relatedDocId}`;
-            } else if (notification.relatedCollection === "produk") {
-              linkHref = `admin-katalog-detail.html?id=${notification.relatedDocId}`;
-            } else if (notification.relatedCollection === "aduans") {
-              linkHref = `admin-aduan-detail.html?id=${notification.relatedDocId}`;
-            }
-            modalRelatedLink.href = linkHref;
-          } else {
-            modalRelatedInfo.classList.add("hidden");
-          }
-
-          markAsReadFromModalButton.classList.toggle(
-            "hidden",
-            notification.read
-          );
-
-          modalOverlay.classList.add("open");
-        };
-
-        const closeModal = () => {
-          modalOverlay.classList.remove("open");
-          currentOpenedNotificationId = null;
-        };
-
-        closeModalButton.addEventListener("click", closeModal);
-        modalOverlay.addEventListener("click", (e) => {
-          if (e.target === modalOverlay) {
-            closeModal();
-          }
-        });
-
-        markAsReadFromModalButton.addEventListener("click", async () => {
-          if (currentOpenedNotificationId) {
-            try {
-              const notificationDocRef = doc(
-                db,
-                "notifications",
-                currentOpenedNotificationId
-              );
-              await updateDoc(notificationDocRef, { read: true });
-              alert("Notifikasi ditandai sebagai sudah dibaca!");
-              closeModal();
-              // onSnapshot akan otomatis memperbarui tampilan
-            } catch (error) {
-              console.error("Error marking notification as read:", error);
-              alert("Gagal menandai notifikasi sebagai sudah dibaca.");
-            }
-          }
-        });
-
-        // --- Listener Real-time untuk Notifikasi ---
-        const notificationsColRef = collection(db, "notifications");
-        const q = query(notificationsColRef, orderBy("timestamp", "desc")); // Urutkan dari terbaru
-
-        onSnapshot(
-          q,
-          (snapshot) => {
-            notificationsListEl.innerHTML = ""; // Bersihkan daftar notifikasi
-            let unreadCount = 0;
-
-            if (snapshot.empty) {
-              notificationsListEl.innerHTML = `
+        if (dummyNotifications.length === 0) {
+          notificationsListEl.innerHTML = `
               <div class="bg-white p-6 rounded-lg shadow-md text-center text-gray-500">
                 <i class="fas fa-bell-slash text-4xl mb-3"></i>
                 <p class="text-lg font-semibold">Tidak ada notifikasi.</p>
                 <p class="text-sm">Semua aktivitas terbaru akan muncul di sini.</p>
               </div>
             `;
-              notificationBadge.classList.add("hidden");
-              notificationBadge.textContent = "0";
-              return;
-            }
+          notificationBadge.classList.add("hidden");
+          notificationBadge.textContent = "0";
+          return;
+        }
 
-            snapshot.forEach((doc) => {
-              const notification = { id: doc.id, ...doc.data() };
-              if (!notification.read) {
-                unreadCount++;
-              }
+        dummyNotifications.forEach((notification) => {
+          if (!notification.read) {
+            unreadCount++;
+          }
 
-              const notificationHtml = `
+          const notificationHtml = `
               <div
-                class="notification-item p-4 rounded-lg shadow-sm flex items-center justify-between ${
-                  notification.read ? "" : "unread"
-                }"
+                class="notification-item p-4 rounded-lg shadow-sm flex items-center justify-between ${notification.read ? "" : "unread"
+            }"
                 data-id="${notification.id}"
               >
                 <div class="flex items-center">
                   <i class="fas fa-${getNotificationIcon(
-                    notification.type
-                  )} text-xl mr-4 ${
-                notification.read ? "text-gray-400" : "text-orange-500"
-              }"></i>
+              notification.type
+            )} text-xl mr-4 ${notification.read ? "text-gray-400" : "text-orange-500"
+            }"></i>
                   <div>
                     <p class="text-gray-800">${notification.message}</p>
-                    <p class="text-xs ${
-                      notification.read ? "text-gray-500" : "text-orange-700"
-                    } mt-1">${formatDate(notification.timestamp)}</p>
+                    <p class="text-xs ${notification.read ? "text-gray-500" : "text-orange-700"
+            } mt-1">${formatDate(notification.timestamp)}</p>
                   </div>
                 </div>
                 <button
@@ -573,126 +473,163 @@
                 </button>
               </div>
             `;
-              notificationsListEl.insertAdjacentHTML(
-                "beforeend",
-                notificationHtml
-              );
-            });
-
-            // Perbarui badge notifikasi
-            if (unreadCount > 0) {
-              notificationBadge.textContent = unreadCount;
-              notificationBadge.classList.remove("hidden");
-            } else {
-              notificationBadge.classList.add("hidden");
-              notificationBadge.textContent = "0";
-            }
-
-            // Tambahkan event listener ke tombol detail setelah notifikasi dirender
-            document.querySelectorAll(".detail-button").forEach((button) => {
-              button.addEventListener("click", async (e) => {
-                const notifId = e.target.dataset.id;
-                const docRef = doc(db, "notifications", notifId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                  const notificationData = {
-                    id: docSnap.id,
-                    ...docSnap.data(),
-                  };
-                  openModal(notificationData);
-                  // Tandai sebagai dibaca saat modal dibuka
-                  if (!notificationData.read) {
-                    await updateDoc(docRef, { read: true });
-                  }
-                }
-              });
-            });
-          },
-          (error) => {
-            console.error("Error fetching notifications:", error);
-            notificationsListEl.innerHTML = `
-            <div class="bg-red-100 text-red-700 p-6 rounded-lg shadow-md text-center">
-              <p class="text-lg font-semibold">Gagal memuat notifikasi.</p>
-              <p class="text-sm">Terjadi kesalahan: ${error.message}</p>
-            </div>
-          `;
-            notificationBadge.classList.add("hidden");
-            notificationBadge.textContent = "0";
-          }
-        );
-
-        // --- Fungsi untuk mendapatkan ikon berdasarkan tipe notifikasi ---
-        function getNotificationIcon(type) {
-          switch (type) {
-            case "new_order":
-              return "shopping-cart";
-            case "new_user":
-              return "user-plus";
-            case "new_product":
-              return "box";
-            case "new_aduan":
-              return "envelope";
-            case "system_alert":
-              return "exclamation-triangle";
-            case "verification_pending":
-              return "id-card";
-            case "product_update":
-              return "pen-to-square";
-            default:
-              return "bell";
-          }
-        }
-
-        // --- Fungsionalitas Tandai Semua Dibaca ---
-        markAllReadButton.addEventListener("click", async () => {
-          if (
-            confirm(
-              "Apakah Anda yakin ingin menandai semua notifikasi sebagai sudah dibaca?"
-            )
-          ) {
-            try {
-              const unreadNotificationsQuery = query(
-                notificationsColRef,
-                where("read", "==", false)
-              );
-              const snapshot = await getDocs(unreadNotificationsQuery); // Menggunakan getDocs untuk mendapatkan semua dokumen
-
-              if (snapshot.empty) {
-                alert("Tidak ada notifikasi yang belum dibaca.");
-                return;
-              }
-
-              const batch = writeBatch(db); // Menggunakan writeBatch untuk operasi massal
-              snapshot.forEach((doc) => {
-                batch.update(doc.ref, { read: true });
-              });
-
-              await batch.commit();
-              alert("Semua notifikasi berhasil ditandai sebagai sudah dibaca!");
-              // onSnapshot akan otomatis memperbarui tampilan
-            } catch (error) {
-              console.error("Error marking all as read:", error);
-              alert("Gagal menandai semua notifikasi sebagai sudah dibaca.");
-            }
-          }
+          notificationsListEl.insertAdjacentHTML(
+            "beforeend",
+            notificationHtml
+          );
         });
 
-        // --- Fungsionalitas Logout ---
-        const logoutButton = document.getElementById("logoutButton");
-        if (logoutButton) {
-          logoutButton.addEventListener("click", async (e) => {
-            e.preventDefault();
-            try {
-              await auth.signOut();
-              alert("Anda telah logout!");
-              window.location.href = "login.html"; // Arahkan ke halaman login Anda
-            } catch (error) {
-              console.error("Error during logout:", error);
-              alert("Gagal logout: " + error.message);
+        // Perbarui badge notifikasi
+        if (unreadCount > 0) {
+          notificationBadge.textContent = unreadCount;
+          notificationBadge.classList.remove("hidden");
+        } else {
+          notificationBadge.classList.add("hidden");
+          notificationBadge.textContent = "0";
+        }
+
+        // Tambahkan event listener ke tombol detail setelah notifikasi dirender
+        document.querySelectorAll(".detail-button").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            const notifId = e.target.dataset.id;
+            const notificationData = dummyNotifications.find(
+              (n) => n.id === notifId
+            );
+            if (notificationData) {
+              openModal(notificationData);
+              // Tandai sebagai dibaca saat modal dibuka (untuk dummy data)
+              if (!notificationData.read) {
+                notificationData.read = true;
+                renderNotifications(); // Render ulang untuk memperbarui status
+              }
             }
           });
+        });
+      };
+
+      const openModal = (notification) => {
+        currentOpenedNotificationId = notification.id;
+        modalType.textContent = notification.type || "Umum";
+        modalMessage.textContent = notification.message || "Tidak ada pesan.";
+        modalTimestamp.textContent = formatDate(notification.timestamp);
+        modalReadStatus.textContent = notification.read
+          ? "Sudah Dibaca"
+          : "Belum Dibaca";
+
+        if (notification.relatedDocId && notification.relatedCollection) {
+          modalRelatedInfo.classList.remove("hidden");
+          modalRelatedDocId.textContent = notification.relatedDocId;
+          modalRelatedCollection.textContent = notification.relatedCollection;
+
+          let linkHref = "#";
+          // Contoh link berdasarkan koleksi terkait
+          if (notification.relatedCollection === "pemesanan") {
+            linkHref = `admin-pesanan-detail.html?id=${notification.relatedDocId}`;
+          } else if (notification.relatedCollection === "users") {
+            linkHref = `admin-pengguna-detail.html?id=${notification.relatedDocId}`;
+          } else if (notification.relatedCollection === "produk") {
+            linkHref = `admin-katalog-detail.html?id=${notification.relatedDocId}`;
+          } else if (notification.relatedCollection === "aduans") {
+            linkHref = `admin-aduan-detail.html?id=${notification.relatedDocId}`;
+          } else if (notification.relatedCollection === "toko") {
+            linkHref = `admin-toko-detail.html?id=${notification.relatedDocId}`; // Assuming a detail page for toko
+          }
+          modalRelatedLink.href = linkHref;
+        } else {
+          modalRelatedInfo.classList.add("hidden");
+        }
+
+        markAsReadFromModalButton.classList.toggle(
+          "hidden",
+          notification.read
+        );
+
+        modalOverlay.classList.add("open");
+      };
+
+      const closeModal = () => {
+        modalOverlay.classList.remove("open");
+        currentOpenedNotificationId = null;
+      };
+
+      closeModalButton.addEventListener("click", closeModal);
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) {
+          closeModal();
         }
       });
-    </script>
-  </body>
+
+      markAsReadFromModalButton.addEventListener("click", async () => {
+        if (currentOpenedNotificationId) {
+          const notificationIndex = dummyNotifications.findIndex(
+            (n) => n.id === currentOpenedNotificationId
+          );
+          if (notificationIndex > -1) {
+            dummyNotifications[notificationIndex].read = true;
+            alert("Notifikasi ditandai sebagai sudah dibaca!");
+            closeModal();
+            renderNotifications(); // Render ulang untuk memperbarui tampilan
+          }
+        }
+      });
+
+      // --- Fungsi untuk mendapatkan ikon berdasarkan tipe notifikasi ---
+      function getNotificationIcon(type) {
+        switch (type) {
+          case "new_order":
+            return "shopping-cart";
+          case "new_user":
+            return "user-plus";
+          case "new_product":
+            return "box";
+          case "new_aduan":
+            return "envelope";
+          case "system_alert":
+            return "exclamation-triangle";
+          case "verification_pending":
+            return "id-card";
+          case "product_update":
+            return "pen-to-square";
+          default:
+            return "bell";
+        }
+      }
+
+      // Panggil renderNotifications saat DOMContentLoaded
+      renderNotifications();
+
+      // --- Fungsionalitas Tandai Semua Dibaca ---
+      markAllReadButton.addEventListener("click", async () => {
+        if (
+          confirm(
+            "Apakah Anda yakin ingin menandai semua notifikasi sebagai sudah dibaca?"
+          )
+        ) {
+          const unreadExist = dummyNotifications.some((n) => !n.read);
+          if (!unreadExist) {
+            alert("Tidak ada notifikasi yang belum dibaca.");
+            return;
+          }
+
+          dummyNotifications.forEach((notification) => {
+            notification.read = true;
+          });
+          alert("Semua notifikasi berhasil ditandai sebagai sudah dibaca!");
+          renderNotifications(); // Render ulang untuk memperbarui tampilan
+        }
+      });
+
+      // --- Fungsionalitas Logout (Dummy) ---
+      const logoutButton = document.getElementById("logoutButton");
+      if (logoutButton) {
+        logoutButton.addEventListener("click", async (e) => {
+          e.preventDefault();
+          alert("Anda telah logout (simulasi)!");
+          window.location.href = "login.html"; // Arahkan ke halaman login Anda
+        });
+      }
+    });
+  </script>
+</body>
+
 </html>

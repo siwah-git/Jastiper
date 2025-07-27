@@ -1,170 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Laporan - TitipGo Admin</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Laporan - TitipGo Admin</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <style>
-      /* Custom styles */
-      .card-bg-transparent {
-        background-color: rgba(
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Custom styles */
+    .card-bg-transparent {
+      background-color: rgba(255,
           255,
           255,
-          255,
-          0.8
-        ); /* Putih dengan opasitas 80% */
-      }
+          0.8);
+      /* Putih dengan opasitas 80% */
+    }
 
-      /* Untuk header blue, jika ingin transparan: */
-      .blue-header-transparent {
-        background-color: rgba(
-          37,
+    /* Untuk header blue, jika ingin transparan: */
+    .blue-header-transparent {
+      background-color: rgba(37,
           99,
           235,
-          0.8
-        ); /* blue-600 dengan opasitas 80% */
-      }
+          0.8);
+      /* blue-600 dengan opasitas 80% */
+    }
 
-      /* Pastikan konten di dalam mainContent berada di atas overlay */
-      /* Ini penting jika Anda menggunakan overlay di mainContent */
-      #mainContent > * {
-        position: relative;
-        z-index: 1;
-      }
-      :root {
-        --sidebar-width: 268px; /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
-      }
+    /* Pastikan konten di dalam mainContent berada di atas overlay */
+    /* Ini penting jika Anda menggunakan overlay di mainContent */
+    #mainContent>* {
+      position: relative;
+      z-index: 1;
+    }
 
-      .sidebar {
-        width: var(--sidebar-width);
-      }
+    :root {
+      --sidebar-width: 268px;
+      /* Pastikan nilai ini sesuai dengan lebar aktual sidebar Anda */
+    }
 
-      .main-content {
-        margin-left: var(--sidebar-width);
-        flex-grow: 1;
-      }
+    .sidebar {
+      width: var(--sidebar-width);
+    }
 
-      body {
-        min-height: 100vh;
-        background-image: url("asset/images/background_admin.png"); /* Add your background image here */
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-      }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+    }
 
-      /* Optional: Custom scrollbar for better aesthetics */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100 font-sans antialiased">
-    <div class="flex min-h-screen">
-      <aside
-        class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50"
-      >
-        <div>
-          <nav class="space-y-2 p-4">
-            <img
-              src="asset/images/logosiwah.png"
-              alt="Logo"
-              class="w-48 h-20 object-contain mb-4"
-            />
+    body {
+      min-height: 100vh;
+      background-image: url("asset/images/background_admin.png");
+      /* Add your background image here */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
 
-            <a
-              href="admin-dashboard.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-home mr-3"></i> Dashboard
-            </a>
-            <a
-              href="admin-katalog.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-box mr-3"></i> Manajemen Katalog
-            </a>
-            <a
-              href="admin-pengguna.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-users mr-3"></i> Manajemen Pengguna
-            </a>
-            <a
-              href="admin-toko.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-store mr-3"></i> Manajemen Toko
-            </a>
-            <a
-              href="admin-pesanan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
-            </a>
-            <a
-              href="admin-aduan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-envelope mr-3"></i> Aduan
-            </a>
-            <a
-              href="admin-laporan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold"
-            >
-              <i class="fas fa-chart-line mr-3"></i> Laporan
-            </a>
-            <a
-              href="admin-pendapatan.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
-            </a>
-            <a
-              href="admin-profil.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-user-circle mr-3"></i> Profil
-            </a>
-            <a
-              href="admin-tentang.html"
-              class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition"
-            >
-              <i class="fas fa-info-circle mr-3"></i> Tentang Kami
-            </a>
-          </nav>
-        </div>
-        <footer class="text-sm text-gray-500 text-center p-4 border-t">
-          &copy; 2025 TitipGo. All rights reserved.
-        </footer>
-      </aside>
+    /* Optional: Custom scrollbar for better aesthetics */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
 
-      <main
-        id="mainContent"
-        class="ml-64 w-full p-6 overflow-y-auto min-h-screen"
-        style="
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans antialiased">
+  <div class="flex min-h-screen">
+    <aside class="w-67 bg-white text-gray-800 flex flex-col justify-between shadow-lg fixed top-0 left-0 h-screen z-50">
+      <div>
+        <nav class="space-y-2 p-4">
+          <img src="asset/images/logosiwah.png" alt="Logo" class="w-48 h-20 object-contain mb-4" />
+
+          <a href="admin-dashboard.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-home mr-3"></i> Dashboard
+          </a>
+          <a href="admin-katalog.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-box mr-3"></i> Manajemen Katalog
+          </a>
+          <a href="admin-pengguna.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-users mr-3"></i> Manajemen Pengguna
+          </a>
+          <a href="admin-toko.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-store mr-3"></i> Manajemen Toko
+          </a>
+          <a href="admin-pesanan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-shopping-cart mr-3"></i> Manajemen Pesanan
+          </a>
+          <a href="admin-aduan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-envelope mr-3"></i> Aduan
+          </a>
+          <a href="admin-laporan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-white bg-pink-600 font-semibold">
+            <i class="fas fa-chart-line mr-3"></i> Laporan
+          </a>
+          <a href="admin-pendapatan.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-money-bill-wave mr-3"></i> Pendapatan
+          </a>
+          <a href="admin-profil.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-user-circle mr-3"></i> Profil
+          </a>
+          <a href="admin-tentang.html"
+            class="sidebar-item block py-2 px-4 rounded-md text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            <i class="fas fa-info-circle mr-3"></i> Tentang Kami
+          </a>
+        </nav>
+      </div>
+      <footer class="text-sm text-gray-500 text-center p-4 border-t">
+        &copy; 2025 TitipGo. All rights reserved.
+      </footer>
+    </aside>
+
+    <main id="mainContent" class="ml-64 w-full p-6 overflow-y-auto min-h-screen" style="
           background-image: linear-gradient(
               rgba(255, 255, 255, 0.3),
               rgba(255, 255, 255, 0.3)
@@ -174,564 +146,528 @@
           background-position: center;
           background-repeat: no-repeat;
           background-attachment: fixed;
-        "
-      >
-        <div
-          class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md"
-        >
-          <p class="text-lg font-semibold">Laporan</p>
-          <div class="flex gap-3 text-right ml-auto">
-            <a
-              href="#"
-              class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"
-              ><i class="fas fa-sign-out-alt mr-2"></i> Logout</a
-            >
-          </div>
+        ">
+      <div class="blue-header-transparent p-4 text-white flex items-center mb-6 rounded-lg shadow-md">
+        <p class="text-lg font-semibold">Laporan</p>
+        <div class="flex gap-3 text-right ml-auto">
+          <a href="#"
+            class="text-pink-100 hover:text-white button-pink-100 transition duration-200 ease-in-out px-4 py-2 rounded-md border border-pink-400 hover:bg-pink-700 text-sm flex items-center"><i
+              class="fas fa-sign-out-alt mr-2"></i> Logout</a>
         </div>
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div
-            class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
-          >
-            <a href="admin-laporan-detail.html"></a>
-            <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
-            <p class="text-gray-600 text-sm">Total Pendapatan</p>
-            <p class="text-xl font-bold text-gray-800" id="totalPendapatan">
-              Rp. 0,-
-            </p>
-          </div>
-          <div
-            class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
-          >
-            <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
-            <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
-            <p class="text-xl font-bold text-gray-800" id="jumlahPesanan">0</p>
-          </div>
-          <div
-            class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center"
-          >
-            <i class="fas fa-user-check text-green-500 text-3xl mb-2"></i>
-            <p class="text-gray-600 text-sm">Total Jastiper Aktif</p>
-            <p class="text-xl font-bold text-gray-800" id="totalJastiperAktif">
-              0
-            </p>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center">
+          <a href="admin-laporan-detail.html"></a>
+          <i class="fas fa-money-bill-wave text-blue-500 text-3xl mb-2"></i>
+          <p class="text-gray-600 text-sm">Total Pendapatan</p>
+          <p class="text-xl font-bold text-gray-800" id="totalPendapatan">
+            Rp. 0,-
+          </p>
         </div>
-
-        <div class="grid grid-cols-1 gap-6 mb-8">
-          <div class="bg-gray-50 p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">
-              Grafik Pendapatan Bulanan
-            </h2>
-            <div
-              class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500 font-bold"
-            >
-              <canvas id="pendapatanChart"></canvas>
-            </div>
-          </div>
-          <div class="bg-gray-50 p-4 rounded-md shadow">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">
-              Pie Chart Kategori
-            </h2>
-            <p class="text-gray-600 text-sm mb-4">Kategori Paling Favorit</p>
-            <div
-              class="flex flex-col items-center justify-center lg:flex-row lg:justify-center"
-            >
-              <div
-                class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold mb-4 lg:mb-0 lg:mr-8"
-              >
-                <canvas id="kategoriPieChart"></canvas>
-              </div>
-              <div
-                class="text-sm text-gray-700 space-y-2"
-                id="kategoriLegend"
-              ></div>
-            </div>
-          </div>
+        <div class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center">
+          <i class="fas fa-box text-pink-500 text-3xl mb-2"></i>
+          <p class="text-gray-600 text-sm">Jumlah Pesanan</p>
+          <p class="text-xl font-bold text-gray-800" id="jumlahPesanan">0</p>
         </div>
+        <div class="bg-white p-4 rounded-md shadow flex items-center justify-center flex-col text-center">
+          <i class="fas fa-user-check text-green-500 text-3xl mb-2"></i>
+          <p class="text-gray-600 text-sm">Total Jastiper Aktif</p>
+          <p class="text-xl font-bold text-gray-800" id="totalJastiperAktif">
+            0
+          </p>
+        </div>
+      </div>
 
+      <div class="grid grid-cols-1 gap-6 mb-8">
         <div class="bg-gray-50 p-4 rounded-md shadow">
           <h2 class="text-lg font-semibold text-gray-800 mb-4">
-            Tabel Rekap Laporan
+            Grafik Pendapatan Bulanan
           </h2>
-          <div class="mb-4 flex flex-col sm:flex-row gap-4">
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200"
-              id="exportButton"
-            >
-              Ekspor
-            </button>
-            <div class="relative flex-grow">
-              <input
-                type="text"
-                id="searchInput"
-                placeholder="Cari bulan atau tahun..."
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <i
-                class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-              ></i>
-            </div>
-            <select
-              id="filterYear"
-              class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Filter Tahun</option>
-            </select>
-          </div>
-          <div class="overflow-x-auto rounded-md border border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-blue-500">
-                <tr>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Bulan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Tahun
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Pendapatan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Jumlah Pesanan
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Jumlah Jastiper Baru
-                  </th>
-                  <th
-                    scope="col"
-                    class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider"
-                  >
-                    Aksi
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                class="bg-white divide-y divide-gray-200"
-                id="laporanTableBody"
-              >
-                <tr>
-                  <td colspan="6" class="text-center py-4 text-gray-500">
-                    Memuat data...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="mt-6 flex justify-between items-center">
-            <div class="text-sm text-gray-700" id="paginationInfo">
-              Menampilkan 0 sampai 0 dari 0 data
-            </div>
-            <div class="flex" id="paginationControls"></div>
+          <div class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+            <canvas id="pendapatanChart"></canvas>
           </div>
         </div>
-      </main>
-    </div>
+        <div class="bg-gray-50 p-4 rounded-md shadow">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">
+            Pie Chart Kategori
+          </h2>
+          <p class="text-gray-600 text-sm mb-4">Kategori Paling Favorit</p>
+          <div class="flex flex-col items-center justify-center lg:flex-row lg:justify-center">
+            <div
+              class="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold mb-4 lg:mb-0 lg:mr-8">
+              <canvas id="kategoriPieChart"></canvas>
+            </div>
+            <div class="text-sm text-gray-700 space-y-2" id="kategoriLegend"></div>
+          </div>
+        </div>
+      </div>
 
-    <script>
-      // Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID",
-      };
+      <div class="bg-gray-50 p-4 rounded-md shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">
+          Tabel Rekap Laporan
+        </h2>
+        <div class="mb-4 flex flex-col sm:flex-row gap-4">
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors duration-200"
+            id="exportButton">
+            Ekspor
+          </button>
+          <div class="relative flex-grow">
+            <input type="text" id="searchInput" placeholder="Cari bulan atau tahun..."
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+          <select id="filterYear"
+            class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Filter Tahun</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto rounded-md border border-gray-200">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-500">
+              <tr>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Bulan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Tahun
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Pendapatan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Jumlah Pesanan
+                </th>
+                <th scope="col" class="py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                  Jumlah Jastiper Baru
+                </th>
+                <th scope="col" class="py-3 px-4 text-center text-xs font-semibold text-white uppercase tracking-wider">
+                  Aksi
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="laporanTableBody">
+              <tr>
+                <td colspan="6" class="text-center py-4 text-gray-500">
+                  Memuat data...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-6 flex justify-between items-center">
+          <div class="text-sm text-gray-700" id="paginationInfo">
+            Menampilkan 0 sampai 0 dari 0 data
+          </div>
+          <div class="flex" id="paginationControls"></div>
+        </div>
+      </div>
+    </main>
+  </div>
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+  <script>
+    let allOrders = []; // To store all fetched orders
+    let filteredOrders = []; // To store filtered orders for table and pagination
+    let currentPage = 1;
+    const rowsPerPage = 10;
 
-      let allOrders = []; // To store all fetched orders
-      let filteredOrders = []; // To store filtered orders for table and pagination
-      let currentPage = 1;
-      const rowsPerPage = 10;
+    const formatRupiah = (amount) => {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      }).format(amount);
+    };
 
-      const formatRupiah = (amount) => {
-        return new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-          minimumFractionDigits: 0,
-        }).format(amount);
-      };
+    // Dummy data generation
+    function generateDummyData(numEntries = 100) {
+      const dummyData = [];
+      const categories = [
+        "Makanan & Minuman",
+        "Fashion",
+        "Elektronik",
+        "Kecantikan",
+        "Otomotif",
+        "Olahraga",
+        "Rumah Tangga",
+      ];
+      const monthNames = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
+      ];
+      const startYear = 2023;
+      const endYear = 2024;
 
-      // Function to fetch data from Firestore
-      async function fetchReportData() {
-        try {
-          const ordersRef = db.collection("pemesanan");
-          const snapshot = await ordersRef.get();
+      for (let i = 0; i < numEntries; i++) {
+        const year =
+          Math.floor(Math.random() * (endYear - startYear + 1)) + startYear;
+        const monthIndex = Math.floor(Math.random() * 12);
+        const month = monthNames[monthIndex];
+        const revenue = Math.floor(Math.random() * (10000000 - 100000 + 1)) + 100000; // Rp 100,000 to Rp 10,000,000
+        const orderCount = Math.floor(Math.random() * 50) + 1; // 1 to 50 orders
+        const newJastiper = Math.floor(Math.random() * 5); // 0 to 4 new jastipers
+        const randomCategory =
+          categories[Math.floor(Math.random() * categories.length)];
 
-          let totalPendapatan = 0;
-          let totalPesanan = 0;
-          const monthlyData = {}; // { 'YYYY-MM': { totalRevenue: 0, orderCount: 0 } }
-          const categoryCounts = {}; // { 'categoryName': count }
-          const newJastiperCounts = {}; // { 'YYYY-MM': count }
-          const registeredUsers = new Set(); // To track unique users for jastiper count
+        dummyData.push({
+          month: month,
+          year: year,
+          revenue: revenue,
+          orderCount: orderCount,
+          newJastiper: newJastiper,
+          category: randomCategory,
+          id: `dummy-id-${i}`, // Dummy ID for detail link
+        });
+      }
+      return dummyData;
+    }
 
-          // Fetch users collection to identify jastipers
-          const usersRef = db.collection("users");
-          const usersSnapshot = await usersRef.get();
-          const jastipers = new Set();
-          usersSnapshot.forEach((doc) => {
-            if (doc.data().role === "jastiper") {
-              jastipers.add(doc.id); // Assuming 'id' is the user ID
-            }
+    // Function to fetch data (now using dummy data)
+    async function fetchReportData() {
+      try {
+        // Simulate API call delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        allOrders = generateDummyData(50); // Generate 50 dummy entries
+
+        let totalPendapatan = 0;
+        let totalPesanan = 0;
+        let totalJastiperAktif = 0; // Simplified for dummy data, could be based on unique jastiper_id
+        const monthlyData = {}; // { 'YYYY-MM': { totalRevenue: 0, orderCount: 0 } }
+        const categoryCounts = {}; // { 'categoryName': count }
+        const jastiperCounts = {}; // { 'jastiperId': count } to determine active jastipers
+
+        allOrders.forEach((order) => {
+          const date = new Date(order.year, monthNameToNum(order.month));
+          const yearMonth = `${date.getFullYear()}-${(
+            date.getMonth() + 1
+          )
+            .toString()
+            .padStart(2, "0")}`;
+
+          totalPendapatan += order.revenue;
+          totalPesanan += order.orderCount;
+
+          if (!monthlyData[yearMonth]) {
+            monthlyData[yearMonth] = { totalRevenue: 0, orderCount: 0 };
+          }
+          monthlyData[yearMonth].totalRevenue += order.revenue;
+          monthlyData[yearMonth].orderCount += order.orderCount;
+
+          // Category counts
+          categoryCounts[order.category] = (categoryCounts[order.category] || 0) + 1;
+
+          // Simulate active jastipers
+          // In a real scenario, this would come from the user/jastiper data.
+          // For dummy, let's just count unique "newJastiper" values for now as a placeholder
+          if (order.newJastiper > 0) {
+            // This is a simplification; actual active jastiper logic is more complex.
+            // Here, we just count if there's *any* new jastiper reported for that dummy order.
+            // In a real app, you'd track distinct jastiper IDs from orders.
+            totalJastiperAktif++;
+          }
+        });
+
+
+        // Sort monthly data by date
+        const sortedMonthlyKeys = Object.keys(monthlyData).sort();
+        const labels = sortedMonthlyKeys.map((key) => {
+          const [year, month] = key.split("-");
+          return new Date(year, month - 1).toLocaleString("id-ID", {
+            month: "short",
           });
+        });
+        const revenues = sortedMonthlyKeys.map(
+          (key) => monthlyData[key].totalRevenue
+        );
 
-          snapshot.forEach((doc) => {
-            const order = doc.data();
-            const orderDate = order.tanggal_pemesanan
-              ? new Date(order.tanggal_pemesanan.toDate())
-              : null; // Assuming timestamp from Firestore
+        // Update summary cards
+        document.getElementById("totalPendapatan").textContent =
+          formatRupiah(totalPendapatan);
+        document.getElementById("jumlahPesanan").textContent = totalPesanan;
+        document.getElementById("totalJastiperAktif").textContent =
+          // For dummy data, let's use a fixed number or a calculation
+          Math.floor(Math.random() * 50) + 10; // Dummy active jastipers between 10 and 60
 
-            if (orderDate) {
-              const yearMonth = `${orderDate.getFullYear()}-${(
-                orderDate.getMonth() + 1
-              )
-                .toString()
-                .padStart(2, "0")}`;
 
-              // Calculate total revenue and order count
-              const orderTotal = order.total_harga || 0;
-              totalPendapatan += orderTotal;
-              totalPesanan++;
+        // Update Pendapatan Bulanan Chart
+        updatePendapatanChart(labels, revenues);
 
-              if (!monthlyData[yearMonth]) {
-                monthlyData[yearMonth] = { totalRevenue: 0, orderCount: 0 };
-              }
-              monthlyData[yearMonth].totalRevenue += orderTotal;
-              monthlyData[yearMonth].orderCount++;
+        // Update Kategori Pie Chart
+        const categoryLabels = Object.keys(categoryCounts);
+        const categoryData = Object.values(categoryCounts);
+        updateKategoriPieChart(categoryLabels, categoryData);
+        updateKategoriLegend(categoryLabels, categoryData);
 
-              // Category counts
-              const categories = order.kategori || [];
-              categories.forEach((category) => {
-                categoryCounts[category] = (categoryCounts[category] || 0) + 1;
-              });
-
-              // Add order to allOrders for table display
-              allOrders.push({
-                month: orderDate.toLocaleString("id-ID", { month: "long" }),
-                year: orderDate.getFullYear(),
-                revenue: orderTotal,
-                orderCount: 1, // Each document is one order
-                id: doc.id, // Keep document ID for detail link
-              });
-            }
-
-            // Track new jastipers (this part is tricky, needs 'tanggal_daftar' for jastipers)
-            // For now, let's assume `users` collection has `role` and `tanggal_daftar`
-            // and we're looking at newly registered jastipers within the reporting period.
-            // This would typically involve querying the users collection separately or
-            // having a more direct way to link orders to new jastiper registrations.
-            // For demonstration, we'll keep the placeholder for `Jumlah Jastiper Baru`
-            // and simply count active jastipers based on `pemesanan` collection if a jastiper_id field exists.
-            if (
-              order.jastiper_id &&
-              !registeredUsers.has(order.jastiper_id) &&
-              jastipers.has(order.jastiper_id)
-            ) {
-              registeredUsers.add(order.jastiper_id);
-            }
-          });
-
-          // Sort monthly data by date
-          const sortedMonthlyKeys = Object.keys(monthlyData).sort();
-          const labels = sortedMonthlyKeys.map((key) => {
-            const [year, month] = key.split("-");
-            return new Date(year, month - 1).toLocaleString("id-ID", {
-              month: "short",
-            });
-          });
-          const revenues = sortedMonthlyKeys.map(
-            (key) => monthlyData[key].totalRevenue
+        // Prepare data for the table and initial filter options
+        allOrders.sort((a, b) => {
+          if (a.year !== b.year) return a.year - b.year;
+          return (
+            monthNameToNum(a.month) -
+            monthNameToNum(b.month)
           );
-
-          // Update summary cards
-          document.getElementById("totalPendapatan").textContent =
-            formatRupiah(totalPendapatan);
-          document.getElementById("jumlahPesanan").textContent = totalPesanan;
-          document.getElementById("totalJastiperAktif").textContent =
-            registeredUsers.size;
-
-          // Update Pendapatan Bulanan Chart
-          updatePendapatanChart(labels, revenues);
-
-          // Update Kategori Pie Chart
-          const categoryLabels = Object.keys(categoryCounts);
-          const categoryData = Object.values(categoryCounts);
-          updateKategoriPieChart(categoryLabels, categoryData);
-          updateKategoriLegend(categoryLabels, categoryData);
-
-          // Prepare data for the table and initial filter options
-          allOrders.sort((a, b) => {
-            if (a.year !== b.year) return a.year - b.year;
-            return (
-              new Date(1, monthNameToNum(a.month)).getMonth() -
-              new Date(1, monthNameToNum(b.month)).getMonth()
-            );
-          });
-          filteredOrders = [...allOrders]; // Initialize filtered orders with all orders
-          populateTable(filteredOrders);
-          populateYearFilter();
-        } catch (error) {
-          console.error("Error fetching report data: ", error);
-          document.getElementById("laporanTableBody").innerHTML = `
+        });
+        filteredOrders = [...allOrders]; // Initialize filtered orders with all orders
+        populateTable(filteredOrders);
+        populateYearFilter();
+      } catch (error) {
+        console.error("Error fetching report data: ", error);
+        document.getElementById("laporanTableBody").innerHTML = `
             <tr>
               <td colspan="6" class="text-center py-4 text-red-500">
                 Gagal memuat data. Periksa koneksi atau konsol untuk detail.
               </td>
             </tr>
           `;
-        }
       }
+    }
 
-      function monthNameToNum(monthName) {
-        const date = new Date(Date.parse(monthName + " 1, 2000"));
-        return date.getMonth();
+    function monthNameToNum(monthName) {
+      const months = {
+        "januari": 0, "februari": 1, "maret": 2, "april": 3, "mei": 4, "juni": 5,
+        "juli": 6, "agustus": 7, "september": 8, "oktober": 9, "november": 10, "desember": 11
+      };
+      return months[monthName.toLowerCase()];
+    }
+
+
+    // Function to update Pendapatan Bulanan Chart
+    let pendapatanChart;
+    function updatePendapatanChart(labels, data) {
+      if (pendapatanChart) {
+        pendapatanChart.destroy();
       }
-
-      // Function to update Pendapatan Bulanan Chart
-      let pendapatanChart;
-      function updatePendapatanChart(labels, data) {
-        if (pendapatanChart) {
-          pendapatanChart.destroy();
-        }
-        const pendapatanCtx = document
-          .getElementById("pendapatanChart")
-          .getContext("2d");
-        pendapatanChart = new Chart(pendapatanCtx, {
-          type: "bar",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Pendapatan Bulanan (IDR)",
-                data: data.map((value) => value / 1000000), // Convert to millions for better scale
-                backgroundColor: function (context) {
-                  const chart = context.chart;
-                  const { ctx, chartArea } = chart;
-                  if (!chartArea) {
-                    return "rgba(75, 192, 192, 0.6)";
+      const pendapatanCtx = document
+        .getElementById("pendapatanChart")
+        .getContext("2d");
+      pendapatanChart = new Chart(pendapatanCtx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Pendapatan Bulanan (IDR)",
+              data: data.map((value) => value / 1000000), // Convert to millions for better scale
+              backgroundColor: function (context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) {
+                  return "rgba(75, 192, 192, 0.6)";
+                }
+                const gradientSegment = ctx.createLinearGradient(
+                  0,
+                  chartArea.bottom,
+                  0,
+                  chartArea.top
+                );
+                gradientSegment.addColorStop(0, "rgba(59, 130, 246, 0.8)"); // Biru (blue-500 dengan sedikit opacity)
+                gradientSegment.addColorStop(1, "rgba(236, 72, 153, 0.8)"); // Pink (pink-500 dengan sedikit opacity)
+                return gradientSegment;
+              },
+              borderColor: function (context) {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) {
+                  return "rgba(75, 192, 192, 1)";
+                }
+                const gradientBorder = ctx.createLinearGradient(
+                  0,
+                  chartArea.bottom,
+                  0,
+                  chartArea.top
+                );
+                gradientBorder.addColorStop(0, "rgba(59, 130, 246, 1)"); // Biru
+                gradientBorder.addColorStop(1, "rgba(236, 72, 153, 1)"); // Pink
+                return gradientBorder;
+              },
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Jumlah (Jutaan IDR)", // Updated axis label
+              },
+              ticks: {
+                callback: function (value, index, values) {
+                  return value; // Display as millions
+                },
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Bulan",
+              },
+            },
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let label = context.dataset.label || "";
+                  if (label) {
+                    label += ": ";
                   }
-                  const gradientSegment = ctx.createLinearGradient(
-                    0,
-                    chartArea.bottom,
-                    0,
-                    chartArea.top
-                  );
-                  gradientSegment.addColorStop(0, "rgba(59, 130, 246, 0.8)"); // Biru (blue-500 dengan sedikit opacity)
-                  gradientSegment.addColorStop(1, "rgba(236, 72, 153, 0.8)"); // Pink (pink-500 dengan sedikit opacity)
-                  return gradientSegment;
-                },
-                borderColor: function (context) {
-                  const chart = context.chart;
-                  const { ctx, chartArea } = chart;
-                  if (!chartArea) {
-                    return "rgba(75, 192, 192, 1)";
+                  if (context.parsed.y !== null) {
+                    label += formatRupiah(context.parsed.y * 1000000); // Convert back to full amount for tooltip
                   }
-                  const gradientBorder = ctx.createLinearGradient(
-                    0,
-                    chartArea.bottom,
-                    0,
-                    chartArea.top
-                  );
-                  gradientBorder.addColorStop(0, "rgba(59, 130, 246, 1)"); // Biru
-                  gradientBorder.addColorStop(1, "rgba(236, 72, 153, 1)"); // Pink
-                  return gradientBorder;
-                },
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: "Jumlah (Jutaan IDR)", // Updated axis label
-                },
-                ticks: {
-                  callback: function (value, index, values) {
-                    return value; // Display as millions
-                  },
-                },
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: "Bulan",
-                },
-              },
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    let label = context.dataset.label || "";
-                    if (label) {
-                      label += ": ";
-                    }
-                    if (context.parsed.y !== null) {
-                      label += formatRupiah(context.parsed.y * 1000000); // Convert back to full amount for tooltip
-                    }
-                    return label;
-                  },
+                  return label;
                 },
               },
             },
           },
-        });
+        },
+      });
+    }
+
+    // Function to update Pie Chart Kategori
+    let kategoriPieChart;
+    function updateKategoriPieChart(labels, data) {
+      if (kategoriPieChart) {
+        kategoriPieChart.destroy();
       }
-
-      // Function to update Pie Chart Kategori
-      let kategoriPieChart;
-      function updateKategoriPieChart(labels, data) {
-        if (kategoriPieChart) {
-          kategoriPieChart.destroy();
-        }
-        const kategoriCtx = document
-          .getElementById("kategoriPieChart")
-          .getContext("2d");
-        const backgroundColors = [
-          "rgb(59, 130, 246)", // Blue-500
-          "rgb(239, 68, 68)", // Red-500
-          "rgb(245, 158, 11)", // Yellow-500
-          "rgb(168, 85, 247)", // Purple-500
-          "rgb(34, 197, 94)", // Green-500
-          "rgb(96, 165, 250)", // light blue
-          "rgb(251, 146, 60)", // orange
-          "rgb(237, 233, 254)", // light purple
-          "rgb(110, 231, 183)", // light green
-          "rgb(196, 181, 253)", // another light purple
-        ];
-        kategoriPieChart = new Chart(kategoriCtx, {
-          type: "pie",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                data: data,
-                backgroundColor: backgroundColors.slice(0, labels.length),
-                hoverOffset: 4,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false,
-              },
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    let label = context.label || "";
-                    if (label) {
-                      label += ": ";
-                    }
-                    if (context.parsed !== null) {
-                      const total = context.dataset.data.reduce(
-                        (acc, val) => acc + val,
-                        0
-                      );
-                      const percentage =
-                        ((context.parsed / total) * 100).toFixed(1) + "%";
-                      label += percentage;
-                    }
-                    return label;
-                  },
+      const kategoriCtx = document
+        .getElementById("kategoriPieChart")
+        .getContext("2d");
+      const backgroundColors = [
+        "rgb(59, 130, 246)", // Blue-500
+        "rgb(239, 68, 68)", // Red-500
+        "rgb(245, 158, 11)", // Yellow-500
+        "rgb(168, 85, 247)", // Purple-500
+        "rgb(34, 197, 94)", // Green-500
+        "rgb(96, 165, 250)", // light blue
+        "rgb(251, 146, 60)", // orange
+        "rgb(237, 233, 254)", // light purple
+        "rgb(110, 231, 183)", // light green
+        "rgb(196, 181, 253)", // another light purple
+      ];
+      kategoriPieChart = new Chart(kategoriCtx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+              backgroundColor: backgroundColors.slice(0, labels.length),
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let label = context.label || "";
+                  if (label) {
+                    label += ": ";
+                  }
+                  if (context.parsed !== null) {
+                    const total = context.dataset.data.reduce(
+                      (acc, val) => acc + val,
+                      0
+                    );
+                    const percentage =
+                      ((context.parsed / total) * 100).toFixed(1) + "%";
+                    label += percentage;
+                  }
+                  return label;
                 },
               },
             },
           },
-        });
-      }
+        },
+      });
+    }
 
-      function updateKategoriLegend(labels, data) {
-        const legendContainer = document.getElementById("kategoriLegend");
-        legendContainer.innerHTML = "";
-        const total = data.reduce((sum, val) => sum + val, 0);
-        const backgroundColors = [
-          "rgb(59, 130, 246)",
-          "rgb(239, 68, 68)",
-          "rgb(245, 158, 11)",
-          "rgb(168, 85, 247)",
-          "rgb(34, 197, 94)",
-          "rgb(96, 165, 250)",
-          "rgb(251, 146, 60)",
-          "rgb(237, 233, 254)",
-          "rgb(110, 231, 183)",
-          "rgb(196, 181, 253)",
-        ];
+    function updateKategoriLegend(labels, data) {
+      const legendContainer = document.getElementById("kategoriLegend");
+      legendContainer.innerHTML = "";
+      const total = data.reduce((sum, val) => sum + val, 0);
+      const backgroundColors = [
+        "rgb(59, 130, 246)",
+        "rgb(239, 68, 68)",
+        "rgb(245, 158, 11)",
+        "rgb(168, 85, 247)",
+        "rgb(34, 197, 94)",
+        "rgb(96, 165, 250)",
+        "rgb(251, 146, 60)",
+        "rgb(237, 233, 254)",
+        "rgb(110, 231, 183)",
+        "rgb(196, 181, 253)",
+      ];
 
-        labels.forEach((label, index) => {
-          const percentage = ((data[index] / total) * 100).toFixed(1);
-          const p = document.createElement("p");
-          p.innerHTML = `
+      labels.forEach((label, index) => {
+        const percentage = ((data[index] / total) * 100).toFixed(1);
+        const p = document.createElement("p");
+        p.innerHTML = `
             <span
               class="inline-block w-3 h-3 rounded-full mr-2"
-              style="background-color: ${
-                backgroundColors[index % backgroundColors.length]
-              };"
+              style="background-color: ${backgroundColors[index % backgroundColors.length]
+          };"
             ></span>${percentage}% ${label}
           `;
-          legendContainer.appendChild(p);
-        });
-      }
+        legendContainer.appendChild(p);
+      });
+    }
 
-      // Function to populate the table
-      function populateTable(ordersToDisplay) {
-        const tableBody = document.getElementById("laporanTableBody");
-        tableBody.innerHTML = ""; // Clear existing rows
+    // Function to populate the table
+    function populateTable(ordersToDisplay) {
+      const tableBody = document.getElementById("laporanTableBody");
+      tableBody.innerHTML = ""; // Clear existing rows
 
-        if (ordersToDisplay.length === 0) {
-          tableBody.innerHTML = `
+      if (ordersToDisplay.length === 0) {
+        tableBody.innerHTML = `
             <tr>
               <td colspan="6" class="text-center py-4 text-gray-500">
                 Tidak ada data ditemukan.
               </td>
             </tr>
           `;
-          document.getElementById("paginationInfo").textContent =
-            "Menampilkan 0 sampai 0 dari 0 data";
-          document.getElementById("paginationControls").innerHTML = "";
-          return;
-        }
+        document.getElementById("paginationInfo").textContent =
+          "Menampilkan 0 sampai 0 dari 0 data";
+        document.getElementById("paginationControls").innerHTML = "";
+        return;
+      }
 
-        const start = (currentPage - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const paginatedOrders = ordersToDisplay.slice(start, end);
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const paginatedOrders = ordersToDisplay.slice(start, end);
 
-        paginatedOrders.forEach((order) => {
-          const row = tableBody.insertRow();
-          row.innerHTML = `
+      paginatedOrders.forEach((order) => {
+        const row = tableBody.insertRow();
+        row.innerHTML = `
             <td class="py-3 px-4 text-sm text-gray-700">${order.month}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${order.year}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${formatRupiah(
-              order.revenue
-            )}</td>
+          order.revenue
+        )}</td>
             <td class="py-3 px-4 text-sm text-gray-700">${order.orderCount}</td>
-            <td class="py-3 px-4 text-sm text-gray-700">0</td> <td class="py-3 px-4 text-sm text-center">
+            <td class="py-3 px-4 text-sm text-gray-700">${order.newJastiper}</td>
+            <td class="py-3 px-4 text-sm text-center">
               <a
                 href="admin-laporan-detail.html?id=${order.id}"
                 class="text-blue-600 hover:text-blue-900"
@@ -740,223 +676,114 @@
               ></a>
             </td>
           `;
-        });
-        updatePaginationControls(ordersToDisplay.length);
-      }
+      });
+      updatePaginationControls(ordersToDisplay.length);
+    }
 
-      // Function to populate year filter
-      function populateYearFilter() {
-        const filterYearSelect = document.getElementById("filterYear");
-        filterYearSelect.innerHTML = '<option value="">Filter Tahun</option>'; // Reset
-        const years = [...new Set(allOrders.map((order) => order.year))].sort(
-          (a, b) => b - a
-        );
-        years.forEach((year) => {
-          const option = document.createElement("option");
-          option.value = year;
-          option.textContent = year;
-          filterYearSelect.appendChild(option);
-        });
-      }
+    // Function to populate year filter
+    function populateYearFilter() {
+      const filterYearSelect = document.getElementById("filterYear");
+      filterYearSelect.innerHTML = '<option value="">Filter Tahun</option>'; // Reset
+      const years = [...new Set(allOrders.map((order) => order.year))].sort(
+        (a, b) => b - a
+      );
+      years.forEach((year) => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        filterYearSelect.appendChild(option);
+      });
+    }
 
-      // Function to handle search and filter
-      function applySearchAndFilter() {
-        const searchTerm = document
-          .getElementById("searchInput")
-          .value.toLowerCase();
-        const selectedYear = document.getElementById("filterYear").value;
-
-        filteredOrders = allOrders.filter((order) => {
-          const matchesSearch =
-            order.month.toLowerCase().includes(searchTerm) ||
-            order.year.toString().includes(searchTerm);
-          const matchesYear =
-            selectedYear === "" || order.year.toString() === selectedYear;
-          return matchesSearch && matchesYear;
-        });
-        currentPage = 1; // Reset to first page
-        populateTable(filteredOrders);
-      }
-
-      // Event listeners for search and filter
-      document
+    // Function to handle search and filter
+    function applySearchAndFilter() {
+      const searchTerm = document
         .getElementById("searchInput")
-        .addEventListener("keyup", applySearchAndFilter);
-      document
-        .getElementById("filterYear")
-        .addEventListener("change", applySearchAndFilter);
+        .value.toLowerCase();
+      const selectedYear = document.getElementById("filterYear").value;
 
-      // Pagination controls
-      function updatePaginationControls(totalRows) {
-        const paginationControls =
-          document.getElementById("paginationControls");
-        paginationControls.innerHTML = "";
+      filteredOrders = allOrders.filter((order) => {
+        const matchesSearch =
+          order.month.toLowerCase().includes(searchTerm) ||
+          order.year.toString().includes(searchTerm);
+        const matchesYear =
+          selectedYear === "" || order.year.toString() === selectedYear;
+        return matchesSearch && matchesYear;
+      });
+      currentPage = 1; // Reset to first page
+      populateTable(filteredOrders);
+    }
 
-        const totalPages = Math.ceil(totalRows / rowsPerPage);
-        const paginationInfo = document.getElementById("paginationInfo");
-        const startEntry =
-          totalRows === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
-        const endEntry = Math.min(currentPage * rowsPerPage, totalRows);
-        paginationInfo.textContent = `Menampilkan ${startEntry} sampai ${endEntry} dari ${totalRows} data`;
+    // Event listeners for search and filter
+    document
+      .getElementById("searchInput")
+      .addEventListener("keyup", applySearchAndFilter);
+    document
+      .getElementById("filterYear")
+      .addEventListener("change", applySearchAndFilter);
 
-        if (totalPages > 1) {
-          // Previous button
-          const prevButton = document.createElement("button");
-          prevButton.className =
-            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
-          prevButton.textContent = "Previous";
-          prevButton.disabled = currentPage === 1;
-          prevButton.addEventListener("click", () => {
-            if (currentPage > 1) {
-              currentPage--;
-              populateTable(filteredOrders);
-            }
-          });
-          paginationControls.appendChild(prevButton);
+    // Pagination controls
+    function updatePaginationControls(totalRows) {
+      const paginationControls =
+        document.getElementById("paginationControls");
+      paginationControls.innerHTML = "";
 
-          // Page number buttons
-          for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.className = `px-4 py-2 text-sm font-medium border border-gray-300 ${
-              i === currentPage
-                ? "text-pink-600 bg-pink-100"
-                : "text-gray-700 bg-white hover:bg-gray-50"
+      const totalPages = Math.ceil(totalRows / rowsPerPage);
+      const paginationInfo = document.getElementById("paginationInfo");
+      const startEntry =
+        totalRows === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+      const endEntry = Math.min(currentPage * rowsPerPage, totalRows);
+      paginationInfo.textContent = `Menampilkan ${startEntry} sampai ${endEntry} dari ${totalRows} data`;
+
+      if (totalPages > 1) {
+        // Previous button
+        const prevButton = document.createElement("button");
+        prevButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50";
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            populateTable(filteredOrders);
+          }
+        });
+        paginationControls.appendChild(prevButton);
+
+        // Page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.className = `px-4 py-2 text-sm font-medium border border-gray-300 ${i === currentPage
+              ? "text-pink-600 bg-pink-100"
+              : "text-gray-700 bg-white hover:bg-gray-50"
             }`;
-            pageButton.textContent = i;
-            pageButton.addEventListener("click", () => {
-              currentPage = i;
-              populateTable(filteredOrders);
-            });
-            paginationControls.appendChild(pageButton);
-          }
-
-          // Next button
-          const nextButton = document.createElement("button");
-          nextButton.className =
-            "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
-          nextButton.textContent = "Next";
-          nextButton.disabled = currentPage === totalPages;
-          nextButton.addEventListener("click", () => {
-            if (currentPage < totalPages) {
-              currentPage++;
-              populateTable(filteredOrders);
-            }
+          pageButton.textContent = i;
+          pageButton.addEventListener("click", () => {
+            currentPage = i;
+            populateTable(filteredOrders);
           });
-          paginationControls.appendChild(nextButton);
+          paginationControls.appendChild(pageButton);
         }
+
+        // Next button
+        const nextButton = document.createElement("button");
+        nextButton.className =
+          "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50";
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            populateTable(filteredOrders);
+          }
+        });
+        paginationControls.appendChild(nextButton);
       }
+    }
 
-      // Export functionality (basic CSV export)
-      document.getElementById("exportButton").addEventListener("click", () => {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent +=
-          "Bulan,Tahun,Pendapatan,Jumlah Pesanan,Jumlah Jastiper Baru\n";
+    // Initial data fetch on page load
+    document.addEventListener("DOMContentLoaded", fetchReportData);
+  </script>
+</body>
 
-        filteredOrders.forEach((row) => {
-          let rowData = [
-            row.month,
-            row.year,
-            row.revenue,
-            row.orderCount,
-            0, // Placeholder for new jastipers
-          ];
-          csvContent += rowData.join(",") + "\n";
-        });
-
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "laporan_titipgo.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-
-      document.addEventListener("DOMContentLoaded", function () {
-        // Fetch and display data
-        fetchReportData();
-
-        // Skrip untuk menyorot navigasi sidebar
-        const currentPath = window.location.pathname.split("/").pop();
-        const sidebarLinks = document.querySelectorAll(".sidebar-item");
-
-        sidebarLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          const linkFileName = linkHref.split("/").pop();
-
-          let isLinkActive = false;
-
-          // Highlight 'Laporan' for admin-laporan.html
-          if (
-            linkFileName === "admin-laporan.html" &&
-            currentPath.includes("admin-laporan.html")
-          ) {
-            isLinkActive = true;
-          }
-          // Special handling for other detail pages to highlight parent menu
-          else if (
-            linkFileName === "admin-pengguna.html" &&
-            currentPath.startsWith("admin-pengguna-detail")
-          ) {
-            isLinkActive = true;
-          } else if (
-            linkFileName === "admin-katalog.html" &&
-            (currentPath.startsWith("admin-katalog-detail") ||
-              currentPath.startsWith("admin-katalog-add") ||
-              currentPath.startsWith("admin-katalog-edit"))
-          ) {
-            isLinkActive = true;
-          } else if (
-            linkFileName === "admin-pesanan.html" &&
-            currentPath.startsWith("admin-pesanan-detail")
-          ) {
-            isLinkActive = true;
-          }
-          // Highlight 'Manajemen Admin' for all admin-related pages (list, add, edit, detail)
-          else if (
-            linkFileName === "admin-list.html" &&
-            (currentPath.startsWith("admin-list") ||
-              currentPath.startsWith("admin-add") ||
-              currentPath.startsWith("admin-edit") ||
-              currentPath.startsWith("admin-detail"))
-          ) {
-            isLinkActive = true;
-          }
-          // Default matching for exact file names
-          else if (linkFileName === currentPath) {
-            isLinkActive = true;
-          }
-          // Highlight dashboard if current path is root or index.html
-          else if (
-            (currentPath === "" || currentPath === "index.html") &&
-            linkFileName === "admin-dashboard.html"
-          ) {
-            isLinkActive = true;
-          }
-
-          if (isLinkActive) {
-            link.classList.remove(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-            link.classList.add("bg-pink-600", "text-white", "font-semibold");
-          } else {
-            link.classList.remove("bg-pink-600", "text-white", "font-semibold");
-            link.classList.add(
-              "text-gray-700",
-              "hover:bg-pink-100",
-              "hover:text-pink-600",
-              "transition",
-              "duration-200",
-              "ease-in-out"
-            );
-          }
-        });
-      });
-    </script>
-  </body>
 </html>
