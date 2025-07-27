@@ -259,7 +259,7 @@
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-2">Tentang Toko</h2>
                 <p class="text-gray-700 leading-relaxed" id="storeDescription">
-                    </p>
+                </p>
             </div>
 
             <div class="mt-8">
@@ -270,8 +270,7 @@
             </div>
 
             <div class="mt-6 text-center">
-                <button
-                    class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800"
+                <button class="bg-blue-700 text-white px-6 py-2 rounded font-semibold shadow hover:bg-blue-800"
                     onclick="openChatJastiperOnStorePage()">Chat dengan Toko Ini</button>
             </div>
         </div>
@@ -279,17 +278,29 @@
 
     <script type="module">
         // Pastikan path ke firebase-config.js benar relatif dari toko.html
-        import { db, auth } from './js/firebase-config.js'; 
+        import { db, auth } from './js/firebase-config.js';
         import { doc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
         // Fungsi untuk mengambil parameter dari URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            // --- DEBUGGING LOGS TAMBAHAN ---
+            console.log(`getQueryParam dipanggil untuk parameter: '${param}'. URL search string: '${window.location.search}'`);
+            // Ini akan menampilkan semua pasangan key-value yang ditemukan oleh URLSearchParams
+            for (let pair of urlParams.entries()) {
+                console.log(`URLSearchParams melihat: Key='${pair[0]}', Value='${pair[1]}'`);
+            }
+            const value = urlParams.get(param);
+            console.log(`Nilai get('${param}') adalah: '${value}'`);
+            // --- END DEBUGGING LOGS ---
+            return value;
         }
 
         async function loadStoreDetail() {
-            const storeId = getQueryParam('storeId');
+            console.log("Memulai loadStoreDetail...");
+            const storeId = getQueryParam('Id'); // Mengambil parameter dengan nama 'Id'
+            console.log("ID Toko yang diambil dari URL (setelah getQueryParam):", storeId);
+
             const storeNameDetailElement = document.getElementById('storeNameDetail');
             const storeDisplayNameElement = document.getElementById('storeDisplayName');
             const storeActiveStatusElement = document.getElementById('storeActiveStatus');
@@ -302,65 +313,72 @@
             const noProductsMessageElement = document.getElementById('noProductsMessage');
 
             if (!storeId) {
-                storeNameDetailElement.textContent = "ID Toko tidak ditemukan.";
+                storeNameDetailElement.textContent = "ID Toko tidak ditemukan dalam URL.";
                 noProductsMessageElement.textContent = "Tidak ada toko yang dipilih.";
+                console.error("Kesalahan: ID Toko tidak ditemukan dalam parameter URL. Pastikan parameter 'Id' ada di URL.");
                 return;
             }
 
             try {
-                // Ambil detail toko
-                const storeDocRef = doc(db, "stores", storeId);
+                const storeDocRef = doc(db, "toko", storeId);
                 const storeDocSnap = await getDoc(storeDocRef);
+
+                console.log("Status dokumen toko (storeDocSnap.exists()):", storeDocSnap.exists() ? "Ditemukan" : "Tidak Ditemukan");
 
                 if (storeDocSnap.exists()) {
                     const storeData = storeDocSnap.data();
-                    storeNameDetailElement.textContent = storeData.name || "Nama Toko";
-                    storeDisplayNameElement.textContent = storeData.name || "Nama Toko";
-                    storeActiveStatusElement.textContent = storeData.active_status || "Tidak diketahui";
-                    storeFollowersElement.textContent = storeData.followers ? storeData.followers.toLocaleString('id-ID') : '0';
-                    storeProductsCountElement.textContent = storeData.products_count ? storeData.products_count.toLocaleString('id-ID') : '0';
-                    storeDescriptionElement.textContent = storeData.description || "Deskripsi toko belum tersedia.";
-                    if (storeData.image_url) {
-                        storeImageElement.src = storeData.image_url;
+
+                    storeNameDetailElement.textContent = storeData.namaToko || "Nama Toko";
+                    storeDisplayNameElement.textContent = storeData.namaToko || "Nama Toko";
+                    storeActiveStatusElement.textContent = storeData.active_status || "Online";
+                    storeFollowersElement.textContent = storeData.pengikut ? storeData.pengikut.toLocaleString('id-ID') : '0';
+                    storeDescriptionElement.textContent = storeData.deskripsiToko || "Deskripsi toko belum tersedia.";
+
+                    if (storeData.gambar) {
+                        storeImageElement.src = storeData.gambar;
                     } else {
-                        storeImageElement.src = "https://via.placeholder.com/80"; // Default image if none
+                        storeImageElement.src = "https://via.placeholder.com/80";
                     }
                     if (chatJastiperHeaderElement) {
-                        chatJastiperHeaderElement.textContent = `Chat dengan ${storeData.name || 'Toko'}`;
+                        chatJastiperHeaderElement.textContent = `Chat dengan ${storeData.namaToko || 'Toko'}`;
                     }
 
-                    // Ambil produk-produk dari toko ini
-                    const productsQuery = query(collection(db, "products"), where("storeId", "==", storeId));
+                    // Mengambil produk berdasarkan 'tokoId'
+                    const productsQuery = query(collection(db, "produk"), where("tokoId", "==", storeId));
                     const productsSnap = await getDocs(productsQuery);
 
-                    storeProductsGridElement.innerHTML = ''; // Bersihkan pesan "Memuat produk..."
+                    storeProductsCountElement.textContent = productsSnap.size.toLocaleString('id-ID');
+
+                    storeProductsGridElement.innerHTML = '';
                     if (!productsSnap.empty) {
+                        console.log(`Ditemukan ${productsSnap.size} produk untuk toko ini.`);
                         productsSnap.forEach(productDoc => {
                             const productData = productDoc.data();
-                            const productId = productDoc.id; // Ambil ID produk
+                            const productId = productDoc.id;
 
-                            // Buat elemen HTML untuk setiap produk
-                            const productElement = document.createElement('a'); // Gunakan <a> untuk bisa diklik ke detail produk
-                            productElement.href = `pembeli_produk_detail.html?productId=${productId}`; // Link ke halaman detail produk
+                            const productElement = document.createElement('a');
+                            productElement.href = `pembeli_produk_detail.html?productId=${productId}`;
                             productElement.className = 'block bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200';
                             productElement.innerHTML = `
-                                <img src="${productData.imageUrl || 'https://via.placeholder.com/150'}" alt="${productData.name}" class="w-full h-32 object-cover rounded-md mb-2">
-                                <h3 class="font-semibold text-gray-900 truncate">${productData.name}</h3>
-                                <p class="text-red-700 font-bold text-lg mt-1">Rp ${productData.price ? productData.price.toLocaleString('id-ID') : '0'}</p>
+                                <img src="${productData.imageUrl || 'https://via.placeholder.com/150'}" alt="${productData.namaBarang}" class="w-full h-32 object-cover rounded-md mb-2">
+                                <h3 class="font-semibold text-gray-900 truncate">${productData.namaBarang}</h3>
+                                <p class="text-red-700 font-bold text-lg mt-1">Rp ${productData.harga ? productData.harga.toLocaleString('id-ID') : '0'}</p>
                             `;
                             storeProductsGridElement.appendChild(productElement);
                         });
                     } else {
                         noProductsMessageElement.textContent = "Tidak ada produk dari toko ini.";
                         storeProductsGridElement.appendChild(noProductsMessageElement);
+                        console.log("Tidak ada produk ditemukan untuk toko ini.");
                     }
 
                 } else {
                     storeNameDetailElement.textContent = "Toko tidak ditemukan.";
                     noProductsMessageElement.textContent = "Toko yang Anda cari tidak ditemukan.";
+                    console.error("Kesalahan: Dokumen toko tidak ada di Firestore untuk ID:", storeId);
                 }
             } catch (error) {
-                console.error("Error loading store detail: ", error);
+                console.error("Kesalahan saat memuat detail toko:", error);
                 storeNameDetailElement.textContent = "Gagal memuat detail toko.";
                 noProductsMessageElement.textContent = "Terjadi kesalahan saat memuat produk.";
             }
@@ -399,22 +417,21 @@
                     messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
                 }, 800);
                 input.value = '';
-                messages.scrollTop = messages.scrollHeight; // Scroll to bottom
+                messages.scrollTop = messages.scrollHeight;
             }
         }
 
-        // Functions for Jastiper Chat on the Store Detail page
         function openChatJastiperOnStorePage() {
             const chatJastiperModal = document.getElementById('chatJastiperModal');
             const chatJastiperMessages = document.getElementById('chatJastiperMessages');
             const storeDisplayName = document.getElementById('storeDisplayName').textContent;
-            const storeId = getQueryParam('storeId'); // Ambil storeId dari URL halaman toko
+            const storeId = getQueryParam('Id');
 
             if (chatJastiperModal && chatJastiperMessages) {
                 document.getElementById('chatJastiperHeader').textContent = `Chat dengan ${storeDisplayName}`;
                 chatJastiperMessages.innerHTML = `<b>${storeDisplayName}:</b> Halo, ada yang bisa saya bantu?`;
                 chatJastiperModal.style.display = 'flex';
-                chatJastiperModal.dataset.storeId = storeId; // Simpan storeId di modal untuk digunakan nanti
+                chatJastiperModal.dataset.storeId = storeId;
             }
         }
 
@@ -422,21 +439,18 @@
             var input = document.getElementById('chatJastiperInput');
             var messages = document.getElementById('chatJastiperMessages');
             const storeName = document.getElementById('chatJastiperHeader').textContent.replace('Chat dengan ', '');
-            const storeId = document.getElementById('chatJastiperModal').dataset.storeId; // Ambil storeId dari dataset
+            const storeId = document.getElementById('chatJastiperModal').dataset.storeId;
 
             if (input.value.trim() !== '') {
                 messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
-                // Di sini Anda akan mengintegrasikan dengan Firebase Firestore untuk menyimpan pesan
-                // Misalnya: addDoc(collection(db, "chats"), { sender: "user", receiverId: storeId, message: input.value, timestamp: serverTimestamp() });
                 setTimeout(function () {
                     messages.innerHTML += `<br><b>${storeName}:</b> Oke, terima kasih pesan Anda sudah kami terima!`;
                 }, 800);
                 input.value = '';
-                messages.scrollTop = messages.scrollHeight; // Scroll to bottom
+                messages.scrollTop = messages.scrollHeight;
             }
         }
 
-        // Make these functions globally accessible if they are called from inline HTML attributes
         window.openChatJastiperOnStorePage = openChatJastiperOnStorePage;
         window.sendJastiperMessageFromStorePage = sendJastiperMessageFromStorePage;
         window.openChatCS = openChatCS;

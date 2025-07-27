@@ -17,8 +17,9 @@
     body {
       font-family: "Inter", sans-serif;
       background-image: url("asset/images/background.png");
-      /* Pastikan path ini benar */
+      /* Dikembalikan ke path asli */
       background-size: contain;
+      /* Dikembalikan ke contain */
       background-repeat: no-repeat;
       background-position: center;
       height: 100vh;
@@ -48,6 +49,15 @@
       height: 40px;
       object-fit: contain;
     }
+
+    /* Styling for the text logo - Dihapus karena kembali menggunakan gambar */
+    /* .sidebar-header .logo-text {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ec4899;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    } */
 
     .sidebar-nav ul {
       padding: 1rem 0;
@@ -98,7 +108,7 @@
       background-image: linear-gradient(rgba(255, 255, 255, 0.3),
           rgba(255, 255, 255, 0.3)),
         url("asset/images/titipgo_logo_remove.png");
-      /* Pastikan path ini benar */
+      /* Dikembalikan ke path asli */
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -145,6 +155,23 @@
     .btn-secondary:hover {
       background-color: #e0e0e0;
     }
+
+    /* Menambahkan styling untuk btn-danger */
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      border: 1px solid #ef4444;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
 
     /* Modal (Popup) Styling for Logout */
     .modal-overlay {
@@ -211,7 +238,8 @@
       background-color: #e0e0e0;
     }
 
-    .modal-buttons .btn-confirm {
+    /* Menghapus styling .modal-buttons .btn-confirm karena akan diganti secara dinamis */
+    /* .modal-buttons .btn-confirm {
       background-color: #ef4444;
       color: white;
       border: 1px solid #ef4444;
@@ -219,7 +247,7 @@
 
     .modal-buttons .btn-confirm:hover {
       background-color: #dc2626;
-    }
+    } */
 
     /* Overview Boxes in "Yang Perlu Dilakukan" - Adjusted for consistency */
     .overview-grid {
@@ -291,6 +319,7 @@
       height: 100%;
     }
 
+    /* Menggunakan path gambar asli untuk background icon */
     .statistik-box.pengunjung::before {
       background-image: url("asset/images/titipgo_logo_remove.png");
     }
@@ -326,6 +355,7 @@
   <div class="flex h-full">
     <div class="sidebar">
       <div class="sidebar-header">
+        <!-- Mengembalikan ke logo gambar asli -->
         <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo" />
       </div>
       <nav class="sidebar-nav">
@@ -337,7 +367,7 @@
             <span>🏬</span> <a href="jastiper_toko_kita.html">Toko Kita</a>
           </li>
           <li><span>💬</span><a href="jastiper_chat.html">Chat</a></li>
-          <li id="logout-button"><span>➡️</span> Logout</li>
+          <li id="logout-button"><span>➡️</span><a href="pembeli_dashboard.html">Logout</a></li>
         </ul>
       </nav>
     </div>
@@ -369,7 +399,6 @@
             <p class="number" id="count-pengikut-toko">0</p>
             <p class="label">Pengikut Toko</p>
           </div>
-          <!-- Removed "Produk Diblokir" section -->
           <div class="overview-box">
             <p class="number" id="count-produk-habis">0</p>
             <p class="label">Produk Habis</p>
@@ -417,7 +446,7 @@
       </p>
       <div class="modal-buttons">
         <button id="cancel-logout" class="btn-cancel">Batal</button>
-        <button id="confirm-logout" class="btn-confirm">Logout</button>
+        <button id="confirm-logout" class="btn-danger">Logout</button>
       </div>
     </div>
   </div>
@@ -428,7 +457,7 @@
       <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
       <div class="modal-buttons">
         <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
-        <button id="custom-confirm-btn" class="btn-confirm">OK</button>
+        <button id="custom-confirm-btn">OK</button>
       </div>
     </div>
   </div>
@@ -465,7 +494,7 @@
     // Dapatkan instance Auth
     const auth = getAuth(app);
 
-    let currentTokoId = null;
+    let currentTokoId = null; // Ini akan menyimpan UID pengguna yang login, yang sekarang akan kita anggap sebagai userId
 
     // Custom Confirmation/Alert Modal elements
     const customConfirmModal = document.getElementById('custom-confirm-modal');
@@ -481,12 +510,12 @@
       customConfirmCallback = callback;
       customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
       if (isConfirmation) {
-        customConfirmBtn.classList.remove('btn-confirm');
-        customConfirmBtn.classList.add('btn-danger'); // Make confirm button red for delete/logout
+        customConfirmBtn.classList.remove('btn-primary'); // Pastikan menghapus btn-primary jika ada
+        customConfirmBtn.classList.add('btn-danger'); // Gunakan btn-danger untuk konfirmasi logout/delete
         customCancelBtn.classList.remove('hidden');
       } else {
-        customConfirmBtn.classList.remove('btn-danger'); // Reset to default if not confirmation
-        customConfirmBtn.classList.add('btn-primary'); // Make it green for success/info
+        customConfirmBtn.classList.remove('btn-danger'); // Pastikan menghapus btn-danger jika ada
+        customConfirmBtn.classList.add('btn-primary'); // Gunakan btn-primary untuk info/success
         customCancelBtn.classList.add('hidden');
       }
       customConfirmBtn.textContent = isConfirmation ? "Konfirmasi" : "OK";
@@ -509,14 +538,14 @@
     // Listen for Firebase authentication state changes
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, get the UID which will be our tokoId
-        currentTokoId = user.uid;
-        localStorage.setItem("tokoId", currentTokoId); // Store for consistency
-        console.log("Toko ID (from Firebase Auth):", currentTokoId);
+        // User is signed in, get the UID which will be our userId
+        currentTokoId = user.uid; // Menggunakan user.uid sebagai userId
+        localStorage.setItem("tokoId", currentTokoId); // Tetap simpan di localStorage sebagai tokoId untuk konsistensi nama variabel
+        console.log("User ID (from Firebase Auth):", currentTokoId);
         loadDashboardData(); // Load data once authenticated
       } else {
         // User is signed out
-        console.warn("No Toko ID found (user not authenticated).");
+        console.warn("No User ID found (user not authenticated).");
         localStorage.removeItem("tokoId"); // Clear any stale ID
         showCustomConfirm("Anda belum login. Silakan login.", () => {
           window.location.href = "login_user.html"; // Redirect ke halaman login
@@ -534,7 +563,6 @@
       "count-perlu-diproses"
     );
     const countPengikutToko = document.getElementById("count-pengikut-toko");
-    // Removed countProdukDiblokir
     const countProdukHabis = document.getElementById("count-produk-habis");
 
     // Get DOM elements for counts in "Performa Toko"
@@ -554,30 +582,30 @@
 
     let salesChartInstance = null; // To store the Chart.js instance
 
-    // --- Function to fetch and display counts from Firebase "pemesanan" collection ---
+    // --- Function to fetch and display counts from Firebase "orders" collection ---
     async function fetchToDoCounts() {
       if (!currentTokoId) {
-        console.warn("fetchToDoCounts: Toko ID not available.");
-        return; // Ensure tokoId is available
+        console.warn("fetchToDoCounts: User ID not available.");
+        return; // Ensure userId is available
       }
 
       try {
-        // Get orders relevant to the current toko
-        const qOrders = query(collection(db, "pemesanan"), where("tokoId", "==", currentTokoId));
+        // Get orders relevant to the current user (assuming currentTokoId now holds userId)
+        const qOrders = query(collection(db, "orders"), where("userId", "==", currentTokoId)); // Diperbarui: Menggunakan "userId"
         const querySnapshot = await getDocs(qOrders);
 
         let belumBayarCount = 0;
         let pengirimanDiprosesCount = 0;
-        let perluDiprosesCount = 0; // Assuming this refers to 'new' or 'pending' orders
+        let perluDiprosesCount = 0;
         let totalSuccessfulOrders = 0;
 
         querySnapshot.forEach((doc) => {
           const order = doc.data();
-          if (order.status === "pending_payment") {
+          if (order.status === "belum bayar") {
             belumBayarCount++;
           } else if (order.status === "shipping_processed") {
             pengirimanDiprosesCount++;
-          } else if (order.status === "new_order" || order.status === "payment_confirmed") { // Example statuses
+          } else if (order.status === "menunggu verifikasi") {
             perluDiprosesCount++;
           } else if (order.status === "completed") {
             totalSuccessfulOrders++;
@@ -589,31 +617,30 @@
         countPerluDiproses.textContent = perluDiprosesCount;
         countTotalPesananBerhasil.textContent = totalSuccessfulOrders;
 
-        // Fetch Product Blocked and Out of Stock
+        // Fetch Product Blocked and Out of Stock (assuming tokoId is still used for products, or adapt if products also use userId)
+        // Jika koleksi 'produk' juga menggunakan userId, Anda perlu mengubah 'tokoId' di sini juga.
+        // Untuk saat ini, saya asumsikan 'produk' masih menggunakan 'tokoId' yang sama dengan UID pengguna.
         const qProducts = query(collection(db, "produk"), where("tokoId", "==", currentTokoId));
         const productSnapshot = await getDocs(qProducts);
 
-        // Removed produkDiblokirCount
         let produkHabisCount = 0;
-        let produkDilihatCount = 0; // Assuming each product has a view count or similar
+        let produkDilihatCount = 0;
 
         productSnapshot.forEach((doc) => {
           const product = doc.data();
-          // Removed logic for produkDiblokirCount
-          if (product.stok === 0) { // Assuming a numeric field 'stok'
+          if (product.stok === 0) {
             produkHabisCount++;
           }
-          if (product.views) { // Assuming a numeric field 'views' for product views
+          if (product.views) {
             produkDilihatCount += product.views;
           }
         });
 
-        // Removed countProdukDiblokir.textContent
         countProdukHabis.textContent = produkHabisCount;
         countProdukDilihat.textContent = produkDilihatCount;
 
 
-        // Fetch Store Followers from the 'toko' collection where the document ID is currentTokoId
+        // Fetch Store Followers from the 'toko' collection where the document ID is currentTokoId (which is userId)
         const docRefToko = doc(db, "toko", currentTokoId);
         const docSnapToko = await getDoc(docRefToko);
 
@@ -625,7 +652,7 @@
             countPengikutToko.textContent = 0;
           }
         } else {
-          console.log("No 'toko' document found for this tokoId:", currentTokoId);
+          console.log("No 'toko' document found for this userId (tokoId):", currentTokoId);
           countPengikutToko.textContent = 0;
         }
 
@@ -637,7 +664,7 @@
     // --- Function to fetch sales data for the chart based on total orders per 6 hours ---
     async function fetchSalesData() {
       if (!currentTokoId) {
-        console.warn("fetchSalesData: Toko ID not available.");
+        console.warn("fetchSalesData: User ID not available.");
         return;
       }
 
@@ -651,9 +678,8 @@
         tomorrow.setDate(today.getDate() + 1); // Start of tomorrow
 
         const qSales = query(
-          collection(db, "pemesanan"),
-          where("tokoId", "==", currentTokoId),
-          where("status", "==", "completed"), // Only count completed orders
+          collection(db, "orders"), // Menggunakan koleksi "orders"
+          where("userId", "==", currentTokoId), // Diperbarui: Menggunakan "userId"
           where("orderDate", ">=", today),
           where("orderDate", "<", tomorrow)
         );
@@ -766,11 +792,12 @@
     // Function to fetch traffic data (Total Pengunjung, Produk yang dilihat)
     async function fetchTrafficData() {
       if (!currentTokoId) {
-        console.warn("fetchTrafficData: Toko ID not available.");
+        console.warn("fetchTrafficData: User ID not available.");
         return;
       }
 
       try {
+        // Assuming 'toko' collection document ID is the userId
         const docRefToko = doc(db, "toko", currentTokoId);
         const docSnapToko = await getDoc(docRefToko);
 
@@ -778,6 +805,7 @@
           const tokoData = docSnapToko.data();
           countTotalPengunjung.textContent = tokoData.totalViews || 0;
         } else {
+          console.log("No 'toko' document found for this userId:", currentTokoId);
           countTotalPengunjung.textContent = 0;
         }
 
@@ -790,7 +818,7 @@
     // Main function to load all dashboard data
     async function loadDashboardData() {
       if (!currentTokoId) {
-        console.warn("loadDashboardData: Toko ID not available yet for data loading.");
+        console.warn("loadDashboardData: User ID not available yet for data loading.");
         return;
       }
       await fetchToDoCounts();

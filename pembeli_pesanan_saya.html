@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesanan Saya - TitipGo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome untuk ikon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
@@ -371,6 +370,17 @@
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
+    /* For the chat modal, we need a larger max-width */
+    #chatModal .modal-content {
+      max-width: 800px;
+      /* Adjust as needed */
+      text-align: left;
+      /* Align text left for chat */
+      padding: 0;
+      /* Remove padding from modal content itself, content inside will have padding */
+    }
+
+
     .modal-overlay.show .modal-content {
       transform: translateY(0);
       opacity: 1;
@@ -420,6 +430,13 @@
 
     .modal-buttons .btn-confirm.success:hover {
       background-color: #16a34a;
+    }
+
+    .chat-contact.active {
+      background-color: #fce7f3;
+      /* Pink-100 */
+      border-color: #fbcfe8;
+      /* Pink-200 */
     }
   </style>
 </head>
@@ -488,9 +505,7 @@
       SAYA
     </h1>
 
-    <!-- Main Content -->
     <div class="akun-main">
-      <!-- Left Sidebar -->
       <div class="akun-sidebar">
         <div class="akun-user-info">
           <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="akun-user-icon">
@@ -506,34 +521,28 @@
         </div>
       </div>
 
-      <!-- Right Content -->
       <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full mx-auto p-6 mt-6">
-        <!-- Order Status Tabs -->
         <div class="pesanan-tabs">
           <a href="#" class="pesanan-tab active" data-status="Semua">Semua</a>
           <a href="#" class="pesanan-tab" data-status="Belum Dibayar">Belum Dibayar</a>
-          <a href="#" class="pesanan-tab" data-status="Sedang Dikemas">Sedang Dikemas <span
+          <a href="#" class="pesanan-tab" data-status="Menunggu Verifikasi">Menunggu Verifikasi <span
               class="pesanan-count hidden">(0)</span></a>
           <a href="#" class="pesanan-tab" data-status="Dikirim">Dikirim</a>
           <a href="#" class="pesanan-tab" data-status="Selesai">Selesai</a>
           <a href="#" class="pesanan-tab" data-status="Dibatalkan">Dibatalkan</a>
         </div>
 
-        <!-- Section Title -->
         <h2 class="pesanan-section-title">Semua Pesanan</h2>
 
-        <!-- Semua box pesanan hanya render dari JS -->
         <div id="orders-list" class="mt-6">
           <div class="text-gray-500 text-center py-8">Memuat pesanan...</div>
         </div>
       </div>
     </div>
 
-    <!-- Modal Rating Pop-up -->
     <div id="ratingModal" class="modal-overlay">
       <div class="modal-content">
         <h2 class="text-2xl font-bold text-center mb-6">Nilai Produk</h2>
-        <!-- Preview Produk -->
         <div class="flex items-center gap-4 bg-gray-100 rounded p-4 mb-6">
           <img id="rating-product-image" src="https://placehold.co/60x60/E0E0E0/333333?text=Produk" alt="Produk"
             class="w-16 h-16 rounded object-cover border border-gray-300">
@@ -543,7 +552,6 @@
             <div id="rating-order-status" class="text-xs text-pink-600 font-semibold"></div>
           </div>
         </div>
-        <!-- Rating Bintang -->
         <form id="ratingForm" class="space-y-6">
           <div>
             <label class="block font-semibold mb-1">Nilai Produk</label>
@@ -585,7 +593,6 @@
       </div>
     </div>
 
-    <!-- Chat Modal -->
     <div id="chatModal" class="modal-overlay">
       <div class="modal-content">
         <div class="flex border-b border-gray-300 items-center justify-between px-4 py-2">
@@ -594,11 +601,10 @@
             class="text-gray-500 hover:text-pink-600 text-2xl leading-none">&times;</button>
         </div>
         <div class="flex h-[320px]">
-          <!-- Sidebar Kontak Chat -->
-          <div class="w-1/3 border-r border-gray-200 p-3 flex flex-col gap-2 bg-gray-50 overflow-y-auto">
+          <div id="chat-contacts-sidebar"
+            class="w-1/3 border-r border-gray-200 p-3 flex flex-col gap-2 bg-gray-50 overflow-y-auto">
             <div class="text-sm text-gray-500 text-center py-2">Memuat kontak...</div>
           </div>
-          <!-- Panel Chat Kanan -->
           <div class="flex-1 flex flex-col">
             <div class="p-3 border-b border-gray-200 font-semibold" id="chat-header-title">Pilih kontak untuk memulai
               chat</div>
@@ -612,7 +618,6 @@
               </div>
             </div>
             <div class="flex-1 p-3 overflow-y-auto" id="chat-messages-container">
-              <!-- Pesan chat akan dimuat di sini -->
               <div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>
             </div>
             <div class="border-t border-gray-200 p-2 flex items-center">
@@ -666,14 +671,14 @@
       onAuthStateChanged,
       doc,
       getDoc,
-      updateDoc, // Added for updating order status
+      updateDoc,
       signOut,
       collection,
       query,
       where,
       getDocs,
-      addDoc, // For sending chat messages
-      serverTimestamp // For chat messages timestamp
+      addDoc,
+      serverTimestamp
     } from './js/firebase-config.js'; // Corrected path to firebase-config.js
 
     let currentUserId = null;
@@ -687,7 +692,7 @@
     const ordersListContainer = document.getElementById('orders-list');
     const pesananTabs = document.querySelectorAll('.pesanan-tab');
     const pesananSectionTitle = document.querySelector('.pesanan-section-title');
-    const pendingOrdersCountSpan = document.querySelector('.pesanan-tab[data-status="Sedang Dikemas"] .pesanan-count');
+    const pendingOrdersCountSpan = document.querySelector('.pesanan-tab[data-status="Menunggu Verifikasi"] .pesanan-count');
 
     // Header dropdown elements
     const userIcon = document.getElementById('userIcon');
@@ -704,7 +709,7 @@
 
     // Chat Modal Elements
     const chatModal = document.getElementById('chatModal');
-    const chatContactsSidebar = chatModal.querySelector('.w-1/3');
+    const chatContactsSidebar = document.getElementById('chat-contacts-sidebar');
     const chatHeaderTitle = document.getElementById('chat-header-title');
     const chatProductInfo = document.getElementById('chat-product-info');
     const chatProductImage = document.getElementById('chat-product-image');
@@ -727,8 +732,6 @@
     }
 
     // Function to show custom confirmation/alert modal (re-used from admin-katalog.html for consistency)
-    // Note: This modal is not present in the provided HTML, so it needs to be added or replaced with standard alert.
-    // For now, I'll use standard alert for simplicity. If you want a custom modal, you need to add its HTML structure.
     function showCustomAlert(message) {
       alert(message);
     }
@@ -762,14 +765,19 @@
       }
 
       ordersListContainer.innerHTML = '<div class="text-gray-500 text-center py-8">Memuat pesanan...</div>';
+
+      // Update section title based on filter
       pesananSectionTitle.textContent = `Pesanan ${statusFilter}`;
+
 
       try {
         let q;
         if (statusFilter === 'Semua') {
-          q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId));
+          // PERBAIKAN DI SINI: Ubah "pembeliId" menjadi "userId"
+          q = query(collection(db, "orders"), where("userId", "==", currentUserId));
         } else {
-          q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId), where("status", "==", statusFilter));
+          // PERBAIKAN DI SINI: Ubah "pembeliId" menjadi "userId"
+          q = query(collection(db, "orders"), where("userId", "==", currentUserId), where("status", "==", statusFilter));
         }
 
         const querySnapshot = await getDocs(q);
@@ -777,9 +785,12 @@
         let pendingCount = 0;
 
         querySnapshot.forEach((doc) => {
-          const orderData = { id: doc.id, ...doc.data() };
+          const orderData = {
+            id: doc.id,
+            ...doc.data()
+          };
           allOrders.push(orderData);
-          if (orderData.status === 'Sedang Dikemas') {
+          if (orderData.status === 'Menunggu Verifikasi') { // Perbaikan: Gunakan status yang sesuai
             pendingCount++;
           }
         });
@@ -830,61 +841,87 @@
         let actionButtons = '';
         const orderIndex = allOrders.indexOf(order); // Get current index for local array manipulation (if needed)
 
-        if (order.status === 'Sedang Dikemas' || order.status === 'Dikirim') {
+        // Perbaikan: Menggunakan 'order.items' dan properti 'quantity' dan 'variant'
+        const firstProduct = order.items && order.items.length > 0 ? order.items[0] : null;
+        const productNameForChat = firstProduct ? (firstProduct.namaBarang || '') : '';
+        const productImageForChat = firstProduct ? (firstProduct.imageUrl || '') : '';
+
+        if (order.status === 'Belum Dibayar') {
           actionButtons = `
-                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="markOrderCompleted('${order.id}')">Pesanan Selesai</button>
-                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>
-                    `;
+                                <button class="pesanan-action-btn pesanan-action-btn-active" onclick="window.location.href='pembeli_pembayaran.html?orderId=${order.id}'">Bayar Sekarang</button>
+                                <button class="pesanan-action-btn" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Hubungi Penjual</button>
+                            `;
+        } else if (order.status === 'Menunggu Verifikasi') { // Perbaikan: Sesuaikan dengan status di database
+          actionButtons = `
+                                <button class="pesanan-action-btn pesanan-action-btn-active" disabled>Menunggu Verifikasi Penjual</button>
+                                <button class="pesanan-action-btn" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Hubungi Penjual</button>
+                            `;
+        } else if (order.status === 'Dikirim') {
+          actionButtons = `
+                                <button class="pesanan-action-btn pesanan-action-btn-active" onclick="markOrderCompleted('${order.id}')">Pesanan Selesai</button>
+                                <button class="pesanan-action-btn" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Hubungi Penjual</button>
+                            `;
         } else if (order.status === 'Selesai') {
           actionButtons = `
-                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white mr-2 hover:bg-pink-700 hover:border-pink-700" onclick="showRatingModalWithOrder('${order.id}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Nilai</button>
-                        <button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>
-                    `;
+                                <button class="pesanan-action-btn pesanan-action-btn-active" onclick="showRatingModalWithOrder('${order.id}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Nilai</button>
+                                <button class="pesanan-action-btn" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Hubungi Penjual</button>
+                            `;
         } else {
-          actionButtons = `<button class="border border-pink-600 rounded px-4 py-2 bg-pink-600 text-white hover:bg-pink-700 hover:border-pink-700" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${order.products[0]?.namaBarang || ''}', '${order.products[0]?.imageUrl || ''}', '${order.status}')">Hubungi Penjual</button>`;
+          // Default action for other statuses like 'Dibatalkan'
+          actionButtons = `<button class="pesanan-action-btn" onclick="showChatModalWithOrder('${order.id}', '${order.jastiperId}', '${productNameForChat}', '${productImageForChat}', '${order.status}')">Hubungi Penjual</button>`;
         }
 
         // Calculate total price for all products in the order
-        const totalOrderPrice = order.products.reduce((sum, product) => {
-          return sum + (product.harga || 0) * (product.qty || 1);
+        // Perbaikan: Pastikan order.items adalah array sebelum memanggil reduce, dan gunakan product.quantity
+        const totalOrderPrice = (order.items || []).reduce((sum, product) => {
+          return sum + (product.harga || 0) * (product.quantity || 1);
         }, 0);
 
         return `
-                    <div class="border border-gray-300 rounded bg-white mt-2 mb-8">
-                        <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
-                            <div class="flex items-center gap-2">
-                                <span class="font-bold text-base">${storeName}</span>
-                                <button class="px-2 py-1 border border-pink-600 rounded bg-pink-600 text-white text-xs hover:bg-pink-700 hover:border-pink-700 ml-2" onclick="kunjungiToko('${order.tokoId}')">Kunjungi Toko</button>
-                            </div>
-                            <span class="text-sm text-gray-700">Pesanan ${order.status}</span>
-                        </div>
-                        ${order.products.map(product => `
-                            <div class="flex flex-row gap-4 px-4 py-4 items-center">
-                                <img src="${product.imageUrl || 'https://placehold.co/60x60/E0E0E0/333333?text=Produk'}" alt="${product.namaBarang || 'Produk'}" class="w-20 h-20 object-cover rounded border border-gray-200">
-                                <div class="flex-1">
-                                    <div class="font-semibold text-base mb-1">${product.namaBarang || 'Nama Produk Tidak Diketahui'}</div>
-                                    <div class="text-gray-600 text-sm mb-1">${product.varian ? `${product.varian}, ` : ''}Jumlah: ${product.qty || 1}</div>
+                        <div class="border border-gray-300 rounded bg-white mt-2 mb-8">
+                            <div class="flex justify-between items-center px-4 py-2 border-b border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-base">${storeName}</span>
+                                    <button class="px-2 py-1 border border-pink-600 rounded bg-pink-600 text-white text-xs hover:bg-pink-700 hover:border-pink-700 ml-2" onclick="kunjungiToko('${order.tokoId}')">Kunjungi Toko</button>
                                 </div>
-                                <div class="text-right min-w-[120px]">
-                                    <div class="text-red-600 font-semibold text-base">${formatRupiah(product.harga || 0)}</div>
+                                <span class="text-sm font-semibold text-pink-600">${order.status}</span>
+                            </div>
+                            <div class="p-4">
+                                ${order.items.map(item => `
+                                    <div class="pesanan-product">
+                                        <div class="pesanan-product-image">
+                                            <img src="${item.imageUrl || 'https://placehold.co/60x60/E0E0E0/333333?text=Produk'}" alt="${item.namaBarang}" class="pesanan-img" onerror="this.onerror=null;this.src='https://placehold.co/60x60/E0E0E0/333333?text=Produk';">
+                                        </div>
+                                        <div class="pesanan-product-info">
+                                            <div class="pesanan-product-name">${item.namaBarang}</div>
+                                            ${item.variant ? `<div class="pesanan-product-variant">${item.variant}</div>` : ''}
+                                            <div class="pesanan-product-variant">Jumlah: ${item.quantity}</div>
+                                        </div>
+                                        <div class="pesanan-product-price">${formatRupiah(item.harga * item.quantity)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="flex justify-end items-center px-4 py-3 border-t border-gray-200">
+                                <div class="pesanan-total">
+                                    <span class="pesanan-total-label">Total Pesanan:</span>
+                                    <span class="pesanan-total-amount">${formatRupiah(totalOrderPrice)}</span>
                                 </div>
                             </div>
-                        `).join('')}
-                        <div class="flex justify-end items-center px-4 pb-4">
-                            <div class="mr-8 text-base">Total Pesanan: <span class="text-red-600 font-semibold">${formatRupiah(totalOrderPrice)}</span></div>
-                            ${actionButtons}
+                            <div class="pesanan-actions px-4 pb-3">
+                                ${actionButtons}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
       });
 
-      ordersListContainer.innerHTML = (await Promise.all(orderHtmlPromises)).join('');
+      const orderHtml = await Promise.all(orderHtmlPromises);
+      ordersListContainer.innerHTML = orderHtml.join('');
     }
 
     function updatePendingOrdersCount(count) {
       if (pendingOrdersCountSpan) {
-        pendingOrdersCountSpan.textContent = `(${count})`;
         if (count > 0) {
+          pendingOrdersCountSpan.textContent = `(${count})`;
           pendingOrdersCountSpan.classList.remove('hidden');
         } else {
           pendingOrdersCountSpan.classList.add('hidden');
@@ -892,388 +929,289 @@
       }
     }
 
-    // --- Order Actions ---
+    // --- Event Listeners and Initial Load ---
 
-    // Mark order as completed
-    window.markOrderCompleted = async function (orderId) {
-      const confirmed = confirm('Apakah Anda yakin pesanan sudah selesai?'); // Using standard confirm for now
-      if (confirmed) {
-        try {
-          const orderRef = doc(db, "orders", orderId);
-          await updateDoc(orderRef, {
-            status: "Selesai",
-            completedAt: serverTimestamp() // Add a timestamp for completion
-          });
-          showCustomAlert("Pesanan berhasil ditandai sebagai Selesai!");
-          fetchOrdersFromFirestore(currentTab); // Re-fetch orders for current tab
-        } catch (error) {
-          console.error("Error updating order status:", error);
-          showCustomAlert("Gagal menandai pesanan sebagai Selesai: " + error.message);
-        }
-      }
+    // Handle tab clicks
+    pesananTabs.forEach(tab => {
+      tab.addEventListener('click', (event) => {
+        event.preventDefault();
+        pesananTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTab = tab.dataset.status;
+        fetchOrdersFromFirestore(currentTab);
+      });
+    });
+
+    // Handle header dropdown for user icon
+    if (userIcon) {
+      userIcon.addEventListener('click', function (event) {
+        event.preventDefault();
+        if (userDropdown) userDropdown.classList.toggle('hidden');
+      });
     }
 
+    document.addEventListener('click', function (event) {
+      if (userIcon && userDropdown && !userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
+        userDropdown.classList.add('hidden');
+      }
+    });
+
     // --- Rating Modal Functions ---
-    window.showRatingModalWithOrder = function (orderId, productName, productImage, orderStatus) {
+    window.showRatingModalWithOrder = async function (orderId, productName, productImage, orderStatus) {
       currentRatingOrderId = orderId;
       ratingProductImage.src = productImage || 'https://placehold.co/60x60/E0E0E0/333333?text=Produk';
       ratingProductName.textContent = productName;
-      ratingOrderNumber.textContent = `No Pesanan ${orderId.substring(0, 8)}`; // Shorten ID for display
-      ratingOrderStatus.textContent = orderStatus;
+      ratingOrderNumber.textContent = `Order ID: ${orderId}`;
+      ratingOrderStatus.textContent = `Status: ${orderStatus}`;
 
-      // Reset stars
-      document.querySelectorAll('#stars-produk .star').forEach(s => s.textContent = '☆');
-      document.querySelectorAll('#stars-jastiper .star').forEach(s => s.textContent = '☆');
-      document.querySelectorAll('#stars-kirim .star').forEach(s => s.textContent = '☆');
-      document.getElementById('stars-produk').dataset.rating = 0;
-      document.getElementById('stars-jastiper').dataset.rating = 0;
-      document.getElementById('stars-kirim').dataset.rating = 0;
+      // Reset stars to empty
+      document.querySelectorAll('#stars-produk .star').forEach(star => star.textContent = '☆');
+      document.querySelectorAll('#stars-jastiper .star').forEach(star => star.textContent = '☆');
+      document.querySelectorAll('#stars-kirim .star').forEach(star => star.textContent = '☆');
+
+      // Add click listeners for stars
+      setupStarRating('stars-produk', 'productRating');
+      setupStarRating('stars-jastiper', 'jastiperRating');
+      setupStarRating('stars-kirim', 'kirimRating');
 
       ratingModal.classList.add('show');
-    }
+    };
 
     window.hideRatingModal = function () {
       ratingModal.classList.remove('show');
       currentRatingOrderId = null;
-    }
+    };
 
-    function makeStarRating(containerId) {
+    let ratings = {
+      productRating: 0,
+      jastiperRating: 0,
+      kirimRating: 0
+    };
+
+    function setupStarRating(containerId, ratingKey) {
       const container = document.getElementById(containerId);
       const stars = container.querySelectorAll('.star');
-      let rating = 0;
-
-      stars.forEach((star, idx) => {
-        star.addEventListener('mouseenter', () => {
-          stars.forEach((s, i) => s.textContent = i <= idx ? '★' : '☆');
-        });
-        star.addEventListener('mouseleave', () => {
-          stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
-        });
-        star.addEventListener('click', () => {
-          rating = idx + 1;
-          stars.forEach((s, i) => s.textContent = i < rating ? '★' : '☆');
-          container.dataset.rating = rating; // Store rating in dataset
-        });
+      stars.forEach((star, index) => {
+        star.onclick = () => {
+          ratings[ratingKey] = index + 1;
+          stars.forEach((s, i) => {
+            s.textContent = i < ratings[ratingKey] ? '★' : '☆';
+          });
+        };
       });
     }
 
-    // Apply star rating functionality
-    makeStarRating('stars-produk');
-    makeStarRating('stars-jastiper');
-    makeStarRating('stars-kirim');
+    ratingForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-    ratingForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const produkRating = parseInt(document.getElementById('stars-produk').dataset.rating || 0);
-      const jastiperRating = parseInt(document.getElementById('stars-jastiper').dataset.rating || 0);
-      const kirimRating = parseInt(document.getElementById('stars-kirim').dataset.rating || 0);
+      if (!currentRatingOrderId) {
+        showCustomAlert("Tidak ada pesanan yang dipilih untuk diberi nilai.");
+        return;
+      }
 
-      if (produkRating === 0 || jastiperRating === 0 || kirimRating === 0) {
-        showCustomAlert("Mohon berikan semua rating (produk, jastiper, jasa kirim) sebelum mengirim.");
+      if (ratings.productRating === 0 || ratings.jastiperRating === 0 || ratings.kirimRating === 0) {
+        showCustomAlert("Mohon berikan semua nilai bintang.");
         return;
       }
 
       try {
-        // Add rating to 'ratings' collection
-        await addDoc(collection(db, "ratings"), {
-          orderId: currentRatingOrderId,
-          userId: currentUserId,
-          produkRating: produkRating,
-          jastiperRating: jastiperRating,
-          jasaKirimRating: kirimRating,
-          timestamp: serverTimestamp()
+        // Update the order status to 'Selesai' (if not already) and add rating data
+        const orderRef = doc(db, "orders", currentRatingOrderId);
+        await updateDoc(orderRef, {
+          status: 'Selesai', // Ensure status is 'Selesai' after rating
+          rating: {
+            product: ratings.productRating,
+            jastiper: ratings.jastiperRating,
+            kirim: ratings.kirimRating,
+            ratedAt: serverTimestamp()
+          },
+          updatedAt: serverTimestamp()
         });
 
-        // Optionally, update the order document to mark it as rated
-        await updateDoc(doc(db, "orders", currentRatingOrderId), {
-          isRated: true
-        });
+        // Optionally, update product/jastiper/delivery ratings averages (requires Cloud Functions for security)
+        // For now, just confirming the order update.
 
-        showCustomAlert("Terima kasih atas rating Anda!");
+        showCustomAlert("Terima kasih atas penilaian Anda!");
         hideRatingModal();
-        fetchOrdersFromFirestore(currentTab); // Re-fetch orders to update UI
+        fetchOrdersFromFirestore(currentTab); // Refresh orders list
       } catch (error) {
         console.error("Error submitting rating:", error);
-        showCustomAlert("Gagal mengirim rating: " + error.message);
+        showCustomAlert("Gagal mengirim penilaian: " + error.message);
       }
     });
 
     // --- Chat Modal Functions ---
+
     window.showChatModalWithOrder = async function (orderId, jastiperId, productName, productImage, orderStatus) {
       currentChatOrderId = orderId;
-      currentChatPartnerId = jastiperId; // The jastiper is the chat partner
+      currentChatPartnerId = jastiperId; // This is the jastiper's UID
 
+      // Update chat header with product/order info
+      chatHeaderTitle.textContent = `Chat dengan Jastiper untuk Pesanan: ${orderId}`;
+      chatProductInfo.classList.remove('hidden');
       chatProductImage.src = productImage || 'https://placehold.co/48x48/E0E0E0/333333?text=Produk';
       chatProductName.textContent = productName;
-      chatOrderNumber.textContent = `No Pesanan ${orderId ? orderId.substring(0, 8) : 'N/A'}`; // Handle null orderId for general CS chat
-      chatOrderStatus.textContent = orderStatus;
-      chatProductInfo.classList.remove('hidden'); // Show product info in chat header
+      chatOrderNumber.textContent = `Order ID: ${orderId}`;
+      chatOrderStatus.textContent = `Status: ${orderStatus}`;
 
-      // Fetch and display chat contacts (jastipers from user's orders)
-      await loadChatContacts();
-      // Select the current chat partner in the sidebar
-      const contactElement = chatContactsSidebar.querySelector(`[data-jastiper-id="${jastiperId}"]`);
-      if (contactElement) {
-        document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
-        contactElement.classList.add('active');
-      }
-
-      // Load messages for the selected chat
-      await loadChatMessages(orderId, currentUserId, jastiperId);
+      // Fetch and display chat messages for this order and partner
+      await fetchChatMessages();
 
       chatModal.classList.add('show');
-    }
+    };
 
     window.hideChatModal = function () {
       chatModal.classList.remove('show');
-      currentChatOrderId = null;
       currentChatPartnerId = null;
+      currentChatOrderId = null;
+      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>'; // Clear messages
+      chatInput.value = ''; // Clear input
       chatProductInfo.classList.add('hidden'); // Hide product info
-      chatHeaderTitle.textContent = "Pilih kontak untuk memulai chat";
-      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>';
-      chatInput.value = '';
-    }
+    };
 
-    async function loadChatContacts() {
-      chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Memuat kontak...</div>';
-      try {
-        const q = query(collection(db, "orders"), where("pembeliId", "==", currentUserId));
-        const querySnapshot = await getDocs(q);
-
-        const jastiperIds = new Set();
-        const jastiperNames = new Map(); // To store jastiper names
-
-        for (const docSnap of querySnapshot.docs) {
-          const orderData = docSnap.data();
-          if (orderData.jastiperId && !jastiperIds.has(orderData.jastiperId)) {
-            jastiperIds.add(orderData.jastiperId);
-            // Fetch jastiper's store name (assuming jastiperId is also tokoId)
-            const storeName = await getStoreName(orderData.jastiperId);
-            jastiperNames.set(orderData.jastiperId, storeName);
-          }
-        }
-
-        if (jastiperIds.size === 0) {
-          chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Tidak ada kontak chat.</div>';
-          return;
-        }
-
-        chatContactsSidebar.innerHTML = ''; // Clear loading message
-
-        jastiperIds.forEach(jastiperId => {
-          const jastiperName = jastiperNames.get(jastiperId) || 'Jastiper Tidak Dikenal';
-          const contactDiv = document.createElement('div');
-          contactDiv.classList.add('flex', 'items-center', 'gap-2', 'p-2', 'border', 'rounded', 'cursor-pointer', 'hover:bg-pink-50', 'chat-contact');
-          contactDiv.dataset.jastiperId = jastiperId;
-          contactDiv.innerHTML = `
-                        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" class="w-7 h-7 rounded-full" />
-                        <div>
-                            <div class="font-semibold text-sm">${jastiperName}</div>
-                            <div class="text-xs text-gray-500">Ketuk untuk chat</div>
-                        </div>
-                    `;
-          chatContactsSidebar.appendChild(contactDiv);
-
-          contactDiv.addEventListener('click', async () => {
-            document.querySelectorAll('.chat-contact').forEach(c => c.classList.remove('active'));
-            contactDiv.classList.add('active');
-            currentChatPartnerId = jastiperId;
-            chatHeaderTitle.textContent = `Chat dengan ${jastiperName}`;
-
-            // Find an order associated with this jastiper to display product info
-            const associatedOrder = allOrders.find(order => order.jastiperId === jastiperId);
-            if (associatedOrder && associatedOrder.products && associatedOrder.products.length > 0) {
-              currentChatOrderId = associatedOrder.id;
-              chatProductImage.src = associatedOrder.products[0].imageUrl || 'https://placehold.co/48x48/E0E0E0/333333?text=Produk';
-              chatProductName.textContent = associatedOrder.products[0].namaBarang || 'Produk';
-              chatOrderNumber.textContent = `No Pesanan ${associatedOrder.id.substring(0, 8)}`;
-              chatOrderStatus.textContent = associatedOrder.status;
-              chatProductInfo.classList.remove('hidden');
-            } else {
-              chatProductInfo.classList.add('hidden');
-            }
-
-            await loadChatMessages(currentChatOrderId, currentUserId, currentChatPartnerId);
-          });
-        });
-
-      } catch (error) {
-        console.error("Error loading chat contacts:", error);
-        chatContactsSidebar.innerHTML = '<div class="text-sm text-gray-500 text-center py-2">Gagal memuat kontak.</div>';
-      }
-    }
-
-    async function loadChatMessages(orderId, userId1, userId2) {
-      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Memuat pesan...</div>';
-      if (!orderId || !userId1 || !userId2) {
+    async function fetchChatMessages() {
+      if (!currentUserId || !currentChatPartnerId || !currentChatOrderId) {
         chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Pilih kontak untuk melihat riwayat chat.</div>';
         return;
       }
 
+      chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Memuat pesan...</div>';
+
       try {
-        // Determine chat document ID (consistent for both users)
-        const chatDocId = [userId1, userId2].sort().join('_') + '_' + orderId;
-        const chatRef = doc(db, "chats", chatDocId);
-        const chatSnap = await getDoc(chatRef);
+        // Chat messages are stored in a subcollection under the order
+        // Path: orders/{orderId}/chats/{chatMessageId}
+        const chatRef = collection(db, "orders", currentChatOrderId, "chats");
+        // Query for messages between current user and current chat partner
+        // This assumes each message document has 'senderId' and 'receiverId'
+        const q = query(chatRef,
+          where("senderId", "in", [currentUserId, currentChatPartnerId]),
+          where("receiverId", "in", [currentUserId, currentChatPartnerId]),
+          orderBy("timestamp", "asc") // Order by timestamp
+        );
 
-        if (chatSnap.exists()) {
-          const chatData = chatSnap.data();
-          const messages = chatData.messages || [];
-
-          if (messages.length === 0) {
-            chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Belum ada pesan dalam obrolan ini.</div>';
-          } else {
-            chatMessagesContainer.innerHTML = messages.map(msg => `
-                            <div class="flex ${msg.senderId === currentUserId ? 'justify-end' : 'justify-start'} mb-2">
-                                <div class="max-w-[70%] p-2 rounded-lg ${msg.senderId === currentUserId ? 'bg-pink-600 text-white' : 'bg-gray-200 text-gray-800'}">
-                                    <p class="text-sm">${msg.text}</p>
-                                    <span class="text-xs opacity-75">${msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
-                                </div>
-                            </div>
-                        `).join('');
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
-          }
+        const querySnapshot = await getDocs(q);
+        let messagesHtml = '';
+        if (querySnapshot.empty) {
+          messagesHtml = '<div class="text-gray-500 text-center py-4">Belum ada pesan dalam obrolan ini.</div>';
         } else {
-          chatMessagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Belum ada pesan dalam obrolan ini.</div>';
+          querySnapshot.forEach(docSnap => {
+            const msg = docSnap.data();
+            const isSender = msg.senderId === currentUserId;
+            const messageClass = isSender ? 'bg-pink-100 self-end text-right' : 'bg-gray-200 self-start text-left';
+            messagesHtml += `
+              <div class="flex ${isSender ? 'justify-end' : 'justify-start'} mb-2">
+                <div class="rounded-lg p-2 max-w-[70%] ${messageClass}">
+                  <p class="text-sm">${msg.text}</p>
+                  <span class="text-xs text-gray-500">${new Date(msg.timestamp?.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              </div>
+            `;
+          });
         }
+        chatMessagesContainer.innerHTML = messagesHtml;
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
       } catch (error) {
-        console.error("Error loading chat messages:", error);
-        chatMessagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Gagal memuat pesan.</div>';
+        console.error("Error fetching chat messages:", error);
+        chatMessagesContainer.innerHTML = `<div class="text-red-500 text-center py-4">Gagal memuat pesan: ${error.message}</div>`;
       }
     }
 
     window.sendMessage = async function () {
       const messageText = chatInput.value.trim();
-      if (!messageText || !currentChatOrderId || !currentUserId || !currentChatPartnerId) {
-        showCustomAlert("Pesan tidak boleh kosong atau chat belum dipilih.");
+      if (!messageText || !currentUserId || !currentChatPartnerId || !currentChatOrderId) {
+        showCustomAlert("Pesan tidak boleh kosong atau chat belum siap.");
         return;
       }
 
       try {
-        const chatDocId = [currentUserId, currentChatPartnerId].sort().join('_') + '_' + currentChatOrderId;
-        const chatRef = doc(db, "chats", chatDocId);
-
-        const newMessage = {
+        const chatRef = collection(db, "orders", currentChatOrderId, "chats");
+        await addDoc(chatRef, {
           senderId: currentUserId,
+          receiverId: currentChatPartnerId,
           text: messageText,
           timestamp: serverTimestamp()
-        };
-
-        // Atomically update the messages array
-        await updateDoc(chatRef, {
-          messages: [...(await getDoc(chatRef)).data()?.messages || [], newMessage]
-        }, { merge: true }); // Use merge: true to create if not exists
-
+        });
         chatInput.value = ''; // Clear input
-        await loadChatMessages(currentChatOrderId, currentUserId, currentChatPartnerId); // Reload messages
+        await fetchChatMessages(); // Refresh messages
       } catch (error) {
         console.error("Error sending message:", error);
         showCustomAlert("Gagal mengirim pesan: " + error.message);
       }
-    }
+    };
+
+    // --- Order Actions ---
+    window.markOrderCompleted = async function (orderId) {
+      showCustomAlert("Fungsi 'Pesanan Selesai' belum diimplementasikan.", null, false);
+      // Implement logic to update order status to 'Selesai' in Firestore
+      // You might also want to trigger a Cloud Function here to handle finalization,
+      // such as releasing funds to the jastiper.
+    };
+
+    window.kunjungiToko = function (storeId) {
+      showCustomAlert(`Fungsi 'Kunjungi Toko' untuk ID: ${storeId} belum diimplementasikan.`);
+      // Implement redirection to store page
+    };
 
 
-    // --- Event Listeners ---
-
-    // Highlight active sidebar item
-    document.addEventListener('DOMContentLoaded', function () {
-      const currentPath = window.location.pathname.split("/").pop();
-      document.querySelectorAll('.akun-menu-item').forEach(function (item) {
-        const linkHref = item.getAttribute('href').split("/").pop();
-        if (linkHref === currentPath) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
-      });
-
-      // Tab Navigation
-      pesananTabs.forEach(tab => {
-        tab.addEventListener('click', function (e) {
-          e.preventDefault();
-          pesananTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          currentTab = this.dataset.status; // Get status from data-status attribute
-          fetchOrdersFromFirestore(currentTab);
-        });
-      });
-
-      // Search functionality
-      const searchInput = document.querySelector('.header-search');
-      if (searchInput) {
-        searchInput.addEventListener('keypress', function (e) {
-          if (e.key === 'Enter') {
-            const searchTerm = this.value;
-            if (searchTerm.trim()) {
-              alert('Mencari: ' + searchTerm);
-            }
-          }
-        });
-      }
-
-      const searchIconInHeader = document.querySelector('.relative.hidden.md\\:block svg');
-      if (searchIconInHeader) {
-        searchIconInHeader.addEventListener('click', function () {
-          const searchTerm = this.previousElementSibling.value;
-          if (searchTerm.trim()) {
-            alert('Mencari: ' + searchTerm);
-          }
-        });
-      }
-    });
-
-
-    // Header User Dropdown functionality
-    if (userIcon && userDropdown) {
-      userIcon.onclick = function (e) {
-        e.stopPropagation();
-        userDropdown.classList.toggle('hidden');
-      };
-      document.addEventListener('click', function (e) {
-        if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-          userDropdown.classList.add('hidden');
-        }
-      });
-    }
-
-    // Global functions for logout and chat CS (accessed from header dropdown)
+    // --- General Navigation / Logout (re-used from other files) ---
     window.logoutUser = async function () {
-      try {
-        await signOut(auth);
-        alert("Anda telah logout!");
-        window.location.href = "login.html"; // Redirect to login page after logout
-      } catch (error) {
-        console.error("Error logging out: ", error);
-        alert("Gagal logout. Silakan coba lagi.");
-      }
-      if (userDropdown) userDropdown.classList.add('hidden');
-    }
+      showCustomAlert("Anda yakin ingin logout?", async () => {
+        try {
+          await signOut(auth);
+          showCustomAlert("Anda telah logout!");
+          window.location.href = 'pembeli_login.html'; // Redirect to login page after logout
+        } catch (error) {
+          console.error("Error during logout:", error);
+          showCustomAlert("Gagal logout. Silakan coba lagi.");
+        }
+      });
+    };
 
     window.openChatCS = function () {
-      // This function is for the general "Chat with CS" from the header dropdown
-      // It will open the chat modal and load contacts.
-      // You might want to pre-select a 'CS' contact if one exists.
-      showChatModalWithOrder(null, null, 'Dukungan Pelanggan', null, 'CS'); // Example: no specific order, just CS chat
-    }
+      showCustomAlert("Fungsi Chat dengan CS belum diimplementasikan.");
+    };
 
-    window.kunjungiToko = function (tokoId) {
-      // Implement redirect to store page
-      alert(`Mengarahkan ke halaman toko dengan ID: ${tokoId}`);
-      // window.location.href = `pembeli_toko_detail.html?id=${tokoId}`; // Example redirect
-    }
-
-    // Firebase Auth State Listener - Main entry point for data loading
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUserId = user.uid;
-        console.log("User logged in:", currentUserId);
-        fetchUserData(currentUserId); // Fetch user data for sidebar
-        fetchOrdersFromFirestore(currentTab); // Load initial orders based on default tab
-      } else {
-        console.warn("User not authenticated. Redirecting to login page.");
-        alert("Anda belum login. Silakan login terlebih dahulu.");
-        window.location.href = "login.html"; // Redirect to your login page
+    window.openTokoSaya = async function () {
+      if (!currentUserId) {
+        showCustomAlert("Anda harus login untuk mengakses Toko Saya.");
+        window.location.href = 'pembeli_login.html';
+        return;
       }
+
+      try {
+        const tokoQuery = query(collection(db, "toko"), where("ownerId", "==", currentUserId));
+        const tokoSnap = await getDocs(tokoQuery);
+
+        if (!tokoSnap.empty) {
+          const tokoDoc = tokoSnap.docs[0];
+          window.location.href = `jastiper_dashboard.html?storeId=${tokoDoc.id}`;
+        } else {
+          showCustomAlert("Anda belum memiliki toko. Apakah Anda ingin membuat toko?", () => {
+            showCustomAlert("Fungsi pembuatan toko belum diimplementasikan.");
+          });
+        }
+      } catch (error) {
+        console.error("Error checking store ownership:", error);
+        showCustomAlert("Gagal memeriksa status toko Anda. Silakan coba lagi.");
+      }
+    };
+
+
+    // Initial authentication check and data load
+    document.addEventListener('DOMContentLoaded', () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUserId = user.uid;
+          console.log("User is logged in:", currentUserId);
+          fetchUserData(currentUserId); // Fetch user data for sidebar
+          fetchOrdersFromFirestore(currentTab); // Load orders for the current tab
+        } else {
+          currentUserId = null;
+          console.log("User is not logged in.");
+          showCustomAlert("Anda harus login untuk melihat pesanan Anda.");
+          window.location.href = 'pembeli_login.html';
+        }
+      });
     });
   </script>
 </body>

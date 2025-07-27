@@ -437,6 +437,18 @@
             align-items: center;
             justify-content: center;
             z-index: 1002;
+            opacity: 0;
+            /* Add opacity for transition */
+            visibility: hidden;
+            /* Add visibility for transition */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            /* Add transition */
+        }
+
+        .modal-alamat.show {
+            /* Add show class for modal-alamat */
+            opacity: 1;
+            visibility: visible;
         }
 
         .modal-alamat-backdrop {
@@ -524,6 +536,203 @@
             background-color: #d1d5db;
             /* gray-300 */
         }
+
+        /* Modal Bank - New styles for dynamic content */
+        .modal-bank {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-bank.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-bank-backdrop {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            transition: opacity 0.2s;
+        }
+
+        .modal-bank-content {
+            position: relative;
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #bfdbfe;
+            padding: 1rem;
+            width: 100%;
+            max-width: 24rem;
+            margin-left: auto;
+            margin-right: auto;
+            transition: all 0.2s;
+        }
+
+        .modal-bank-title {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: move;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1d4ed8;
+        }
+
+        .modal-bank-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .modal-bank-row:hover {
+            background-color: #eff6ff;
+            /* blue-50 */
+        }
+
+        .modal-bank-row input[type="radio"] {
+            accent-color: #2563eb;
+            /* blue-600 */
+        }
+
+        .modal-bank-logo {
+            width: 2rem;
+            /* 32px */
+            height: 1.25rem;
+            /* 20px */
+            object-fit: contain;
+        }
+
+        .modal-bank-btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-bank-btn-pilih {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .modal-bank-btn-pilih:hover {
+            background-color: #1e40af;
+        }
+
+        .modal-bank-btn-batal {
+            background-color: #e5e7eb;
+            color: #374151;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .modal-bank-btn-batal:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Custom Confirmation/Alert Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid #ef4444;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #dc2626;
+        }
+
+        .modal-buttons .btn-primary {
+            background-color: #ec4899;
+            color: white;
+            border: 1px solid #ec4899;
+        }
+
+        .modal-buttons .btn-primary:hover {
+            background-color: #db2777;
+        }
     </style>
 </head>
 
@@ -601,6 +810,7 @@
                 <div class="checkout-alamat-detail">
                     <div id="namaPenerima">Memuat...</div>
                     <div id="alamatLengkap">Memuat...</div>
+                    <div id="teleponPenerima">Memuat...</div> <!-- Pastikan ID ini ada -->
                 </div>
             </div>
             <div class="checkout-section checkout-produk">
@@ -634,8 +844,8 @@
                 <div class="checkout-rincian-row"><span>Subtotal Pesanan</span><span id="subtotalPesanan">Rp.
                         0</span>
                 </div>
-                <div class="checkout-rincian-row"><span>Subtotal Pengiriman</span><span id="subtotalPengiriman">Rp.
-                        0</span></div>
+                <!-- <div class="checkout-rincian-row"><span>Subtotal Pengiriman</span><span id="subtotalPengiriman">Rp.
+                        0</span></div> -->
                 <div class="checkout-rincian-row"><span>Biaya Layanan</span><span id="biayaLayanan">Rp. 0</span>
                 </div>
                 <div class="checkout-rincian-row"><span>Fee Jastiper</span><span id="feeJastiper">Rp. 0</span>
@@ -646,8 +856,7 @@
             </div>
         </div>
 
-        <div class="modal-bank fixed inset-0 flex items-center justify-center z-[1002]" id="modalBank"
-            style="display:none;">
+        <div class="modal-bank fixed inset-0 flex items-center justify-center z-[1002]" id="modalBank">
             <div class="modal-bank-backdrop absolute inset-0 bg-black opacity-40 transition-opacity duration-200"></div>
             <div class="modal-bank-content relative bg-white rounded-xl shadow-2xl border border-blue-200 p-4 w-full max-w-xs mx-auto transition-all duration-200"
                 style="min-width:240px;">
@@ -656,41 +865,7 @@
                     Pilih Metode Pembayaran
                 </div>
                 <form id="formBank" class="flex flex-col gap-2">
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="bca" class="accent-blue-600">
-                        <img src="asset/bca.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BCA">
-                        <span class="text-sm">Bank BCA</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="mandiri" class="accent-blue-600">
-                        <img src="asset/mandiri.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="Mandiri">
-                        <span class="text-sm">Bank Mandiri</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="bni" class="accent-blue-600">
-                        <img src="asset/bni.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BNI">
-                        <span class="text-sm">Bank BNI</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="bri" class="accent-blue-600">
-                        <img src="asset/bri.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BRI">
-                        <span class="text-sm">Bank BRI</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="cimb" class="accent-blue-600">
-                        <img src="asset/cimb.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="CIMB Niaga">
-                        <span class="text-sm">Bank CIMB Niaga</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="permata" class="accent-blue-600">
-                        <img src="asset/permata.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="Permata">
-                        <span class="text-sm">Bank Permata</span>
-                    </label>
-                    <label class="modal-bank-row flex items-center gap-2 p-2 rounded hover:bg-blue-50 cursor-pointer">
-                        <input type="radio" name="bank" value="bsi" class="accent-blue-600">
-                        <img src="asset/bsi.jfif" class="modal-bank-logo w-8 h-5 object-contain" alt="BSI">
-                        <span class="text-sm">Bank Syariah Indonesia (BSI)</span>
-                    </label>
+                    <!-- Opsi bank akan dimuat secara dinamis di sini oleh JavaScript -->
                 </form>
                 <div class="modal-bank-btn-row flex justify-end gap-2 mt-4">
                     <button id="modalBankPilih" type="button"
@@ -701,8 +876,7 @@
             </div>
         </div>
 
-        <div class="modal-alamat fixed inset-0 flex items-center justify-center z-[1002]" id="modalAlamat"
-            style="display:none;">
+        <div class="modal-alamat fixed inset-0 flex items-center justify-center z-[1002]" id="modalAlamat">
             <div class="modal-alamat-backdrop absolute inset-0 bg-black opacity-40 transition-opacity duration-200">
             </div>
             <div
@@ -727,6 +901,17 @@
                         class="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700 transition">Simpan</button>
                     <button id="modalAlamatBatal" type="button"
                         class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded text-sm hover:bg-gray-300 transition">Batal</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="custom-confirm-modal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
+                <p class="text-gray-700 mb-4" id="custom-confirm-message"></p>
+                <div class="modal-buttons">
+                    <button id="custom-cancel-btn" class="btn-cancel hidden">Batal</button>
+                    <button id="custom-confirm-btn" class="btn-confirm">OK</button>
                 </div>
             </div>
         </div>

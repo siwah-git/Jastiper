@@ -19,7 +19,7 @@ import {
     writeBatch,
     arrayUnion,
     onSnapshot,
-    orderBy // <<< PASTIKAN orderBy diimpor dari firestore
+    orderBy // PASTIKAN orderBy diimpor dari firestore
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import {
     getAuth,
@@ -106,12 +106,12 @@ export {
     writeBatch,
     arrayUnion,
     onSnapshot,
-    orderBy // <<< PASTIKAN orderBy diekspor di sini
+    orderBy, // PASTIKAN orderBy diekspor di sini
 
-    // Fungsi Storage
-    // ref,
-    // getDownloadURL,
-    // uploadBytes,
-    // deleteObject
+    // Fungsi Storage - DIAKTIFKAN
+    ref,
+    getDownloadURL,
+    uploadBytes,
+    deleteObject
     // httpsCallable // Ekspor httpsCallable jika Anda mengimpornya di atas
 };

@@ -1,683 +1,190 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>transfer bank</title>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Pembayaran - TitipGo</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f5f7fa;
+    /* Custom CSS untuk modal, tambahkan ke style.css atau di sini jika kecil */
+    .modal-overlay {
+      /* Pastikan modal muncul di atas semua */
+      z-index: 9999;
+      /* Tambahkan efek fade in */
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+      /* Izinkan klik di bawah overlay saat tersembunyi */
     }
 
-    .header-search {
-      font-size: 1rem;
-      height: 36px;
-      padding-left: 2.2rem;
-      padding-right: 1rem;
-      border-radius: 9999px;
-      width: 180px;
-      font-weight: 600;
-    }
-
-    @media (min-width: 1024px) {
-      .header-search {
-        width: 220px;
-      }
-    }
-
-    .header-search::placeholder {
-      color: #a0aec0;
+    .modal-overlay.flex {
+      /* Menggantikan .show untuk menampilkan */
       opacity: 1;
-      font-size: 1rem;
-      font-weight: 600;
+      pointer-events: auto;
+      /* Aktifkan interaksi saat modal terlihat */
     }
 
-    .icon-nav,
-    nav svg {
-      width: 20px !important;
-      height: 20px !important;
-      min-width: 20px;
-      min-height: 20px;
+    .modal-content {
+      transform: translateY(-20px);
+      transition: transform 0.3s ease-in-out;
     }
 
-    .icon-nav:hover {
-      filter: brightness(0.7);
+    .modal-overlay.flex .modal-content {
+      transform: translateY(0);
     }
 
-    .nav-center {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
+    /* Styling tambahan untuk ikon panah pada details/summary */
+    details summary svg {
+      transition: transform 0.2s ease-in-out;
     }
 
-    .nav-center a,
-    .nav-center .dropdown-kategori>a {
-      padding: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    .dropdown-kategori .dropdown-content,
-    #userDropdown {
-      min-width: 160px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
-      background: #fff;
-      padding: 0;
-      margin-top: 4px;
-    }
-
-    .dropdown-kategori .dropdown-content a,
-    #userDropdown a {
-      display: block;
-      padding: 10px 18px;
-      color: #222;
-      text-decoration: none;
-      font-size: 15px;
-      border-bottom: 1px solid #f0f0f0;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .dropdown-kategori .dropdown-content a:last-child,
-    #userDropdown a:last-child {
-      border-bottom: none;
-    }
-
-    .dropdown-kategori .dropdown-content a:hover,
-    #userDropdown a:hover {
-      background: #f5f7fa;
-      color: #1976d2;
-    }
-
-    .logo-titipgo {
-      width: 80px !important;
-      min-width: 80px;
-      max-width: 90px;
-    }
-
-    @media (max-width: 900px) {
-
-      .icon-nav,
-      nav svg {
-        width: 16px !important;
-        height: 16px !important;
-      }
-
-      .logo-titipgo {
-        width: 60px !important;
-      }
-
-      .header-search {
-        font-size: 0.9rem;
-        height: 28px;
-        width: 120px;
-      }
-
-      .header-search::placeholder {
-        font-size: 0.9rem;
-      }
-
-      .nav-center a,
-      .nav-center .dropdown-kategori>a {
-        font-size: 0.9rem;
-      }
-    }
-
-    .pay-main {
-      background: #f5f7fa;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 36px 20px;
-    }
-
-    .pay-box {
-      background: #eaf6fa;
-      border: 2px solid #2196f3;
-      border-radius: 6px;
-      max-width: 900px;
-      width: 100%;
-      padding: 38px 48px 32px 48px;
-      box-sizing: border-box;
-      font-size: 15px;
-      color: #222;
-    }
-
-    .pay-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .pay-label {
-      flex: 1;
-      font-weight: 500;
-    }
-
-    .pay-value {
-      flex: 1;
-      text-align: right;
-      font-weight: 500;
-    }
-
-    .pay-value-red {
-      color: #d32f2f;
-      font-weight: bold;
-    }
-
-    .pay-bank-section {
-      margin: 24px 0;
-    }
-
-    .pay-bank-info {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .pay-bank-logo img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-    }
-
-    .pay-bank-details {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .pay-bank-name {
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    .pay-bank-label {
-      font-size: 13px;
-      color: #444;
-    }
-
-    .pay-bank-number {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 16px;
-      color: #1976d2;
-      font-weight: bold;
-    }
-
-    .pay-copy-btn {
-      background: #fff;
-      color: #1976d2;
-      border: 1px solid #1976d2;
-      border-radius: 4px;
-      padding: 2px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .pay-copy-btn:hover {
-      background: #e3f0ff;
-    }
-
-    .pay-instructions {
-      margin: 24px 0;
-    }
-
-    .pay-instruction-item {
-      background: #fff;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-      border: 1px solid #e0e0e0;
-    }
-
-    .pay-instruction-header {
-      font-weight: bold;
-      font-size: 15px;
-      padding: 10px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      user-select: none;
-    }
-
-    .pay-arrow {
-      font-size: 18px;
-      margin-left: 8px;
-    }
-
-    .pay-instruction-content {
-      padding: 0 24px 14px 32px;
-      font-size: 14px;
-      color: #222;
-    }
-
-    .pay-instruction-content ol {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    .pay-instruction-content li {
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .pay-button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-    }
-
-    .pay-ok-btn {
-      background: #1976d2;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 48px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .pay-ok-btn:hover {
-      background: #1256a3;
-    }
-
-    @media (max-width: 900px) {
-      .pay-box {
-        padding: 18px 4vw;
-      }
-
-      .pay-instruction-content {
-        padding: 0 16px 14px 24px;
-      }
+    details[open] summary svg {
+      transform: rotate(180deg);
     }
   </style>
 </head>
 
-<body class="font-sans bg-gray-100 m-0">
-<header class="bg-white shadow-md py-1 px-6 flex justify-between items-center fixed w-full top-0 z-50 mb-8">
-    <div class="flex items-center space-x-3">
-        <img src="asset/images/titipgo_logo_remove.png" alt="Logo TitipGo" class="w-28 sm:w-32">
-        <div class="relative hidden md:block">
-            <input type="text" placeholder="Cari Barang..."
-                class="header-search pl-10 pr-4 py-2 border border-gray-300 rounded-full w-56 lg:w-64 focus:outline-none focus:border-pink-500">
-            <svg class="w-5 h-5 absolute left-2.5 top-2.5 text-gray-500 pointer-events-none" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M8 4a4 4 0 104 4 4 4 0 00-4-4zM2 8a6 6 0 1110.39 3.94l4.3 4.3-1.42 1.42-4.3-4.3A6 6 0 012 8z" />
-            </svg>
-        </div>
+<body class="bg-gray-100 font-sans antialiased">
+  <header class="bg-white shadow-sm py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition duration-200">TitipGo</a>
+      <nav>
+      </nav>
     </div>
-    <nav class="nav-center flex-grow hidden md:flex justify-center items-center gap-6">
-    </nav>
-    <nav class="flex items-center space-x-4 sm:space-x-6">
-        <a href="pembeli_dashboard.html"
-            class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Beranda</a>
-        <div class="dropdown-kategori relative inline-block hidden md:block">
-            <a href="pembeli_kategori.html" 
-                class="hidden md:block text-gray-700 hover:text-pink-600 font-semibold text-base">Kategori</a>
-                        <div class="dropdown-kategori relative inline-block hidden md:block"></div>
-        </div>
+  </header>
 
-        <a href="pembeli_keranjang.html" class="relative p-2 text-gray-700 hover:text-pink-600">
-            <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                </path>
-            </svg>
-        </a>
-        <a href="pembeli_notifikasi.html" class="relative p-2 text-gray-700 hover:text-pink-600"> <svg class="icon-nav w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
-                </path>
-            </svg>
-        </a>
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User" class="icon-nav w-6 h-6"
-            id="userIcon" style="cursor:pointer;">
-        <div id="userDropdown"
-            class="hidden absolute right-0 top-[60px] bg-white shadow-lg rounded min-w-[160px] z-[1001]">
-            <a href="pembeli_akun.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Akun Saya</a>
-            <a href="pembeli_pesanan_saya.html"
-                class="block px-5 py-3 text-gray-900 no-underline text-sm border-b border-gray-100">Pesanan</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Chat dengan
-                CS</a>
-            <a href="#" onclick="openChatCS();return false;"
-                class="block px-5 py-3 text-gray-700 no-underline text-sm border-b border-gray-100">Toko Saya</a>
-            <a href="#" onclick="logoutUser();return false;"
-                class="block px-5 py-3 text-red-600 no-underline text-sm">Logout</a>
-        </div>
-    </nav>
-</header>
-  <main class="pt-32">
-    <h1 class="page-title"
-      style="text-align:center;font-size:2rem;font-weight:bold;margin:32px 0 16px 0;letter-spacing:1px;">PEMBAYARAN</h1>
+  <main class="container mx-auto p-4 md:p-8">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-8 text-center">PEMBAYARAN</h1>
 
-    <!-- Main Content -->
-    <div class="pay-main">
-      <div class="pay-box">
-        <!-- Payment Summary -->
-        <div style="text-align:center;margin-bottom:16px;">
-          <img src="asset/images/ootd (1).jpg" alt="OOTD"
-            style="width:100px;height:auto;border-radius:8px;object-fit:cover;">
-        </div>
-        <div class="pay-row">
-          <div class="pay-label">Total Pembayaran</div>
-          <div class="pay-value pay-value-red">Rp. 6.300.000</div>
-        </div>
-        <div class="pay-row">
-          <div class="pay-label">Bayar Dalam</div>
-          <div class="pay-value pay-value-red" id="countdown">49 Menit 59 Detik</div>
-        </div>
+    <div class="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200">
+      <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Selesaikan Pembayaran Anda</h2>
 
-        <!-- Transfer Instructions -->
-        <div class="pay-instructions">
-          <!-- mBanking (Expanded) -->
-          <div class="pay-instruction-item active">
-            <div class="pay-instruction-header" onclick="toggleInstruction(0)">
-              <span>Cara Transfer mBanking</span>
-              <span class="pay-arrow">&#9660;</span>
-            </div>
-            <div class="pay-instruction-content">
-              <ol>
-                <li>Pilih m-Transfer > BCA Virtual Account.</li>
-                <li>Masukkan nomor Virtual Account 126 085867449980 dan pilih Send.</li>
-                <li>Periksa informasi yang tertera di layar. Total tagihan sudah benar dan username kamu
-                  dwirestykartika. Jika benar pilih Ya.</li>
-                <li>Masukkan PIN m-BCA Anda dan pilih OK.</li>
-                <li>Jika muncul notifikasi "Transaksi Gagal. Nominal melebihi limit harian", mohon ulangi transaksi
-                  menggunakan iBanking atau ATM.</li>
-              </ol>
-            </div>
-          </div>
+      <div class="flex justify-between items-baseline py-3 border-b border-gray-200 mb-4">
+        <span class="text-lg text-gray-700 font-medium">Total Pembayaran</span>
+        <span id="totalPembayaranDisplay" class="text-3xl font-extrabold text-blue-600">Rp. 0</span>
+      </div>
 
-          <!-- iBanking (Collapsed) -->
-          <div class="pay-instruction-item">
-            <div class="pay-instruction-header" onclick="toggleInstruction(1)">
-              <span>Cara Transfer iBanking</span>
-              <span class="pay-arrow">&#9654;</span>
-            </div>
-            <div class="pay-instruction-content" style="display: none;">
-              <ol>
-                <li>Login ke iBanking BCA.</li>
-                <li>Pilih menu Transfer > Virtual Account.</li>
-                <li>Masukkan nomor Virtual Account dan nominal pembayaran.</li>
-                <li>Ikuti instruksi hingga pembayaran selesai.</li>
-              </ol>
-            </div>
-          </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 mb-6">
+        <span class="text-lg text-gray-700">Bayar Dalam</span>
+        <span id="countdownDisplay" class="text-xl font-bold text-red-600">Memuat...</span>
+      </div>
 
-          <!-- ATM (Collapsed) -->
-          <div class="pay-instruction-item">
-            <div class="pay-instruction-header" onclick="toggleInstruction(2)">
-              <span>Cara Transfer ATM</span>
-              <span class="pay-arrow">&#9654;</span>
-            </div>
-            <div class="pay-instruction-content" style="display: none;">
-              <ol>
-                <li>Masukkan kartu ATM dan PIN Anda.</li>
-                <li>Pilih menu Transfer > Virtual Account.</li>
-                <li>Masukkan nomor Virtual Account dan nominal pembayaran.</li>
-                <li>Ikuti instruksi hingga pembayaran selesai.</li>
-              </ol>
-            </div>
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+          Transfer Bank:
+          <span id="bankNameDisplay" class="font-normal text-gray-600 ml-2">Memuat informasi bank...</span>
+          <img id="bankLogoDisplay" src="" alt="Bank Logo" class="h-7 ml-2 rounded">
+        </h3>
+
+        <div class="mb-4">
+          <p class="text-gray-700 text-base mb-1">Nomor Virtual Account:</p>
+          <div class="flex items-center mt-2 p-3 bg-blue-50 bg-opacity-80 rounded-lg border border-blue-200">
+            <span id="accountNumberDisplay"
+              class="text-lg md:text-xl font-bold text-blue-800 flex-grow select-all">Memuat...</span>
+            <button id="copyAccountBtn"
+              class="ml-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200">
+              Salin
+            </button>
           </div>
         </div>
 
-        <!-- OK Button -->
-        <div class="pay-button-container">
-          <button class="pay-ok-btn" onclick="handleOK()">OK</button>
+        <div class="mb-4">
+          <p class="text-gray-700 text-base mb-1">Pastikan nama pemilik rekening adalah:</p>
+          <p id="accountHolderDisplay"
+            class="text-lg md:text-xl font-bold text-gray-800 mt-1 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            Memuat...</p>
         </div>
       </div>
-    </div>
 
-    <script>
-      // Load payment data from localStorage
-      let paymentData = {};
+      <h3 class="text-xl font-bold text-gray-800 mt-8 mb-4">Instruksi Pembayaran:</h3>
 
-      function loadPaymentData() {
-        const savedData = localStorage.getItem('paymentData');
-        if (savedData) {
-          paymentData = JSON.parse(savedData);
-          updatePaymentDisplay();
-        }
-      }
-
-      function updatePaymentDisplay() {
-        if (paymentData.total) {
-          document.querySelector('.pay-value-red').textContent = `Rp. ${(paymentData.total / 1000000).toFixed(1)}.000.000`;
-        }
-      }
-
-      // Countdown Timer
-      let totalSeconds = 2999; // 49 minutes 59 seconds
-      function updateCountdown() {
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        document.getElementById('countdown').textContent =
-          `${minutes} Menit ${seconds.toString().padStart(2, '0')} Detik`;
-
-        if (totalSeconds > 0) {
-          totalSeconds--;
-        } else {
-          clearInterval(countdownInterval);
-          alert('Waktu pembayaran telah habis! Silakan coba lagi.');
-        }
-      }
-      const countdownInterval = setInterval(updateCountdown, 1000);
-      updateCountdown();
-
-      // Copy VA Number
-      function copyVANumber() {
-        const vaNumber = document.getElementById('va-number').textContent;
-        navigator.clipboard.writeText(vaNumber).then(() => {
-          document.getElementById('copy-btn').textContent = 'Disalin!';
-          setTimeout(() => {
-            document.getElementById('copy-btn').textContent = 'Salin';
-          }, 1500);
-        }).catch(() => {
-          // Fallback for older browsers
-          const textArea = document.createElement('textarea');
-          textArea.value = vaNumber;
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          document.getElementById('copy-btn').textContent = 'Disalin!';
-          setTimeout(() => {
-            document.getElementById('copy-btn').textContent = 'Salin';
-          }, 1500);
-        });
-      }
-
-      // Toggle Instructions
-      function toggleInstruction(index) {
-        const items = document.querySelectorAll('.pay-instruction-item');
-        const headers = document.querySelectorAll('.pay-instruction-header');
-        const contents = document.querySelectorAll('.pay-instruction-content');
-        const arrows = document.querySelectorAll('.pay-arrow');
-
-        // Close all
-        items.forEach(item => item.classList.remove('active'));
-        contents.forEach(content => content.style.display = 'none');
-        arrows.forEach(arrow => arrow.innerHTML = '&#9654;');
-
-        // Open selected
-        if (!items[index].classList.contains('active')) {
-          items[index].classList.add('active');
-          contents[index].style.display = 'block';
-          arrows[index].innerHTML = '&#9660;';
-        }
-      }
-
-      // OK Button
-      function handleOK() {
-        if (confirm('Apakah Anda sudah melakukan pembayaran?')) {
-          // Simpan data pesanan ke localStorage untuk halaman pesanan
-          const orderData = {
-            ...paymentData,
-            orderNumber: 'ORD' + Date.now(),
-            orderDate: new Date().toISOString(),
-            status: 'Sedang Dikemas'
-          };
-
-          let orders = JSON.parse(localStorage.getItem('orders') || '[]');
-          orders.push(orderData);
-
-          localStorage.setItem('orders', JSON.stringify(orders));
-          alert('Pesanan berhasil dibuat! Silakan cek di halaman Pesanan Saya.');
-          window.location.href = 'pembeli_pesanan_saya.html';
-        }
-      }
-
-      function showNotifications() {
-        alert('Anda memiliki 3 notifikasi baru!');
-      }
-
-      // Load data when page loads
-      window.onload = function () {
-        loadPaymentData();
-      };
-
-      function logoutUser() {
-        alert('Berhasil logout!');
-        userDropdown.classList.add('hidden');
-      }
-    </script>
-
-    <script>
-      // Dropdown Kategori
-      const kategoriMenu = document.getElementById('kategoriMenu');
-      const dropdownKategori = document.getElementById('dropdownKategori');
-      if (kategoriMenu && dropdownKategori) {
-        kategoriMenu.addEventListener('click', function (e) {
-          e.preventDefault();
-          dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', function (e) {
-          if (!kategoriMenu.contains(e.target) && !dropdownKategori.contains(e.target)) {
-            dropdownKategori.style.display = 'none';
-          }
-        });
-      }
-      // Dropdown User
-      const userIcon = document.getElementById('userIcon');
-      const userDropdown = document.getElementById('userDropdown');
-      if (userIcon && userDropdown) {
-        userIcon.onclick = function (e) {
-          e.stopPropagation();
-          userDropdown.classList.toggle('hidden');
-        };
-        document.addEventListener('click', function (e) {
-          if (!userDropdown.contains(e.target) && e.target !== userIcon) {
-            userDropdown.classList.add('hidden');
-          }
-        });
-      }
-    </script>
-
-    <script type="module">
-      import { db } from './js/firebase-config.js';
-      import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js';
-
-      async function debugFirestore() {
-        const collections = ['users', 'products', 'orders', 'ratings', 'chats'];
-        for (const col of collections) {
-          try {
-            const snap = await getDocs(collection(db, col));
-            console.log(`Data koleksi ${col}:`);
-            snap.forEach(doc => console.log(doc.id, doc.data()));
-          } catch (e) {
-            console.error(`Gagal ambil data koleksi ${col}:`, e);
-          }
-        }
-      }
-      debugFirestore();
-    </script>
-
-    <script type="module">
-      import { db, auth } from './js/firebase-config.js';
-      import { collection, query, where, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-
-      window.konfirmasiPembayaran = async function () {
-        const userId = localStorage.getItem('userId');
-        // Ambil orderId pesanan terakhir user yang statusnya 'Belum Dibayar'
-        const q = query(collection(db, "orders"), where("userId", "==", userId), where("status", "==", "Belum Dibayar"));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const orderDoc = querySnapshot.docs[0];
-          await updateDoc(doc(db, "orders", orderDoc.id), { status: "Sedang Dikemas" });
-          alert("Pembayaran dikonfirmasi!");
-          window.location.href = "pembeli_pesanan_saya.html";
-        } else {
-          alert("Tidak ada pesanan yang perlu dikonfirmasi.");
-        }
-      }
-    </script>
-
-    <!-- Integrasi Firebase Firestore -->
-    <script>
-      // Ganti konfigurasi berikut dengan milik Anda dari Firebase Console
-      const firebaseConfig = {
-        apiKey: "AlzaSyCAeVRX88dod-9BVHFIPCa_RTlIHwus-29rQ", // Dari gambar
-  authDomain: "titipgo-28f84.firebaseapp.com",
-  projectId: "titipgo-28f84", // Dari gambar
-  storageBucket: "titipgo-28f84.appspot.com",
-  messagingSenderId: "816687535591", // Dari gambar
-  appId: "1:816687535591:web:dd88f7b7f1e72e8c2a3e20"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
-
-      // Contoh: Ambil data pembayaran
-      db.collection("pembayaran").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log("Data pembayaran:", doc.id, doc.data());
-        });
-      });
-    </script>
-
-     <footer class="bg-blue-900 py-8 px-6 mt-8"> <div class="container mx-auto flex flex-wrap justify-between items-start text-white text-sm"> <div class="w-full sm:w-1/3 mb-6 sm:mb-0">
-            <h3 class="font-bold text-white mb-3">INFORMASI</h3> <ul>
-                <li class="mb-2"><a href="pembeli_tentang_kami.html" class="hover:text-pink-600">Tentang Kami</a></li>
-                <li class="mb-2"><a href="pembeli_pertanyaan_umum.html" class="hover:text-pink-600">Pertanyaan Umum</a></li>
-                <li class="mb-2"><a href="pembeli_hubungi_kami.html" class="hover:text-pink-600">Hubungi Kami</a></li>
-            </ul>
+      <details
+        class="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200">
+        <summary
+          class="text-lg font-semibold text-gray-700 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+          <span>Transfer m-Banking</span>
+          <svg class="w-6 h-6 text-gray-600 transform transition-transform duration-200" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div id="mbankingInstructionsContent" class="text-gray-600 text-sm p-4 border-t border-gray-200 bg-white">
+          <p>Memuat instruksi m-Banking...</p>
         </div>
-        <div class="w-full sm:w-1/3 flex justify-center items-center mb-6 sm:mb-0">
-            <img src="asset/images/titipgo_logo_remove.png" alt="TitipGo Logo" class="w-32">
+      </details>
+
+      <details
+        class="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200">
+        <summary
+          class="text-lg font-semibold text-gray-700 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+          <span>Transfer ATM</span>
+          <svg class="w-6 h-6 text-gray-600 transform transition-transform duration-200" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div id="atmInstructionsContent" class="text-gray-600 text-sm p-4 border-t border-gray-200 bg-white">
+          <p>Memuat instruksi ATM...</p>
         </div>
-        <div class="w-full sm:w-1/3 text-right">
-            <h3 class="font-bold text-white mb-3">IKUTI SOSIAL MEDIA KAMI</h3> <ul>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-instagram mr-2"></i><a href="https://www.instagram.com/restiidr_?igsh=MXkwbXQ5OHgxdnJteQ%3D%3D&utm_source=qr" target="_blank" class="hover:text-pink-600">Instagram</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-facebook mr-2"></i><a href="https://www.instagram.com/sitiiwhy_?igsh=MTk4aWtnbTBmaWZyZQ==" target="_blank" class="hover:text-pink-600">Facebook</a></li>
-                <li class="mb-2 flex items-center justify-end"><i class="fab fa-youtube mr-2"></i><a href="https://www.instagram.com/okay_5527?igsh=MXVkODNpNTNrZ3kwbg==" target="_blank" class="hover:text-pink-600">Youtube</a></li>
-            </ul>
+      </details>
+
+      <details
+        class="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200">
+        <summary
+          class="text-lg font-semibold text-gray-700 p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+          <span>Transfer i-Banking</span>
+          <svg class="w-6 h-6 text-gray-600 transform transition-transform duration-200" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div id="ibankingInstructionsContent" class="text-gray-600 text-sm p-4 border-t border-gray-200 bg-white">
+          <p>Memuat instruksi i-Banking...</p>
         </div>
+      </details>
+
+      <p class="mt-6 text-red-600 text-sm text-center font-bold">
+        Penting: Lakukan pembayaran dalam waktu yang ditentukan.
+      </p>
+
+
+      <div class="mt-8 text-center space-y-3">
+        <button id="confirmPaymentBtn"
+          class="w-full py-3 bg-green-600 text-white font-bold rounded-lg text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200 shadow-md">
+          Saya Sudah Bayar
+        </button>
+        <button id="cancelOrderBtn"
+          class="w-full py-2 text-red-600 border border-red-600 font-semibold rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-200 shadow-sm">
+          Batalkan Pesanan
+        </button>
+      </div>
     </div>
-    <div class="text-center text-white text-xs mt-8 opacity-75"> © 2025 TitipGo. All rights reserved.
+  </main>
+
+  <div id="custom-confirm-modal"
+    class="modal-overlay hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+    <div class="modal-content bg-white p-8 rounded-xl shadow-2xl w-11/12 md:w-1/3 max-w-md border border-gray-200">
+      <h3 id="custom-confirm-title" class="text-xl font-bold mb-5 text-gray-800">Informasi</h3>
+      <p id="custom-confirm-message" class="text-gray-700 text-base mb-7 leading-relaxed">Pesan.</p>
+      <div class="flex justify-end space-x-4">
+        <button id="custom-cancel-btn"
+          class="px-5 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 hidden">Batal</button>
+        <button id="custom-confirm-btn"
+          class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">OK</button>
+      </div>
     </div>
-</footer>
+  </div>
+
+
+  <script type="module" src="./js/pembeli_pembayaran.js"></script>
 </body>
 
 </html>

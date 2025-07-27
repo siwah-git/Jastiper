@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        /* Custom CSS untuk overriding atau menambahkan style Tailwind, identik dengan dashboard */
+        /* Custom CSS for overriding or adding Tailwind styles, identical to dashboard */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #ffffff;
@@ -300,7 +300,6 @@
         </nav>
     </header>
     <main class="pt-20">
-        <!-- Custom Confirmation/Alert Modal -->
         <div id="custom-confirm-modal" class="modal-overlay">
             <div class="modal-content">
                 <h3 class="text-xl font-semibold mb-4" id="custom-confirm-title">Peringatan!</h3>
@@ -361,7 +360,6 @@
 
         <div id="product-detail-container"
             class="relative max-w-7xl mx-auto rounded-xl shadow-lg flex flex-col md:flex-row gap-8 p-8 mb-8 bg-[#eaf3fb] border border-gray-200 mt-12 items-start min-h-[340px]">
-            <!-- Product detail will be loaded here -->
             <p id="loading-product-message" class="text-gray-500 text-center w-full">Memuat detail produk...</p>
             <p id="error-product-message" class="text-red-500 text-center w-full hidden">Gagal memuat produk.</p>
         </div>
@@ -376,16 +374,16 @@
             <button
                 class="ml-4 bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
                 onclick="hubungiToko()">Hubungi Toko</button>
-            <button
-                class="bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100"
-                onclick="kunjungiToko()">Kunjungi Toko</button>
+            <a id="kunjungiTokoButton" href="#"
+                class="bg-white border border-gray-400 text-black px-4 py-1 rounded font-semibold shadow hover:bg-gray-100">Kunjungi
+                Toko</a>
             <span class="ml-auto text-gray-700 text-xs">Pengikut <b id="store-followers-count">0</b></span>
             <span class="text-gray-700 text-xs">Produk <b id="store-products-count">0</b></span>
         </div>
     </main>
 
     <script type="module">
-        import { db, auth, doc, getDoc, updateDoc, onAuthStateChanged, collection, query, where, getDocs, addDoc } from './js/firebase-config.js'; // Import addDoc for adding to cart
+        import { db, auth, doc, getDoc, updateDoc, onAuthStateChanged, collection, query, where, getDocs, addDoc } from './js/firebase-config.js'; // Pastikan addDoc diimport
 
         // DOM Elements
         const productPageTitle = document.getElementById('product-page-title');
@@ -400,6 +398,7 @@
         const storeProductsCount = document.getElementById('store-products-count');
         const chatJastiperName = document.getElementById('chat-jastiper-name');
         const loadingSpinner = document.getElementById('loading-spinner');
+        const kunjungiTokoButton = document.getElementById('kunjungiTokoButton'); // Dapatkan referensi ke tombol "Kunjungi Toko"
 
         // Global variables for product and store data
         let currentProductData = null;
@@ -422,11 +421,11 @@
             customConfirmCallback = callback;
             customConfirmTitle.textContent = isConfirmation ? "Konfirmasi" : "Peringatan!";
             if (isConfirmation) {
-                customConfirmBtn.classList.remove('btn-confirm');
-                customConfirmBtn.classList.add('btn-danger'); // Make confirm button red for delete/logout
+                customConfirmBtn.classList.remove('btn-confirm', 'success');
+                customConfirmBtn.classList.add('btn-confirm'); // Ensure it's the base confirm style
                 customCancelBtn.classList.remove('hidden');
             } else {
-                customConfirmBtn.classList.remove('btn-danger'); // Reset to default if not confirmation
+                customConfirmBtn.classList.remove('btn-confirm'); // Remove base confirm style
                 customConfirmBtn.classList.add('btn-confirm', 'success'); // Make it green for success/info
                 customCancelBtn.classList.add('hidden');
             }
@@ -507,8 +506,7 @@
                         </div>
                         ${variantsHtml}
                         <div class="flex items-center">
-                            <div class="w-28 font-semibold text-gray-700">Jumlah</div> <!-- Changed 'Kuantitas' to 'Jumlah' -->
-                            <div class="flex-1 flex items-center gap-2">
+                            <div class="w-28 font-semibold text-gray-700">Jumlah</div> <div class="flex-1 flex items-center gap-2">
                                 <button class="produk-qty-btn w-8 h-8 bg-gray-200 rounded text-lg font-bold" type="button" data-action="decrease">-</button>
                                 <input type="number" value="1" min="1" max="${defaultStock}"
                                     class="produk-qty-input w-12 px-2 py-1 border border-gray-300 rounded text-center" />
@@ -607,7 +605,7 @@
             storeInfoContainer.classList.add('hidden');
 
             const urlParams = new URLSearchParams(window.location.search);
-            currentProductId = urlParams.get('id');
+            currentProductId = urlParams.get('id'); // Pastikan parameter ID produk adalah 'id'
 
             if (!currentProductId) {
                 loadingProductMessage.classList.add('hidden');
@@ -639,27 +637,46 @@
                             currentStoreData = { id: storeSnap.id, ...storeSnap.data() };
                             console.log("Store data loaded:", currentStoreData);
                             storeNameDisplay.textContent = currentStoreData.namaToko || 'Nama Toko';
-                            storeCountryName.textContent = currentStoreData.negaraToko || 'Tidak Tersedia'; // Display store country
-                            chatJastiperName.textContent = currentStoreData.namaToko || 'Toko'; // Set Jastiper chat name
-                            storeLastActive.textContent = `Aktif ${currentStoreData.lastActive ? timeSince(currentStoreData.lastActive.toDate()) : 'Tidak diketahui'}`;
-
-                            // Fetch product count for the store
-                            const productsQuery = query(collection(db, "produk"), where("tokoId", "==", currentStoreData.id));
-                            const productsSnapshot = await getDocs(productsQuery);
-                            storeProductsCount.textContent = productsSnapshot.size;
-
-                            // Fetch follower count for the store (assuming 'pengikut' is an array of UIDs)
-                            storeFollowersCount.textContent = currentStoreData.pengikut ? currentStoreData.pengikut.length : 0;
-
+                            storeCountryName.textContent = currentStoreData.negaraToko || 'Tidak Tersedia';
                             storeInfoContainer.classList.remove('hidden');
+
+                            // Update last active (dummy for now, replace with actual logic)
+                            // For actual last active, you'd need a field in your 'toko' collection
+                            storeLastActive.textContent = `Aktif beberapa saat yang lalu`; // Placeholder
+
+                            // Fetch followers count for the store
+                            const followersQuery = query(collection(db, "pengguna"), where("following", "array-contains", currentStoreData.id));
+                            const followersSnap = await getDocs(followersQuery);
+                            storeFollowersCount.textContent = followersSnap.size;
+
+                            // Fetch products count for the store
+                            const productsQuery = query(collection(db, "produk"), where("tokoId", "==", currentStoreData.id));
+                            const productsSnap = await getDocs(productsQuery);
+                            storeProductsCount.textContent = productsSnap.size;
+
+                            // Set the href for "Kunjungi Toko" button
+                            kunjungiTokoButton.href = `pembeli_toko.html?id=${currentStoreData.id}`;
+
                         } else {
-                            console.warn("Store not found for tokoId:", currentProductData.tokoId);
-                            storeInfoContainer.classList.add('hidden'); // Hide store info if not found
+                            console.warn("Store data not found for tokoId:", currentProductData.tokoId);
+                            storeNameDisplay.textContent = 'Toko Tidak Ditemukan';
+                            storeCountryName.textContent = '';
+                            storeLastActive.textContent = '';
+                            storeFollowersCount.textContent = '0';
+                            storeProductsCount.textContent = '0';
+                            storeInfoContainer.classList.remove('hidden'); // Still show, but with "not found" message
                         }
                     } else {
                         console.warn("Product has no tokoId.");
-                        storeInfoContainer.classList.add('hidden');
+                        storeNameDisplay.textContent = 'Toko Tidak Ditemukan';
+                        storeCountryName.textContent = '';
+                        storeLastActive.textContent = '';
+                        storeFollowersCount.textContent = '0';
+                        storeProductsCount.textContent = '0';
+                        storeInfoContainer.classList.remove('hidden'); // Still show, but with "not found" message
                     }
+
+                    loadingProductMessage.classList.add('hidden');
                 } else {
                     loadingProductMessage.classList.add('hidden');
                     errorProductMessage.textContent = "Produk tidak ditemukan.";
@@ -671,344 +688,268 @@
             } catch (error) {
                 console.error("Error loading product or store data:", error);
                 loadingProductMessage.classList.add('hidden');
-                errorProductMessage.textContent = "Terjadi kesalahan: " + error.message;
+                errorProductMessage.textContent = "Terjadi kesalahan saat memuat data produk. Silakan coba lagi.";
                 errorProductMessage.classList.remove('hidden');
-                showCustomConfirm("Terjadi kesalahan saat memuat data: " + error.message, null);
             } finally {
                 loadingSpinner.classList.add('hidden');
             }
         }
 
-        // Helper function for time since calculation
-        function timeSince(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + " tahun";
-            interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + " bulan";
-            interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + " hari";
-            interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + " jam";
-            interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + " menit";
-            return Math.floor(seconds) + " detik";
-        }
-
-        // Fungsi untuk mengurangi stok produk di Firebase
-        async function decreaseProductStock(productId, quantity, variantName = null) {
-            try {
-                const productRef = doc(db, "produk", productId);
-                const productSnap = await getDoc(productRef);
-
-                if (productSnap.exists()) {
-                    const productData = productSnap.data();
-                    let newStock = parseInt(productData.stok) || 0; // Ensure it's a number
-                    let updatedVariants = productData.variants;
-
-                    if (variantName && updatedVariants && updatedVariants.length > 0) {
-                        // Find and update the stock of the specific variant
-                        const variantIndex = updatedVariants.findIndex(v => v.name === variantName);
-                        if (variantIndex > -1) {
-                            // Ensure variant stock is parsed as number
-                            if ((parseInt(updatedVariants[variantIndex].stock) || 0) >= quantity) {
-                                updatedVariants[variantIndex].stock = (parseInt(updatedVariants[variantIndex].stock) || 0) - quantity;
-                            } else {
-                                throw new Error("Stok varian tidak mencukupi atau tidak valid.");
-                            }
-                        } else {
-                            throw new Error("Varian tidak ditemukan.");
-                        }
-                    } else {
-                        // Update the main product stock if no variant or variant stock is not managed
-                        if (newStock >= quantity) {
-                            newStock -= quantity;
-                        } else {
-                            throw new Error("Stok produk tidak mencukupi.");
-                        }
-                    }
-
-                    // Update the product document in Firestore
-                    await updateDoc(productRef, {
-                        stok: newStock,
-                        variants: updatedVariants // Update variants array if it was modified
-                    });
-                    console.log(`Stok produk ${productId} (varian: ${variantName || 'N/A'}) berhasil dikurangi sebanyak ${quantity}.`);
-                    return true;
-                } else {
-                    console.error("Produk tidak ditemukan untuk pengurangan stok.");
-                    return false;
-                }
-            } catch (error) {
-                console.error("Error mengurangi stok produk:", error);
-                showCustomConfirm("Gagal mengurangi stok: " + error.message, null);
-                return false;
-            }
-        }
-
-        // --- Fungsi untuk Keranjang dan Pembelian ---
-        window.masukkanKeranjang = async function () { // Made async
+        // Add to Cart function
+        async function masukkanKeranjang() {
             if (!currentUserId) {
                 showCustomConfirm("Anda harus login untuk menambahkan produk ke keranjang.", () => {
-                    window.location.href = 'index.html'; // Redirect ke halaman login
+                    window.location.href = 'pembeli_login.html';
                 });
                 return;
             }
 
             if (!currentProductData) {
-                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Mohon tunggu.", null);
+                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Coba lagi sebentar.");
                 return;
             }
-            const qtyInput = productDetailContainer.querySelector('.produk-qty-input');
+
+            const qtyInput = document.querySelector('.produk-qty-input');
             const quantity = parseInt(qtyInput.value, 10);
+            // Pastikan stok yang dicek adalah stok varian yang dipilih, atau stok produk jika tidak ada varian
+            const availableStock = parseInt(document.getElementById('product-stock').textContent, 10);
 
-            if (quantity <= 0) {
-                showCustomConfirm("Jumlah harus lebih dari 0.", null);
+            if (quantity <= 0 || isNaN(quantity)) {
+                showCustomConfirm("Jumlah produk harus setidaknya 1.");
                 return;
             }
 
-            // Check stock before adding to cart
-            const currentStock = selectedVariant ? (parseInt(selectedVariant.stock) || parseInt(currentProductData.stok) || 0) : parseInt(currentProductData.stok) || 0;
-            if (quantity > currentStock) {
-                showCustomConfirm(`Stok tidak mencukupi. Tersedia: ${currentStock}`, null);
+            if (quantity > availableStock) {
+                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`);
                 return;
             }
-
-            // Decrease stock in Firebase
-            const stockDecreased = await decreaseProductStock(currentProductData.id, quantity, selectedVariant ? selectedVariant.name : null);
-            if (!stockDecreased) {
-                return; // Stop if stock update failed
-            }
-
-            const itemToAdd = {
-                productId: currentProductData.id,
-                productName: currentProductData.namaBarang,
-                productImageUrl: selectedVariant ? selectedVariant.imageUrl || currentProductData.imageUrl : currentProductData.imageUrl,
-                price: selectedVariant ? (selectedVariant.price !== null ? selectedVariant.price : currentProductData.harga) : currentProductData.harga,
-                quantity: quantity,
-                storeId: currentProductData.tokoId,
-                storeName: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
-                variant: selectedVariant ? selectedVariant.name : null, // Store selected variant name
-                addedAt: new Date(), // Timestamp when added to cart
-            };
 
             try {
-                const cartRef = collection(db, "users", currentUserId, "keranjang");
-                const q = query(cartRef,
-                    where("productId", "==", itemToAdd.productId),
-                    where("variant", "==", itemToAdd.variant)
+                loadingSpinner.classList.remove('hidden');
+
+                const cartItemData = {
+                    productId: currentProductId,
+                    namaBarang: currentProductData.namaBarang,
+                    imageUrl: selectedVariant ? selectedVariant.imageUrl : currentProductData.imageUrl,
+                    harga: selectedVariant ? selectedVariant.price : currentProductData.harga,
+                    quantity: quantity,
+                    tokoId: currentProductData.tokoId,
+                    namaToko: currentStoreData ? currentStoreData.namaToko : 'Unknown Store', // Tambahkan nama toko
+                    variant: selectedVariant ? selectedVariant.name : null, // Tambahkan nama varian
+                    createdAt: new Date(),
+                };
+
+                // REFERENSI PENTING: Mengarahkan ke sub-koleksi keranjang di bawah dokumen pengguna
+                const userCartRef = collection(db, "users", currentUserId, "keranjang");
+
+                // Periksa apakah item (produk + varian) sudah ada di keranjang untuk pengguna saat ini
+                const existingCartItemQuery = query(
+                    userCartRef, // Gunakan userCartRef
+                    where("productId", "==", currentProductId),
+                    where("variant", "==", cartItemData.variant) // Penting untuk memeriksa varian spesifik
                 );
-                const querySnapshot = await getDocs(q);
 
-                if (!querySnapshot.empty) {
-                    // Item already exists in cart, update quantity
-                    const existingCartItemDoc = querySnapshot.docs[0];
-                    const existingQuantity = existingCartItemDoc.data().quantity;
-                    await updateDoc(doc(db, "users", currentUserId, "keranjang", existingCartItemDoc.id), {
-                        quantity: existingQuantity + itemToAdd.quantity,
-                        addedAt: new Date() // Update timestamp
-                    });
-                    console.log("Cart item updated in Firebase:", existingCartItemDoc.id);
+                const existingCartSnap = await getDocs(existingCartItemQuery);
+
+                if (existingCartSnap.empty) {
+                    // Item tidak ada, tambahkan sebagai yang baru
+                    await addDoc(userCartRef, cartItemData); // Tambahkan ke userCartRef
+                    showCustomConfirm("Produk berhasil ditambahkan ke keranjang!", null, false);
+                    console.log("Product added to cart:", cartItemData);
                 } else {
-                    // Add new item to cart
-                    await addDoc(cartRef, itemToAdd);
-                    console.log("New cart item added to Firebase.");
+                    // Item sudah ada, perbarui kuantitas
+                    const existingItemDoc = existingCartSnap.docs[0];
+                    const existingQuantity = existingItemDoc.data().quantity;
+                    const newQuantity = existingQuantity + quantity;
+
+                    if (newQuantity > availableStock) {
+                        showCustomConfirm(`Tidak dapat menambahkan. Total kuantitas akan melebihi stok yang tersedia (${availableStock}).`);
+                    } else {
+                        await updateDoc(doc(db, "users", currentUserId, "keranjang", existingItemDoc.id), { // Perbarui di userCartRef
+                            quantity: newQuantity
+                        });
+                        showCustomConfirm("Kuantitas produk di keranjang berhasil diperbarui!", null, false);
+                        console.log("Product quantity updated in cart:", newQuantity);
+                    }
                 }
-
-                showCustomConfirm("Produk berhasil ditambahkan ke keranjang!", () => {
-                    window.location.href = 'pembeli_keranjang.html';
-                }, false);
-
             } catch (error) {
-                console.error("Error adding/updating cart item in Firebase:", error);
-                showCustomConfirm("Gagal menambahkan produk ke keranjang: " + error.message, null);
-                // Revert stock if adding to cart failed (optional, but good for consistency)
-                await decreaseProductStock(currentProductData.id, -quantity, selectedVariant ? selectedVariant.name : null); // Add back stock
+                console.error("Error adding product to cart:", error);
+                showCustomConfirm("Gagal menambahkan produk ke keranjang. Silakan coba lagi.", null, false);
+            } finally {
+                loadingSpinner.classList.add('hidden');
             }
-        };
+        }
 
-        window.beliSekarang = async function () { // Made async
+        // Buy Now function (placeholder, perlu disesuaikan juga jika ingin update stok produk atau buat dokumen pesanan)
+        async function beliSekarang() {
             if (!currentUserId) {
-                showCustomConfirm("Anda harus login untuk melakukan pembelian.", () => {
-                    window.location.href = 'index.html'; // Redirect ke halaman login
+                showCustomConfirm("Anda harus login untuk membeli produk.", () => {
+                    window.location.href = 'pembeli_login.html';
                 });
                 return;
             }
 
             if (!currentProductData) {
-                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Mohon tunggu.", null);
+                showCustomConfirm("Detail produk belum dimuat sepenuhnya. Coba lagi sebentar.");
                 return;
             }
-            const qtyInput = productDetailContainer.querySelector('.produk-qty-input');
+
+            const qtyInput = document.querySelector('.produk-qty-input');
             const quantity = parseInt(qtyInput.value, 10);
+            const availableStock = parseInt(document.getElementById('product-stock').textContent, 10);
 
-            if (quantity <= 0) {
-                showCustomConfirm("Jumlah harus lebih dari 0.", null);
+            if (quantity <= 0 || isNaN(quantity)) {
+                showCustomConfirm("Jumlah produk harus setidaknya 1.");
                 return;
             }
 
-            // Check stock before buying
-            const currentStock = selectedVariant ? (parseInt(selectedVariant.stock) || parseInt(currentProductData.stok) || 0) : parseInt(currentProductData.stok) || 0;
-            if (quantity > currentStock) {
-                showCustomConfirm(`Stok tidak mencukupi. Tersedia: ${currentStock}`, null);
+            if (quantity > availableStock) {
+                showCustomConfirm(`Maaf, stok hanya tersedia ${availableStock}.`);
                 return;
             }
 
-            // Decrease stock in Firebase
-            const stockDecreased = await decreaseProductStock(currentProductData.id, quantity, selectedVariant ? selectedVariant.name : null);
-            if (!stockDecreased) {
-                return; // Stop if stock update failed
-            }
-
-            const productToBuy = {
-                productId: currentProductData.id,
-                productName: currentProductData.namaBarang,
-                productImageUrl: selectedVariant ? selectedVariant.imageUrl || currentProductData.imageUrl : currentProductData.imageUrl,
-                price: selectedVariant ? (selectedVariant.price !== null ? selectedVariant.price : currentProductData.harga) : currentProductData.harga,
+            const orderItem = {
+                productId: currentProductId,
+                namaBarang: currentProductData.namaBarang,
+                imageUrl: selectedVariant ? selectedVariant.imageUrl : currentProductData.imageUrl,
+                harga: selectedVariant ? selectedVariant.price : currentProductData.harga,
                 quantity: quantity,
-                storeId: currentProductData.tokoId,
-                storeName: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
-                variant: selectedVariant ? selectedVariant.name : null, // Store selected variant name
-                // You might want to add more details like category, merk, etc.
+                tokoId: currentProductData.tokoId,
+                namaToko: currentStoreData ? currentStoreData.namaToko : 'Unknown Store',
+                variant: selectedVariant ? selectedVariant.name : null,
+                // Tambahkan detail lain yang diperlukan untuk pesanan
             };
 
-            // For "Beli Sekarang", we still use localStorage for a direct checkout flow,
-            // as it's typically a single item purchase bypasses the full cart experience.
-            localStorage.setItem('checkoutProduct', JSON.stringify(productToBuy));
-            window.location.href = 'pembeli_checkout.html';
-        };
-
-        // --- Fungsi Chat Jastiper ---
-        window.hubungiToko = function () {
-            if (!currentStoreData) {
-                showCustomConfirm("Informasi toko belum dimuat.", null);
-                return;
-            }
-            document.getElementById('chatJastiperModal').style.display = 'flex';
-            document.getElementById('chatJastiperMessages').innerHTML = `<b>${currentStoreData.namaToko || 'Toko'}:</b> Halo, ada yang bisa saya bantu terkait produk ini?`;
-            document.getElementById('chatJastiperInput').value = '';
-        };
-
-        window.sendJastiperMessage = function () {
-            var input = document.getElementById('chatJastiperInput');
-            var messages = document.getElementById('chatJastiperMessages');
-            if (input.value.trim() !== '') {
-                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
-                setTimeout(function () {
-                    messages.innerHTML += '<br><b>' + (currentStoreData ? currentStoreData.namaToko : 'Toko') + ':</b> Oke, terima kasih pesan Anda sudah kami terima!';
-                }, 800);
-                input.value = '';
-            }
-        };
-
-        // --- Fungsi Kunjungi Toko ---
-        window.kunjungiToko = function () {
-            if (currentStoreData && currentStoreData.id) {
-                window.location.href = `pembeli_toko.html?id=${currentStoreData.id}`;
-            } else {
-                showCustomConfirm("ID Toko tidak tersedia untuk dikunjungi.", null);
-            }
-        };
-
-        // --- Fungsi Chat CS (tetap sama) ---
-        function openChatCS() {
-            document.getElementById('chatCSModal').style.display = 'flex';
-            document.getElementById('chatCSMessages').innerHTML = '<b>CS:</b> Ada yang bisa kami bantu?';
+            // Ini adalah fungsionalitas placeholder. Untuk aplikasi nyata, Anda biasanya akan:
+            // 1. Membuat dokumen pesanan di koleksi 'orders' (atau sejenisnya)
+            // 2. Mengurangi stok produk di koleksi 'produk'
+            // 3. Mengarahkan pengguna ke halaman checkout/pembayaran
+            console.log("Akan melanjutkan ke halaman checkout dengan:", orderItem);
+            showCustomConfirm("Fungsionalitas 'Beli Sekarang' akan mengarahkan Anda ke halaman checkout. (Implementasi pengurangan stok dan pembuatan pesanan perlu ditambahkan)", () => {
+                // Contoh: Redirect ke halaman checkout dummy dengan parameter
+                // window.location.href = `pembeli_checkout.html?productId=${orderItem.productId}&quantity=${orderItem.quantity}&variant=${orderItem.variant || ''}`;
+                showCustomConfirm("Produk siap dibeli! (Redirect ke halaman checkout belum diimplementasikan)", null, false);
+            }, false); // Ini adalah alert informatif
         }
 
+        // Function to open Chat with Jastiper (Store)
+        function hubungiToko() {
+            if (!currentUserId) {
+                showCustomConfirm("Anda harus login untuk menghubungi toko.", () => {
+                    window.location.href = 'pembeli_login.html';
+                });
+                return;
+            }
+            if (currentStoreData) {
+                chatJastiperName.textContent = currentStoreData.namaToko || 'Toko';
+                document.getElementById('chatJastiperModal').dataset.storeId = currentStoreData.id; // Simpan ID toko di dataset
+                document.getElementById('chatJastiperMessages').innerHTML = "Halo! Ada yang bisa saya bantu terkait produk ini?"; // Reset chat
+                document.getElementById('chatJastiperInput').value = '';
+                document.getElementById('chatJastiperModal').style.display = 'flex';
+                // In a real app, you'd load chat history here
+            } else {
+                showCustomConfirm("Informasi toko belum tersedia.");
+            }
+        }
+
+        // Function to open Chat with CS
+        function openChatCS() {
+            if (!currentUserId) {
+                showCustomConfirm("Anda harus login untuk menghubungi Customer Service.", () => {
+                    window.location.href = 'pembeli_login.html';
+                });
+                return;
+            }
+            document.getElementById('chatCSMessages').innerHTML = "Selamat datang di TitipGo Customer Service. Ada yang bisa kami bantu?"; // Reset chat
+            document.getElementById('chatCSInput').value = '';
+            document.getElementById('chatCSModal').style.display = 'flex';
+            // In a real app, you'd load CS chat history here
+        }
+
+        // Dummy send CS message function
         function sendCSMessage() {
             var input = document.getElementById('chatCSInput');
             var messages = document.getElementById('chatCSMessages');
             if (input.value.trim() !== '') {
                 messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
                 setTimeout(function () {
-                    messages.innerHTML += '<br><b>CS:</b> Terima kasih, pesan Anda sudah kami terima!';
+                    messages.innerHTML += '<br><b>CS TitipGo:</b> Pesan Anda telah diterima, kami akan segera merespons.';
                 }, 800);
                 input.value = '';
+                messages.scrollTop = messages.scrollHeight;
             }
         }
 
-        // --- Dropdown User (tetap sama) ---
+        // Dummy send Jastiper message function
+        function sendJastiperMessage() {
+            var input = document.getElementById('chatJastiperInput');
+            var messages = document.getElementById('chatJastiperMessages');
+            const storeName = document.getElementById('chat-jastiper-name').textContent;
+            const storeId = document.getElementById('chatJastiperModal').dataset.storeId; // Ambil ID toko dari dataset modal
+
+            if (input.value.trim() !== '') {
+                messages.innerHTML += '<br><b>Anda:</b> ' + input.value;
+                setTimeout(function () {
+                    messages.innerHTML += `<br><b>${storeName}:</b> Oke, terima kasih pesan Anda sudah kami terima!`;
+                }, 800);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        // Dropdown User (copied from main page for consistency)
         const userIcon = document.getElementById('userIcon');
         const userDropdown = document.getElementById('userDropdown');
-        const tokoSayaLink = document.getElementById('tokoSayaLink'); // Get the "Toko Saya" link
-
-        // Hide user dropdown by default
-        userDropdown.classList.add('hidden');
-
-        userIcon.addEventListener('click', function (event) {
-            event.preventDefault(); // Mencegah link default action
-            userDropdown.classList.toggle('hidden');
-        });
-
-        // Tutup dropdown jika klik di luar area dropdown
-        document.addEventListener('click', function (event) {
-            if (!userIcon.contains(event.target) && !userDropdown.contains(event.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        });
-
-        // Fungsi Logout
-        async function logoutUser() {
-            try {
-                await signOut(auth); // Perform Firebase logout
-                showCustomConfirm("Anda telah logout!", () => {
-                    window.location.href = "index.html"; // Redirect to login page after logout
-                }, false);
-            } catch (error) {
-                console.error("Error logging out: ", error);
-                showCustomConfirm("Gagal logout. Silakan coba lagi: " + error.message, null);
-            }
+        if (userIcon && userDropdown) {
+            userIcon.onclick = function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            };
+            document.addEventListener('click', function (e) {
+                if (!userDropdown.contains(e.target) && e.target !== userIcon) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
+        function logoutUser() {
+            showCustomConfirm("Anda yakin ingin logout?", () => {
+                // Perform logout action here (e.g., Firebase signOut)
+                auth.signOut().then(() => {
+                    console.log("User logged out successfully");
+                    window.location.href = 'pembeli_login.html'; // Redirect to login page after logout
+                }).catch((error) => {
+                    console.error("Error during logout:", error);
+                    showCustomConfirm("Gagal logout. Silakan coba lagi.", null, false);
+                });
+            }, true); // true for confirmation type modal
         }
 
-        // Expose functions to global scope for onclick attributes
-        window.openChatCS = openChatCS;
-        window.sendCSMessage = sendCSMessage;
-        window.logoutUser = logoutUser;
 
-        // Auth state listener to handle user session and load data
+        // Event listener for authentication state change
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                currentUserId = user.uid; // Set the current user ID
+                currentUserId = user.uid;
                 console.log("User is logged in:", currentUserId);
-                // Optionally fetch user role to adjust UI, e.g., for "Toko Saya" link
-                const userDocRef = doc(db, "users", user.uid);
-                getDoc(userDocRef).then(docSnap => {
-                    if (docSnap.exists() && docSnap.data().role === 'jastiper') {
-                        tokoSayaLink.href = "jastiper_dashboard.html"; // Change link for jastiper
-                    } else {
-                        // Default for pembeli or other roles
-                        tokoSayaLink.href = "pembeli_toko_saya.html"; // Assume this is a page for pembeli to manage their own 'toko' or create one
-                    }
-                }).catch(error => {
-                    console.error("Error fetching user role:", error);
-                    tokoSayaLink.href = "pembeli_toko_saya.html"; // Fallback
-                });
-                loadProductAndStoreData(); // Load data after user is authenticated
             } else {
-                currentUserId = null; // Clear user ID if not logged in
-                console.log("No user logged in, redirecting to index.html");
-                // Redirect to index.html if no user is logged in
-                window.location.href = "index.html";
+                currentUserId = null;
+                console.log("User is not logged in.");
+                // Optionally hide/disable cart/buy buttons if not logged in
             }
         });
 
-        // Dropdown Kategori (assuming this is for a dynamic dropdown, but currently not implemented)
-        // const kategoriMenu = document.getElementById('kategoriMenu');
-        // const dropdownKategori = document.getElementById('dropdownKategori');
 
-        // if (kategoriMenu && dropdownKategori) {
-        //     kategoriMenu.addEventListener('click', function (event) {
-        //         event.preventDefault();
-        //         dropdownKategori.style.display = dropdownKategori.style.display === 'block' ? 'none' : 'block';
-        //     });
+        // Initial load
+        document.addEventListener('DOMContentLoaded', loadProductAndStoreData);
 
-        //     document.addEventListener('click', function (event) {
-        //         if (!kategoriMenu.contains(event.target) && !dropdownKategori.contains(event.target)) {
-        //             dropdownKategori.style.display = 'none';
-        //         }
-        //     });
-        // }
+        // Make functions globally accessible if they are called directly from HTML onclick
+        window.masukkanKeranjang = masukkanKeranjang;
+        window.beliSekarang = beliSekarang;
+        window.hubungiToko = hubungiToko;
+        // window.kunjungiToko dihapus karena kita pakai `href` langsung
+        window.openChatCS = openChatCS;
+        window.sendCSMessage = sendCSMessage;
+        window.sendJastiperMessage = sendJastiperMessage;
+        window.logoutUser = logoutUser;
     </script>
 </body>
 
